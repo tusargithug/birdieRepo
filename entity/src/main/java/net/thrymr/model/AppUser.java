@@ -26,17 +26,14 @@ public class AppUser extends BaseEntity {
     @Column(unique = true)
     private String userName;
 
-    @Column(unique = true)
     private String mobile;
     
     private String alternateMobile;
 
-//    private String occupation;
-//
-//    @Column(name = "primary_branch")
-//    private Long primaryBranch;
-
     @Column(name = "password")
     private String password;
+    
+@Column(unique = true)
+    private String empId;
 
 }

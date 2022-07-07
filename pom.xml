@@ -13,7 +13,7 @@
     </parent>
 
     <groupId>net.thrymr</groupId>
-    <artifactId>base_backend</artifactId>
+    <artifactId>birdie_backend</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
