@@ -4,8 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
-
-import net.thrymr.model.BaseEntity;
 import net.thrymr.model.master.Question;
 
 import lombok.Getter;

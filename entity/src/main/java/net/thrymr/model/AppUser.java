@@ -33,7 +33,11 @@ public class AppUser extends BaseEntity {
     @Column(name = "password")
     private String password;
     
-@Column(unique = true)
+  @Column(unique = true)
     private String empId;
+
+  @ManyToOne
+
+private Roles roles;
 
 }

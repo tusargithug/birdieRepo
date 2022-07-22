@@ -15,15 +15,19 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EntityScan(basePackages = {"net.thrymr.*"})
 @EnableJpaRepositories(basePackages = {"net.thrymr.*"})
 @PropertySource("message.properties")
+
+
+
 @SpringBootApplication
 public class BaseApplication {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseApplication.class);
 
     public static void main(String[] args) {
         SpringApplication.run(BaseApplication.class, args);
 
         LOGGER.info("***************************************************");
-        LOGGER.info("	   THRYMR BACKEND SERVER STARTED    ");
+        LOGGER.info("	    BIRDIE BACKEND SERVER STARTED    ");
         LOGGER.info("***************************************************");
     }
 }
