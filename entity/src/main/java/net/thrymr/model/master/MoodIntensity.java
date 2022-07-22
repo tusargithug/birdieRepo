@@ -1,9 +1,7 @@
 package net.thrymr.model.master;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,7 +26,7 @@ public class MoodIntensity extends BaseEntity{
 	
 	@ManyToOne
 	private FileEntity icon;
-	
+
 	@ManyToOne
 	private MoodInfo moodInfo;
 	

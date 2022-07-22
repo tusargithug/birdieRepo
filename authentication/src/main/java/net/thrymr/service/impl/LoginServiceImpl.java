@@ -7,6 +7,7 @@ import net.thrymr.dto.response.LoginResponse;
 import net.thrymr.dto.response.SendMessageDto;
 import net.thrymr.model.AppUser;
 import net.thrymr.repository.AppUserRepo;
+import net.thrymr.repository.RoleRepository;
 import net.thrymr.security.JwtUtil;
 import net.thrymr.security.LoggedInUser;
 import net.thrymr.service.LoginService;
@@ -22,9 +23,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
-
 
 
 @Service
@@ -44,15 +46,15 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public ApiResponse signUpUser(AppUserDto appUserDto) {
-        if(Validator.isValid(appUserDto.getEmail())){
-            Optional<AppUser>optionalAppUser=appUserRepo.findByEmail(appUserDto.getEmail());
-            if(optionalAppUser.isPresent()){
-                return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("USER_EXIST_EMAIL"),appUserDto.getEmail());
+        if (Validator.isValid(appUserDto.getEmail())) {
+            Optional<AppUser> optionalAppUser = appUserRepo.findByEmail(appUserDto.getEmail());
+            if (optionalAppUser.isPresent()) {
+                return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("USER_EXIST_EMAIL"), appUserDto.getEmail());
             }
         }
-        AppUser appUser=dtoToModel(appUserDto);
+        AppUser appUser = dtoToModel(appUserDto);
         appUserRepo.save(appUser);
-        return new ApiResponse(HttpStatus.OK,"SignUp Successfully Completed");
+        return new ApiResponse(HttpStatus.OK, "SignUp Successfully Completed");
     }
     private AppUser dtoToModel(AppUserDto request) {
         AppUser appUser = new AppUser();
@@ -63,7 +65,7 @@ public class LoginServiceImpl implements LoginService {
         appUser.setLastName(request.getLastName());
         appUser.setMobile(request.getMobile());
         appUser.setEmail(request.getEmail());
-        appUser.setUserName(appUser.getFirstName() + " " + request.getLastName());
+        appUser.setUserName(request.getUserName());
         appUser.setPassword(new BCryptPasswordEncoder().encode(request.getPassword()));
         appUser.setAlternateMobile(request.getAlternateMobile());
         return appUser;
@@ -71,19 +73,18 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public ApiResponse getOtp(LoginDto request) {
-        if(request!=null && request.getMobile()!=null){
-            Optional<AppUser> optionalAppUser = appUserRepo.findByMobileAndIsActiveAndIsDeleted(request.getMobile(),Boolean.TRUE,Boolean.FALSE);
-            if(!optionalAppUser.isPresent()){
-                return new ApiResponse(HttpStatus.BAD_REQUEST,"Please Signup ");
-            }else {
-                SendMessageDto dto=new SendMessageDto();
+        if (request != null && request.getMobile() != null) {
+            Optional<AppUser> optionalAppUser = appUserRepo.findByMobileAndIsActiveAndIsDeleted(request.getMobile(), Boolean.TRUE, Boolean.FALSE);
+            if (optionalAppUser.isEmpty()) {
+                return new ApiResponse(HttpStatus.BAD_REQUEST, "Please Signup ");
+            } else {
+                SendMessageDto dto = new SendMessageDto();
                 dto.setOtp(BaseCommonUtil.generateOTP(6));
                 dto.setUserName(optionalAppUser.get().getUserName());
-                return new ApiResponse(HttpStatus.OK,"OTP Generated Successfully",dto.getOtp());
+                return new ApiResponse(HttpStatus.OK, "OTP Generated Successfully", dto.getOtp());
             }
-        }
-        else {
-            return new ApiResponse(HttpStatus.BAD_REQUEST,"Please provide Valid Mobile number");
+        } else {
+            return new ApiResponse(HttpStatus.BAD_REQUEST, "Please provide Valid Mobile number");
         }
     }
 
@@ -110,38 +111,38 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public ApiResponse changePassword(ChangePasswordDto changePasswordDto) {
-        ApiResponse apiResponse=validateChangePasswordRequest(changePasswordDto);
-        if(Validator.isObjectValid(apiResponse)){
+        ApiResponse apiResponse = validateChangePasswordRequest(changePasswordDto);
+        if (Validator.isObjectValid(apiResponse)) {
             return apiResponse;
         }
-        LoggedInUser loggedInUser =getCurrentUserLogin();
-        if (loggedInUser!=null) {
+        LoggedInUser loggedInUser = getCurrentUserLogin();
+        if (loggedInUser != null) {
             Optional<AppUser> optionalAppUser = appUserRepo.findById(loggedInUser.getId());
             if (optionalAppUser.isPresent()) {
                 AppUser appUser = optionalAppUser.get();
                 appUser.setPassword(new BCryptPasswordEncoder().encode(changePasswordDto.getNewPassword()));
                 appUserRepo.save(appUser);
                 return new ApiResponse(HttpStatus.OK, "Password Changed Successfully");
-            }else{
-                return new ApiResponse(HttpStatus.BAD_REQUEST,"Logged in User Details Missing,please do a login again");
+            } else {
+                return new ApiResponse(HttpStatus.BAD_REQUEST, "Logged in User Details Missing,please do a login again");
             }
-        }else{
-            return new ApiResponse(HttpStatus.BAD_REQUEST,"Please login to do this action");
+        } else {
+            return new ApiResponse(HttpStatus.BAD_REQUEST, "Please login to do this action");
         }
     }
 
     private ApiResponse validateChangePasswordRequest(ChangePasswordDto changePasswordDto) {
-        if(!Validator.isObjectValid(changePasswordDto)){
-            return new ApiResponse(HttpStatus.BAD_REQUEST,"Please Provide Valid Request");
+        if (!Validator.isObjectValid(changePasswordDto)) {
+            return new ApiResponse(HttpStatus.BAD_REQUEST, "Please Provide Valid Request");
         }
-        if(!Validator.isValid(changePasswordDto.getNewPassword())){
-            return new ApiResponse(HttpStatus.BAD_REQUEST,"Please Provide New Password");
+        if (!Validator.isValid(changePasswordDto.getNewPassword())) {
+            return new ApiResponse(HttpStatus.BAD_REQUEST, "Please Provide New Password");
         }
-        if(!Validator.isValid(changePasswordDto.getConfirmPassword())){
-            return new ApiResponse(HttpStatus.BAD_REQUEST,"Please Confirm Password");
+        if (!Validator.isValid(changePasswordDto.getConfirmPassword())) {
+            return new ApiResponse(HttpStatus.BAD_REQUEST, "Please Confirm Password");
         }
-        if(!changePasswordDto.getNewPassword().equals(changePasswordDto.getConfirmPassword())){
-            return new ApiResponse(HttpStatus.BAD_REQUEST,"Password and Confirm Password Should be same");
+        if (!changePasswordDto.getNewPassword().equals(changePasswordDto.getConfirmPassword())) {
+            return new ApiResponse(HttpStatus.BAD_REQUEST, "Password and Confirm Password Should be same");
         }
         return null;
     }
@@ -184,6 +185,5 @@ public class LoginServiceImpl implements LoginService {
     public ApiResponse updateUser(AppUserDto appUserDto) {
         return null;
     }
-
-
 }
+

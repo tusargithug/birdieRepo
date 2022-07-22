@@ -4,13 +4,10 @@ import java.util.ArrayList;
 
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.RequiredArgsConstructor;
 import net.thrymr.model.BaseEntity;
 import net.thrymr.enums.MoodType;
 
@@ -20,6 +17,7 @@ import lombok.Setter;
 @Entity
 @Setter
 @Getter
+@RequiredArgsConstructor
 public class MoodInfo extends BaseEntity {
 	
 	private String name;
@@ -29,13 +27,14 @@ public class MoodInfo extends BaseEntity {
 	
 	@ManyToOne
 	private FileEntity icon;
-	
-	@OneToMany(mappedBy = "moodInfo", fetch = FetchType.LAZY)
-	private List<MoodIntensity> intensities = new ArrayList<MoodIntensity>();
+
+	@JsonIgnore
+	@OneToMany(cascade = CascadeType.ALL,mappedBy = "moodInfo")
+	private List<MoodIntensity> intensities=new ArrayList<>();
 	
 	private int sequence;
 
-	@Enumerated
+	@Enumerated(EnumType.STRING)
 	private MoodType moodType;
 
 	private String intensityName;

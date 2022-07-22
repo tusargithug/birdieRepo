@@ -23,18 +23,17 @@ public class UserDetailsServiceImpl implements UserDetailsService{
     @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         //Map<Object,Object> loginData=appUserRepo.getLoginData(contactNumber);
-      //  Optional<AppUser> optionalAppUser=appUserRepo.findByMobile(contactNumber);
+        //  Optional<AppUser> optionalAppUser=appUserRepo.findByMobile(contactNumber);
 
-        Optional<AppUser> optionalAppUser =appUserRepo.findByEmail(email);
+        Optional<AppUser> optionalAppUser = appUserRepo.findByEmail(email);
 
-        if(Validator.isValid(optionalAppUser.get().getEmail())){
+        if (Validator.isValid(optionalAppUser.get().getEmail())) {
             return LoggedInUser.builds(optionalAppUser);
-        }else{
-            throw new UsernameNotFoundException("User Not Found with Contact Number: " + email);
+        } else {
+            throw new UsernameNotFoundException("User Not Found with the given Email: " + email);
         }
 
     }
-
 }
 
 

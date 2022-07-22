@@ -10,7 +10,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import net.thrymr.model.BaseEntity;
 import net.thrymr.model.master.Course;
 import net.thrymr.enums.CourseStatus;
 
