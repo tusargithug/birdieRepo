@@ -7,7 +7,6 @@ import net.thrymr.dto.response.LoginResponse;
 import net.thrymr.dto.response.SendMessageDto;
 import net.thrymr.model.AppUser;
 import net.thrymr.repository.AppUserRepo;
-import net.thrymr.repository.RoleRepository;
 import net.thrymr.security.JwtUtil;
 import net.thrymr.security.LoggedInUser;
 import net.thrymr.service.LoginService;
@@ -68,6 +67,8 @@ public class LoginServiceImpl implements LoginService {
         appUser.setUserName(request.getUserName());
         appUser.setPassword(new BCryptPasswordEncoder().encode(request.getPassword()));
         appUser.setAlternateMobile(request.getAlternateMobile());
+        appUser.setRoles(request.getRoles());
+
         return appUser;
     }
 
@@ -97,14 +98,14 @@ public class LoginServiceImpl implements LoginService {
         String jwt = jwtUtils.generateJwtToken(authentication);
 
         LoggedInUser loggedInUser = (LoggedInUser) authentication.getPrincipal();
-
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setId(loggedInUser.getId());
         loginResponse.setFirstName(loggedInUser.getFirstName());
         loginResponse.setLastName(loggedInUser.getLastName());
         loginResponse.setContactNumber(loggedInUser.getContactNumber());
         loginResponse.setEmail(loggedInUser.getEmail());
-        loginResponse.setUserRole(loggedInUser.getRole());
+        loginResponse.setUserRole(loggedInUser.getRole().getName());
+
         loginResponse.setAccessToken(jwt);
         return new ApiResponse(HttpStatus.OK, "USER LOGIN SUCCESSFULLY", loginResponse);
     }

@@ -3,11 +3,9 @@ package net.thrymr.model.master;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
+import net.thrymr.enums.Category;
 import net.thrymr.model.BaseEntity;
 import net.thrymr.model.UserMoodCheckIn;
 import lombok.Getter;
@@ -27,6 +25,9 @@ public class MoodSource extends BaseEntity{
 	private FileEntity icon;
 	
 	private int sequence;
+
+	@Enumerated(EnumType.STRING)
+	private Category category;
 	
 	@ManyToMany(mappedBy = "sources")
 	private List<UserMoodCheckIn> userMoodCheckIns = new LinkedList<UserMoodCheckIn>();

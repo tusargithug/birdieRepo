@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.thrymr.dto.RolesDto;
 import net.thrymr.model.AppUser;
+import net.thrymr.model.Roles;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
@@ -24,11 +26,11 @@ public class LoggedInUser implements UserDetails {
 
     private String lastName;
 
-    private String role;
+    private Roles role;
 
     private Boolean isActive;
 
-    private AppUser appUser;
+    private String appUser;
 
     private String email;
 
@@ -43,6 +45,7 @@ public class LoggedInUser implements UserDetails {
        loggedInUser.setLastName(loginData.get().getLastName());
        loggedInUser.setEmail(loginData.get().getEmail());
         loggedInUser.setPassword(loginData.get().getPassword());
+        loggedInUser.setRole(loginData.get().getRoles());
         return loggedInUser;
     }
     @Override

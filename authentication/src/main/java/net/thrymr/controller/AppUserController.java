@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.security.RolesAllowed;
+
 
 /*
  *@author Chanda Veeresh
@@ -17,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
  *@since  19-07-2022
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class AppUserController {
     private final Logger logger;
 

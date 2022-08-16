@@ -1,15 +1,6 @@
 package net.thrymr.controller;
-
-
-
-
-
 import net.thrymr.dto.AppUserDto;
-
-import net.thrymr.service.AppUserService;
-import net.thrymr.service.MoodInfoService;
-import net.thrymr.service.MoodIntensityService;
-import net.thrymr.service.RoleService;
+import net.thrymr.service.*;
 import net.thrymr.utils.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +35,9 @@ public class MasterController {
     MoodInfoService moodInfoService;
     @Autowired
     MoodIntensityService moodIntensityService;
+
+    @Autowired
+    MoodSourceService moodSourceService;
 
 
     @GetMapping("/master/role/save")
@@ -98,5 +92,21 @@ public class MasterController {
         ApiResponse apiResponse = moodInfoService.getAllMoods();
         logger.info("get all roles service completed");
         return new ApiResponse(HttpStatus.OK, "All MoodInfo details",apiResponse);
+    }
+
+    @PostMapping("/master/mood-source/save")
+    public ResponseEntity<ApiResponse> importMoodSourceInfo(@RequestParam("file") MultipartFile file) {
+        logger.info("Import  Mood Source Data Service Started");
+        ApiResponse apiResponse = moodSourceService.addMoodSourceByExcel(file);
+        logger.info("Import Mood Source Data Service Completed");
+        return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
+    }
+
+    @GetMapping("/master/mood-source/get")
+    public ApiResponse getAllMoodSources() {
+        logger.info("get all mood sources service started");
+        ApiResponse apiResponse = moodSourceService.getAllMoodSources();
+        logger.info("get all mood sources service completed");
+        return new ApiResponse(HttpStatus.OK, "All MoodSources details",apiResponse);
     }
 }

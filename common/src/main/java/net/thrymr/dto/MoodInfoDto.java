@@ -25,7 +25,7 @@ public class MoodInfoDto {
 
     private int sequence;
 
-    private MoodType moodType;
+    private String moodType;
 
     private String intensityName;
 }

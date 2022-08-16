@@ -131,7 +131,7 @@ public class MoodInfoServiceImpl implements MoodInfoService {
         MoodInfoDto moodInfoDto = new MoodInfoDto();
         moodInfoDto.setMoodName(moodInfo.getName());
         moodInfoDto.setSequence(moodInfo.getSequence());
-        moodInfoDto.setMoodType(moodInfo.getMoodType());
+        moodInfoDto.setMoodType(moodInfo.getMoodType().name());
         moodInfoDto.setIntensityName(moodInfo.getIntensityName());
         return moodInfoDto;
     }
@@ -141,9 +141,9 @@ public class MoodInfoServiceImpl implements MoodInfoService {
         List<MoodInfoDto> moodInfoDtos = new ArrayList<>();
         if (!moodInfos.isEmpty()) {
             moodInfos.forEach(model -> moodInfoDtos.add(setModelToDto(model)));
-            return new ApiResponse(HttpStatus.OK, environment.getProperty("mood_FOUND"), moodInfoDtos);
+            return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_FOUND"), moodInfoDtos);
         } else {
-            return new ApiResponse(HttpStatus.OK, environment.getProperty("mood_NOTFOUND"), moodInfoDtos);
+            return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_NOTFOUND"), moodInfoDtos);
         }
     }
 
