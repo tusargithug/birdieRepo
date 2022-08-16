@@ -7,6 +7,7 @@ import net.thrymr.dto.response.LoginResponse;
 import net.thrymr.dto.response.SendMessageDto;
 import net.thrymr.model.AppUser;
 import net.thrymr.repository.AppUserRepo;
+import net.thrymr.repository.RoleRepository;
 import net.thrymr.security.JwtUtil;
 import net.thrymr.security.LoggedInUser;
 import net.thrymr.service.LoginService;
