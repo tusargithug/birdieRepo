@@ -24,9 +24,9 @@ public class MoodInfo extends BaseEntity {
 	
 	@Column(columnDefinition = "TEXT")
 	private String description;
-	
-	@ManyToOne
-	private FileEntity icon;
+
+	@Column(name = "emoji")
+	private String emoji;
 
 	@JsonIgnore
 	@OneToMany(cascade = CascadeType.ALL,mappedBy = "moodInfo")
@@ -37,6 +37,7 @@ public class MoodInfo extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private MoodType moodType;
 
+	@Column(name = "intensity_name")
 	private String intensityName;
 
 }

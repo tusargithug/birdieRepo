@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import lombok.NoArgsConstructor;
 import net.thrymr.enums.Category;
 import net.thrymr.model.BaseEntity;
 import net.thrymr.model.UserMoodCheckIn;
@@ -14,15 +15,16 @@ import lombok.Setter;
 @Entity
 @Setter
 @Getter
+@NoArgsConstructor
 public class MoodSource extends BaseEntity{
 
 	private String name;
 	
 	@Column(columnDefinition = "TEXT")
 	private String description;
-	
-	@ManyToOne
-	private FileEntity icon;
+
+	@Column(name = "emoji")
+	private String emoji;
 	
 	private int sequence;
 

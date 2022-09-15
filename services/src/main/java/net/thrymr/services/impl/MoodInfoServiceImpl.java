@@ -1,11 +1,11 @@
-package net.thrymr.impl;
+package net.thrymr.services.impl;
 
 import net.thrymr.dto.MoodInfoDto;
 import net.thrymr.enums.MoodType;
 import net.thrymr.model.master.MoodInfo;
 import net.thrymr.repository.MoodInfoRepo;
 import net.thrymr.repository.MoodIntensityRepo;
-import net.thrymr.service.MoodInfoService;
+import net.thrymr.services.MoodInfoService;
 import net.thrymr.utils.ApiResponse;
 import net.thrymr.utils.Validator;
 import org.apache.poi.ss.usermodel.CellType;
@@ -16,7 +16,6 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -27,20 +26,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/*
- *@author Chanda Veeresh
- *@version 1.0
- *@since  14-07-2022
- */
+
 @Service
 public class MoodInfoServiceImpl implements MoodInfoService {
-    @Autowired
-    private Environment environment;
-    @Autowired
-    private MoodInfoRepo moodInfoRepo;
-    @Autowired
-    private MoodIntensityRepo moodIntensityRepo;
-    final Logger log = LoggerFactory.getLogger(MoodInfoServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(MoodInfoServiceImpl.class);
+
+    private final Environment environment;
+
+    private final MoodInfoRepo moodInfoRepo;
+
+    private final MoodIntensityRepo moodIntensityRepo;
+
+
+    public MoodInfoServiceImpl(Environment environment, MoodInfoRepo moodInfoRepo, MoodIntensityRepo moodIntensityRepo) {
+        this.environment = environment;
+        this.moodInfoRepo = moodInfoRepo;
+        this.moodIntensityRepo = moodIntensityRepo;
+    }
 
 //    private ApiResponse validateMoodRequest(MultipartFile request) {
 //        if (!Validator.isObjectValid(request)) {
@@ -118,7 +120,7 @@ public class MoodInfoServiceImpl implements MoodInfoService {
                     moodInfoList = moodInfoRepo.saveAll(moodInfoList);
 
                 } catch (Exception e) {
-                    log.error("Exception " + e);
+                    logger.error("Exception " + e);
                     return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD.IMPORT.FORMAT.FAILED"));
                 }
             }

@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
+
+import lombok.NoArgsConstructor;
 import net.thrymr.model.master.Question;
 
 import lombok.Getter;
@@ -12,6 +14,7 @@ import lombok.Setter;
 @Entity
 @Setter
 @Getter
+@NoArgsConstructor
 public class Answer extends BaseEntity{
 	
 	@Column(columnDefinition = "TEXT")

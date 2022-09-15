@@ -1,10 +1,10 @@
-package net.thrymr.impl;
+package net.thrymr.services.impl;
 
 import net.thrymr.dto.MoodSourceDto;
 import net.thrymr.enums.Category;
 import net.thrymr.model.master.MoodSource;
 import net.thrymr.repository.MoodSourceRepo;
-import net.thrymr.service.MoodSourceService;
+import net.thrymr.services.MoodSourceService;
 import net.thrymr.utils.ApiResponse;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.util.NumberToTextConverter;
@@ -14,7 +14,6 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -24,21 +23,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
- *@author Chanda Veeresh
- *@version 1.0
- *@since  11-08-2022
- */
+
 @Service
 public class MoodSourceServiceImpl implements MoodSourceService {
+    private final Logger logger = LoggerFactory.getLogger(MoodSourceServiceImpl.class);
 
-    @Autowired
-    Environment environment;
+   private final Environment environment;
 
-    @Autowired
-    MoodSourceRepo moodSourceRepo;
+    private final MoodSourceRepo moodSourceRepo;
 
-    final Logger log = LoggerFactory.getLogger(MoodSourceServiceImpl.class);
+    public MoodSourceServiceImpl(Environment environment, MoodSourceRepo moodSourceRepo) {
+        this.environment = environment;
+        this.moodSourceRepo = moodSourceRepo;
+    }
 
 
     @Override
@@ -75,7 +72,7 @@ public class MoodSourceServiceImpl implements MoodSourceService {
                     moodSourceList.add(moodSource);
                     moodSourceList = moodSourceRepo.saveAll(moodSourceList);
                 } catch (Exception e) {
-                    log.error("Exception" + e);
+                    logger.error("Exception{} " , e);
                     return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD.IMPORT.FORMAT.FAILED"));
                 }
             }

@@ -1,13 +1,12 @@
-package net.thrymr.impl;
+package net.thrymr.services.impl;
 
 import net.thrymr.dto.MoodIntensityDto;
 import net.thrymr.model.master.MoodInfo;
 import net.thrymr.model.master.MoodIntensity;
 import net.thrymr.repository.MoodInfoRepo;
 import net.thrymr.repository.MoodIntensityRepo;
-import net.thrymr.service.MoodIntensityService;
+import net.thrymr.services.MoodIntensityService;
 import net.thrymr.utils.ApiResponse;
-
 import net.thrymr.utils.Validator;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.util.NumberToTextConverter;
@@ -17,7 +16,6 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -28,20 +26,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/*
- *@author Chanda Veeresh
- *@version 1.0
- *@since  15-07-2022
- */
+
 @Service
 public class MoodIntensityServiceImpl implements MoodIntensityService {
-    @Autowired
-    private Environment environment;
-    final Logger log = LoggerFactory.getLogger(MoodIntensityServiceImpl.class);
-    @Autowired
-    MoodInfoRepo moodInfoRepo;
-    @Autowired
-    private MoodIntensityRepo moodIntensityRepo;
+    private final Logger logger = LoggerFactory.getLogger(MoodIntensityServiceImpl.class);
+
+    private final Environment environment;
+
+
+    private final MoodInfoRepo moodInfoRepo;
+
+    private final MoodIntensityRepo moodIntensityRepo;
+
+    public MoodIntensityServiceImpl(Environment environment, MoodInfoRepo moodInfoRepo, MoodIntensityRepo moodIntensityRepo) {
+        this.environment = environment;
+        this.moodInfoRepo = moodInfoRepo;
+        this.moodIntensityRepo = moodIntensityRepo;
+    }
 
     private String getCellValue(XSSFCell cell) {
         String value;
@@ -114,7 +115,7 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
                     moodIntensityList = moodIntensityRepo.saveAll(moodIntensityList);
 
                 } catch (Exception e) {
-                    log.error("Exception " + e);
+                    logger.error("Exception{} " , e);
                     return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD.IMPORT.FORMAT.FAILED"));
                 }
             }
@@ -123,7 +124,7 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
         return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD.IMPORT.SUCCESS"));
     }
 
-    public List<MoodIntensityDto> getMoodIntensityByMoodInfoId(Long id) {
+    public ApiResponse getMoodIntensityByMoodInfoId(Long id) {
         Optional<MoodInfo> moodInfoOptional = moodInfoRepo.findById(id);
         List<MoodIntensityDto> moodIntensityDtos = new ArrayList<>();
         if (moodInfoOptional.isPresent()) {
@@ -135,7 +136,7 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
                 moodIntensityDto.setScore(moodIntensity1.getScore());
                 moodIntensityDto.setSequence(moodIntensity1.getSequence());
                 moodIntensityDtos.add(moodIntensityDto);}}
-        return moodIntensityDtos;
+        return new ApiResponse(HttpStatus.OK,moodIntensityDtos);
         }
 }
 

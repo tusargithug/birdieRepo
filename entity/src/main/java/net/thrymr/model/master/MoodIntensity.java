@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
+import lombok.NoArgsConstructor;
 import net.thrymr.model.BaseEntity;
 import net.thrymr.model.UserMoodCheckIn;
 
@@ -17,15 +18,16 @@ import lombok.Setter;
 @Entity
 @Setter
 @Getter
+@NoArgsConstructor
 public class MoodIntensity extends BaseEntity{
 	
 	private String name;
 	
 	@Column(columnDefinition = "TEXT")
 	private String description;
-	
-	@ManyToOne
-	private FileEntity icon;
+
+	@Column(name = "emoji")
+	private String emoji;
 
 	@ManyToOne
 	private MoodInfo moodInfo;

@@ -4,12 +4,9 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
+import lombok.NoArgsConstructor;
 import net.thrymr.model.master.Course;
 import net.thrymr.enums.CourseStatus;
 
@@ -19,6 +16,7 @@ import lombok.Setter;
 @Entity
 @Setter
 @Getter
+@NoArgsConstructor
 public class UserCourse extends BaseEntity{
 	
 	@ManyToOne
@@ -32,9 +30,11 @@ public class UserCourse extends BaseEntity{
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userCourseInfo")
 	private Set<Answer> answers = new HashSet<>();
-	
+
+	@Column(name = "started_date")
 	private Date startedDate;
-	
+
+	@Column(name = "completed_date")
 	private Date completedDate;
 
 }

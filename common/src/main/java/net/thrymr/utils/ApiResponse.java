@@ -28,9 +28,13 @@ public class ApiResponse {
         this.message=message;
         this.responseData=response;
     }
+
+    public ApiResponse (HttpStatus httpStatus,Object response){
+        this.status=httpStatus;
+        this.statusCode=httpStatus.value();
+        this.responseData=response;
+    }
 }
-
-
 /**
  * 200 - Success
  * 404 - Resource Not Found

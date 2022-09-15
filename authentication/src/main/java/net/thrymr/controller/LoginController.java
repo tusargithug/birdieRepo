@@ -2,7 +2,6 @@ package net.thrymr.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,8 +22,12 @@ import net.thrymr.utils.ApiResponse;
 public class LoginController {
     private final Logger logger = LoggerFactory.getLogger( LoginController.class );
 
-    @Autowired
-    private LoginService loginService;
+
+    private final LoginService loginService;
+
+    public LoginController(LoginService loginService) {
+        this.loginService = loginService;
+    }
 
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse> signUpUser(@RequestBody AppUserDto appUserDto){

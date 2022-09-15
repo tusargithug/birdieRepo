@@ -1,10 +1,10 @@
 package net.thrymr.controller;
 import net.thrymr.dto.AppUserDto;
-import net.thrymr.service.*;
+import net.thrymr.service.AppUserService;
+import net.thrymr.services.*;
 import net.thrymr.utils.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,24 +20,26 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/api")
 public class MasterController {
-    private final Logger logger;
+    private final Logger logger=LoggerFactory.getLogger(MasterController.class);
 
-    {
-        logger = LoggerFactory.getLogger(MasterController.class);
+
+    private final RoleService roleService;
+
+    private final AppUserService appUserService;
+
+    private final  MoodInfoService moodInfoService;
+
+    private final  MoodIntensityService moodIntensityService;
+
+    private final MoodSourceService moodSourceService;
+
+    public MasterController(RoleService roleService, AppUserService appUserService, MoodInfoService moodInfoService, MoodIntensityService moodIntensityService, MoodSourceService moodSourceService) {
+        this.roleService = roleService;
+        this.appUserService = appUserService;
+        this.moodInfoService = moodInfoService;
+        this.moodIntensityService = moodIntensityService;
+        this.moodSourceService = moodSourceService;
     }
-
-    @Autowired
-    RoleService roleService;
-
-    @Autowired
-    AppUserService appUserService;
-    @Autowired
-    MoodInfoService moodInfoService;
-    @Autowired
-    MoodIntensityService moodIntensityService;
-
-    @Autowired
-    MoodSourceService moodSourceService;
 
 
     @GetMapping("/master/role/save")

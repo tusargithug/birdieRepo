@@ -12,6 +12,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
+import lombok.NoArgsConstructor;
 import net.thrymr.model.BaseEntity;
 
 import lombok.Getter;
@@ -19,7 +20,8 @@ import lombok.Setter;
 
 @Entity
 @Setter
-@Getter
+@Getter@NoArgsConstructor
+
 public class Course extends BaseEntity {
 
 	private String code;
@@ -31,12 +33,12 @@ public class Course extends BaseEntity {
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "course_content", joinColumns = { @JoinColumn(name = "course_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "content_id") })
-	Set<FileEntity> content = new HashSet<FileEntity>();
+	Set<FileEntity> content = new HashSet<>();
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "course_assignment", joinColumns = { @JoinColumn(name = "course_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "assignment_id") })
-	Set<Assignment> assignments = new HashSet<Assignment>();
+	Set<Assignment> assignments = new HashSet<>();
 
 	@Column(columnDefinition = "TEXT")
 	private String decription;

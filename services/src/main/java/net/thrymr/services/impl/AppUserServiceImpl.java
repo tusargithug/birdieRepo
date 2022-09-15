@@ -1,4 +1,4 @@
-package net.thrymr.impl;
+package net.thrymr.services.impl;
 
 
 import net.thrymr.dto.AppUserDto;
@@ -8,10 +8,10 @@ import net.thrymr.model.Roles;
 import net.thrymr.repository.AppUserRepo;
 import net.thrymr.repository.RoleRepository;
 import net.thrymr.service.AppUserService;
+
 import net.thrymr.utils.ApiResponse;
 import net.thrymr.utils.CommonUtil;
 import net.thrymr.utils.Validator;
-
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -22,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,46 +33,29 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-/*
- *@author Chanda Veeresh
- *@version 1.0
- *@since  11-07-2022
- */
+
 @Service
 public class AppUserServiceImpl implements AppUserService {
-    @Autowired
-    private AppUserRepo appUserRepo;
-    @Autowired
-    private Environment environment;
-    @Autowired
-    private RoleRepository roleRepository;
-    final Logger log = LoggerFactory.getLogger(AppUserServiceImpl.class);
+    private  final Logger logger = LoggerFactory.getLogger(AppUserServiceImpl.class);
+
+    private final AppUserRepo appUserRepo;
+
+    private final Environment environment;
+
+    private final RoleRepository roleRepository;
+
+    public AppUserServiceImpl(AppUserRepo appUserRepo, Environment environment, RoleRepository roleRepository) {
+        this.appUserRepo = appUserRepo;
+        this.environment = environment;
+        this.roleRepository = roleRepository;
+    }
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    private AppUser dtoToEntity(AppUserDto request) {
-        AppUser appUser = new AppUser();
-        if (Validator.isValid(request.getId())) {
-            appUser = appUserRepo.findById(request.getId()).orElse(new AppUser());
-        }
-        if (Validator.isValid(request.getUserName())) {
-            appUser.setUserName(request.getUserName());
-        }
-        appUser.setId(request.getId());
-        appUser.setFirstName(request.getFirstName());
-        appUser.setLastName(request.getLastName());
-        appUser.setMobile(request.getMobile());
-        appUser.setEmail(request.getEmail());
-        appUser.setAlternateMobile(request.getAlternateMobile());
-        appUser.setPassword(bCryptPasswordEncoder().encode(request.getPassword()));
-        if (request.getRoles() != null && !request.getRoles().getName().isEmpty()) {
-            appUser.setRoles(request.getRoles());
-        }
-        return appUser;
-    }
+
 
     @Override
     public ApiResponse saveUser(AppUserDto appUser) {
@@ -137,7 +119,7 @@ public class AppUserServiceImpl implements AppUserService {
                         if (row.getCell(8) != null) {
                             Optional<Roles> optionalRoles = roleRepository.findById(Long.valueOf(getCellValue(row.getCell(8))));
                             System.out.println("optionalRole: " + CommonUtil.getStringFromObject(optionalRoles));
-                            optionalRoles.ifPresent(appUser::setRoles);
+                            optionalRoles.ifPresent(role -> appUser.setRoles(role));
                         }
                         if (row.getCell(9) != null) {
                             appUser.setEmpId(getCellValue(row.getCell(9)));
@@ -145,7 +127,7 @@ public class AppUserServiceImpl implements AppUserService {
                         setUserSearchKey(appUser);
                         appUsers.add(appUser);
                     } catch (Exception e) {
-                        log.error("Exception " + e);
+                        logger.error("Exception{} " , e);
                         return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("APPUSER.IMPORT.FORMAT.FAILED"));
                     }
                 }
@@ -198,5 +180,25 @@ public class AppUserServiceImpl implements AppUserService {
         dto.setName(request.getName());
         dto.setUsers(request.getUsers());
         return dto;
+    }
+    private AppUser dtoToEntity(AppUserDto request) {
+        AppUser appUser = new AppUser();
+        if (Validator.isValid(request.getId())) {
+            appUser = appUserRepo.findById(request.getId()).orElse(new AppUser());
+        }
+        if (Validator.isValid(request.getUserName())) {
+            appUser.setUserName(request.getUserName());
+        }
+        appUser.setId(request.getId());
+        appUser.setFirstName(request.getFirstName());
+        appUser.setLastName(request.getLastName());
+        appUser.setMobile(request.getMobile());
+        appUser.setEmail(request.getEmail());
+        appUser.setAlternateMobile(request.getAlternateMobile());
+        appUser.setPassword(bCryptPasswordEncoder().encode(request.getPassword()));
+        if (request.getRoles() != null && !request.getRoles().getName().isEmpty()) {
+            appUser.setRoles(request.getRoles());
+        }
+        return appUser;
     }
 }

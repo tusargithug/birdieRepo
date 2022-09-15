@@ -1,14 +1,16 @@
-package net.thrymr.impl;
+package net.thrymr.services.impl;
 
 
 import net.thrymr.model.Roles;
 import net.thrymr.repository.RoleRepository;
-import net.thrymr.service.RoleService;
+import net.thrymr.services.RoleService;
 import net.thrymr.utils.ApiResponse;
-
 import net.thrymr.utils.Validator;
-import org.hibernate.cfg.Environment;
-import org.springframework.beans.factory.annotation.Autowired;
+
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -16,18 +18,20 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/*
- *@author Chanda Veeresh
- *@version 1.0
- *@since  08-07-2022
- */
+
 @Service
 public class RoleServiceImpl implements RoleService {
 
-    @Autowired
-    RoleRepository roleRepository;
-    @Autowired
-    private org.springframework.core.env.Environment environment;
+    private  final Logger logger = LoggerFactory.getLogger(RoleServiceImpl.class);
+
+    private final RoleRepository roleRepository;
+
+    private final Environment environment;
+
+    public RoleServiceImpl(RoleRepository roleRepository, Environment environment) {
+        this.roleRepository = roleRepository;
+        this.environment = environment;
+    }
 
     private ApiResponse validateRoleRequest(Roles request) {
         if (!Validator.isObjectValid(request)) {

@@ -20,6 +20,7 @@ import lombok.ToString;
 public class Roles extends BaseEntity{
 
 	private String name;
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "roles",cascade = CascadeType.ALL)
 	private List<AppUser> users = new ArrayList<>();
