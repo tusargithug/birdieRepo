@@ -26,7 +26,7 @@ public class UserPsychometricTest extends BaseEntity{
 	
 	@ManyToOne
 	private AppUser appUser;
-	
+	//TODO already relation in RiskLevel need to remove
 	@ManyToOne
 	private PsychometricTest psychometricTest;
 	

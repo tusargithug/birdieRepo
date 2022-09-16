@@ -1,6 +1,6 @@
 package net.thrymr.controller;
 import net.thrymr.dto.AppUserDto;
-import net.thrymr.service.AppUserService;
+import net.thrymr.services.AppUserService;
 import net.thrymr.services.*;
 import net.thrymr.utils.ApiResponse;
 import org.slf4j.Logger;

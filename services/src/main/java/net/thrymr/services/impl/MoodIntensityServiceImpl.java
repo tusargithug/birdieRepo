@@ -76,12 +76,12 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
         try {
             workbook = new XSSFWorkbook(file.getInputStream());
         } catch (IOException e) {
-            return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD.IMPORT.FORMAT.FAILED"));
+            return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_INTENSITY_IMPORT_FORMAT_FAILED"));
         }
         XSSFSheet worksheet = workbook.getSheetAt(0);
 
         if (worksheet.getLastRowNum() < 1) {
-            return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD.IMPORT.FORMAT.INVALID.DATA"));
+            return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_INTENSITY_IMPORT_FORMAT_INVALID_DATA"));
         }
 
         for (int index = 1; index <= worksheet.getLastRowNum(); index++) {
@@ -116,12 +116,12 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
 
                 } catch (Exception e) {
                     logger.error("Exception{} " , e);
-                    return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD.IMPORT.FORMAT.FAILED"));
+                    return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_INTENSITY_IMPORT_FORMAT_FAILED"));
                 }
             }
         }
 
-        return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD.IMPORT.SUCCESS"));
+        return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_INTENSITY_FOUND"));
     }
 
     public ApiResponse getMoodIntensityByMoodInfoId(Long id) {

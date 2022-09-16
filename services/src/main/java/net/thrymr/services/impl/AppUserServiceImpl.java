@@ -7,7 +7,7 @@ import net.thrymr.model.AppUser;
 import net.thrymr.model.Roles;
 import net.thrymr.repository.AppUserRepo;
 import net.thrymr.repository.RoleRepository;
-import net.thrymr.service.AppUserService;
+import net.thrymr.services.AppUserService;
 
 import net.thrymr.utils.ApiResponse;
 import net.thrymr.utils.CommonUtil;
@@ -61,12 +61,12 @@ public class AppUserServiceImpl implements AppUserService {
     public ApiResponse saveUser(AppUserDto appUser) {
         AppUser model = dtoToEntity(appUser);
         appUserRepo.save(model);
-        return new ApiResponse(HttpStatus.OK, "user saved");
+        return new ApiResponse(HttpStatus.OK, environment.getProperty("USER_SAVED"));
     }
 
     private ApiResponse validateAddUserRequest(MultipartFile request) {
         if (!Validator.isObjectValid(request)) {
-            return new ApiResponse(HttpStatus.BAD_REQUEST, org.hibernate.cfg.Environment.getProperties().getProperty("INVALID_REQUEST"));
+            return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("INVALID_REQUEST"));
         }
         return null;
     }
@@ -82,11 +82,11 @@ public class AppUserServiceImpl implements AppUserService {
                 workbook = new XSSFWorkbook(file.getInputStream());
             } catch (
                     IOException e) {
-                return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("APPUSERS.IMPORT.FORMAT.FAILED"));
+                return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("USERS_IMPORT_FORMAT_FAILED"));
             }
             XSSFSheet worksheet = workbook.getSheetAt(0);
             if (worksheet.getLastRowNum() < 1) {
-                return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("APPUSERS.IMPORT.FORMAT.INVALID.DATA"));
+                return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("USERS_IMPORT_FORMAT_INVALID_DATA"));
             }
             for (int index = 1; index <= worksheet.getLastRowNum(); index++) {
                 if (index > 0) {
@@ -118,7 +118,7 @@ public class AppUserServiceImpl implements AppUserService {
                         }
                         if (row.getCell(8) != null) {
                             Optional<Roles> optionalRoles = roleRepository.findById(Long.valueOf(getCellValue(row.getCell(8))));
-                            System.out.println("optionalRole: " + CommonUtil.getStringFromObject(optionalRoles));
+                            logger.info("optionalRole{}: " , CommonUtil.getStringFromObject(optionalRoles));
                             optionalRoles.ifPresent(role -> appUser.setRoles(role));
                         }
                         if (row.getCell(9) != null) {
@@ -128,19 +128,19 @@ public class AppUserServiceImpl implements AppUserService {
                         appUsers.add(appUser);
                     } catch (Exception e) {
                         logger.error("Exception{} " , e);
-                        return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("APPUSER.IMPORT.FORMAT.FAILED"));
+                        return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("USERS_IMPORT_FORMAT_FAILED"));
                     }
                 }
             }
             if (Validator.isObjectValid(appUsers)) {
                 appUsers = appUserRepo.saveAll(appUsers);
-                return new ApiResponse(HttpStatus.OK, environment.getProperty("USER.IMPORT.SUCCESS"), apiResponse);
+                return new ApiResponse(HttpStatus.OK, environment.getProperty("USER_IMPORT_SUCCESS"), apiResponse);
             }
         } catch (Exception e) {
             return new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR, environment.getProperty("UN_HANDLED_ERROR_MESSAGE"));
         }
 
-        return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("USER.IMPORT.FAILED"));
+        return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("USER_IMPORT_FAILED"));
     }
 
     @Override
@@ -149,7 +149,7 @@ public class AppUserServiceImpl implements AppUserService {
         List<RolesDto> rolesDtoList;
         rolesDtoList = rolesOptional.stream().map(this::entityToDto).collect(Collectors.toList());
 
-        return new ApiResponse(HttpStatus.OK, environment.getProperty("ROLES.FOUND"), rolesDtoList);
+        return new ApiResponse(HttpStatus.OK, environment.getProperty("ROLES_FOUND"), rolesDtoList);
     }
 
     private String getCellValue(XSSFCell cell) {

@@ -89,11 +89,11 @@ public class MoodInfoServiceImpl implements MoodInfoService {
         try {
             workbook = new XSSFWorkbook(file.getInputStream());
         } catch (IOException e) {
-            return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD.IMPORT.FORMAT.FAILED"));
+            return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_IMPORT_FORMAT_FAILED"));
         }
         XSSFSheet worksheet = workbook.getSheetAt(0);
         if (worksheet.getLastRowNum() < 1) {
-            return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD.IMPORT.FORMAT.INVALID.DATA"));
+            return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_IMPORT_FORMAT_INVALID_DATA"));
         }
         System.out.println(worksheet.getLastRowNum());
         for (int index = 1; index <= worksheet.getLastRowNum(); index++) {
@@ -120,14 +120,14 @@ public class MoodInfoServiceImpl implements MoodInfoService {
                     moodInfoList = moodInfoRepo.saveAll(moodInfoList);
 
                 } catch (Exception e) {
-                    logger.error("Exception " + e);
-                    return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD.IMPORT.FORMAT.FAILED"));
+                    logger.error("Exception{}; " , e);
+                    return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_IMPORT_FORMAT_FAILED"));
                 }
             }
         }
 
 
-        return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD.IMPORT.SUCCESS"));
+        return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_IMPORT_SUCCESS"));
     }
     private MoodInfoDto setModelToDto(MoodInfo moodInfo) {
         MoodInfoDto moodInfoDto = new MoodInfoDto();
@@ -145,7 +145,7 @@ public class MoodInfoServiceImpl implements MoodInfoService {
             moodInfos.forEach(model -> moodInfoDtos.add(setModelToDto(model)));
             return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_FOUND"), moodInfoDtos);
         } else {
-            return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_NOTFOUND"), moodInfoDtos);
+            return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_NOT_FOUND"), moodInfoDtos);
         }
     }
 

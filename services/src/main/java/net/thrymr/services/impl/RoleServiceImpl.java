@@ -50,7 +50,7 @@ public class RoleServiceImpl implements RoleService {
             ApiResponse apiResponse = validateRoleRequest(saveRole);
 
         }
-        return new ApiResponse(HttpStatus.OK, "Roles Saved ");
+        return new ApiResponse(HttpStatus.OK, environment.getProperty("ROLES_SAVED_SUCCESS"));
     }
 
     @Override
@@ -58,7 +58,7 @@ public class RoleServiceImpl implements RoleService {
         List<Roles> rolesList = roleRepository.findAll();
         List<String> rolesString;
         rolesString = rolesList.stream().map(Roles::getName).collect(Collectors.toList());
-        return new ApiResponse(HttpStatus.OK, environment.getProperty("ROLES.FOUND"), rolesString);
+        return new ApiResponse(HttpStatus.OK, environment.getProperty("ROLES_FOUND"), rolesString);
     }
 
 }

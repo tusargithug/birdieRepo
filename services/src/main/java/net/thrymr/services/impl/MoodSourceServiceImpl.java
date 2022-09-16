@@ -45,11 +45,11 @@ public class MoodSourceServiceImpl implements MoodSourceService {
         try {
             workbook = new XSSFWorkbook(file.getInputStream());
         } catch (IOException e) {
-            return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD.IMPORT.FORMAT.FAILED"));
+            return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_SOURCE_IMPORT_FORMAT_FAILED"));
         }
         XSSFSheet worksheet = workbook.getSheetAt(0);
         if (worksheet.getLastRowNum() < 1) {
-            return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD.IMPORT.FORMAT.INVALID.DATA"));
+            return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_SOURCE_IMPORT_FORMAT_INVALID_DATA"));
         }
         for (int index = 1; index <= worksheet.getLastRowNum(); index++) {
             if (index > 0) {
@@ -73,11 +73,11 @@ public class MoodSourceServiceImpl implements MoodSourceService {
                     moodSourceList = moodSourceRepo.saveAll(moodSourceList);
                 } catch (Exception e) {
                     logger.error("Exception{} " , e);
-                    return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD.IMPORT.FORMAT.FAILED"));
+                    return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_SOURCE_IMPORT_FORMAT_FAILED"));
                 }
             }
         }
-        return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD.IMPORT.SUCCESS"));
+        return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_SOURCE_FOUND"));
     }
 
     @Override
@@ -89,7 +89,7 @@ public class MoodSourceServiceImpl implements MoodSourceService {
            return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_SOURCE_FOUND"), moodSourceDtoList);
        }
        else {
-           return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_SOURCE_NOTFOUND"), moodSourceDtoList);
+           return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_SOURCE_NOT_FOUND"), moodSourceDtoList);
        }
     }
 

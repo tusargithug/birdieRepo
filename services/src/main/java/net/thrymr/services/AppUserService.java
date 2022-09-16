@@ -1,4 +1,4 @@
-package net.thrymr.service;
+package net.thrymr.services;
 import net.thrymr.dto.AppUserDto;
 import net.thrymr.utils.ApiResponse;
 import org.springframework.web.multipart.MultipartFile;
