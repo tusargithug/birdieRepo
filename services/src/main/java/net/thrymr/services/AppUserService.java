@@ -12,4 +12,10 @@ public interface AppUserService {
     ApiResponse saveUser(AppUserDto appUser);
     ApiResponse addUsersByExcel(MultipartFile file);
     ApiResponse getAllRoles();
+
+    ApiResponse deleteUserById(Long id);
+
+    ApiResponse getUserById(Long id);
+
+    ApiResponse getAllUsers();
 }

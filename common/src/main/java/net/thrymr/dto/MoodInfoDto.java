@@ -21,7 +21,8 @@ public class MoodInfoDto {
 
     private String moodName;
 
-    private List<MoodIntensity> intensities = new ArrayList<MoodIntensity>();
+    //TODO dought
+    private List<MoodIntensity> intensities = new ArrayList<>();
 
     private int sequence;
 

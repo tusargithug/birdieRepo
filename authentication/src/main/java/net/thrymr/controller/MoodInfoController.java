@@ -7,10 +7,7 @@ import net.thrymr.utils.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -34,9 +31,19 @@ public class MoodInfoController {
 
     @GetMapping("/mood-info/intensities/{id}")
     public ApiResponse getMoodIntensityByMoodInfoId(@PathVariable Long id) {
-        logger.info("get all roles service started");
+        logger.info("get all mood intensity service started");
       ApiResponse apiResponse=   moodIntensityService.getMoodIntensityByMoodInfoId(id);
-        logger.info("get all roles service completed");
-        return new ApiResponse(HttpStatus.OK, "Get all mood intensity",apiResponse);
+        logger.info("get all mood intensity completed");
+        return new ApiResponse(HttpStatus.OK, apiResponse);
     }
+
+    @GetMapping("/mood-info/intensities/save")
+    public ApiResponse moodIntensitySave(@RequestBody MoodIntensityDto request) {
+        logger.info("save mood intensity service started");
+        ApiResponse apiResponse=   moodIntensityService.moodIntensitySave(request);
+        logger.info("save mood intensity service completed");
+        return new ApiResponse(HttpStatus.OK, apiResponse);
+    }
+
+
 }

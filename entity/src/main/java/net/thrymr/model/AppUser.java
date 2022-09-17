@@ -24,7 +24,7 @@ public class AppUser extends BaseEntity {
 
     @Column(unique = true)
     private String email;
-     //TODO is there unique username
+
     @Column(name = "user_name",unique = true)
     private String userName;
 

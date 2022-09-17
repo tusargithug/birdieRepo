@@ -152,6 +152,40 @@ public class AppUserServiceImpl implements AppUserService {
         return new ApiResponse(HttpStatus.OK, environment.getProperty("ROLES_FOUND"), rolesDtoList);
     }
 
+    @Override
+    public ApiResponse deleteUserById(Long id) {
+         //TODO validate id
+        Optional<AppUser> optionalAppUser = appUserRepo.findById(id);
+        optionalAppUser.ifPresent(appUserRepo::delete);
+
+        return new ApiResponse(HttpStatus.OK, environment.getProperty("USER_DELETED"));
+
+    }
+
+    @Override
+    public ApiResponse getUserById(Long id) {
+        //TODO validate id
+        Optional<AppUser> optionalAppUser = appUserRepo.findById(id);
+
+        if(optionalAppUser.isPresent()){
+         AppUser user=optionalAppUser.get();
+            AppUserDto dto=entityToDto(user);
+            return new ApiResponse(HttpStatus.OK,dto);
+        }else {
+            return new ApiResponse(HttpStatus.OK, environment.getProperty("USER_NOT_FOUND"));
+        }
+
+
+    }
+
+    @Override
+    public ApiResponse getAllUsers() {
+
+        List<AppUser>appUserList=appUserRepo.findAll();
+        List<AppUserDto>appUserDtoList=appUserList.stream().map(this::entityToDto).toList();
+        return new ApiResponse(HttpStatus.OK,appUserDtoList);
+    }
+
     private String getCellValue(XSSFCell cell) {
         String value;
         if (cell.getCellType().equals(CellType.NUMERIC)) {
@@ -200,5 +234,15 @@ public class AppUserServiceImpl implements AppUserService {
             appUser.setRoles(request.getRoles());
         }
         return appUser;
+    }
+
+    private AppUserDto entityToDto(AppUser user){
+        AppUserDto dto=new AppUserDto();
+        dto.setId(user.getId());
+        dto.setUserName(user.getUserName());
+        dto.setMobile(user.getMobile());
+        dto.setEmail(user.getEmail());
+
+        return dto;
     }
 }

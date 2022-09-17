@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
  *@since  08-07-2022
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class MasterController {
     private final Logger logger=LoggerFactory.getLogger(MasterController.class);
 
@@ -63,6 +63,29 @@ public class MasterController {
         logger.info("Save user Service Started");
         ApiResponse apiResponse = appUserService.saveUser(request);
         logger.info("Save user Service Completed");
+        return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
+    }
+
+    @DeleteMapping("/master/user/delete/{id}")
+    public ResponseEntity<ApiResponse> deleteUserById(@PathVariable Long id) {
+        logger.info("Delete user service Started");
+        ApiResponse apiResponse = appUserService.deleteUserById(id);
+        logger.info("Delete user Service Completed");
+        return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
+    }
+
+    @GetMapping("/master/user/get/{id}")
+    public ResponseEntity<ApiResponse> getUserById(@PathVariable Long id) {
+        logger.info("get user service Started");
+        ApiResponse apiResponse = appUserService.getUserById(id);
+        logger.info("get user Service Completed");
+        return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
+    }
+    @GetMapping("/master/user/get/all")
+    public ResponseEntity<ApiResponse> getAllUsers() {
+        logger.info("get all user service Started");
+        ApiResponse apiResponse = appUserService.getAllUsers();
+        logger.info("get all user Service Completed");
         return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
     }
 

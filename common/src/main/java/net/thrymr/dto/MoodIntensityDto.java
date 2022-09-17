@@ -3,6 +3,11 @@ package net.thrymr.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.thrymr.model.UserMoodCheckIn;
+import net.thrymr.model.master.MoodInfo;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /*
  *@author Chanda Veeresh
@@ -16,5 +21,13 @@ public class MoodIntensityDto {
     private String name;
     private Float score;
     private int sequence;
+
+    private String description;
+
+    private String emoji;
+
+    private MoodInfoDto moodInfoDto;
+
+
 
 }

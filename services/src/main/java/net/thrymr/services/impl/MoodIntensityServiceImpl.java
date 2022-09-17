@@ -138,5 +138,21 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
                 moodIntensityDtos.add(moodIntensityDto);}}
         return new ApiResponse(HttpStatus.OK,moodIntensityDtos);
         }
+
+    @Override
+    public ApiResponse moodIntensitySave(MoodIntensityDto request) {
+        MoodIntensity intensity=new MoodIntensity();
+        intensity.setName(request.getName());
+        intensity.setDescription(request.getDescription());
+        intensity.setScore(request.getScore());
+        intensity.setEmoji(request.getEmoji());
+        intensity.setSequence(request.getSequence());
+        // need to set mood info
+       // intensity.setMoodInfo(request.getMoodInfoDto());
+
+        moodIntensityRepo.save(intensity);
+
+        return new ApiResponse(HttpStatus.OK,environment.getProperty("MOOD_INTENSITY_SAVED"));
+    }
 }
 

@@ -1,6 +1,6 @@
 package net.thrymr.model.master;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -37,6 +37,6 @@ public class MoodIntensity extends BaseEntity{
 	private Float score;
 	
 	@ManyToMany(mappedBy = "intensities")
-	private List<UserMoodCheckIn> userMoodCheckIns = new LinkedList<UserMoodCheckIn>();
+	private List<UserMoodCheckIn> userMoodCheckIns = new ArrayList<>();
 
 }
