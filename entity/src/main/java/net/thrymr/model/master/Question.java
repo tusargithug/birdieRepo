@@ -26,13 +26,14 @@ import lombok.Setter;
 public class Question extends BaseEntity{
 	
 	@Column(columnDefinition = "TEXT")
-	private String questionText;
+	private String question;
 	
 	@ManyToOne
 	private Assignment courseAssignment;
 	
 	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-	private Set<Answer> answers = new HashSet<Answer>();
+	private Set<Answer> answers = new HashSet<>();
+
 	
 	@ManyToOne
 	private PsychometricTest psychometricTest;
@@ -42,4 +43,6 @@ public class Question extends BaseEntity{
 	
 	private int sequence;
 
+	@Column(name = "video_reference",columnDefinition = "TEXT")
+	private String videoReference;
 }

@@ -6,14 +6,17 @@ import net.thrymr.dto.LoginDto;
 import net.thrymr.dto.response.LoginResponse;
 import net.thrymr.dto.response.SendMessageDto;
 import net.thrymr.model.AppUser;
+import net.thrymr.model.Roles;
 import net.thrymr.repository.AppUserRepo;
-import net.thrymr.repository.RoleRepository;
+
+import net.thrymr.repository.RolesRepo;
 import net.thrymr.security.JwtUtil;
 import net.thrymr.security.LoggedInUser;
 import net.thrymr.service.LoginService;
 import net.thrymr.utils.ApiResponse;
 import net.thrymr.utils.BaseCommonUtil;
 import net.thrymr.utils.Validator;
+import org.apache.poi.sl.draw.geom.GuideIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -42,6 +45,9 @@ public class LoginServiceImpl implements LoginService {
     AuthenticationManager authenticationManager;
 
     @Autowired
+    private RolesRepo rolesRepo;
+
+    @Autowired
     JwtUtil jwtUtils;
 
     @Override
@@ -68,7 +74,12 @@ public class LoginServiceImpl implements LoginService {
         appUser.setUserName(request.getUserName());
         appUser.setPassword(new BCryptPasswordEncoder().encode(request.getPassword()));
         appUser.setAlternateMobile(request.getAlternateMobile());
-        appUser.setRoles(request.getRoles());
+        if(request.getRolesDto()!=null){
+            Optional<Roles>optionalRoles=rolesRepo.findById(request.getRolesDto().getId());
+            appUser.setRoles(optionalRoles.get());
+        }
+
+
 
         return appUser;
     }
@@ -105,7 +116,11 @@ public class LoginServiceImpl implements LoginService {
         loginResponse.setLastName(loggedInUser.getLastName());
         loginResponse.setContactNumber(loggedInUser.getContactNumber());
         loginResponse.setEmail(loggedInUser.getEmail());
-        loginResponse.setUserRole(loggedInUser.getRole().getName());
+        if(loggedInUser.getRole()!=null){
+            Optional<Roles>optionalRoles=rolesRepo.findById(loggedInUser.getRole().getId());
+            loginResponse.setUserRole(optionalRoles.map(Roles::getName).orElse(null));
+        }
+
 
         loginResponse.setAccessToken(jwt);
         return new ApiResponse(HttpStatus.OK, "USER LOGIN SUCCESSFULLY", loginResponse);

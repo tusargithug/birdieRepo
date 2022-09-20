@@ -30,6 +30,6 @@ public class Assignment extends BaseEntity{
 	private Set<Question> questions = new HashSet<>();
 	
 	@ManyToMany(mappedBy = "assignments")
-	private Set<Course> courses = new HashSet<Course>();
+	private Set<Course> courses = new HashSet<>();
 
 }

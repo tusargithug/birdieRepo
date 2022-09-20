@@ -2,7 +2,7 @@ package net.thrymr.services.impl;
 
 
 import net.thrymr.model.Roles;
-import net.thrymr.repository.RoleRepository;
+import net.thrymr.repository.RoleRepo;
 import net.thrymr.services.RoleService;
 import net.thrymr.utils.ApiResponse;
 import net.thrymr.utils.Validator;
@@ -24,12 +24,12 @@ public class RoleServiceImpl implements RoleService {
 
     private  final Logger logger = LoggerFactory.getLogger(RoleServiceImpl.class);
 
-    private final RoleRepository roleRepository;
+    private final RoleRepo roleRepo;
 
     private final Environment environment;
 
-    public RoleServiceImpl(RoleRepository roleRepository, Environment environment) {
-        this.roleRepository = roleRepository;
+    public RoleServiceImpl(RoleRepo roleRepo, Environment environment) {
+        this.roleRepo = roleRepo;
         this.environment = environment;
     }
 
@@ -46,7 +46,7 @@ public class RoleServiceImpl implements RoleService {
         List<String> stringList = Arrays.asList("Content Moderator", "WellBeing Manager", "Operations Team", "Admin", "On-site counsellor ", "Vendor", "Director");
         for (String role : stringList) {
             Roles saveRole = new Roles(role);
-            roleRepository.save(saveRole);
+            roleRepo.save(saveRole);
             ApiResponse apiResponse = validateRoleRequest(saveRole);
 
         }
@@ -55,9 +55,8 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public ApiResponse getAllUserRoles() {
-        List<Roles> rolesList = roleRepository.findAll();
-        List<String> rolesString;
-        rolesString = rolesList.stream().map(Roles::getName).collect(Collectors.toList());
+        List<Roles> rolesList = roleRepo.findAll();
+        List<String> rolesString = rolesList.stream().map(Roles::getName).collect(Collectors.toList());
         return new ApiResponse(HttpStatus.OK, environment.getProperty("ROLES_FOUND"), rolesString);
     }
 

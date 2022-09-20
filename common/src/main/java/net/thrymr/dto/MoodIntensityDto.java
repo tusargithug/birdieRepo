@@ -18,6 +18,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class MoodIntensityDto {
+    private Long id;
+
     private String name;
     private Float score;
     private int sequence;

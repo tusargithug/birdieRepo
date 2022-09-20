@@ -22,7 +22,7 @@ import java.util.Date;
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class BaseEntity implements Serializable {
+public abstract class BaseEntity  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

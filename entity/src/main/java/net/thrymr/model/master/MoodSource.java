@@ -32,5 +32,5 @@ public class MoodSource extends BaseEntity{
 	private Category category;
 	
 	@ManyToMany(mappedBy = "sources")
-	private List<UserMoodCheckIn> userMoodCheckIns = new LinkedList<UserMoodCheckIn>();
+	private List<UserMoodCheckIn> userMoodCheckIns = new LinkedList<>();
 }

@@ -24,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Optional;
 
 
 @Service
@@ -129,14 +129,7 @@ public class MoodInfoServiceImpl implements MoodInfoService {
 
         return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_IMPORT_SUCCESS"));
     }
-    private MoodInfoDto setModelToDto(MoodInfo moodInfo) {
-        MoodInfoDto moodInfoDto = new MoodInfoDto();
-        moodInfoDto.setMoodName(moodInfo.getName());
-        moodInfoDto.setSequence(moodInfo.getSequence());
-        moodInfoDto.setMoodType(moodInfo.getMoodType().name());
-        moodInfoDto.setIntensityName(moodInfo.getIntensityName());
-        return moodInfoDto;
-    }
+
     @Override
     public ApiResponse getAllMoods() {
         List<MoodInfo> moodInfos = moodInfoRepo.findAll();
@@ -144,10 +137,39 @@ public class MoodInfoServiceImpl implements MoodInfoService {
         if (!moodInfos.isEmpty()) {
             moodInfos.forEach(model -> moodInfoDtos.add(setModelToDto(model)));
             return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_FOUND"), moodInfoDtos);
-        } else {
-            return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_NOT_FOUND"), moodInfoDtos);
         }
+
+            return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_NOT_FOUND"), moodInfoDtos);
+
     }
 
+    @Override
+    public ApiResponse getMoodInfoById(Long id) {
+        Optional<MoodInfo>optionalMoodInfo=moodInfoRepo.findById(id);
+        return optionalMoodInfo.map(moodInfo -> new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_FOUND"), this.setModelToDto(moodInfo))).orElseGet(() -> new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_NOT_FOUND")));
+
+    }
+
+    @Override
+    public ApiResponse deleteMoodInfoById(Long id) {
+        Optional<MoodInfo>optionalMoodInfo=moodInfoRepo.findById(id);
+
+        if(optionalMoodInfo.isPresent()){
+            MoodInfo moodInfo=optionalMoodInfo.get();
+            moodInfoRepo.delete(moodInfo);
+            return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_INFO_DELETE"));
+        }
+
+        return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_NOT_FOUND"));
+    }
+    private MoodInfoDto setModelToDto(MoodInfo moodInfo) {
+        MoodInfoDto moodInfoDto = new MoodInfoDto();
+        moodInfoDto.setId(moodInfo.getId());
+        moodInfoDto.setMoodName(moodInfo.getName());
+        moodInfoDto.setSequence(moodInfo.getSequence());
+        moodInfoDto.setMoodType(moodInfo.getMoodType().name());
+        moodInfoDto.setIntensityName(moodInfo.getIntensityName());
+        return moodInfoDto;
+    }
 }
 

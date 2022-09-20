@@ -93,6 +93,11 @@ public class MoodSourceServiceImpl implements MoodSourceService {
        }
     }
 
+    @Override
+    public ApiResponse moodSourceSave(MoodSourceDto request) {
+        return null;
+    }
+
     private String getCellValue(XSSFCell cell) {
         String value;
         if (cell.getCellType().equals(CellType.NUMERIC)) {

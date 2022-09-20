@@ -6,11 +6,10 @@ import net.thrymr.dto.RolesDto;
 import net.thrymr.model.AppUser;
 import net.thrymr.model.Roles;
 import net.thrymr.repository.AppUserRepo;
-import net.thrymr.repository.RoleRepository;
+import net.thrymr.repository.RoleRepo;
 import net.thrymr.services.AppUserService;
 
 import net.thrymr.utils.ApiResponse;
-import net.thrymr.utils.CommonUtil;
 import net.thrymr.utils.Validator;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.util.NumberToTextConverter;
@@ -42,12 +41,12 @@ public class AppUserServiceImpl implements AppUserService {
 
     private final Environment environment;
 
-    private final RoleRepository roleRepository;
+    private final RoleRepo roleRepo;
 
-    public AppUserServiceImpl(AppUserRepo appUserRepo, Environment environment, RoleRepository roleRepository) {
+    public AppUserServiceImpl(AppUserRepo appUserRepo, Environment environment, RoleRepo roleRepo) {
         this.appUserRepo = appUserRepo;
         this.environment = environment;
-        this.roleRepository = roleRepository;
+        this.roleRepo = roleRepo;
     }
 
     @Bean
@@ -117,8 +116,8 @@ public class AppUserServiceImpl implements AppUserService {
 
                         }
                         if (row.getCell(8) != null) {
-                            Optional<Roles> optionalRoles = roleRepository.findById(Long.valueOf(getCellValue(row.getCell(8))));
-                            logger.info("optionalRole{}: " , CommonUtil.getStringFromObject(optionalRoles));
+                            Optional<Roles> optionalRoles = roleRepo.findById(Long.valueOf(getCellValue(row.getCell(8))));
+                           // logger.info("optionalRole{}: " , CommonUtil.getStringFromObject(optionalRoles));
                             optionalRoles.ifPresent(role -> appUser.setRoles(role));
                         }
                         if (row.getCell(9) != null) {
@@ -145,7 +144,7 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public ApiResponse getAllRoles() {
-        List<Roles> rolesOptional = roleRepository.findAll();
+        List<Roles> rolesOptional = roleRepo.findAll();
         List<RolesDto> rolesDtoList;
         rolesDtoList = rolesOptional.stream().map(this::entityToDto).collect(Collectors.toList());
 
@@ -170,7 +169,7 @@ public class AppUserServiceImpl implements AppUserService {
         if(optionalAppUser.isPresent()){
          AppUser user=optionalAppUser.get();
             AppUserDto dto=entityToDto(user);
-            return new ApiResponse(HttpStatus.OK,dto);
+            return new ApiResponse(HttpStatus.OK,environment.getProperty("SUCCESS"),dto);
         }else {
             return new ApiResponse(HttpStatus.OK, environment.getProperty("USER_NOT_FOUND"));
         }
@@ -183,7 +182,7 @@ public class AppUserServiceImpl implements AppUserService {
 
         List<AppUser>appUserList=appUserRepo.findAll();
         List<AppUserDto>appUserDtoList=appUserList.stream().map(this::entityToDto).toList();
-        return new ApiResponse(HttpStatus.OK,appUserDtoList);
+        return new ApiResponse(HttpStatus.OK,"",appUserDtoList);
     }
 
     private String getCellValue(XSSFCell cell) {
@@ -212,7 +211,8 @@ public class AppUserServiceImpl implements AppUserService {
     private RolesDto entityToDto(Roles request) {
         RolesDto dto = new RolesDto();
         dto.setName(request.getName());
-        dto.setUsers(request.getUsers());
+
+        dto.setUsersDto(request.getUsers().stream().map(this::entityToDto).toList());
         return dto;
     }
     private AppUser dtoToEntity(AppUserDto request) {
@@ -230,8 +230,9 @@ public class AppUserServiceImpl implements AppUserService {
         appUser.setEmail(request.getEmail());
         appUser.setAlternateMobile(request.getAlternateMobile());
         appUser.setPassword(bCryptPasswordEncoder().encode(request.getPassword()));
-        if (request.getRoles() != null && !request.getRoles().getName().isEmpty()) {
-            appUser.setRoles(request.getRoles());
+        if (request.getRolesDto() != null && !request.getRolesDto().getName().isEmpty()) {
+            Optional<Roles>optionalRoles= roleRepo.findByName(request.getRolesDto().getName());
+            appUser.setRoles(optionalRoles.get());
         }
         return appUser;
     }

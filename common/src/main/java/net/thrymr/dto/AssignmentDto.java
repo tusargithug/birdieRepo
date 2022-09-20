@@ -7,14 +7,12 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
-public class RolesDto {
+public class AssignmentDto {
+
     private Long id;
 
-    private String name;
-
-    private List<AppUserDto> usersDto = new ArrayList<>();
+    private List<QuestionDto>questionDtoList=new ArrayList<>();
 }

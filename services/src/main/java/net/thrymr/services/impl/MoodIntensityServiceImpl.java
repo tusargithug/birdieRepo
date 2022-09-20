@@ -1,12 +1,19 @@
 package net.thrymr.services.impl;
 
 import net.thrymr.dto.MoodIntensityDto;
+import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
+import net.thrymr.model.AppUser;
+import net.thrymr.model.UserMoodCheckIn;
 import net.thrymr.model.master.MoodInfo;
 import net.thrymr.model.master.MoodIntensity;
+import net.thrymr.model.master.MoodSource;
 import net.thrymr.repository.MoodInfoRepo;
 import net.thrymr.repository.MoodIntensityRepo;
+import net.thrymr.repository.MoodSourceRepo;
+import net.thrymr.repository.UserMoodCheckInRepo;
 import net.thrymr.services.MoodIntensityService;
 import net.thrymr.utils.ApiResponse;
+import net.thrymr.utils.CommonUtil;
 import net.thrymr.utils.Validator;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.util.NumberToTextConverter;
@@ -38,10 +45,16 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
 
     private final MoodIntensityRepo moodIntensityRepo;
 
-    public MoodIntensityServiceImpl(Environment environment, MoodInfoRepo moodInfoRepo, MoodIntensityRepo moodIntensityRepo) {
+    private final UserMoodCheckInRepo userMoodCheckInRepo;
+
+    private final MoodSourceRepo moodSourceRepo;
+
+    public MoodIntensityServiceImpl(Environment environment, MoodInfoRepo moodInfoRepo, MoodIntensityRepo moodIntensityRepo, UserMoodCheckInRepo userMoodCheckInRepo, MoodSourceRepo moodSourceRepo) {
         this.environment = environment;
         this.moodInfoRepo = moodInfoRepo;
         this.moodIntensityRepo = moodIntensityRepo;
+        this.userMoodCheckInRepo = userMoodCheckInRepo;
+        this.moodSourceRepo = moodSourceRepo;
     }
 
     private String getCellValue(XSSFCell cell) {
@@ -136,7 +149,7 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
                 moodIntensityDto.setScore(moodIntensity1.getScore());
                 moodIntensityDto.setSequence(moodIntensity1.getSequence());
                 moodIntensityDtos.add(moodIntensityDto);}}
-        return new ApiResponse(HttpStatus.OK,moodIntensityDtos);
+        return new ApiResponse(HttpStatus.OK,"",moodIntensityDtos);
         }
 
     @Override
@@ -153,6 +166,88 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
         moodIntensityRepo.save(intensity);
 
         return new ApiResponse(HttpStatus.OK,environment.getProperty("MOOD_INTENSITY_SAVED"));
+    }
+
+    @Override
+    public ApiResponse getMoodIntensitiesById(Long id) {
+        Optional<MoodIntensity> optionalMoodIntensity=moodIntensityRepo.findById(id);
+        if(optionalMoodIntensity.isPresent()){
+            MoodIntensityDto dto=entityToDto(optionalMoodIntensity.get());
+            return new ApiResponse(HttpStatus.OK,environment.getProperty("SUCCESS"),dto);
+        }
+
+        return new ApiResponse(HttpStatus.OK,environment.getProperty("MOOD_INTENSITY_NOT_FOUND"));
+    }
+
+    @Override
+    public ApiResponse deleteMoodIntensitiesById(Long id) {
+        Optional<MoodIntensity> optionalMoodIntensity=moodIntensityRepo.findById(id);
+        if(optionalMoodIntensity.isPresent()){
+            moodIntensityRepo.delete(optionalMoodIntensity.get());
+            return new ApiResponse(HttpStatus.OK,environment.getProperty("MOOD_INTENSITY_DELETED"));
+        }
+
+        return new ApiResponse(HttpStatus.OK,environment.getProperty("MOOD_INTENSITY_NOT_FOUND"));
+    }
+
+    @Override
+    public ApiResponse getAllMoodIntensities() {
+        List<MoodIntensity> moodIntensityList=moodIntensityRepo.findAll();
+
+        if(!moodIntensityList.isEmpty()){
+          List<MoodIntensityDto>  moodIntensityDtoList =  moodIntensityList.stream().map(this::entityToDto).toList();
+            return new ApiResponse(HttpStatus.OK,environment.getProperty("SUCCESS"),moodIntensityDtoList);
+        }
+
+
+        return new ApiResponse(HttpStatus.OK,environment.getProperty("MOOD_INTENSITY_NOT_FOUND"));
+    }
+
+    @Override
+    public ApiResponse getAllMoodIntensitiesByMoodInfoId(Long id) {
+        List<MoodIntensity>moodIntensityList=moodIntensityRepo.findByMoodInfoId(id);
+        if(!moodIntensityList.isEmpty()){
+            List<MoodIntensityDto>  moodIntensityDtoList =  moodIntensityList.stream().map(this::entityToDto).toList();
+            return new ApiResponse(HttpStatus.OK,"",moodIntensityDtoList);
+        }
+        return new ApiResponse(HttpStatus.OK,environment.getProperty("MOOD_INTENSITY_NOT_FOUND"));
+    }
+
+    @Override
+    public ApiResponse updateMoodIntensity(MoodSourceIntensityRequestDto request) {
+
+        AppUser user= CommonUtil.getAppUser();
+        Optional<MoodIntensity>optionalMoodIntensity=moodIntensityRepo.findById(request.getIntensityId());
+        UserMoodCheckIn userMoodCheckIn=new UserMoodCheckIn();
+        userMoodCheckIn.setAppUser(user);
+        if(optionalMoodIntensity.isPresent()){
+            if(Validator.isValid(request.getIntensityDescription())){
+                optionalMoodIntensity.get().setDescription(request.getIntensityDescription());
+            }
+            userMoodCheckIn.setIntensities(optionalMoodIntensity.stream().toList());
+        }
+        List<MoodSource>moodSourceList=moodSourceRepo.findAllByIdIn(request.getSourceIds());
+          if(!moodSourceList.isEmpty()){
+              userMoodCheckIn.setSources(moodSourceList);
+          }
+          if(Validator.isValid(request.getMoreInfo())){
+              userMoodCheckIn.setMoreInfo(request.getMoreInfo());
+          }
+
+          userMoodCheckInRepo.save(userMoodCheckIn);
+
+        return new ApiResponse(HttpStatus.OK,environment.getProperty("USER_CHECKED_IN_SAVE"));
+    }
+
+
+    private MoodIntensityDto entityToDto(MoodIntensity request){
+        MoodIntensityDto dto=new MoodIntensityDto();
+        dto.setId(request.getId());
+        dto.setName(request.getName());
+        dto.setDescription(request.getDescription());
+        dto.setEmoji(request.getEmoji());
+      //  dto.setMoodInfoDto(request.getMoodInfo());
+       return dto;
     }
 }
 

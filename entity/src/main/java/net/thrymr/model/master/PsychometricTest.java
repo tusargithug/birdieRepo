@@ -29,10 +29,10 @@ public class PsychometricTest extends BaseEntity{
 	private Set<Question> questions = new HashSet<>();
 	
 	@OneToMany(mappedBy = "psychometricTest", cascade = CascadeType.ALL , fetch = FetchType.LAZY)
-	private Set<PsychometricTestOption> options = new HashSet<PsychometricTestOption>();
+	private Set<PsychometricTestOption> options = new HashSet<>();
 	
 	@OneToMany(mappedBy = "psychometricTest", cascade = CascadeType.ALL , fetch = FetchType.LAZY)
-	private Set<RiskLevel> riskLevels = new HashSet<RiskLevel>();
+	private Set<RiskLevel> riskLevels = new HashSet<>();
 	
 	
 

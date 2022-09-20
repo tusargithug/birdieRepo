@@ -1,49 +1,47 @@
 package net.thrymr.controller;
 
-import net.thrymr.dto.MoodIntensityDto;
-
-import net.thrymr.services.MoodIntensityService;
+import net.thrymr.services.MoodInfoService;
 import net.thrymr.utils.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
-/*
- *@author Chanda Veeresh
- *@version 1.0
- *@since  19-07-2022
- */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1/mood-info")
 public class MoodInfoController {
-    private final Logger logger = LoggerFactory.getLogger(MasterController.class);
+    private final Logger logger = LoggerFactory.getLogger(MoodInfoController.class);
 
 
-    private final MoodIntensityService moodIntensityService;
+    private final MoodInfoService moodInfoService;
 
-    public MoodInfoController(MoodIntensityService moodIntensityService) {
-        this.moodIntensityService = moodIntensityService;
+    public MoodInfoController(MoodInfoService moodInfoService) {
+        this.moodInfoService = moodInfoService;
     }
 
-    @GetMapping("/mood-info/intensities/{id}")
-    public ApiResponse getMoodIntensityByMoodInfoId(@PathVariable Long id) {
-        logger.info("get all mood intensity service started");
-      ApiResponse apiResponse=   moodIntensityService.getMoodIntensityByMoodInfoId(id);
-        logger.info("get all mood intensity completed");
-        return new ApiResponse(HttpStatus.OK, apiResponse);
+    // get mood info by id
+    @GetMapping("/get/{id}")
+    public ApiResponse getMoodInfoById(@PathVariable Long id) {
+        logger.info("get  mood info service started");
+      ApiResponse apiResponse=   moodInfoService.getMoodInfoById(id);
+        logger.info("get  mood info completed");
+        return new ApiResponse(HttpStatus.OK,"", apiResponse);
+    }
+    // get all mood info
+    @GetMapping("/get/all")
+    public ApiResponse getAllMoodNames() {
+        logger.info("get all mood info service started");
+        ApiResponse apiResponse = moodInfoService.getAllMoods();
+        logger.info("get all mood info service completed");
+        return new ApiResponse(HttpStatus.OK, "All MoodInfo details",apiResponse);
     }
 
-    @GetMapping("/mood-info/intensities/save")
-    public ApiResponse moodIntensitySave(@RequestBody MoodIntensityDto request) {
-        logger.info("save mood intensity service started");
-        ApiResponse apiResponse=   moodIntensityService.moodIntensitySave(request);
-        logger.info("save mood intensity service completed");
-        return new ApiResponse(HttpStatus.OK, apiResponse);
+    @DeleteMapping("/get/all")
+    public ApiResponse deleteMoodInfoById(@PathVariable Long id) {
+        logger.info("delete mood info service started");
+        ApiResponse apiResponse = moodInfoService.deleteMoodInfoById(id);
+        logger.info("delete mood info service completed");
+        return new ApiResponse(HttpStatus.OK, "Delete  mood info");
     }
-
-
 }

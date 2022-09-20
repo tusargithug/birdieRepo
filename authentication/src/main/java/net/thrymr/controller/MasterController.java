@@ -12,11 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 
-/*
- *@author Chanda Veeresh
- *@version 1.0
- *@since  08-07-2022
- */
+
 @RestController
 @RequestMapping("/api/v1")
 public class MasterController {
@@ -96,7 +92,7 @@ public class MasterController {
         logger.info("Import Users Data Service Completed");
         return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
     }
-
+    // mood-info uploaded by excel sheet
     @PostMapping("master/mood-info/save")
     public ResponseEntity<ApiResponse> importMoodInfo(@RequestParam("file") MultipartFile file) {
         logger.info("Import  Users Data Service Started");
@@ -104,6 +100,8 @@ public class MasterController {
         logger.info("Import Users Data Service Completed");
         return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
     }
+
+    // mood-intensity uploaded by excel sheet
     @PostMapping("master/mood-intensity/save")
     public ResponseEntity<ApiResponse> importMoodIntensitiesInfo(@RequestParam("file") MultipartFile file) {
         logger.info("Import  Users Data Service Started");
@@ -111,13 +109,8 @@ public class MasterController {
         logger.info("Import Users Data Service Completed");
         return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
     }
-    @GetMapping("/master/mood-info/get")
-    public ApiResponse getAllMoodNames() {
-        logger.info("get all roles service started");
-        ApiResponse apiResponse = moodInfoService.getAllMoods();
-        logger.info("get all roles service completed");
-        return new ApiResponse(HttpStatus.OK, "All MoodInfo details",apiResponse);
-    }
+
+
 
     @PostMapping("/master/mood-source/save")
     public ResponseEntity<ApiResponse> importMoodSourceInfo(@RequestParam("file") MultipartFile file) {
@@ -127,11 +120,5 @@ public class MasterController {
         return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
     }
 
-    @GetMapping("/master/mood-source/get")
-    public ApiResponse getAllMoodSources() {
-        logger.info("get all mood sources service started");
-        ApiResponse apiResponse = moodSourceService.getAllMoodSources();
-        logger.info("get all mood sources service completed");
-        return new ApiResponse(HttpStatus.OK, "All MoodSources details",apiResponse);
-    }
+
 }

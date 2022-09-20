@@ -3,6 +3,11 @@ package net.thrymr.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.thrymr.model.AppUser;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import java.util.Random;
 
 
@@ -34,5 +39,13 @@ public class CommonUtil {
             }
         }
         return null;
+    }
+
+    public static AppUser getAppUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+             new ApiResponse(HttpStatus.BAD_REQUEST,"user not found");
+        }
+        return (AppUser) authentication.getPrincipal();
     }
 }

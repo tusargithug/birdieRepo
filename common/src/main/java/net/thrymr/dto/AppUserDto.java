@@ -4,7 +4,7 @@ package net.thrymr.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.thrymr.model.Roles;
+
 
 
 @Setter
@@ -32,5 +32,5 @@ public class AppUserDto {
 
     private Boolean isActive;
 
-private Roles roles;
+      private RolesDto rolesDto;
 }
