@@ -26,7 +26,7 @@ public class PsychometricTest extends BaseEntity{
 	private String description;
 	
 	@OneToMany(mappedBy = "psychometricTest", cascade = CascadeType.ALL , fetch = FetchType.LAZY)
-	private Set<Question> questions = new HashSet<>();
+	private Set<MtQuestion> mtQuestions = new HashSet<>();
 	
 	@OneToMany(mappedBy = "psychometricTest", cascade = CascadeType.ALL , fetch = FetchType.LAZY)
 	private Set<PsychometricTestOption> options = new HashSet<>();

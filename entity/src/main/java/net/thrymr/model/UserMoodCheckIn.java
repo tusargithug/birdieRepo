@@ -15,8 +15,8 @@ import javax.persistence.ManyToOne;
 
 
 import lombok.NoArgsConstructor;
-import net.thrymr.model.master.MoodIntensity;
-import net.thrymr.model.master.MoodSource;
+import net.thrymr.model.master.MtMoodIntensity;
+import net.thrymr.model.master.MtMoodSource;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -34,16 +34,16 @@ public class UserMoodCheckIn extends BaseEntity{
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "mood_check_in_intensity", joinColumns = { @JoinColumn(name = "mood_info_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "mood_intensity_id") })
-	private List<MoodIntensity> intensities = new ArrayList<>();
+	private List<MtMoodIntensity> intensities = new ArrayList<>();
 	
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "mood_check_in_source", joinColumns = { @JoinColumn(name = "mood_info_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "mood_source_id") })
-	private List<MoodSource> sources = new ArrayList<>();
+//	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//	@JoinTable(name = "mood_check_in_source", joinColumns = { @JoinColumn(name = "mood_info_id") }, inverseJoinColumns = {
+//			@JoinColumn(name = "mood_source_id") })
+//	private List<MtMoodSource> sources = new ArrayList<>();
 	
-	@Column(name = "more_info",columnDefinition = "TEXT")
-	private String moreInfo;
+	@Column(name = "description",columnDefinition = "TEXT")
+	private String description;
 	
 
 	

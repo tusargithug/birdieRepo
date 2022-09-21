@@ -6,7 +6,7 @@ import net.thrymr.dto.LoginDto;
 import net.thrymr.dto.response.LoginResponse;
 import net.thrymr.dto.response.SendMessageDto;
 import net.thrymr.model.AppUser;
-import net.thrymr.model.Roles;
+import net.thrymr.model.master.MtRoles;
 import net.thrymr.repository.AppUserRepo;
 
 import net.thrymr.repository.RolesRepo;
@@ -16,7 +16,6 @@ import net.thrymr.service.LoginService;
 import net.thrymr.utils.ApiResponse;
 import net.thrymr.utils.BaseCommonUtil;
 import net.thrymr.utils.Validator;
-import org.apache.poi.sl.draw.geom.GuideIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -26,9 +25,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 
@@ -75,8 +72,8 @@ public class LoginServiceImpl implements LoginService {
         appUser.setPassword(new BCryptPasswordEncoder().encode(request.getPassword()));
         appUser.setAlternateMobile(request.getAlternateMobile());
         if(request.getRolesDto()!=null){
-            Optional<Roles>optionalRoles=rolesRepo.findById(request.getRolesDto().getId());
-            appUser.setRoles(optionalRoles.get());
+            Optional<MtRoles>optionalRoles=rolesRepo.findById(request.getRolesDto().getId());
+            appUser.setMtRoles(optionalRoles.get());
         }
 
 
@@ -117,8 +114,8 @@ public class LoginServiceImpl implements LoginService {
         loginResponse.setContactNumber(loggedInUser.getContactNumber());
         loginResponse.setEmail(loggedInUser.getEmail());
         if(loggedInUser.getRole()!=null){
-            Optional<Roles>optionalRoles=rolesRepo.findById(loggedInUser.getRole().getId());
-            loginResponse.setUserRole(optionalRoles.map(Roles::getName).orElse(null));
+            Optional<MtRoles>optionalRoles=rolesRepo.findById(loggedInUser.getRole().getId());
+            loginResponse.setUserRole(optionalRoles.map(MtRoles::getName).orElse(null));
         }
 
 

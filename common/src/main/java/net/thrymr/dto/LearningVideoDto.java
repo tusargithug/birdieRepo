@@ -7,11 +7,10 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class AnswerDto {
+public class LearningVideoDto {
 
     private Long id;
 
-    private String  textAnswer;
+    private String videoReference;
 
-    private QuestionDto questionDto;
 }

@@ -2,7 +2,7 @@ package net.thrymr.services.impl;
 
 import net.thrymr.dto.MoodInfoDto;
 import net.thrymr.enums.MoodType;
-import net.thrymr.model.master.MoodInfo;
+import net.thrymr.model.master.MtMoodInfo;
 import net.thrymr.repository.MoodInfoRepo;
 import net.thrymr.repository.MoodIntensityRepo;
 import net.thrymr.services.MoodInfoService;
@@ -74,17 +74,17 @@ public class MoodInfoServiceImpl implements MoodInfoService {
         return value;
     }
 
-    private void setUserSearchKey(MoodInfo moodInfo) {
+    private void setUserSearchKey(MtMoodInfo mtMoodInfo) {
         String searchKey = "";
-        if (Validator.isValid(moodInfo.getName())) {
-            searchKey = searchKey + moodInfo.getName();
+        if (Validator.isValid(mtMoodInfo.getName())) {
+            searchKey = searchKey + mtMoodInfo.getName();
         }
-        moodInfo.setSearchKey(searchKey);
+        mtMoodInfo.setSearchKey(searchKey);
     }
 
     @Override
     public ApiResponse saveMoodInfo(MultipartFile file) {
-        List<MoodInfo> moodInfoList = new ArrayList<>();
+        List<MtMoodInfo> mtMoodInfoList = new ArrayList<>();
         XSSFWorkbook workbook;
         try {
             workbook = new XSSFWorkbook(file.getInputStream());
@@ -101,23 +101,23 @@ public class MoodInfoServiceImpl implements MoodInfoService {
                 try {
                     XSSFRow row = worksheet.getRow(index);
 
-                    MoodInfo moodInfo = new MoodInfo();
+                    MtMoodInfo mtMoodInfo = new MtMoodInfo();
 
                     if (row.getCell(1) != null) {
-                        moodInfo.setName(getCellValue(row.getCell(1)));
+                        mtMoodInfo.setName(getCellValue(row.getCell(1)));
                     }
                     if (row.getCell(2) != null) {
-                        moodInfo.setSequence(Integer.parseInt(getCellValue(row.getCell(2))));
+                        mtMoodInfo.setSequence(Integer.parseInt(getCellValue(row.getCell(2))));
                     }
                     if (row.getCell(3) != null) {
-                        moodInfo.setIntensityName(String.valueOf(row.getCell(3)));
+                        mtMoodInfo.setIntensityName(String.valueOf(row.getCell(3)));
                     }
                     if (row.getCell(4) != null) {
-                        moodInfo.setMoodType(MoodType.stringToEnum(getCellValue(row.getCell(4))));
+                        mtMoodInfo.setMoodType(MoodType.stringToEnum(getCellValue(row.getCell(4))));
                     }
-                    setUserSearchKey(moodInfo);
-                    moodInfoList.add(moodInfo);
-                    moodInfoList = moodInfoRepo.saveAll(moodInfoList);
+                    setUserSearchKey(mtMoodInfo);
+                    mtMoodInfoList.add(mtMoodInfo);
+                    mtMoodInfoList = moodInfoRepo.saveAll(mtMoodInfoList);
 
                 } catch (Exception e) {
                     logger.error("Exception{}; " , e);
@@ -132,10 +132,10 @@ public class MoodInfoServiceImpl implements MoodInfoService {
 
     @Override
     public ApiResponse getAllMoods() {
-        List<MoodInfo> moodInfos = moodInfoRepo.findAll();
+        List<MtMoodInfo> mtMoodInfos = moodInfoRepo.findAll();
         List<MoodInfoDto> moodInfoDtos = new ArrayList<>();
-        if (!moodInfos.isEmpty()) {
-            moodInfos.forEach(model -> moodInfoDtos.add(setModelToDto(model)));
+        if (!mtMoodInfos.isEmpty()) {
+            mtMoodInfos.forEach(model -> moodInfoDtos.add(setModelToDto(model)));
             return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_FOUND"), moodInfoDtos);
         }
 
@@ -145,30 +145,30 @@ public class MoodInfoServiceImpl implements MoodInfoService {
 
     @Override
     public ApiResponse getMoodInfoById(Long id) {
-        Optional<MoodInfo>optionalMoodInfo=moodInfoRepo.findById(id);
+        Optional<MtMoodInfo>optionalMoodInfo=moodInfoRepo.findById(id);
         return optionalMoodInfo.map(moodInfo -> new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_FOUND"), this.setModelToDto(moodInfo))).orElseGet(() -> new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_NOT_FOUND")));
 
     }
 
     @Override
     public ApiResponse deleteMoodInfoById(Long id) {
-        Optional<MoodInfo>optionalMoodInfo=moodInfoRepo.findById(id);
+        Optional<MtMoodInfo>optionalMoodInfo=moodInfoRepo.findById(id);
 
         if(optionalMoodInfo.isPresent()){
-            MoodInfo moodInfo=optionalMoodInfo.get();
-            moodInfoRepo.delete(moodInfo);
+            MtMoodInfo mtMoodInfo =optionalMoodInfo.get();
+            moodInfoRepo.delete(mtMoodInfo);
             return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_INFO_DELETE"));
         }
 
         return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_NOT_FOUND"));
     }
-    private MoodInfoDto setModelToDto(MoodInfo moodInfo) {
+    private MoodInfoDto setModelToDto(MtMoodInfo mtMoodInfo) {
         MoodInfoDto moodInfoDto = new MoodInfoDto();
-        moodInfoDto.setId(moodInfo.getId());
-        moodInfoDto.setMoodName(moodInfo.getName());
-        moodInfoDto.setSequence(moodInfo.getSequence());
-        moodInfoDto.setMoodType(moodInfo.getMoodType().name());
-        moodInfoDto.setIntensityName(moodInfo.getIntensityName());
+        moodInfoDto.setId(mtMoodInfo.getId());
+        moodInfoDto.setMoodName(mtMoodInfo.getName());
+        moodInfoDto.setSequence(mtMoodInfo.getSequence());
+        moodInfoDto.setMoodType(mtMoodInfo.getMoodType().name());
+        moodInfoDto.setIntensityName(mtMoodInfo.getIntensityName());
         return moodInfoDto;
     }
 }

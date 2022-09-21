@@ -3,11 +3,6 @@ package net.thrymr.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.thrymr.model.UserMoodCheckIn;
-import net.thrymr.model.master.MoodInfo;
-
-import java.util.LinkedList;
-import java.util.List;
 
 /*
  *@author Chanda Veeresh

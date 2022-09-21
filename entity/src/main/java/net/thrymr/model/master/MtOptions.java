@@ -1,12 +1,11 @@
-package net.thrymr.model;
+package net.thrymr.model.master;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 import lombok.NoArgsConstructor;
-import net.thrymr.model.master.Question;
+import net.thrymr.model.BaseEntity;
+import net.thrymr.model.UserCourse;
+
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,13 +14,14 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class Answer extends BaseEntity{
+@Table(name = "mt_options")
+public class MtOptions extends BaseEntity {
 	
 	@Column(columnDefinition = "TEXT")
 	private String  textAnswer;
 	
 	@ManyToOne
-	private Question question;
+	private MtQuestion mtQuestion;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	private UserCourse userCourseInfo;

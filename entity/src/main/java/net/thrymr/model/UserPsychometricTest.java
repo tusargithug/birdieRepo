@@ -10,7 +10,7 @@ import javax.persistence.*;
 
 import lombok.NoArgsConstructor;
 import net.thrymr.model.master.PsychometricTest;
-import net.thrymr.model.master.Question;
+import net.thrymr.model.master.MtQuestion;
 import net.thrymr.model.master.PsychometricTestOption;
 import net.thrymr.enums.Risk;
 import net.thrymr.model.master.RiskLevel;
@@ -31,7 +31,7 @@ public class UserPsychometricTest extends BaseEntity{
 	private PsychometricTest psychometricTest;
 	
 	@Embedded
-	private Map<Question, PsychometricTestOption> selectedOptions = new HashMap<>();
+	private Map<MtQuestion, PsychometricTestOption> selectedOptions = new HashMap<>();
 
 	@Column(name = "submitted_on")
 	private Date submittedOn;

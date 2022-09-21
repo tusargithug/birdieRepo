@@ -2,8 +2,8 @@ package net.thrymr.services.impl;
 
 import net.thrymr.dto.AssignmentDto;
 import net.thrymr.dto.QuestionDto;
-import net.thrymr.model.master.Assignment;
-import net.thrymr.model.master.Question;
+import net.thrymr.model.master.MtAssignment;
+import net.thrymr.model.master.MtQuestion;
 import net.thrymr.repository.AssignmentRepo;
 import net.thrymr.services.AssignmentService;
 import net.thrymr.utils.ApiResponse;
@@ -25,13 +25,13 @@ public class AssignmentServiceImpl implements AssignmentService {
         this.assignmentRepo = assignmentRepo;
         this.environment = environment;
     }
-
+    // get all assignment
     @Override
     public ApiResponse getAllAssignment() {
-        List<Assignment>assignmentList=assignmentRepo.findAll();
-        if(!assignmentList.isEmpty()){
+        List<MtAssignment> mtAssignmentList =assignmentRepo.findAll();
+        if(!mtAssignmentList.isEmpty()){
             //TODO based on reference video
-            List<AssignmentDto>assignmentDtoList=assignmentList.stream().map(this::entityToDto).toList();
+            List<AssignmentDto>assignmentDtoList= mtAssignmentList.stream().map(this::entityToDto).toList();
             return new ApiResponse(HttpStatus.OK,environment.getProperty("SUCCESS"),assignmentDtoList);
 
         }
@@ -39,13 +39,13 @@ public class AssignmentServiceImpl implements AssignmentService {
         return new ApiResponse(HttpStatus.OK,environment.getProperty("ASSIGNMENT_NOT_FOUND"));
     }
 
-    private AssignmentDto entityToDto(Assignment request){
+    private AssignmentDto entityToDto(MtAssignment request){
         AssignmentDto dto=new AssignmentDto();
         dto.setId(request.getId());
-        dto.setQuestionDtoList(request.getQuestions().stream().map(this::entityToDto).toList());
+        dto.setQuestionDtoList(request.getMtQuestions().stream().map(this::entityToDto).toList());
        return dto;
     }
-    private QuestionDto entityToDto(Question request){
+    private QuestionDto entityToDto(MtQuestion request){
         QuestionDto dto=new QuestionDto();
         dto.setId(request.getId());
         dto.setQuestion(request.getQuestion());

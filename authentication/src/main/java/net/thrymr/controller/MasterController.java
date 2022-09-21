@@ -1,5 +1,6 @@
 package net.thrymr.controller;
 import net.thrymr.dto.AppUserDto;
+import net.thrymr.dto.LearningVideoDto;
 import net.thrymr.services.AppUserService;
 import net.thrymr.services.*;
 import net.thrymr.utils.ApiResponse;
@@ -14,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/master")
 public class MasterController {
     private final Logger logger=LoggerFactory.getLogger(MasterController.class);
 
@@ -29,16 +30,19 @@ public class MasterController {
 
     private final MoodSourceService moodSourceService;
 
-    public MasterController(RoleService roleService, AppUserService appUserService, MoodInfoService moodInfoService, MoodIntensityService moodIntensityService, MoodSourceService moodSourceService) {
+    private final LearningVideoService learningVideoService;
+
+    public MasterController(RoleService roleService, AppUserService appUserService, MoodInfoService moodInfoService, MoodIntensityService moodIntensityService, MoodSourceService moodSourceService, LearningVideoService learningVideoService) {
         this.roleService = roleService;
         this.appUserService = appUserService;
         this.moodInfoService = moodInfoService;
         this.moodIntensityService = moodIntensityService;
         this.moodSourceService = moodSourceService;
+        this.learningVideoService = learningVideoService;
     }
 
 
-    @GetMapping("/master/role/save")
+    @GetMapping("/role/save")
     public ResponseEntity<ApiResponse> saveRole() {
         logger.info("save role service started");
         ApiResponse apiResponse = roleService.saveRole();
@@ -46,7 +50,7 @@ public class MasterController {
         return new ResponseEntity<>(apiResponse.getStatus());     //apiResponse.getStatus()
     }
 
-    @GetMapping("/master/role/get")
+    @GetMapping("/role/get")
     public ApiResponse getAllRoles() {
         logger.info("get all roles service started");
         ApiResponse apiResponse = roleService.getAllUserRoles();
@@ -54,7 +58,7 @@ public class MasterController {
         return new ApiResponse(HttpStatus.OK, "All Roles",apiResponse);
     }
 
-    @PostMapping("/master/user/save")
+    @PostMapping("/user/save")
     public ResponseEntity<ApiResponse> saveUser(@RequestBody AppUserDto request) {
         logger.info("Save user Service Started");
         ApiResponse apiResponse = appUserService.saveUser(request);
@@ -62,7 +66,7 @@ public class MasterController {
         return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
     }
 
-    @DeleteMapping("/master/user/delete/{id}")
+    @DeleteMapping("/user/delete/{id}")
     public ResponseEntity<ApiResponse> deleteUserById(@PathVariable Long id) {
         logger.info("Delete user service Started");
         ApiResponse apiResponse = appUserService.deleteUserById(id);
@@ -70,14 +74,14 @@ public class MasterController {
         return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
     }
 
-    @GetMapping("/master/user/get/{id}")
+    @GetMapping("/user/get/{id}")
     public ResponseEntity<ApiResponse> getUserById(@PathVariable Long id) {
         logger.info("get user service Started");
         ApiResponse apiResponse = appUserService.getUserById(id);
         logger.info("get user Service Completed");
         return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
     }
-    @GetMapping("/master/user/get/all")
+    @GetMapping("/user/get/all")
     public ResponseEntity<ApiResponse> getAllUsers() {
         logger.info("get all user service Started");
         ApiResponse apiResponse = appUserService.getAllUsers();
@@ -85,7 +89,7 @@ public class MasterController {
         return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
     }
 
-    @PostMapping("/master/user/upload")
+    @PostMapping("/user/upload")
     public ResponseEntity<ApiResponse> importUsersData(@RequestParam("file") MultipartFile file) {
         logger.info("Import  Users Data Service Started");
         ApiResponse apiResponse = appUserService.addUsersByExcel(file);
@@ -93,7 +97,7 @@ public class MasterController {
         return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
     }
     // mood-info uploaded by excel sheet
-    @PostMapping("master/mood-info/save")
+    @PostMapping("/mood-info/save")
     public ResponseEntity<ApiResponse> importMoodInfo(@RequestParam("file") MultipartFile file) {
         logger.info("Import  Users Data Service Started");
         ApiResponse apiResponse = moodInfoService.saveMoodInfo(file);
@@ -102,7 +106,7 @@ public class MasterController {
     }
 
     // mood-intensity uploaded by excel sheet
-    @PostMapping("master/mood-intensity/save")
+    @PostMapping("/mood-intensity/save")
     public ResponseEntity<ApiResponse> importMoodIntensitiesInfo(@RequestParam("file") MultipartFile file) {
         logger.info("Import  Users Data Service Started");
         ApiResponse apiResponse = moodIntensityService.saveintensity(file);
@@ -112,13 +116,20 @@ public class MasterController {
 
 
 
-    @PostMapping("/master/mood-source/save")
+    @PostMapping("/mood-source/save")
     public ResponseEntity<ApiResponse> importMoodSourceInfo(@RequestParam("file") MultipartFile file) {
         logger.info("Import  Mood Source Data Service Started");
         ApiResponse apiResponse = moodSourceService.addMoodSourceByExcel(file);
         logger.info("Import Mood Source Data Service Completed");
         return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
     }
-
+    // save Learning video
+    @PostMapping("/learning/video/save")
+    public ResponseEntity<ApiResponse> saveLearningVideo(@RequestBody LearningVideoDto request) {
+        logger.info("Save video Service Started");
+        ApiResponse apiResponse = learningVideoService.saveLearningVideo(request);
+        logger.info("Save video Service Completed");
+        return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
+    }
 
 }

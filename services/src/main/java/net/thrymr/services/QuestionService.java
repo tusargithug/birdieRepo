@@ -1,10 +1,10 @@
 package net.thrymr.services;
 
-import net.thrymr.model.master.Question;
+import net.thrymr.model.master.MtQuestion;
 import net.thrymr.utils.ApiResponse;
 
 public interface QuestionService {
-    ApiResponse save(Question request);
+    ApiResponse save(MtQuestion request);
 
     ApiResponse getQuestionById(Long id);
 

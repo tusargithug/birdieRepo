@@ -18,7 +18,8 @@ import lombok.Setter;
 @Setter
 @Getter
 @RequiredArgsConstructor
-public class MoodInfo extends BaseEntity {
+@Table(name = "mt_mood_info")
+public class MtMoodInfo extends BaseEntity {
 	
 	private String name;
 	
@@ -29,8 +30,8 @@ public class MoodInfo extends BaseEntity {
 	private String emoji;
 
 	@JsonIgnore
-	@OneToMany(cascade = CascadeType.ALL,mappedBy = "moodInfo")
-	private List<MoodIntensity> intensities=new ArrayList<>();
+	@OneToMany(cascade = CascadeType.ALL,mappedBy = "mtMoodInfo")
+	private List<MtMoodIntensity> intensities=new ArrayList<>();
 	
 	private int sequence;
 

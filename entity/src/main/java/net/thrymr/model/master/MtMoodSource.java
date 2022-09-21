@@ -3,24 +3,22 @@ package net.thrymr.model.master;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 import lombok.NoArgsConstructor;
+import net.thrymr.enums.Category;
 import net.thrymr.model.BaseEntity;
-import net.thrymr.model.UserMoodCheckIn;
-
 import lombok.Getter;
 import lombok.Setter;
+import net.thrymr.model.UserMoodSourceCheckedIn;
 
 @Entity
 @Setter
 @Getter
 @NoArgsConstructor
-public class MoodIntensity extends BaseEntity{
-	
+@Table(name = "mt_mood_source")
+public class MtMoodSource extends BaseEntity{
+
 	private String name;
 	
 	@Column(columnDefinition = "TEXT")
@@ -28,15 +26,12 @@ public class MoodIntensity extends BaseEntity{
 
 	@Column(name = "emoji")
 	private String emoji;
-
-	@ManyToOne
-	private MoodInfo moodInfo;
 	
 	private int sequence;
-	
-	private Float score;
-	
-	@ManyToMany(mappedBy = "intensities")
-	private List<UserMoodCheckIn> userMoodCheckIns = new ArrayList<>();
 
+	@Enumerated(EnumType.STRING)
+	private Category category;
+	
+	@ManyToMany(mappedBy = "sources")
+	private List<UserMoodSourceCheckedIn> userMoodSourceCheckedIns = new ArrayList<>();
 }

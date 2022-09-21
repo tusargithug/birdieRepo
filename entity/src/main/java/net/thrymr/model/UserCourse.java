@@ -12,6 +12,7 @@ import net.thrymr.enums.CourseStatus;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.thrymr.model.master.MtOptions;
 
 @Entity
 @Setter
@@ -29,7 +30,7 @@ public class UserCourse extends BaseEntity{
 	private CourseStatus status = CourseStatus.NOT_STARTED;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userCourseInfo")
-	private Set<Answer> answers = new HashSet<>();
+	private Set<MtOptions> mtOptions = new HashSet<>();
 
 	@Column(name = "started_date")
 	private Date startedDate;

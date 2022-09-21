@@ -1,4 +1,4 @@
-package net.thrymr.model;
+package net.thrymr.model.master;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,25 +11,29 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.thrymr.model.AppUser;
+import net.thrymr.model.BaseEntity;
+import net.thrymr.model.RoleModuleInfo;
 
 @Entity
 @Setter
 @Getter
 @NoArgsConstructor
 @ToString
-public class Roles extends BaseEntity{
+@Table(name = "mt_roles")
+public class MtRoles extends BaseEntity {
 
 	private String name;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "roles",cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "mtRoles",cascade = CascadeType.ALL)
 	private List<AppUser> users = new ArrayList<>();
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "roles", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "mtRoles", cascade = CascadeType.ALL)
 	private List<RoleModuleInfo> roleModuleInfoList = new ArrayList<>();
 
-	public  Roles(String  name){
+	public MtRoles(String  name){
 		this.name=name;
 	}
 

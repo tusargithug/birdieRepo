@@ -4,7 +4,7 @@ package net.thrymr.services.impl;
 import net.thrymr.dto.AppUserDto;
 import net.thrymr.dto.RolesDto;
 import net.thrymr.model.AppUser;
-import net.thrymr.model.Roles;
+import net.thrymr.model.master.MtRoles;
 import net.thrymr.repository.AppUserRepo;
 import net.thrymr.repository.RoleRepo;
 import net.thrymr.services.AppUserService;
@@ -116,9 +116,9 @@ public class AppUserServiceImpl implements AppUserService {
 
                         }
                         if (row.getCell(8) != null) {
-                            Optional<Roles> optionalRoles = roleRepo.findById(Long.valueOf(getCellValue(row.getCell(8))));
+                            Optional<MtRoles> optionalRoles = roleRepo.findById(Long.valueOf(getCellValue(row.getCell(8))));
                            // logger.info("optionalRole{}: " , CommonUtil.getStringFromObject(optionalRoles));
-                            optionalRoles.ifPresent(role -> appUser.setRoles(role));
+                            optionalRoles.ifPresent(role -> appUser.setMtRoles(role));
                         }
                         if (row.getCell(9) != null) {
                             appUser.setEmpId(getCellValue(row.getCell(9)));
@@ -144,9 +144,9 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public ApiResponse getAllRoles() {
-        List<Roles> rolesOptional = roleRepo.findAll();
+        List<MtRoles> mtRolesOptional = roleRepo.findAll();
         List<RolesDto> rolesDtoList;
-        rolesDtoList = rolesOptional.stream().map(this::entityToDto).collect(Collectors.toList());
+        rolesDtoList = mtRolesOptional.stream().map(this::entityToDto).collect(Collectors.toList());
 
         return new ApiResponse(HttpStatus.OK, environment.getProperty("ROLES_FOUND"), rolesDtoList);
     }
@@ -208,7 +208,7 @@ public class AppUserServiceImpl implements AppUserService {
         }
         appUser.setSearchKey(searchKey);
     }
-    private RolesDto entityToDto(Roles request) {
+    private RolesDto entityToDto(MtRoles request) {
         RolesDto dto = new RolesDto();
         dto.setName(request.getName());
 
@@ -231,8 +231,8 @@ public class AppUserServiceImpl implements AppUserService {
         appUser.setAlternateMobile(request.getAlternateMobile());
         appUser.setPassword(bCryptPasswordEncoder().encode(request.getPassword()));
         if (request.getRolesDto() != null && !request.getRolesDto().getName().isEmpty()) {
-            Optional<Roles>optionalRoles= roleRepo.findByName(request.getRolesDto().getName());
-            appUser.setRoles(optionalRoles.get());
+            Optional<MtRoles>optionalRoles= roleRepo.findByName(request.getRolesDto().getName());
+            appUser.setMtRoles(optionalRoles.get());
         }
         return appUser;
     }

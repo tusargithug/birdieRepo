@@ -4,6 +4,7 @@ package net.thrymr.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.thrymr.model.master.MtRoles;
 
 import javax.persistence.*;
 
@@ -41,6 +42,6 @@ public class AppUser extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "role_id")
-  private Roles roles;
+  private MtRoles mtRoles;
 
 }

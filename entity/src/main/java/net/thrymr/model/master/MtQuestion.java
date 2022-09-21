@@ -3,17 +3,11 @@ package net.thrymr.model.master;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import net.thrymr.model.BaseEntity;
-import net.thrymr.model.Answer;
 import net.thrymr.enums.QuestionCalType;
 
 import lombok.Getter;
@@ -23,16 +17,17 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class Question extends BaseEntity{
+@Table(name = "mt_question")
+public class MtQuestion extends BaseEntity{
 	
 	@Column(columnDefinition = "TEXT")
 	private String question;
 	
 	@ManyToOne
-	private Assignment courseAssignment;
+	private MtAssignment courseAssignment;
 	
 	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-	private Set<Answer> answers = new HashSet<>();
+	private Set<MtOptions> mtOptions = new HashSet<>();
 
 	
 	@ManyToOne
@@ -43,6 +38,4 @@ public class Question extends BaseEntity{
 	
 	private int sequence;
 
-	@Column(name = "video_reference",columnDefinition = "TEXT")
-	private String videoReference;
 }

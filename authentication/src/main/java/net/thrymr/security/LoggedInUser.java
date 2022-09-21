@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.thrymr.model.AppUser;
-import net.thrymr.model.Roles;
+import net.thrymr.model.master.MtRoles;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,7 +26,7 @@ public class LoggedInUser implements UserDetails {
 
     private String lastName;
 
-    private Roles role;
+    private MtRoles role;
 
     private Boolean isActive;
 
@@ -45,7 +45,7 @@ public class LoggedInUser implements UserDetails {
        loggedInUser.setLastName(loginData.get().getLastName());
        loggedInUser.setEmail(loginData.get().getEmail());
         loggedInUser.setPassword(loginData.get().getPassword());
-        loggedInUser.setRole(loginData.get().getRoles());
+        loggedInUser.setRole(loginData.get().getMtRoles());
         return loggedInUser;
     }
     @Override

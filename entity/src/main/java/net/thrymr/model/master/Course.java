@@ -38,7 +38,7 @@ public class Course extends BaseEntity {
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "course_assignment", joinColumns = { @JoinColumn(name = "course_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "assignment_id") })
-	Set<Assignment> assignments = new HashSet<>();
+	Set<MtAssignment> assignments = new HashSet<>();
 
 	@Column(columnDefinition = "TEXT")
 	private String decription;

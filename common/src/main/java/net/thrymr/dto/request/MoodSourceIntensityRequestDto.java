@@ -18,5 +18,5 @@ public class MoodSourceIntensityRequestDto {
 
     private String intensityDescription;
 
-    private String moreInfo;
+    private String description;
 }

@@ -61,7 +61,7 @@ public class MoodIntensityController {
         logger.info("Get all mood intensity service completed");
         return new ApiResponse(HttpStatus.OK,"", apiResponse);
     }
-     //update mood intensity  and mood source  on daily basis in userCheckedIn  table
+     //update mood intensity    on daily basis in userCheckedIn  table
 
     @PutMapping("/update")
     public ApiResponse updateMoodIntensity(@RequestBody MoodSourceIntensityRequestDto request) {

@@ -1,14 +1,14 @@
 package net.thrymr.model.master;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
 
 import lombok.NoArgsConstructor;
-import net.thrymr.enums.Category;
 import net.thrymr.model.BaseEntity;
 import net.thrymr.model.UserMoodCheckIn;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,8 +16,9 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class MoodSource extends BaseEntity{
-
+@Table(name = "mt_mood_intensity")
+public class MtMoodIntensity extends BaseEntity{
+	
 	private String name;
 	
 	@Column(columnDefinition = "TEXT")
@@ -25,12 +26,15 @@ public class MoodSource extends BaseEntity{
 
 	@Column(name = "emoji")
 	private String emoji;
+
+	@ManyToOne
+	private MtMoodInfo mtMoodInfo;
 	
 	private int sequence;
-
-	@Enumerated(EnumType.STRING)
-	private Category category;
 	
-	@ManyToMany(mappedBy = "sources")
-	private List<UserMoodCheckIn> userMoodCheckIns = new LinkedList<>();
+	private Float score;
+	
+	@ManyToMany(mappedBy = "intensities")
+	private List<UserMoodCheckIn> userMoodCheckIns = new ArrayList<>();
+
 }

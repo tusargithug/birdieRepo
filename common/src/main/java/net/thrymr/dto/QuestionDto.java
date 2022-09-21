@@ -16,7 +16,7 @@ public class QuestionDto {
 
     private String question;
 
-    private Set<AnswerDto> answersDto = new HashSet<>();
+    private Set<OptionsDto> answersDto = new HashSet<>();
 
     private String videoReference;
 }

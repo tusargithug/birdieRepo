@@ -1,7 +1,6 @@
 package net.thrymr.controller;
 
-import net.thrymr.dto.MoodIntensityDto;
-import net.thrymr.model.master.Question;
+import net.thrymr.model.master.MtQuestion;
 import net.thrymr.services.QuestionService;
 import net.thrymr.utils.ApiResponse;
 import org.slf4j.Logger;
@@ -21,7 +20,7 @@ public class QuestionController {
     }
     // save  question
     @PostMapping("/save")
-    public ApiResponse save(@RequestBody Question request) {
+    public ApiResponse save(@RequestBody MtQuestion request) {
         logger.info("save question service started");
         ApiResponse apiResponse=   questionService.save(request);
         logger.info("save question service completed");

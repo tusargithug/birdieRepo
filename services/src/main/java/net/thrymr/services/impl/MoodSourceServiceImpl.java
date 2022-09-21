@@ -1,11 +1,15 @@
 package net.thrymr.services.impl;
 
 import net.thrymr.dto.MoodSourceDto;
+import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
 import net.thrymr.enums.Category;
-import net.thrymr.model.master.MoodSource;
+import net.thrymr.model.UserMoodSourceCheckedIn;
+import net.thrymr.model.master.MtMoodSource;
 import net.thrymr.repository.MoodSourceRepo;
+import net.thrymr.repository.UserMoodSourceCheckInRepo;
 import net.thrymr.services.MoodSourceService;
 import net.thrymr.utils.ApiResponse;
+import net.thrymr.utils.Validator;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -32,15 +36,19 @@ public class MoodSourceServiceImpl implements MoodSourceService {
 
     private final MoodSourceRepo moodSourceRepo;
 
-    public MoodSourceServiceImpl(Environment environment, MoodSourceRepo moodSourceRepo) {
+    private final UserMoodSourceCheckInRepo userMoodSourceCheckInRepo;
+
+    public MoodSourceServiceImpl(Environment environment, MoodSourceRepo moodSourceRepo, UserMoodSourceCheckInRepo userMoodSourceCheckInRepo) {
         this.environment = environment;
         this.moodSourceRepo = moodSourceRepo;
+        this.userMoodSourceCheckInRepo = userMoodSourceCheckInRepo;
+
     }
 
 
     @Override
     public ApiResponse addMoodSourceByExcel(MultipartFile file) {
-        List<MoodSource> moodSourceList = new ArrayList<>();
+        List<MtMoodSource> mtMoodSourceList = new ArrayList<>();
         XSSFWorkbook workbook;
         try {
             workbook = new XSSFWorkbook(file.getInputStream());
@@ -56,21 +64,21 @@ public class MoodSourceServiceImpl implements MoodSourceService {
                 try {
                     XSSFRow row = worksheet.getRow(index);
 
-                    MoodSource moodSource = new MoodSource();
+                    MtMoodSource mtMoodSource = new MtMoodSource();
 
                     if (row.getCell(1) != null) {
-                        moodSource.setName(getCellValue(row.getCell(1)));
+                        mtMoodSource.setName(getCellValue(row.getCell(1)));
                     }
 
                     if (row.getCell(2) != null) {
-                        moodSource.setCategory(Category.stringToEnum(getCellValue(row.getCell(2))));
+                        mtMoodSource.setCategory(Category.stringToEnum(getCellValue(row.getCell(2))));
                     }
 
                     if (row.getCell(3) != null) {
-                        moodSource.setSequence(Integer.parseInt(getCellValue(row.getCell(3))));
+                        mtMoodSource.setSequence(Integer.parseInt(getCellValue(row.getCell(3))));
                     }
-                    moodSourceList.add(moodSource);
-                    moodSourceList = moodSourceRepo.saveAll(moodSourceList);
+                    mtMoodSourceList.add(mtMoodSource);
+                    mtMoodSourceList = moodSourceRepo.saveAll(mtMoodSourceList);
                 } catch (Exception e) {
                     logger.error("Exception{} " , e);
                     return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_SOURCE_IMPORT_FORMAT_FAILED"));
@@ -82,10 +90,10 @@ public class MoodSourceServiceImpl implements MoodSourceService {
 
     @Override
     public ApiResponse getAllMoodSources() {
-        List<MoodSource> moodSourceList = moodSourceRepo.findAll();
+        List<MtMoodSource> mtMoodSourceList = moodSourceRepo.findAll();
        List<MoodSourceDto> moodSourceDtoList = new ArrayList<>();
-       if (!moodSourceList.isEmpty()) {
-    moodSourceList.forEach(moodSource -> moodSourceDtoList.add(setModelToDto(moodSource)));
+       if (!mtMoodSourceList.isEmpty()) {
+    mtMoodSourceList.forEach(mtMoodSource -> moodSourceDtoList.add(setModelToDto(mtMoodSource)));
            return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_SOURCE_FOUND"), moodSourceDtoList);
        }
        else {
@@ -95,7 +103,25 @@ public class MoodSourceServiceImpl implements MoodSourceService {
 
     @Override
     public ApiResponse moodSourceSave(MoodSourceDto request) {
+
+
         return null;
+    }
+
+    @Override
+    public ApiResponse updateMoodSource(MoodSourceIntensityRequestDto request) {
+
+
+        List<MtMoodSource> mtMoodSourceList =moodSourceRepo.findAllByIdIn(request.getSourceIds());
+        UserMoodSourceCheckedIn checkedIn=new UserMoodSourceCheckedIn();
+          if(!mtMoodSourceList.isEmpty()){
+              checkedIn.setSources(mtMoodSourceList);
+         }
+          if(Validator.isValid(request.getDescription())){
+              checkedIn.setDescription(request.getDescription());
+          }
+        userMoodSourceCheckInRepo.save(checkedIn);
+        return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_SOURCE_UPDATED"));
     }
 
     private String getCellValue(XSSFCell cell) {
@@ -114,12 +140,12 @@ public class MoodSourceServiceImpl implements MoodSourceService {
         return value;
     }
 
-    private MoodSourceDto setModelToDto(MoodSource moodSource) {
+    private MoodSourceDto setModelToDto(MtMoodSource mtMoodSource) {
         MoodSourceDto moodSourceDto = new MoodSourceDto();
-        moodSourceDto.setName(moodSource.getName());
-        moodSourceDto.setCategory(moodSource.getCategory().name());
-        moodSourceDto.setDescription(moodSource.getDescription());
-        moodSourceDto.setSequence(moodSource.getSequence());
+        moodSourceDto.setName(mtMoodSource.getName());
+        moodSourceDto.setCategory(mtMoodSource.getCategory().name());
+        moodSourceDto.setDescription(mtMoodSource.getDescription());
+        moodSourceDto.setSequence(mtMoodSource.getSequence());
         return moodSourceDto;
     }
 

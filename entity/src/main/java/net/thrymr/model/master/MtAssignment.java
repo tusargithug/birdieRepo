@@ -1,14 +1,10 @@
 package net.thrymr.model.master;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 import lombok.NoArgsConstructor;
 import net.thrymr.model.BaseEntity;
@@ -19,7 +15,8 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class Assignment extends BaseEntity{
+@Table(name = "mt_assignment")
+public class MtAssignment extends BaseEntity{
 	
 	private String name;
 	
@@ -27,9 +24,14 @@ public class Assignment extends BaseEntity{
 	private String description;
 	
 	@OneToMany(mappedBy = "courseAssignment", cascade = CascadeType.ALL , fetch = FetchType.LAZY)
-	private Set<Question> questions = new HashSet<>();
+	private Set<MtQuestion> mtQuestions = new HashSet<>();
 	
 	@ManyToMany(mappedBy = "assignments")
 	private Set<Course> courses = new HashSet<>();
 
+	//private LocalDateTime duration;
+
+	//private String instructions;
+	//  TODO  need to create enum
+	// private FrequencyType frequencyType;
 }

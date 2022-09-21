@@ -1,7 +1,5 @@
 package net.thrymr.controller;
 
-import net.thrymr.dto.AnswerDto;
-import net.thrymr.model.Answer;
 import net.thrymr.services.AssignmentService;
 import net.thrymr.services.RoleService;
 import net.thrymr.utils.ApiResponse;

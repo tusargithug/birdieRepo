@@ -2,6 +2,7 @@ package net.thrymr.controller;
 
 import net.thrymr.dto.MoodIntensityDto;
 import net.thrymr.dto.MoodSourceDto;
+import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
 import net.thrymr.services.MoodSourceService;
 import net.thrymr.utils.ApiResponse;
 import org.slf4j.Logger;
@@ -36,5 +37,16 @@ public class MoodSourceController {
         ApiResponse apiResponse = moodSourceService.getAllMoodSources();
         logger.info("get all mood sources service completed");
         return new ApiResponse(HttpStatus.OK, "All MoodSources details",apiResponse);
+    }
+
+
+    //update mood source on daily basis in userMoodSourceCheckedIn  table
+
+    @PutMapping("/update")
+    public ApiResponse updateMoodSource(@RequestBody MoodSourceIntensityRequestDto request) {
+        logger.info("Get update mood service started");
+        ApiResponse apiResponse=   moodSourceService.updateMoodSource(request);
+        logger.info("Get update mood service completed");
+        return new ApiResponse(HttpStatus.OK,"", apiResponse);
     }
 }
