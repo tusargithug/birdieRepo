@@ -1,9 +1,0 @@
-/home/thrymr/Downloads/spring-boot-base-project/authentication/src/main/java/net/thrymr/security/AuthEntryPointJwt.java
-/home/thrymr/Downloads/spring-boot-base-project/authentication/src/main/java/net/thrymr/service/LoginService.java
-/home/thrymr/Downloads/spring-boot-base-project/authentication/src/main/java/net/thrymr/security/WebSecurityConfig.java
-/home/thrymr/Downloads/spring-boot-base-project/authentication/src/main/java/net/thrymr/controller/LoginController.java
-/home/thrymr/Downloads/spring-boot-base-project/authentication/src/main/java/net/thrymr/security/JwtUtil.java
-/home/thrymr/Downloads/spring-boot-base-project/authentication/src/main/java/net/thrymr/security/LoggedInUser.java
-/home/thrymr/Downloads/spring-boot-base-project/authentication/src/main/java/net/thrymr/service/impl/LoginServiceImpl.java
-/home/thrymr/Downloads/spring-boot-base-project/authentication/src/main/java/net/thrymr/security/UserDetailsServiceImpl.java
-/home/thrymr/Downloads/spring-boot-base-project/authentication/src/main/java/net/thrymr/security/AuthTokenFilter.java

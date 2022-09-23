@@ -1,0 +1,10 @@
+type moodInfo {
+    id: ID!
+    name: String!
+}
+
+
+type Query {
+  moodInfoById(id: ID): moodInfo
+}
+
