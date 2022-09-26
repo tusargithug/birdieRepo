@@ -22,11 +22,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-/*
- *@author Chanda Veeresh
- *@version 1.0
- *@since  08-08-2022
- */
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
