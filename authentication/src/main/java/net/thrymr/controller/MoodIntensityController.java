@@ -2,12 +2,24 @@ package net.thrymr.controller;
 
 import net.thrymr.dto.MoodIntensityDto;
 import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
+import net.thrymr.model.AppUser;
+import net.thrymr.model.UserMoodCheckIn;
+import net.thrymr.model.master.MtMoodIntensity;
+import net.thrymr.repository.MoodIntensityRepo;
+import net.thrymr.repository.UserMoodCheckInRepo;
 import net.thrymr.services.MoodIntensityService;
 import net.thrymr.utils.ApiResponse;
+import net.thrymr.utils.CommonUtil;
+import net.thrymr.utils.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/mood-intensity")
@@ -16,8 +28,17 @@ public class MoodIntensityController {
 
     private final MoodIntensityService moodIntensityService;
 
-    public MoodIntensityController(MoodIntensityService moodIntensityService) {
+    private final MoodIntensityRepo moodIntensityRepo;
+
+    private final UserMoodCheckInRepo userMoodCheckInRepo;
+
+    private final Environment environment;
+
+    public MoodIntensityController(MoodIntensityService moodIntensityService, MoodIntensityRepo moodIntensityRepo, UserMoodCheckInRepo userMoodCheckInRepo, Environment environment) {
         this.moodIntensityService = moodIntensityService;
+        this.moodIntensityRepo = moodIntensityRepo;
+        this.userMoodCheckInRepo = userMoodCheckInRepo;
+        this.environment = environment;
     }
    // save mood intensity
     @PostMapping("/save")
@@ -69,5 +90,35 @@ public class MoodIntensityController {
         ApiResponse apiResponse=   moodIntensityService.updateMoodIntensity(request);
         logger.info("Get update mood service completed");
         return new ApiResponse(HttpStatus.OK,"", apiResponse);
+    }
+
+
+    @MutationMapping
+    public String createUserMoodCheckIn(MoodSourceIntensityRequestDto request){
+        AppUser user= CommonUtil.getAppUser();
+        Optional<MtMoodIntensity> optionalMoodIntensity=moodIntensityRepo.findById(request.getIntensityId());
+        UserMoodCheckIn userMoodCheckIn=new UserMoodCheckIn();
+        userMoodCheckIn.setAppUser(user);
+        if(optionalMoodIntensity.isPresent()){
+            if(Validator.isValid(request.getIntensityDescription())){
+                optionalMoodIntensity.get().setDescription(request.getIntensityDescription());
+            }
+            userMoodCheckIn.setIntensities(optionalMoodIntensity.stream().toList());
+        }
+        if(Validator.isValid(request.getDescription())){
+            userMoodCheckIn.setDescription(request.getDescription());
+        }
+
+        userMoodCheckInRepo.save(userMoodCheckIn);
+
+        return environment.getProperty("USER_CHECKED_IN_SAVE");
+    }
+
+
+    @MutationMapping
+    public String deleteUserMoodCheckInById(@Argument Long id){
+        Optional<MtMoodIntensity>optionalMtMoodIntensity=moodIntensityRepo.findById(id);
+        optionalMtMoodIntensity.ifPresent(moodIntensityRepo::delete);
+        return "Intensity deleted successfully";
     }
 }

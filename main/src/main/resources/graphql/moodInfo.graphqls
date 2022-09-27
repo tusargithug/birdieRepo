@@ -16,8 +16,13 @@ type Query {
 
 type Mutation {
   createAppUser(firstName:String!,lastName:String!,email:String!,mobile:String!,alternateMobile:String!,empId:String!): String!
-   updateAppUser(data:AppUserDto!): String!
+   updateAppUser(input:AppUserDto!): String!
    deleteAppUserById(id:ID):String!
+
+   createUserMoodCheckIn(input :MoodSourceIntensityRequestDto!):String!
+   createUserMoodSourceCheckIn(input :MoodSourceIntensityRequestDto!):String!
+   deleteUserMoodCheckInById(id:ID):String!
+    deleteUserMoodSourceCheckInById(id:ID):String!
 
 }
 
@@ -40,8 +45,9 @@ type MtRoles{
      id: ID!
     name: String!
 }
-input AppUserDto{
 
+
+input AppUserDto{
 firstName:String!
 lastName:String!
 email:String!
@@ -62,5 +68,13 @@ mobile:String!
 alternateMobile:String!
 empId:String!
 }
+
+input MoodSourceIntensityRequestDto{
+intensityId:Int!
+sourceIds:[Int!]
+intensityDescription:String!
+
+}
+
 
 
