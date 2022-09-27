@@ -1,17 +1,21 @@
 package net.thrymr.controller;
 import net.thrymr.dto.AppUserDto;
 import net.thrymr.dto.LearningVideoDto;
+import net.thrymr.model.master.MtRoles;
+import net.thrymr.repository.RolesRepo;
 import net.thrymr.services.AppUserService;
 import net.thrymr.services.*;
 import net.thrymr.utils.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-
+import java.util.List;
 
 
 @RestController
@@ -32,13 +36,16 @@ public class MasterController {
 
     private final LearningVideoService learningVideoService;
 
-    public MasterController(RoleService roleService, AppUserService appUserService, MoodInfoService moodInfoService, MoodIntensityService moodIntensityService, MoodSourceService moodSourceService, LearningVideoService learningVideoService) {
+    private final RolesRepo rolesRepo;
+
+    public MasterController(RoleService roleService, AppUserService appUserService, MoodInfoService moodInfoService, MoodIntensityService moodIntensityService, MoodSourceService moodSourceService, LearningVideoService learningVideoService, RolesRepo rolesRepo) {
         this.roleService = roleService;
         this.appUserService = appUserService;
         this.moodInfoService = moodInfoService;
         this.moodIntensityService = moodIntensityService;
         this.moodSourceService = moodSourceService;
         this.learningVideoService = learningVideoService;
+        this.rolesRepo = rolesRepo;
     }
 
 
@@ -131,5 +138,16 @@ public class MasterController {
         logger.info("Save video Service Completed");
         return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
     }
+
+    @QueryMapping
+    public List<MtRoles> getAllMtRoles(){
+        logger.info("get all MtRoles service started");
+        return rolesRepo.findAll();
+}
+
+   @QueryMapping
+    public MtRoles mtRoleById(@Argument Long id){
+    return rolesRepo.findById(id).orElse(null);
+}
 
 }

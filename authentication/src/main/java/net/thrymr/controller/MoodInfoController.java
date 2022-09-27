@@ -1,8 +1,10 @@
 package net.thrymr.controller;
 
+import net.thrymr.repository.MoodInfoRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +18,7 @@ import net.thrymr.services.MoodInfoService;
 import net.thrymr.utils.ApiResponse;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 
+import java.util.List;
 
 
 @RestController
@@ -24,9 +27,11 @@ public class MoodInfoController {
     private final Logger logger = LoggerFactory.getLogger(MoodInfoController.class);
 
 
-    @Autowired MoodInfoRepository repository;
+    @Autowired
+    MoodInfoRepository repository;
     
     private final MoodInfoService moodInfoService;
+
 
     public MoodInfoController(MoodInfoService moodInfoService) {
         this.moodInfoService = moodInfoService;
@@ -58,7 +63,16 @@ public class MoodInfoController {
     }
     
     @QueryMapping
-    public MtMoodInfo findAllMoods(long id) {
+    public MtMoodInfo moodInfoById(@Argument long id) {
         return repository.findById(id).orElse(null);
+    }
+
+    @QueryMapping
+    public List<MtMoodInfo> getAllMoodInfo() {
+        logger.info("get all mood info service started");
+     //   ApiResponse apiResponse =
+                return    repository.findAll();
+//        logger.info("get all mood info service completed");
+//        return new ApiResponse(HttpStatus.OK, "All MoodInfo details",apiResponse);
     }
 }

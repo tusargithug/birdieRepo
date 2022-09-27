@@ -1,10 +1,66 @@
-type moodInfo {
-    id: ID!
-    name: String!
+schema {
+    query: Query
+     mutation: Mutation
 }
-
 
 type Query {
-  moodInfoById(id: ID): moodInfo
+  moodInfoById(id: ID): MtMoodInfo
+  getAllMoodInfo:[MtMoodInfo]
+  getAllMoodIntensity:[MtMoodIntensity]
+  getAppUserById(id:ID):AppUser
+  getAllAppUsers:[AppUser]
+  mtRoleById(id:ID):MtRoles
+  getAllMtRoles:[MtRoles]
+
 }
+
+type Mutation {
+  createAppUser(firstName:String!,lastName:String!,email:String!,mobile:String!,alternateMobile:String!,empId:String!): String!
+   updateAppUser(data:AppUserDto!): String!
+   deleteAppUserById(id:ID):String!
+
+}
+
+type MtMoodInfo {
+    id: ID!
+    name: String!
+    emoji:String!
+    description:String!
+   intensities:[MtMoodIntensity]
+
+}
+
+type MtMoodIntensity{
+    id: ID!
+    name: String!
+     emoji:String!
+}
+
+type MtRoles{
+     id: ID!
+    name: String!
+}
+input AppUserDto{
+
+firstName:String!
+lastName:String!
+email:String!
+mobile:String!
+alternateMobile:String!
+empId:String!
+}
+
+
+
+type AppUser{
+id:ID!
+firstName:String!
+lastName:String!
+email:String!
+userName:String!
+mobile:String!
+alternateMobile:String!
+empId:String!
+}
+
 
