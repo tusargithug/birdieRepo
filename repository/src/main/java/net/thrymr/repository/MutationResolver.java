@@ -6,6 +6,8 @@ import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
 import net.thrymr.model.AppUser;
 import net.thrymr.model.UserMoodCheckIn;
 import net.thrymr.model.UserMoodSourceCheckedIn;
+import net.thrymr.model.master.Category;
+import net.thrymr.model.master.Course;
 import net.thrymr.model.master.MtMoodIntensity;
 import net.thrymr.model.master.MtMoodSource;
 import net.thrymr.utils.CommonUtil;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Component
 public class MutationResolver implements GraphQLMutationResolver {
@@ -34,15 +37,18 @@ private final UserMoodCheckInRepo userMoodCheckInRepo;
     private final MoodSourceRepo moodSourceRepo;
 
     private final UserMoodSourceCheckInRepo userMoodSourceCheckInRepo;
+    
+    private final CategoryRepo categoryRepo;
 
 
-    public MutationResolver(AppUserRepo appUserRepo, MoodIntensityRepo moodIntensityRepo, UserMoodCheckInRepo userMoodCheckInRepo, Environment environment, MoodSourceRepo moodSourceRepo, UserMoodSourceCheckInRepo userMoodSourceCheckInRepo) {
+    public MutationResolver(AppUserRepo appUserRepo, MoodIntensityRepo moodIntensityRepo, UserMoodCheckInRepo userMoodCheckInRepo, Environment environment, MoodSourceRepo moodSourceRepo, UserMoodSourceCheckInRepo userMoodSourceCheckInRepo,CategoryRepo categoryRepo) {
         this.appUserRepo = appUserRepo;
         this.moodIntensityRepo = moodIntensityRepo;
         this.userMoodCheckInRepo = userMoodCheckInRepo;
         this.environment = environment;
         this.moodSourceRepo = moodSourceRepo;
         this.userMoodSourceCheckInRepo = userMoodSourceCheckInRepo;
+        this.categoryRepo=categoryRepo;
     }
 
     @MutationMapping
@@ -153,6 +159,34 @@ private final UserMoodCheckInRepo userMoodCheckInRepo;
         Optional<MtMoodSource>optionalMtMoodSource=moodSourceRepo.findById(id);
         optionalMtMoodSource.ifPresent(moodSourceRepo::delete);
         return "Source deleted successfully";
+    }
+    
+    @MutationMapping
+    public String createCategory(Long id,String name,String description,Integer sequence) {
+    	Category category=new Category();
+    	category.setName(name);
+    	category.setDescription(description);
+    	category.setSequence(sequence);
+    	categoryRepo.save(category);
+        return "Course Created successfully";
+    	
+    }
+    
+    @MutationMapping
+    public Category updateCategory(@Argument Long id,@Argument String name,@Argument String description,@Argument Integer sequence){
+        final Optional<Category> category = categoryRepo.findById(id).stream()
+                .filter(c -> c.getId() == id)
+                .findFirst();
+            if (!category.isPresent()) {
+                return null;
+            }
+            category.get()
+                .setName(name);
+            category.get()
+                .setDescription(description);
+            category.get()
+                .setSequence(sequence);
+            return categoryRepo.save(category.get());
     }
     }
 

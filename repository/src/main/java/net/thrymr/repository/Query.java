@@ -8,6 +8,7 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Component;
 
 import graphql.kickstart.tools.GraphQLQueryResolver;
+import net.thrymr.model.master.Category;
 import net.thrymr.model.master.MtMoodInfo;
 
 import java.util.List;
@@ -26,12 +27,15 @@ public class Query implements GraphQLQueryResolver {
     private final AppUserRepo appUserRepo;
 
     private final RolesRepo rolesRepo;
+    
+    private final CategoryRepo categoryRepo;
 
-    public Query(MoodInfoRepository repository, MoodIntensityRepo moodIntensityRepo, AppUserRepo appUserRepo, RolesRepo rolesRepo) {
+    public Query(MoodInfoRepository repository, MoodIntensityRepo moodIntensityRepo, AppUserRepo appUserRepo, RolesRepo rolesRepo,CategoryRepo categoryRepo) {
         this.repository = repository;
         this.moodIntensityRepo = moodIntensityRepo;
         this.appUserRepo = appUserRepo;
         this.rolesRepo = rolesRepo;
+        this.categoryRepo=categoryRepo;
     }
 
     @QueryMapping
@@ -68,6 +72,11 @@ public class Query implements GraphQLQueryResolver {
     @QueryMapping
     public MtRoles mtRoleById(Long id){
         return rolesRepo.findById(id).orElse(null);
+    }
+    
+    @QueryMapping
+    public List<Category> getAllCategory() {
+        return categoryRepo.findAll();
     }
 
 }

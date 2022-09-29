@@ -1,7 +1,10 @@
 package net.thrymr.controller;
 import net.thrymr.dto.AppUserDto;
 import net.thrymr.dto.LearningVideoDto;
+import net.thrymr.model.master.Category;
+import net.thrymr.model.master.Course;
 import net.thrymr.model.master.MtRoles;
+import net.thrymr.repository.CategoryRepo;
 import net.thrymr.repository.RolesRepo;
 import net.thrymr.services.AppUserService;
 import net.thrymr.services.*;
@@ -9,6 +12,7 @@ import net.thrymr.utils.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 
 @RestController
@@ -37,8 +43,10 @@ public class MasterController {
     private final LearningVideoService learningVideoService;
 
     private final RolesRepo rolesRepo;
+    
+    private final CategoryRepo categoryRepo;
 
-    public MasterController(RoleService roleService, AppUserService appUserService, MoodInfoService moodInfoService, MoodIntensityService moodIntensityService, MoodSourceService moodSourceService, LearningVideoService learningVideoService, RolesRepo rolesRepo) {
+    public MasterController(RoleService roleService, AppUserService appUserService, MoodInfoService moodInfoService, MoodIntensityService moodIntensityService, MoodSourceService moodSourceService, LearningVideoService learningVideoService, RolesRepo rolesRepo,CategoryRepo categoryRepo) {
         this.roleService = roleService;
         this.appUserService = appUserService;
         this.moodInfoService = moodInfoService;
@@ -46,6 +54,7 @@ public class MasterController {
         this.moodSourceService = moodSourceService;
         this.learningVideoService = learningVideoService;
         this.rolesRepo = rolesRepo;
+        this.categoryRepo=categoryRepo;
     }
 
 
@@ -150,4 +159,38 @@ public class MasterController {
     return rolesRepo.findById(id).orElse(null);
 }
 
+   @QueryMapping
+   public List<Category> getAllCategory() {
+       logger.info("get all Category service started");
+       return categoryRepo.findAll();
+   }
+   
+   @MutationMapping
+   public String createCategory(@Argument Long id,@Argument String name,@Argument String description,@Argument Integer sequence) {
+   	Category category=new Category();
+   	category.setId(id);
+   	category.setName(name);
+   	category.setDescription(description);
+   	category.setSequence(sequence);
+   	categoryRepo.save(category);
+    return "Course Created successfully";
+   	
+   }
+   
+   @MutationMapping
+   public Category updateCategory(@Argument Long id,@Argument String name,@Argument String description,@Argument Integer sequence){
+       final Optional<Category> category = categoryRepo.findById(id).stream()
+               .filter(c -> c.getId() == id)
+               .findFirst();
+           if (!category.isPresent()) {
+               return null;
+           }
+           category.get()
+               .setName(name);
+           category.get()
+               .setDescription(description);
+           category.get()
+               .setSequence(sequence);
+           return categoryRepo.save(category.get());
+   }
 }

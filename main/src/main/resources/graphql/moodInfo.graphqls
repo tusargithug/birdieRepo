@@ -11,7 +11,7 @@ type Query {
   getAllAppUsers:[AppUser]
   mtRoleById(id:ID):MtRoles
   getAllMtRoles:[MtRoles]
-
+  getAllCategory:[Category]
 }
 
 type Mutation {
@@ -23,8 +23,9 @@ type Mutation {
    createUserMoodSourceCheckIn(input :MoodSourceIntensityRequestDto!):String!
    deleteUserMoodCheckInById(id:ID):String!
     deleteUserMoodSourceCheckInById(id:ID):String!
-
-}
+    createCategory(id:Int!,name:String!,description:String!,sequence:Int!):String!
+    updateCategory(id:Int!,name:String!,description:String!,sequence:Int!):Category
+ }
 
 type MtMoodInfo {
     id: ID!
@@ -76,5 +77,11 @@ intensityDescription:String!
 
 }
 
+type Category{
+name:String!
+description:String!
+sequence:Int!
+courses:[Int!]
+}
 
 
