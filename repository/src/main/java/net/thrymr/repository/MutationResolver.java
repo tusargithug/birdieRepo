@@ -40,8 +40,9 @@ private final UserMoodCheckInRepo userMoodCheckInRepo;
     
     private final CategoryRepo categoryRepo;
 
+    private final CourseRepo courseRepo;
 
-    public MutationResolver(AppUserRepo appUserRepo, MoodIntensityRepo moodIntensityRepo, UserMoodCheckInRepo userMoodCheckInRepo, Environment environment, MoodSourceRepo moodSourceRepo, UserMoodSourceCheckInRepo userMoodSourceCheckInRepo,CategoryRepo categoryRepo) {
+    public MutationResolver(AppUserRepo appUserRepo, MoodIntensityRepo moodIntensityRepo, UserMoodCheckInRepo userMoodCheckInRepo, Environment environment, MoodSourceRepo moodSourceRepo, UserMoodSourceCheckInRepo userMoodSourceCheckInRepo,CategoryRepo categoryRepo,CourseRepo courseRepo) {
         this.appUserRepo = appUserRepo;
         this.moodIntensityRepo = moodIntensityRepo;
         this.userMoodCheckInRepo = userMoodCheckInRepo;
@@ -49,6 +50,7 @@ private final UserMoodCheckInRepo userMoodCheckInRepo;
         this.moodSourceRepo = moodSourceRepo;
         this.userMoodSourceCheckInRepo = userMoodSourceCheckInRepo;
         this.categoryRepo=categoryRepo;
+        this.courseRepo=courseRepo;
     }
 
     @MutationMapping
@@ -188,5 +190,51 @@ private final UserMoodCheckInRepo userMoodCheckInRepo;
                 .setSequence(sequence);
             return categoryRepo.save(category.get());
     }
+    
+    @MutationMapping
+    public String deleteCategoryById(@Argument Long id){
+    	Optional<Category> category = categoryRepo.findById(id);
+    	category.ifPresent(categoryRepo::delete);
+        return "Intensity deleted successfully";
+    }
+    
+    
+    @MutationMapping
+    public String createCourse(@Argument Long id,@Argument String name,@Argument String description,@Argument Integer sequence,@Argument String code) {
+    	Course course=new Course();
+    	course.setName(name);
+    	course.setDecription(description);
+    	course.setCode(code);
+    	course.setSequence(sequence);
+    	courseRepo.save(course);
+        return "Course Created successfully";
+    	
+    }
+    
+    @MutationMapping
+    public Course updateCourse(@Argument Long id,@Argument String name,@Argument String description,@Argument Integer sequence,@Argument String code){
+        final Optional<Course> course = courseRepo.findById(id).stream()
+                .filter(c -> c.getId() == id)
+                .findFirst();
+            if (!course.isPresent()) {
+                return null;
+            }
+            course.get()
+                .setName(name);
+            course.get()
+                .setDecription(description);
+            course.get()
+                .setSequence(sequence);
+            course.get().setCode(code);
+            return courseRepo.save(course.get());
+    }
+    
+    @MutationMapping
+    public String deleteCourseById(@Argument Long id){
+    	Optional<Course> category = courseRepo.findById(id);
+    	category.ifPresent(courseRepo::delete);
+        return "Intensity deleted successfully";
+    }
+    
     }
 

@@ -5,6 +5,7 @@ import net.thrymr.model.master.Category;
 import net.thrymr.model.master.Course;
 import net.thrymr.model.master.MtRoles;
 import net.thrymr.repository.CategoryRepo;
+import net.thrymr.repository.CourseRepo;
 import net.thrymr.repository.RolesRepo;
 import net.thrymr.services.AppUserService;
 import net.thrymr.services.*;
@@ -46,7 +47,9 @@ public class MasterController {
     
     private final CategoryRepo categoryRepo;
 
-    public MasterController(RoleService roleService, AppUserService appUserService, MoodInfoService moodInfoService, MoodIntensityService moodIntensityService, MoodSourceService moodSourceService, LearningVideoService learningVideoService, RolesRepo rolesRepo,CategoryRepo categoryRepo) {
+    private final CourseRepo courseRepo;
+    
+    public MasterController(RoleService roleService, AppUserService appUserService, MoodInfoService moodInfoService, MoodIntensityService moodIntensityService, MoodSourceService moodSourceService, LearningVideoService learningVideoService, RolesRepo rolesRepo,CategoryRepo categoryRepo,CourseRepo courseRepo) {
         this.roleService = roleService;
         this.appUserService = appUserService;
         this.moodInfoService = moodInfoService;
@@ -55,6 +58,7 @@ public class MasterController {
         this.learningVideoService = learningVideoService;
         this.rolesRepo = rolesRepo;
         this.categoryRepo=categoryRepo;
+        this.courseRepo=courseRepo;
     }
 
 
@@ -192,5 +196,54 @@ public class MasterController {
            category.get()
                .setSequence(sequence);
            return categoryRepo.save(category.get());
+   }
+   
+   @MutationMapping
+   public String deleteCategoryById(@Argument Long id){
+   	Optional<Category> category = categoryRepo.findById(id);
+   	category.ifPresent(categoryRepo::delete);
+       return "Intensity deleted successfully";
+   }
+   
+   @QueryMapping
+   public List<Course> getAllCourse() {
+       return courseRepo.findAll();
+   }
+   
+   @MutationMapping
+   public String createCourse(@Argument Long id,@Argument String name,@Argument String description,@Argument Integer sequence,@Argument String code) {
+   	Course course=new Course();
+   	course.setName(name);
+   	course.setDecription(description);
+   	course.setCode(code);
+   	course.setSequence(sequence);
+   	courseRepo.save(course);
+       return "Course Created successfully";
+   	
+   }
+   
+   @MutationMapping
+   public Course updateCourse(@Argument Long id,@Argument String name,@Argument String description,@Argument Integer sequence,@Argument String code){
+       final Optional<Course> course = courseRepo.findById(id).stream()
+               .filter(c -> c.getId() == id)
+               .findFirst();
+           if (!course.isPresent()) {
+               return null;
+           }
+           course.get()
+               .setName(name);
+           course.get()
+               .setDecription(description);
+           course.get()
+               .setSequence(sequence);
+           course.get().setCode(code);
+           return courseRepo.save(course.get());
+   }
+   
+   @MutationMapping
+   public String deleteCourseById(@Argument Long id){
+   	Optional<Course> category = courseRepo.findById(id);
+   	category.ifPresent(courseRepo::delete);
+       return "Intensity deleted successfully";
    }
 }
