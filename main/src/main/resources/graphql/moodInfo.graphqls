@@ -12,7 +12,8 @@ type Query {
   mtRoleById(id:ID):MtRoles
   getAllMtRoles:[MtRoles]
   getAllCategory:[Category]
-  getAllCourse:[Course]
+  getAllCourse:[Course] 
+  getAllFileEntity:[FileEntity]
 }
 
 type Mutation {
@@ -31,6 +32,9 @@ type Mutation {
     createCourse(input:CourseDto):String!
     updateCourse(input:CourseDto):Course
     deleteCourseById(id:ID):String!
+    createFileEntity(fileId:Int!,name:String!,contentType:String!,fileType:String!):String!
+    updateFileEntity(fileId:Int!,name:String!,contentType:String!,fileType:String!):FileEntity
+    deleteFileEntityById(fileId:ID):String!
  }
 
 type MtMoodInfo {
@@ -79,4 +83,12 @@ empId:String
 
 
 
+
+type FileEntity{
+fileId:ID!
+contentType:String!
+name:String!
+fileType:String!
+employees:[Course]
+}
 
