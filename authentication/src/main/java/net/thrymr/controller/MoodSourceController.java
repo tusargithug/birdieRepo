@@ -29,17 +29,11 @@ public class MoodSourceController {
 
     private final MoodSourceService moodSourceService;
 
-    private final MoodSourceRepo moodSourceRepo;
 
-    private final Environment environment;
 
-    private final UserMoodSourceCheckInRepo userMoodSourceCheckInRepo;
-
-    public MoodSourceController(MoodSourceService moodSourceService, MoodSourceRepo moodSourceRepo, Environment environment, UserMoodSourceCheckInRepo userMoodSourceCheckInRepo) {
+    public MoodSourceController(MoodSourceService moodSourceService ) {
         this.moodSourceService = moodSourceService;
-        this.moodSourceRepo = moodSourceRepo;
-        this.environment = environment;
-        this.userMoodSourceCheckInRepo = userMoodSourceCheckInRepo;
+
     }
 
     // save mood sources
@@ -71,26 +65,13 @@ public class MoodSourceController {
         return new ApiResponse(HttpStatus.OK,"", apiResponse);
     }
 
-    @MutationMapping
-    public String createUserMoodSourceCheckIn(MoodSourceIntensityRequestDto request) {
-        AppUser user= CommonUtil.getAppUser();
+    @MutationMapping(name = "createUserMoodSourceCheckIn")
+    public String createUserMoodSourceCheckIn(@Argument(name = "input") MoodSourceIntensityRequestDto request) {
+        return   moodSourceService.createUserMoodSourceCheckIn(request);
 
-        List<MtMoodSource> mtMoodSourceList = moodSourceRepo.findAllByIdIn(request.getSourceIds());
-        UserMoodSourceCheckedIn checkedIn = new UserMoodSourceCheckedIn();
-        checkedIn.setAppUser(user);
-        if (!mtMoodSourceList.isEmpty()) {
-            checkedIn.setSources(mtMoodSourceList);
-        }
-        if (Validator.isValid(request.getDescription())) {
-            checkedIn.setDescription(request.getDescription());
-        }
-        userMoodSourceCheckInRepo.save(checkedIn);
-        return environment.getProperty("MOOD_SOURCE_UPDATED");
     }
-    @MutationMapping
+    @MutationMapping(name = "deleteUserMoodSourceCheckInById")
     public String deleteUserMoodSourceCheckInById(@Argument Long id){
-        Optional<MtMoodSource> optionalMtMoodSource=moodSourceRepo.findById(id);
-        optionalMtMoodSource.ifPresent(moodSourceRepo::delete);
-        return "Source deleted successfully";
+        return   moodSourceService.deleteUserMoodSourceCheckInById( id);
     }
 }

@@ -22,8 +22,8 @@ public class MtOptions extends BaseEntity {
 	
 	@ManyToOne
 	private MtQuestion mtQuestion;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
+
+	@ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	private UserCourse userCourseInfo;
 	
 

@@ -28,8 +28,8 @@ public class UserCourse extends BaseEntity{
 	
 	@Enumerated
 	private CourseStatus status = CourseStatus.NOT_STARTED;
-	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userCourseInfo")
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userCourseInfo",fetch = FetchType.LAZY)
 	private Set<MtOptions> mtOptions = new HashSet<>();
 
 	@Column(name = "started_date")

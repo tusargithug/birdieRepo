@@ -1,13 +1,14 @@
 package net.thrymr.services;
 import net.thrymr.dto.AppUserDto;
+import net.thrymr.dto.UserCourseDto;
+import net.thrymr.model.AppUser;
 import net.thrymr.utils.ApiResponse;
 import org.springframework.web.multipart.MultipartFile;
 
-/*
- *@author Chanda Veeresh
- *@version 1.0
- *@since  11-07-2022
- */
+import java.text.ParseException;
+import java.util.List;
+
+
 public interface AppUserService {
     ApiResponse saveUser(AppUserDto appUser);
     ApiResponse addUsersByExcel(MultipartFile file);
@@ -18,4 +19,16 @@ public interface AppUserService {
     ApiResponse getUserById(Long id);
 
     ApiResponse getAllUsers();
+
+    AppUser getAppUserById(Long id);
+
+    String createAppUser(AppUserDto request);
+
+    String updateAppUser(AppUserDto request);
+
+    String deleteAppUserById(Long id);
+
+    String createUserCourse(UserCourseDto request) throws ParseException;
+
+    List<AppUser> getAllAppUsers();
 }

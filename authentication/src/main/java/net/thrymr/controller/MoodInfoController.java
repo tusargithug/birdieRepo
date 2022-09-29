@@ -1,9 +1,9 @@
 package net.thrymr.controller;
 
-import net.thrymr.repository.MoodInfoRepo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.thrymr.model.master.MtMoodInfo;
-import net.thrymr.repository.MoodInfoRepository;
+
 import net.thrymr.services.MoodInfoService;
 import net.thrymr.utils.ApiResponse;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -27,9 +27,8 @@ public class MoodInfoController {
     private final Logger logger = LoggerFactory.getLogger(MoodInfoController.class);
 
 
-    @Autowired
-    MoodInfoRepository repository;
-    
+
+
     private final MoodInfoService moodInfoService;
 
 
@@ -41,7 +40,7 @@ public class MoodInfoController {
     @GetMapping("/get/{id}")
     public ApiResponse getMoodInfoById(@PathVariable Long id) {
         logger.info("get  mood info service started");
-      ApiResponse apiResponse=   moodInfoService.getMoodInfoById(id);
+        ApiResponse apiResponse=   moodInfoService.getMoodInfoById(id);
         logger.info("get  mood info completed");
         return new ApiResponse(HttpStatus.OK,"", apiResponse);
     }
@@ -61,18 +60,16 @@ public class MoodInfoController {
         logger.info("delete mood info service completed");
         return new ApiResponse(HttpStatus.OK, "Delete  mood info");
     }
-    
+
     @QueryMapping
     public MtMoodInfo moodInfoById(@Argument long id) {
-        return repository.findById(id).orElse(null);
+        return moodInfoService.moodInfoById(id);
+
     }
 
     @QueryMapping
     public List<MtMoodInfo> getAllMoodInfo() {
         logger.info("get all mood info service started");
-     //   ApiResponse apiResponse =
-                return    repository.findAll();
-//        logger.info("get all mood info service completed");
-//        return new ApiResponse(HttpStatus.OK, "All MoodInfo details",apiResponse);
+        return moodInfoService.getAllMoodInfo();
     }
 }

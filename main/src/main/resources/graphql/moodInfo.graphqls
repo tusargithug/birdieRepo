@@ -16,27 +16,27 @@ type Query {
 }
 
 type Mutation {
-  createAppUser(firstName:String!,lastName:String!,email:String!,mobile:String!,alternateMobile:String!,empId:String!): String!
+  createAppUser(input :AppUserDto): String!
    updateAppUser(input:AppUserDto!): String!
    deleteAppUserById(id:ID):String!
 
-   createUserMoodCheckIn(input :MoodSourceIntensityRequestDto!):String!
-   createUserMoodSourceCheckIn(input :MoodSourceIntensityRequestDto!):String!
+   createUserMoodCheckIn(input :MoodSourceIntensityRequestDto):String!
+   createUserMoodSourceCheckIn(input :MoodSourceIntensityRequestDto):String!
    deleteUserMoodCheckInById(id:ID):String!
     deleteUserMoodSourceCheckInById(id:ID):String!
-    
-    createCategory(id:Int!,name:String!,description:String!,sequence:Int!):String!
-    updateCategory(id:Int!,name:String!,description:String!,sequence:Int!):Category
+    createUserCourse(input:UserCourseDto):String!
+    createCategory(input:CategoryDto):String!
+    updateCategory(input:CategoryDto):Category
     deleteCategoryById(id:ID):String!    
-    createCourse(id:Int!,name:String!,description:String!,sequence:Int!,code: String!):String!
-    updateCourse(id:Int!,name:String!,description:String!,sequence:Int!,code: String!):Course
+    createCourse(input:CourseDto):String!
+    updateCourse(input:CourseDto):Course
     deleteCourseById(id:ID):String!
  }
 
 type MtMoodInfo {
     id: ID!
-    name: String!
-    emoji:String!
+    name: String
+    emoji:String
     description:String!
    intensities:[MtMoodIntensity]
 
@@ -44,59 +44,39 @@ type MtMoodInfo {
 
 type MtMoodIntensity{
     id: ID!
-    name: String!
-     emoji:String!
+    name: String
+     emoji:String
 }
 
 type MtRoles{
      id: ID!
-    name: String!
+    name: String
 }
 
 
 input AppUserDto{
-firstName:String!
-lastName:String!
-email:String!
-mobile:String!
-alternateMobile:String!
-empId:String!
+firstName:String
+lastName:String
+email:String
+mobile:String
+alternateMobile:String
+empId:String
 }
 
 
 
 type AppUser{
 id:ID!
-firstName:String!
-lastName:String!
-email:String!
-userName:String!
-mobile:String!
-alternateMobile:String!
-empId:String!
+firstName:String
+lastName:String
+email:String
+userName:String
+mobile:String
+alternateMobile:String
+empId:String
 }
 
-input MoodSourceIntensityRequestDto{
-intensityId:Int!
-sourceIds:[Int!]
-intensityDescription:String!
 
-}
 
-type Category{
-id:ID!
-name:String!
-description:String!
-sequence:Int!
-courses:[Int!]
-}
 
-type Course{
-id:ID!
-name:String!
-code:String!
-sequence:Int!
-decription:String!
-category:Int!
-}
 

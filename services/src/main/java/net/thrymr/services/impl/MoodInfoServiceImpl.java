@@ -166,15 +166,12 @@ public class MoodInfoServiceImpl implements MoodInfoService {
     @Override
     public List<MtMoodInfo> getAllMoodInfo() {
         List<MtMoodInfo> mtMoodInfos = moodInfoRepo.findAll();
-//        List<MoodInfoDto> moodInfoDtos = new ArrayList<>();
-//        if (!mtMoodInfos.isEmpty()) {
-//            mtMoodInfos.forEach(model -> moodInfoDtos.add(setModelToDto(model)));
-//            return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_FOUND"), moodInfoDtos);
-//        }
-//
-//        return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_NOT_FOUND"), moodInfoDtos);
+     return mtMoodInfos;
+    }
 
-return mtMoodInfos;
+    @Override
+    public MtMoodInfo moodInfoById(Long id) {
+        return moodInfoRepo.findById(id).orElse(null);
     }
 
     private MoodInfoDto setModelToDto(MtMoodInfo mtMoodInfo) {

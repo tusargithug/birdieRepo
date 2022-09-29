@@ -111,9 +111,11 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
                         mtMoodIntensity.setScore(Float.valueOf(getCellValue(row.getCell(2))));
                     }
                     if (row.getCell(3) != null) {
-                        Optional<MtMoodInfo> moodInfoOptional = moodInfoRepo.findById(Long.valueOf(getCellValue(row.getCell(3))));
+//                        Optional<MtMoodInfo> moodInfoOptional = moodInfoRepo.findById(Long.valueOf(getCellValue(row.getCell(3))));
+//
+//                        moodInfoOptional.ifPresent(moodInfo -> mtMoodIntensity.setSequence(Math.toIntExact(moodInfo.getSequence())));
+                        mtMoodIntensity.setSequence(Integer.parseInt(getCellValue(row.getCell(3))));
 
-                        moodInfoOptional.ifPresent(moodInfo -> mtMoodIntensity.setSequence(Math.toIntExact(moodInfo.getSequence())));
                     }
                     if (row.getCell(4) != null) {
                         if (moodInfoRepo.existsById(Long.valueOf(getCellValue(row.getCell(4))))) {
@@ -244,5 +246,39 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
       //  dto.setMoodInfoDto(request.getMoodInfo());
        return dto;
     }
+
+    @Override
+    public List<MtMoodIntensity> getAllMoodIntensity() {
+        return moodIntensityRepo.findAll();
+    }
+
+    @Override
+    public String deleteUserMoodCheckInById(Long id) {
+        Optional<MtMoodIntensity>optionalMtMoodIntensity=moodIntensityRepo.findById(id);
+        optionalMtMoodIntensity.ifPresent(moodIntensityRepo::delete);
+        return "Intensity deleted successfully";
+    }
+
+    @Override
+    public String createUserMoodCheckIn(MoodSourceIntensityRequestDto request) {
+        //AppUser user= CommonUtil.getAppUser();
+        Optional<MtMoodIntensity> optionalMoodIntensity=moodIntensityRepo.findById(request.getIntensityId());
+        UserMoodCheckIn userMoodCheckIn=new UserMoodCheckIn();
+        // userMoodCheckIn.setAppUser(user);
+        if(optionalMoodIntensity.isPresent()){
+            if(Validator.isValid(request.getIntensityDescription())){
+                optionalMoodIntensity.get().setDescription(request.getIntensityDescription());
+            }
+            userMoodCheckIn.setIntensities(optionalMoodIntensity.stream().toList());
+        }
+        if(Validator.isValid(request.getDescription())){
+            userMoodCheckIn.setDescription(request.getDescription());
+        }
+
+        userMoodCheckInRepo.save(userMoodCheckIn);
+
+        return environment.getProperty("USER_CHECKED_IN_SAVE");
+    }
+
 }
 

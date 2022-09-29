@@ -60,6 +60,15 @@ public class RoleServiceImpl implements RoleService {
         return new ApiResponse(HttpStatus.OK, environment.getProperty("ROLES_FOUND"), rolesString);
     }
 
+    @Override
+    public List<MtRoles> getAllMtRoles() {
+        return roleRepo.findAll();
+    }
+
+    @Override
+    public MtRoles mtRoleById(Long id) {
+        return roleRepo.findById(id).orElse(null);
+    }
 }
 
 

@@ -15,4 +15,6 @@ public interface MoodInfoService {
     ApiResponse deleteMoodInfoById(Long id);
 
     List<MtMoodInfo> getAllMoodInfo();
+
+    MtMoodInfo moodInfoById(Long id);
 }

@@ -1,0 +1,54 @@
+
+type Category{
+id:ID!
+name:String
+description:String
+sequence:Int
+courses:[Int]
+}
+
+type Course{
+id:ID!
+name:String
+code:String
+sequence:Int
+description:String
+category:Int
+}
+
+
+input OptionsDto{
+ id:Int
+ textAnswer:String
+ questionDto:QuestionDto
+}
+
+interface ApiResponse{
+statusCode:String!
+message:String
+
+status:String
+}
+
+input QuestionDto{
+question:String
+answersDto:[OptionsDto]
+videoReference:String
+}
+
+
+input CategoryDto{
+id:Int
+name:String
+description:String
+sequence:Int
+coursesIds:[Int]
+}
+
+input CourseDto{
+id:Int
+code:String
+name:String
+sequence:Int
+description:String
+}

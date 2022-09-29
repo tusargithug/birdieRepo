@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface MtOptionsRepo extends JpaRepository<MtOptions,Long> {
     List<MtOptions> findAllByMtQuestionId(Long id);
+
+    List<MtOptions> findAllByIdIn(List<Long> mtOptionsIds);
 }

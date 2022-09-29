@@ -1,5 +1,6 @@
 package net.thrymr.utils;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -74,6 +75,10 @@ public class DateUtils {
         } else {
             return "";
         }
+    }
+    public static Date toFormatStringToDate(String ldt, String format) throws ParseException {
+
+        return new SimpleDateFormat(format).parse(ldt);
     }
 
 }

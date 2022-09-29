@@ -3,12 +3,14 @@ package net.thrymr.services.impl;
 import net.thrymr.dto.MoodSourceDto;
 import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
 import net.thrymr.enums.Category;
+import net.thrymr.model.AppUser;
 import net.thrymr.model.UserMoodSourceCheckedIn;
 import net.thrymr.model.master.MtMoodSource;
 import net.thrymr.repository.MoodSourceRepo;
 import net.thrymr.repository.UserMoodSourceCheckInRepo;
 import net.thrymr.services.MoodSourceService;
 import net.thrymr.utils.ApiResponse;
+import net.thrymr.utils.CommonUtil;
 import net.thrymr.utils.Validator;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.util.NumberToTextConverter;
@@ -26,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -148,5 +151,27 @@ public class MoodSourceServiceImpl implements MoodSourceService {
         moodSourceDto.setSequence(mtMoodSource.getSequence());
         return moodSourceDto;
     }
+    @Override
+    public String createUserMoodSourceCheckIn(MoodSourceIntensityRequestDto request) {
+        //AppUser user= CommonUtil.getAppUser();
 
+        List<MtMoodSource> mtMoodSourceList = moodSourceRepo.findAllByIdIn(request.getSourceIds());
+        UserMoodSourceCheckedIn checkedIn = new UserMoodSourceCheckedIn();
+       // checkedIn.setAppUser(user);
+        if (!mtMoodSourceList.isEmpty()) {
+            checkedIn.setSources(mtMoodSourceList);
+        }
+        if (Validator.isValid(request.getDescription())) {
+            checkedIn.setDescription(request.getDescription());
+        }
+        userMoodSourceCheckInRepo.save(checkedIn);
+        return environment.getProperty("MOOD_SOURCE_UPDATED");
+    }
+
+    @Override
+    public String deleteUserMoodSourceCheckInById(Long id) {
+        Optional<MtMoodSource> optionalMtMoodSource=moodSourceRepo.findById(id);
+        optionalMtMoodSource.ifPresent(moodSourceRepo::delete);
+        return "Source deleted successfully";
+    }
 }

@@ -15,4 +15,8 @@ public interface MoodSourceService {
     ApiResponse moodSourceSave(MoodSourceDto request);
 
     ApiResponse updateMoodSource(MoodSourceIntensityRequestDto request);
+
+    String createUserMoodSourceCheckIn(MoodSourceIntensityRequestDto request);
+
+    String deleteUserMoodSourceCheckInById(Long id);
 }

@@ -1,15 +1,20 @@
 package net.thrymr.services.impl;
 
 
+import net.thrymr.constant.Constants;
 import net.thrymr.dto.AppUserDto;
 import net.thrymr.dto.RolesDto;
+import net.thrymr.dto.UserCourseDto;
 import net.thrymr.model.AppUser;
+import net.thrymr.model.UserCourse;
+import net.thrymr.model.master.Course;
+import net.thrymr.model.master.MtOptions;
 import net.thrymr.model.master.MtRoles;
-import net.thrymr.repository.AppUserRepo;
-import net.thrymr.repository.RoleRepo;
+import net.thrymr.repository.*;
 import net.thrymr.services.AppUserService;
 
 import net.thrymr.utils.ApiResponse;
+import net.thrymr.utils.DateUtils;
 import net.thrymr.utils.Validator;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.util.NumberToTextConverter;
@@ -27,7 +32,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -43,10 +50,19 @@ public class AppUserServiceImpl implements AppUserService {
 
     private final RoleRepo roleRepo;
 
-    public AppUserServiceImpl(AppUserRepo appUserRepo, Environment environment, RoleRepo roleRepo) {
+    private final UserCourseRepo userCourseRepo;
+
+    private final CourseRepo courseRepo;
+
+    private final MtOptionsRepo mtOptionsRepo;
+
+    public AppUserServiceImpl(AppUserRepo appUserRepo, Environment environment, RoleRepo roleRepo, UserCourseRepo userCourseRepo, CourseRepo courseRepo, MtOptionsRepo mtOptionsRepo) {
         this.appUserRepo = appUserRepo;
         this.environment = environment;
         this.roleRepo = roleRepo;
+        this.userCourseRepo = userCourseRepo;
+        this.courseRepo = courseRepo;
+        this.mtOptionsRepo = mtOptionsRepo;
     }
 
     @Bean
@@ -246,4 +262,95 @@ public class AppUserServiceImpl implements AppUserService {
 
         return dto;
     }
+    @Override
+    public String createAppUser(AppUserDto request) {
+        AppUser user=new AppUser();
+        user.setEmail(request.getEmail());
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setUserName(request.getFirstName()+" "+request.getLastName());
+        user.setMobile(request.getMobile());
+        user.setAlternateMobile(request.getAlternateMobile());
+        user.setEmpId(request.getEmpId());
+        appUserRepo.save(user);
+        return "User Saved successfully";
+
+    }
+
+    @Override
+    public String updateAppUser(AppUserDto request) {
+        Optional<AppUser>optionalAppUser=appUserRepo.findById(request.getId());
+        if(optionalAppUser.isPresent()){
+            AppUser user= optionalAppUser.get();
+            if(request.getEmpId()!=null){
+                user.setEmpId(request.getEmpId());
+            }
+            if(request.getMobile()!=null) {
+                user.setMobile(request.getMobile());
+            }
+
+            // user.setPassword(request.getPassword());
+            if(request.getLastName()!=null) {
+                user.setLastName(request.getLastName());
+            }
+            if(request.getFirstName()!=null) {
+                user.setFirstName(request.getFirstName());
+            }
+            if(request.getEmail()!=null) {
+                user.setEmail(request.getEmail());
+            }
+
+            if(request.getAlternateMobile()!=null) {
+                user.setAlternateMobile(request.getAlternateMobile());
+            }
+            appUserRepo.save(user);
+            return "User updated successfully";
+        }
+        return "No data found";
+    }
+
+    @Override
+    public String deleteAppUserById(Long id) {
+        Optional<AppUser>optionalAppUser=appUserRepo.findById(id);
+        optionalAppUser.ifPresent(appUserRepo::delete);
+        return "User deleted successfully";
+    }
+
+    @Override
+    public String createUserCourse(UserCourseDto request) throws ParseException {
+        // AppUser user= CommonUtil.getAppUser();
+        UserCourse userCourse=new UserCourse();
+        //userCourse.setUser(new AppUser());
+
+
+        Optional<Course>optionalCourse=courseRepo.findById(request.getCourseId());
+        optionalCourse.ifPresent(userCourse::setCourse);
+        List<MtOptions>mtOptionsList=mtOptionsRepo.findAllByIdIn(request.getMtOptionsIds());
+        if(Validator.isValid(mtOptionsList)){
+            userCourse.setMtOptions(new HashSet<>(mtOptionsList));
+        }
+        if(Validator.isValid(request.getStartedDate())){
+            userCourse.setStartedDate(DateUtils.toFormatStringToDate(request.getStartedDate(), Constants.DATE_FORMAT));
+        }
+        if(Validator.isValid(request.getCompletedDate())){
+            userCourse.setCompletedDate(DateUtils.toFormatStringToDate(request.getCompletedDate(), Constants.DATE_FORMAT));
+        }
+        if(request.getStatus()!=null){
+            userCourse.setStatus(request.getStatus());
+        }
+        userCourseRepo.save(userCourse);
+        return "Saved Successfully";
+    }
+
+
+    @Override
+    public AppUser getAppUserById(Long id) {
+        return appUserRepo.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<AppUser> getAllAppUsers() {
+        return appUserRepo.findAll();
+    }
+
 }

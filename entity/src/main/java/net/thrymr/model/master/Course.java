@@ -41,7 +41,7 @@ public class Course extends BaseEntity {
 	Set<MtAssignment> assignments = new HashSet<>();
 
 	@Column(columnDefinition = "TEXT")
-	private String decription;
+	private String description;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Category category;

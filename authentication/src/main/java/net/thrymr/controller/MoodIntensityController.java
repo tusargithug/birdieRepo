@@ -2,23 +2,25 @@ package net.thrymr.controller;
 
 import net.thrymr.dto.MoodIntensityDto;
 import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
-import net.thrymr.model.AppUser;
+
 import net.thrymr.model.UserMoodCheckIn;
 import net.thrymr.model.master.MtMoodIntensity;
 import net.thrymr.repository.MoodIntensityRepo;
 import net.thrymr.repository.UserMoodCheckInRepo;
 import net.thrymr.services.MoodIntensityService;
 import net.thrymr.utils.ApiResponse;
-import net.thrymr.utils.CommonUtil;
+
 import net.thrymr.utils.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -30,17 +32,13 @@ public class MoodIntensityController {
 
     private final MoodIntensityRepo moodIntensityRepo;
 
-    private final UserMoodCheckInRepo userMoodCheckInRepo;
 
-    private final Environment environment;
 
-    public MoodIntensityController(MoodIntensityService moodIntensityService, MoodIntensityRepo moodIntensityRepo, UserMoodCheckInRepo userMoodCheckInRepo, Environment environment) {
+    public MoodIntensityController(MoodIntensityService moodIntensityService, MoodIntensityRepo moodIntensityRepo) {
         this.moodIntensityService = moodIntensityService;
         this.moodIntensityRepo = moodIntensityRepo;
-        this.userMoodCheckInRepo = userMoodCheckInRepo;
-        this.environment = environment;
     }
-   // save mood intensity
+    // save mood intensity
     @PostMapping("/save")
     public ApiResponse moodIntensitySave(@RequestBody MoodIntensityDto request) {
         logger.info("save mood intensity service started");
@@ -48,7 +46,7 @@ public class MoodIntensityController {
         logger.info("save mood intensity service completed");
         return new ApiResponse(HttpStatus.OK, "",apiResponse);
     }
-     // get mood intensity by id
+    // get mood intensity by id
     @GetMapping("/get/{id}")
     public ApiResponse getMoodIntensitiesById(@PathVariable Long id) {
         logger.info("Get mood intensity service started");
@@ -82,7 +80,7 @@ public class MoodIntensityController {
         logger.info("Get all mood intensity service completed");
         return new ApiResponse(HttpStatus.OK,"", apiResponse);
     }
-     //update mood intensity    on daily basis in userCheckedIn  table
+    //update mood intensity    on daily basis in userCheckedIn  table
 
     @PutMapping("/update")
     public ApiResponse updateMoodIntensity(@RequestBody MoodSourceIntensityRequestDto request) {
@@ -93,32 +91,23 @@ public class MoodIntensityController {
     }
 
 
-    @MutationMapping
-    public String createUserMoodCheckIn(MoodSourceIntensityRequestDto request){
-        AppUser user= CommonUtil.getAppUser();
-        Optional<MtMoodIntensity> optionalMoodIntensity=moodIntensityRepo.findById(request.getIntensityId());
-        UserMoodCheckIn userMoodCheckIn=new UserMoodCheckIn();
-        userMoodCheckIn.setAppUser(user);
-        if(optionalMoodIntensity.isPresent()){
-            if(Validator.isValid(request.getIntensityDescription())){
-                optionalMoodIntensity.get().setDescription(request.getIntensityDescription());
-            }
-            userMoodCheckIn.setIntensities(optionalMoodIntensity.stream().toList());
-        }
-        if(Validator.isValid(request.getDescription())){
-            userMoodCheckIn.setDescription(request.getDescription());
-        }
+    @MutationMapping(name = "createUserMoodCheckIn")
+    public String createUserMoodCheckIn(@Argument(name = "input") MoodSourceIntensityRequestDto request){
+        return moodIntensityService.createUserMoodCheckIn(request);
 
-        userMoodCheckInRepo.save(userMoodCheckIn);
 
-        return environment.getProperty("USER_CHECKED_IN_SAVE");
     }
 
 
-    @MutationMapping
+    @MutationMapping(name = "deleteUserMoodCheckInById")
     public String deleteUserMoodCheckInById(@Argument Long id){
-        Optional<MtMoodIntensity>optionalMtMoodIntensity=moodIntensityRepo.findById(id);
-        optionalMtMoodIntensity.ifPresent(moodIntensityRepo::delete);
-        return "Intensity deleted successfully";
+        return moodIntensityService.deleteUserMoodCheckInById(id);
+
     }
+    @QueryMapping("getAllMoodIntensity")
+    public List<MtMoodIntensity> getAllMoodIntensity(){
+        return moodIntensityService.getAllMoodIntensity();
+
+    }
+
 }

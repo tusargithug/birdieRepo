@@ -3,10 +3,11 @@ package net.thrymr.services;
 
 import net.thrymr.dto.MoodIntensityDto;
 import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
+import net.thrymr.model.master.MtMoodIntensity;
 import net.thrymr.utils.ApiResponse;
 import org.springframework.web.multipart.MultipartFile;
 
-
+import java.util.List;
 
 
 public interface MoodIntensityService {
@@ -26,4 +27,10 @@ public interface MoodIntensityService {
     ApiResponse getAllMoodIntensitiesByMoodInfoId(Long id);
 
     ApiResponse updateMoodIntensity(MoodSourceIntensityRequestDto request);
+
+    String createUserMoodCheckIn(MoodSourceIntensityRequestDto request);
+
+    List<MtMoodIntensity> getAllMoodIntensity();
+
+    String deleteUserMoodCheckInById(Long id);
 }
