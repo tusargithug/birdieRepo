@@ -6,6 +6,7 @@ import net.thrymr.repository.CourseRepo;
 import net.thrymr.services.CourseService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,5 +42,10 @@ public class CourseServiceImpl implements CourseService {
         course.setName(request.getName());
         courseRepo.save(course);
         return "Course Created successfully";
+    }
+
+    @Override
+    public List<Course> getAllCourse() {
+        return courseRepo.findAll();
     }
 }

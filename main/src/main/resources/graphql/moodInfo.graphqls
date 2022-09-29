@@ -13,7 +13,7 @@ type Query {
   getAllMtRoles:[MtRoles]
   getAllCategory:[Category]
   getAllCourse:[Course] 
-  getAllFileEntity:[FileEntity]
+
 }
 
 type Mutation {
@@ -32,9 +32,7 @@ type Mutation {
     createCourse(input:CourseDto):String!
     updateCourse(input:CourseDto):Course
     deleteCourseById(id:ID):String!
-    createFileEntity(fileId:Int!,name:String!,contentType:String!,fileType:String!):String!
-    updateFileEntity(fileId:Int!,name:String!,contentType:String!,fileType:String!):FileEntity
-    deleteFileEntityById(fileId:ID):String!
+
  }
 
 type MtMoodInfo {

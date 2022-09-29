@@ -8,6 +8,7 @@ import net.thrymr.repository.CourseRepo;
 import net.thrymr.services.CategoryService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -60,5 +61,10 @@ public class CategoryServiceImpl implements CategoryService {
         category.get()
                 .setSequence(request.getSequence());
         return categoryRepo.save(category.get());
+    }
+
+    @Override
+    public List<Category> getAllCategory() {
+        return categoryRepo.findAll();
     }
 }

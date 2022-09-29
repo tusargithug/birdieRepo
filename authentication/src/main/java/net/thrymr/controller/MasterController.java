@@ -41,27 +41,21 @@ public class MasterController {
 
     private final LearningVideoService learningVideoService;
 
-    private final RolesRepo rolesRepo;
 
-    private final CategoryRepo categoryRepo;
-
-
-    private final CourseRepo courseRepo;
 
     private final CategoryService categoryService;
 
     private final CourseService courseService;
 
-    public MasterController(RoleService roleService, AppUserService appUserService, MoodInfoService moodInfoService, MoodIntensityService moodIntensityService, MoodSourceService moodSourceService, LearningVideoService learningVideoService, RolesRepo rolesRepo, CategoryRepo categoryRepo, CourseRepo courseRepo, CategoryService categoryService, CourseService courseService) {
+    public MasterController(RoleService roleService, AppUserService appUserService, MoodInfoService moodInfoService, MoodIntensityService moodIntensityService, MoodSourceService moodSourceService, LearningVideoService learningVideoService,  CategoryService categoryService, CourseService courseService) {
         this.roleService = roleService;
         this.appUserService = appUserService;
         this.moodInfoService = moodInfoService;
         this.moodIntensityService = moodIntensityService;
         this.moodSourceService = moodSourceService;
         this.learningVideoService = learningVideoService;
-        this.rolesRepo = rolesRepo;
-        this.categoryRepo = categoryRepo;
-        this.courseRepo = courseRepo;
+
+
         this.categoryService = categoryService;
         this.courseService = courseService;
     }
@@ -172,7 +166,8 @@ public class MasterController {
         @QueryMapping
         public List<Category> getAllCategory() {
             logger.info("get all Category service started");
-            return categoryRepo.findAll();
+            return categoryService.getAllCategory();
+
         }
 
         @MutationMapping(name = "createCategory")
@@ -195,7 +190,8 @@ public class MasterController {
    
    @QueryMapping
    public List<Course> getAllCourse() {
-       return courseRepo.findAll();
+        return courseService.getAllCourse();
+
    }
 
    @MutationMapping(name = "updateCourse")
