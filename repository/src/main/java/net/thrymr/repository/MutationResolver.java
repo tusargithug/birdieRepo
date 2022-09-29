@@ -3,11 +3,13 @@ package net.thrymr.repository;
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import net.thrymr.dto.AppUserDto;
 import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
+import net.thrymr.enums.FileType;
 import net.thrymr.model.AppUser;
 import net.thrymr.model.UserMoodCheckIn;
 import net.thrymr.model.UserMoodSourceCheckedIn;
 import net.thrymr.model.master.Category;
 import net.thrymr.model.master.Course;
+import net.thrymr.model.master.FileEntity;
 import net.thrymr.model.master.MtMoodIntensity;
 import net.thrymr.model.master.MtMoodSource;
 import net.thrymr.utils.CommonUtil;
@@ -41,8 +43,10 @@ private final UserMoodCheckInRepo userMoodCheckInRepo;
     private final CategoryRepo categoryRepo;
 
     private final CourseRepo courseRepo;
+    
+    private final FileEntityRepo fileEntityRepo;
 
-    public MutationResolver(AppUserRepo appUserRepo, MoodIntensityRepo moodIntensityRepo, UserMoodCheckInRepo userMoodCheckInRepo, Environment environment, MoodSourceRepo moodSourceRepo, UserMoodSourceCheckInRepo userMoodSourceCheckInRepo,CategoryRepo categoryRepo,CourseRepo courseRepo) {
+    public MutationResolver(AppUserRepo appUserRepo, MoodIntensityRepo moodIntensityRepo, UserMoodCheckInRepo userMoodCheckInRepo, Environment environment, MoodSourceRepo moodSourceRepo, UserMoodSourceCheckInRepo userMoodSourceCheckInRepo,CategoryRepo categoryRepo,CourseRepo courseRepo,FileEntityRepo fileEntityRepo) {
         this.appUserRepo = appUserRepo;
         this.moodIntensityRepo = moodIntensityRepo;
         this.userMoodCheckInRepo = userMoodCheckInRepo;
@@ -51,6 +55,7 @@ private final UserMoodCheckInRepo userMoodCheckInRepo;
         this.userMoodSourceCheckInRepo = userMoodSourceCheckInRepo;
         this.categoryRepo=categoryRepo;
         this.courseRepo=courseRepo;
+        this.fileEntityRepo=fileEntityRepo;
     }
 
     @MutationMapping
@@ -233,6 +238,41 @@ private final UserMoodCheckInRepo userMoodCheckInRepo;
     public String deleteCourseById(@Argument Long id){
     	Optional<Course> category = courseRepo.findById(id);
     	category.ifPresent(courseRepo::delete);
+        return "Intensity deleted successfully";
+    }
+    
+    @MutationMapping
+    public String createFileEntity(@Argument Long fileId,@Argument String name,@Argument String contentType,@Argument String fileType) {
+    	FileEntity fileEntity=new FileEntity();
+    	fileEntity.setName(name);
+    fileEntity.setContentType(contentType);
+    fileEntity.setFileType(FileType.valueOf(fileType));
+    	fileEntityRepo.save(fileEntity);
+        return "Course Created successfully";
+    	
+    }
+    
+    @MutationMapping
+    public FileEntity updateFileEntity(@Argument Long fileId,@Argument String name,@Argument String contentType,@Argument String fileType){
+        final Optional<FileEntity> fileEntity = fileEntityRepo.findById(fileId).stream()
+                .filter(c -> c.getId() == fileId)
+                .findFirst();
+            if (!fileEntity.isPresent()) {
+                return null;
+            }
+            fileEntity.get()
+                .setName(name);
+            fileEntity.get()
+                .setContentType(contentType);
+            fileEntity.get()
+                .setFileType(FileType.valueOf(fileType));
+            return fileEntityRepo.save(fileEntity.get());
+    }
+    
+    @MutationMapping
+    public String deleteFileEntityById(@Argument Long id){
+    	Optional<FileEntity> fileEntity = fileEntityRepo.findById(id);
+    	fileEntity.ifPresent(fileEntityRepo::delete);
         return "Intensity deleted successfully";
     }
     

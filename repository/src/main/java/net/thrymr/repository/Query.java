@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import net.thrymr.model.master.Category;
 import net.thrymr.model.master.Course;
+import net.thrymr.model.master.FileEntity;
 import net.thrymr.model.master.MtMoodInfo;
 
 import java.util.List;
@@ -33,13 +34,16 @@ public class Query implements GraphQLQueryResolver {
 
     private final CourseRepo courseRepo;
 
-    public Query(MoodInfoRepository repository, MoodIntensityRepo moodIntensityRepo, AppUserRepo appUserRepo, RolesRepo rolesRepo,CategoryRepo categoryRepo,CourseRepo courseRepo) {
+    private final FileEntityRepo fileEntityRepo;
+    
+    public Query(MoodInfoRepository repository, MoodIntensityRepo moodIntensityRepo, AppUserRepo appUserRepo, RolesRepo rolesRepo,CategoryRepo categoryRepo,CourseRepo courseRepo,FileEntityRepo fileEntityRepo) {
         this.repository = repository;
         this.moodIntensityRepo = moodIntensityRepo;
         this.appUserRepo = appUserRepo;
         this.rolesRepo = rolesRepo;
         this.categoryRepo=categoryRepo;
         this.courseRepo=courseRepo;
+        this.fileEntityRepo=fileEntityRepo;
     }
 
     @QueryMapping
@@ -86,5 +90,10 @@ public class Query implements GraphQLQueryResolver {
     @QueryMapping
     public List<Course> getAllCourse() {
         return courseRepo.findAll();
+    }
+    
+    @QueryMapping
+    public List<FileEntity> getAllFileEntity() {
+        return fileEntityRepo.findAll();
     }
 }

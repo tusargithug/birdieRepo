@@ -12,7 +12,8 @@ type Query {
   mtRoleById(id:ID):MtRoles
   getAllMtRoles:[MtRoles]
   getAllCategory:[Category]
-  getAllCourse:[Course]
+  getAllCourse:[Course] 
+  getAllFileEntity:[FileEntity]
 }
 
 type Mutation {
@@ -31,6 +32,9 @@ type Mutation {
     createCourse(id:Int!,name:String!,description:String!,sequence:Int!,code: String!):String!
     updateCourse(id:Int!,name:String!,description:String!,sequence:Int!,code: String!):Course
     deleteCourseById(id:ID):String!
+    createFileEntity(fileId:Int!,name:String!,contentType:String!,fileType:String!):String!
+    updateFileEntity(fileId:Int!,name:String!,contentType:String!,fileType:String!):FileEntity
+    deleteFileEntityById(fileId:ID):String!
  }
 
 type MtMoodInfo {
@@ -98,5 +102,13 @@ code:String!
 sequence:Int!
 decription:String!
 category:Int!
+}
+
+type FileEntity{
+fileId:ID!
+contentType:String!
+name:String!
+fileType:String!
+employees:[Course]
 }
 

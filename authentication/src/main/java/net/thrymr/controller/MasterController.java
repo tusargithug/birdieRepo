@@ -1,11 +1,14 @@
 package net.thrymr.controller;
 import net.thrymr.dto.AppUserDto;
 import net.thrymr.dto.LearningVideoDto;
+import net.thrymr.enums.FileType;
 import net.thrymr.model.master.Category;
 import net.thrymr.model.master.Course;
+import net.thrymr.model.master.FileEntity;
 import net.thrymr.model.master.MtRoles;
 import net.thrymr.repository.CategoryRepo;
 import net.thrymr.repository.CourseRepo;
+import net.thrymr.repository.FileEntityRepo;
 import net.thrymr.repository.RolesRepo;
 import net.thrymr.services.AppUserService;
 import net.thrymr.services.*;
@@ -49,7 +52,9 @@ public class MasterController {
 
     private final CourseRepo courseRepo;
     
-    public MasterController(RoleService roleService, AppUserService appUserService, MoodInfoService moodInfoService, MoodIntensityService moodIntensityService, MoodSourceService moodSourceService, LearningVideoService learningVideoService, RolesRepo rolesRepo,CategoryRepo categoryRepo,CourseRepo courseRepo) {
+    private final FileEntityRepo fileEntityRepo;
+    
+    public MasterController(RoleService roleService, AppUserService appUserService, MoodInfoService moodInfoService, MoodIntensityService moodIntensityService, MoodSourceService moodSourceService, LearningVideoService learningVideoService, RolesRepo rolesRepo,CategoryRepo categoryRepo,CourseRepo courseRepo,FileEntityRepo fileEntityRepo) {
         this.roleService = roleService;
         this.appUserService = appUserService;
         this.moodInfoService = moodInfoService;
@@ -59,6 +64,7 @@ public class MasterController {
         this.rolesRepo = rolesRepo;
         this.categoryRepo=categoryRepo;
         this.courseRepo=courseRepo;
+        this.fileEntityRepo=fileEntityRepo;
     }
 
 
@@ -244,6 +250,46 @@ public class MasterController {
    public String deleteCourseById(@Argument Long id){
    	Optional<Course> category = courseRepo.findById(id);
    	category.ifPresent(courseRepo::delete);
+       return "Intensity deleted successfully";
+   }
+   
+   @QueryMapping
+   public List<FileEntity> getAllFileEntity() {
+       return fileEntityRepo.findAll();
+   }
+   
+   @MutationMapping
+   public String createFileEntity(@Argument Long fileId,@Argument String name,@Argument String contentType,@Argument String fileType) {
+   	FileEntity fileEntity=new FileEntity();
+   	fileEntity.setName(name);
+   fileEntity.setContentType(contentType);
+   fileEntity.setFileType(FileType.valueOf(fileType));
+   	fileEntityRepo.save(fileEntity);
+       return "Course Created successfully";
+   	
+   }
+   
+   @MutationMapping
+   public FileEntity updateFileEntity(@Argument Long fileId,@Argument String name,@Argument String contentType,@Argument String fileType){
+       final Optional<FileEntity> fileEntity = fileEntityRepo.findById(fileId).stream()
+               .filter(c -> c.getId() == fileId)
+               .findFirst();
+           if (!fileEntity.isPresent()) {
+               return null;
+           }
+           fileEntity.get()
+               .setName(name);
+           fileEntity.get()
+               .setContentType(contentType);
+           fileEntity.get()
+               .setFileType(FileType.valueOf(fileType));
+           return fileEntityRepo.save(fileEntity.get());
+   }
+   
+   @MutationMapping
+   public String deleteFileEntityById(@Argument Long id){
+   	Optional<FileEntity> fileEntity = fileEntityRepo.findById(id);
+   	fileEntity.ifPresent(fileEntityRepo::delete);
        return "Intensity deleted successfully";
    }
 }
