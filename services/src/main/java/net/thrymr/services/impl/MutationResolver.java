@@ -1,20 +1,14 @@
 package net.thrymr.services.impl;
         import graphql.kickstart.tools.GraphQLMutationResolver;
-        import net.thrymr.dto.AppUserDto;
-        import net.thrymr.dto.CategoryDto;
-        import net.thrymr.dto.CourseDto;
-        import net.thrymr.dto.UserCourseDto;
+        import net.thrymr.dto.*;
         import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
         import net.thrymr.model.master.Category;
         import net.thrymr.model.master.Course;
-        import net.thrymr.model.master.MtMoodIntensity;
-        import net.thrymr.repository.MoodIntensityRepo;
         import net.thrymr.services.*;
         import org.springframework.graphql.data.method.annotation.Argument;
         import org.springframework.graphql.data.method.annotation.MutationMapping;
         import org.springframework.stereotype.Component;
         import java.text.ParseException;
-        import java.util.Optional;
 
 @Component
 public class MutationResolver implements GraphQLMutationResolver {
@@ -22,10 +16,7 @@ public class MutationResolver implements GraphQLMutationResolver {
 
     private final MoodSourceService moodSourceService;
 
-
-
-
-
+    private final RoleService roleService;
 
     private final AppUserService appUserService;
 
@@ -36,8 +27,9 @@ public class MutationResolver implements GraphQLMutationResolver {
     private final CourseService courseService;
 
 
-    public MutationResolver( MoodSourceService moodSourceService, AppUserService appUserService, MoodIntensityService moodIntensityService, CategoryService categoryService, CourseService courseService) {
+    public MutationResolver(MoodSourceService moodSourceService, RoleService roleService, AppUserService appUserService, MoodIntensityService moodIntensityService, CategoryService categoryService, CourseService courseService) {
         this.moodSourceService = moodSourceService;
+        this.roleService = roleService;
         this.appUserService = appUserService;
         this.moodIntensityService = moodIntensityService;
         this.categoryService = categoryService;
@@ -130,6 +122,22 @@ public class MutationResolver implements GraphQLMutationResolver {
 
     }
 
+    @MutationMapping("createRole")
+    public String createRole( RolesDto request){
+        return roleService.createRole(request);
+    }
+
+    @MutationMapping( "updateRole")
+    public String updateRole( RolesDto request){
+        return roleService.updateRole(request);
+    }
+
+    @MutationMapping
+    public String deleteRoleById( Long id){
+
+        return roleService.deleteRoleById(id);
+
+    }
 }
 
 

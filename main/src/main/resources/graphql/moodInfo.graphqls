@@ -32,7 +32,9 @@ type Mutation {
     createCourse(input:CourseDto):String!
     updateCourse(input:CourseDto):Course
     deleteCourseById(id:ID):String!
-
+    createRole(input:RolesDto):String!
+    updateRole(input:RolesDto):String!
+    deleteRoleById(id:ID):String!
  }
 
 type MtMoodInfo {

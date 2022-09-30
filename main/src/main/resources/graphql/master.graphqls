@@ -52,3 +52,8 @@ name:String
 sequence:Int
 description:String
 }
+
+input RolesDto{
+id:Int
+name:String
+}

@@ -213,5 +213,20 @@ public class MasterController {
         return categoryService.deleteCourseById(id);
 
     }
+    @MutationMapping(name = "createRole")
+  public String createRole(@Argument(name = "input") RolesDto request){
+        return roleService.createRole(request);
+  }
 
+    @MutationMapping(name = "updateRole")
+    public String updateRole(@Argument(name = "input") RolesDto request){
+        return roleService.updateRole(request);
+    }
+
+    @MutationMapping
+    public String deleteRoleById(@Argument Long id){
+
+        return roleService.deleteRoleById(id);
+
+    }
 }

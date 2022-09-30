@@ -1,6 +1,7 @@
 package net.thrymr.services.impl;
 
 
+import net.thrymr.dto.RolesDto;
 import net.thrymr.model.master.MtRoles;
 import net.thrymr.repository.RoleRepo;
 import net.thrymr.services.RoleService;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -63,6 +65,37 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public List<MtRoles> getAllMtRoles() {
         return roleRepo.findAll();
+    }
+
+    @Override
+    public String createRole(RolesDto request) {
+        Optional<MtRoles>optionalMtRoles=roleRepo.findByName(request.getName());
+        if(optionalMtRoles.isEmpty()){
+            return "Role already existed";
+        }else {
+            MtRoles mtRoles=new MtRoles();
+            mtRoles.setName(request.getName());
+            return "Role saved successfully";
+        }
+
+    }
+
+    @Override
+    public String updateRole(RolesDto request) {
+        Optional<MtRoles>optionalMtRoles=roleRepo.findById(request.getId());
+        if(optionalMtRoles.isPresent()){
+            MtRoles mtRoles=optionalMtRoles.get();
+            mtRoles.setName(request.getName());
+
+        }
+        return "Role updated successfully";
+    }
+
+    @Override
+    public String deleteRoleById(Long id) {
+        Optional<MtRoles>optionalMtRoles=roleRepo.findById(id);
+        optionalMtRoles.ifPresent(roleRepo::delete);
+        return "Role deleted successfully";
     }
 
     @Override
