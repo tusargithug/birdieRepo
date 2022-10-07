@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 
 
@@ -40,5 +41,7 @@ public class AppUserDto {
 
     private String empId;
 
-    private LocalDate date;
+    private LocalTime date;
+
+    private Date dastes;
 }

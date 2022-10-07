@@ -12,10 +12,12 @@ import graphql.schema.GraphQLSchema;
 import graphql.schema.idl.RuntimeWiring;
 import graphql.schema.idl.SchemaGenerator;
 import graphql.schema.idl.TypeDefinitionRegistry;
+import net.thrymr.services.impl.MutationResolver;
 import net.thrymr.services.impl.Query;
 import org.dataloader.DataLoaderRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.autoconfigure.endpoint.web.CorsEndpointProperties;
 import org.springframework.boot.actuate.autoconfigure.endpoint.web.WebEndpointProperties;
@@ -54,6 +56,11 @@ import java.util.concurrent.ExecutionException;
 @SpringBootApplication
 public class BaseApplication {
 
+
+    @Autowired
+    private Query query;
+    @Autowired
+    private MutationResolver mutationResolver;
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseApplication.class);
 
     public static void main(String[] args) {
@@ -101,7 +108,20 @@ public class BaseApplication {
 
     @Bean
     public RuntimeWiringConfigurer runtimeWiringConfigurer() {
-        return wiringBuilder -> wiringBuilder.scalar(ExtendedScalars.Date);
+        return wiringBuilder -> wiringBuilder.scalar(ExtendedScalars.LocalTime);
     }
 
+@Bean
+public RuntimeWiringConfigurer runtimeWiringConfigure() {
+    return wiringBuilder -> wiringBuilder.scalar(ExtendedScalars.Date);
+}
+
+    @Bean
+    public GraphQLScalarType date() {
+        return ExtendedScalars.LocalTime;
+    }
+    @Bean
+    public GraphQLScalarType time() {
+        return ExtendedScalars.Date;
+    }
 }
