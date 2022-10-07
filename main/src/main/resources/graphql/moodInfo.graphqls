@@ -12,7 +12,7 @@ type Query {
   mtRoleById(id:ID):MtRoles
   getAllMtRoles:[MtRoles]
   getAllCategory:[Category]
-  getAllCourse:[Course] 
+  getAllCourse:[Course]
 
 }
 
@@ -35,6 +35,8 @@ type Mutation {
     createRole(input:RolesDto):String!
     updateRole(input:RolesDto):String!
     deleteRoleById(id:ID):String!
+
+
  }
 
 type MtMoodInfo {
@@ -83,7 +85,6 @@ empId:String
 
 
 
-
 type FileEntity{
 fileId:ID!
 contentType:String!
@@ -91,4 +92,3 @@ name:String!
 fileType:String!
 employees:[Course]
 }
-

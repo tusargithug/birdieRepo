@@ -1,14 +1,12 @@
 package net.thrymr.services.impl;
         import net.thrymr.model.AppUser;
+        import net.thrymr.model.CounsellorSlot;
         import net.thrymr.model.master.*;
 
         import net.thrymr.repository.CategoryRepo;
         import net.thrymr.repository.CourseRepo;
-        import net.thrymr.services.AppUserService;
+        import net.thrymr.services.*;
 
-        import net.thrymr.services.MoodInfoService;
-        import net.thrymr.services.MoodIntensityService;
-        import net.thrymr.services.RoleService;
         import org.springframework.graphql.data.method.annotation.Argument;
         import org.springframework.graphql.data.method.annotation.QueryMapping;
         import org.springframework.stereotype.Component;
@@ -32,8 +30,10 @@ public class Query implements GraphQLQueryResolver {
 
     private final CategoryRepo categoryRepo;
 
+    private final CounsellorSlotService counsellorSlotService;
+
     private final CourseRepo courseRepo;
-    public Query(AppUserService appUserService, RoleService roleService, MoodInfoService moodInfoService, MoodIntensityService moodIntensityService, CategoryRepo categoryRepo, CourseRepo courseRepo) {
+    public Query(AppUserService appUserService, RoleService roleService, MoodInfoService moodInfoService, MoodIntensityService moodIntensityService, CategoryRepo categoryRepo, CounsellorSlotService counsellorSlotService, CourseRepo courseRepo) {
 
         this.appUserService = appUserService;
         this.roleService = roleService;
@@ -41,6 +41,7 @@ public class Query implements GraphQLQueryResolver {
         this.moodInfoService = moodInfoService;
         this.moodIntensityService = moodIntensityService;
         this.categoryRepo = categoryRepo;
+        this.counsellorSlotService = counsellorSlotService;
         this.courseRepo = courseRepo;
     }
 
@@ -98,4 +99,9 @@ public class Query implements GraphQLQueryResolver {
     public List<Course> getAllCourse() {
         return courseRepo.findAll();
     }
+
+//    @QueryMapping("getCounsellorSlot")
+//    public List<CounsellorSlot> getCounsellorSlot() {
+//        return counsellorSlotService.getCounsellorSlot();
+//    }
 }

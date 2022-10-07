@@ -2,6 +2,7 @@ package net.thrymr.services.impl;
         import graphql.kickstart.tools.GraphQLMutationResolver;
         import net.thrymr.dto.*;
         import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
+        import net.thrymr.dto.slotRequest.TimeSlotDto;
         import net.thrymr.model.master.Category;
         import net.thrymr.model.master.Course;
         import net.thrymr.services.*;
@@ -26,14 +27,17 @@ public class MutationResolver implements GraphQLMutationResolver {
 
     private final CourseService courseService;
 
+    private final CounsellorSlotService counsellorSlotService;
 
-    public MutationResolver(MoodSourceService moodSourceService, RoleService roleService, AppUserService appUserService, MoodIntensityService moodIntensityService, CategoryService categoryService, CourseService courseService) {
+
+    public MutationResolver(MoodSourceService moodSourceService, RoleService roleService, AppUserService appUserService, MoodIntensityService moodIntensityService, CategoryService categoryService, CourseService courseService, CounsellorSlotService counsellorSlotService) {
         this.moodSourceService = moodSourceService;
         this.roleService = roleService;
         this.appUserService = appUserService;
         this.moodIntensityService = moodIntensityService;
         this.categoryService = categoryService;
         this.courseService = courseService;
+        this.counsellorSlotService = counsellorSlotService;
     }
 
     @MutationMapping(name = "createAppUser")
@@ -138,6 +142,12 @@ public class MutationResolver implements GraphQLMutationResolver {
         return roleService.deleteRoleById(id);
 
     }
+
+//    @MutationMapping(name ="createCounsellorSlot")
+//    private String createCounsellorSlot( TimeSlotDto request){
+//        return counsellorSlotService.createCounsellorSlot(request);
+//    }
+
 }
 
 
