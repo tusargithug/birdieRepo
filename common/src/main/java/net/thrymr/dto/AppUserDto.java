@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.util.Date;
 
 
 @Setter
@@ -37,4 +39,6 @@ public class AppUserDto {
       private RolesDto rolesDto;
 
     private String empId;
+
+    private LocalDate date;
 }

@@ -90,16 +90,17 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-graphql</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>com.graphql-java</groupId>
 			<artifactId>graphql-java-extended-scalars</artifactId>
+			<version>2022-09-22T01-09-40-c44b3b2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.graphql-java</groupId>
 			<artifactId>graphql-java</artifactId>
 
 		</dependency>
+
 	</dependencies>
 
 

@@ -98,4 +98,10 @@ public class BaseApplication {
         return webEndpointProperties.getDiscovery().isEnabled() && (StringUtils.hasText(basePath)
                 || ManagementPortType.get(environment).equals(ManagementPortType.DIFFERENT));
     }
+
+    @Bean
+    public RuntimeWiringConfigurer runtimeWiringConfigurer() {
+        return wiringBuilder -> wiringBuilder.scalar(ExtendedScalars.Date);
+    }
+
 }

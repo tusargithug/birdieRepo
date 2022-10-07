@@ -58,6 +58,7 @@ type MtRoles{
      id: ID!
     name: String
 }
+scalar Date
 
 
 input AppUserDto{
@@ -67,6 +68,7 @@ email:String
 mobile:String
 alternateMobile:String
 empId:String
+date:Date
 }
 
 
