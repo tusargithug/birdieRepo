@@ -5,6 +5,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import graphql.ExecutionInput;
 import graphql.ExecutionResult;
 import graphql.GraphQL;
+import graphql.Scalars;
+import graphql.kickstart.servlet.apollo.ApolloScalars;
 import graphql.kickstart.tools.SchemaParserOptions;
 import graphql.scalars.ExtendedScalars;
 import graphql.schema.GraphQLScalarType;
@@ -70,6 +72,7 @@ public class BaseApplication {
         LOGGER.info("	    BIRDIE BACKEND SERVER STARTED    ");
         LOGGER.info("***************************************************");
     }
+
     @Bean
     public WebMvcConfigurer configurer() {
         return new WebMvcConfigurer() {
@@ -111,17 +114,39 @@ public class BaseApplication {
         return wiringBuilder -> wiringBuilder.scalar(ExtendedScalars.LocalTime);
     }
 
-@Bean
-public RuntimeWiringConfigurer runtimeWiringConfigure() {
-    return wiringBuilder -> wiringBuilder.scalar(ExtendedScalars.Date);
-}
-
+    @Bean
+    public RuntimeWiringConfigurer runtimeWiringConfigure() {
+        return wiringBuilder -> wiringBuilder.scalar(ExtendedScalars.Date);
+    }
+    @Bean
+    public RuntimeWiringConfigurer runtimeWiringConfigurJson() {
+        return wiringBuilder -> wiringBuilder.scalar(ExtendedScalars.Json);
+    }
+    @Bean
+    public RuntimeWiringConfigurer runtimeWiringConfigurObject() {
+        return wiringBuilder -> wiringBuilder.scalar(ExtendedScalars.Object);
+    }
     @Bean
     public GraphQLScalarType date() {
         return ExtendedScalars.LocalTime;
     }
+
     @Bean
     public GraphQLScalarType time() {
         return ExtendedScalars.Date;
     }
+
+    @Bean
+    public GraphQLScalarType objectType() {
+        return ExtendedScalars.Object;
+    }
+    @Bean
+    public GraphQLScalarType jsonType() {
+        return ExtendedScalars.Json;
+    }
+    @Bean
+    public GraphQLScalarType uploadScalarDefine() {
+        return ApolloScalars.Upload;
+    }
+
 }

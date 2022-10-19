@@ -4,6 +4,7 @@ package net.thrymr.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.thrymr.enums.Roles;
 import net.thrymr.model.master.MtRoles;
 
 import javax.persistence.*;
@@ -37,11 +38,15 @@ public class AppUser extends BaseEntity {
     @Column(name = "password")
     private String password;
     
-  @Column(name = "emp_id",unique = true)
+    @Column(name = "emp_id",unique = true)
     private String empId;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "role_id")
-  private MtRoles mtRoles;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id")
+    private MtRoles mtRoles;
+
+    @Column(name="user_role")
+    @Enumerated(EnumType.STRING)
+    private Roles roles;
 
 }

@@ -1,0 +1,230 @@
+package net.thrymr.services.impl;
+
+import net.thrymr.dto.ChapterDto;
+import net.thrymr.dto.UnitDto;
+import net.thrymr.model.Chapter;
+import net.thrymr.model.Unit;
+import net.thrymr.repository.ChapterRepo;
+import net.thrymr.repository.UnitRpo;
+import net.thrymr.services.UnitAndChapterServices;
+import net.thrymr.utils.ApiResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import javax.persistence.criteria.Predicate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static net.thrymr.utils.DateUtils.dateToString;
+
+@Service
+public class UnitAndChapterImpl implements UnitAndChapterServices {
+    @Autowired
+    UnitRpo unitRpo;
+
+    @Autowired
+    ChapterRepo chapterRepo;
+
+    @Override
+    public String  saveUnit(UnitDto request) {
+        unitRpo.save(dtoToEntity(request));
+        return  "CHAPTER_SAVED_SUCCESS";
+    }
+
+    @Override
+    public String updateUnitById(Long id,UnitDto request) {
+        if (id!=null) {
+            unitRpo.save(dtoToEntityForUpdate(id,request));
+            return "CHAPTER_UPDATED_SUCCESSFULLY";
+        }
+        return "RECORD_NOT_FOUND_WITH_GIVEN_ID";
+    }
+
+    public Unit dtoToEntityForUpdate(Long id,UnitDto dto) {
+        Optional<Unit> optionalAddUnit = unitRpo.findById(id);
+            Unit unit = optionalAddUnit.orElse(new Unit());
+            if(optionalAddUnit.isPresent()) {
+                unit=optionalAddUnit.get();
+                unit.setUnitName(dto.getUnitName());
+            }
+        if (dto.getStatus() != null) {
+            unit.setIsActive(true);
+        }
+        return unit;
+    }
+
+    @Override
+    public List<Unit> getAllUnit() {
+        List<Unit> unitList = unitRpo.findAll();
+       return unitList;
+    }
+
+    @Override
+    public List<Unit> getLearnPath(UnitDto unitDto) {
+
+        Pageable pageable=null;
+        if (unitDto.getPageNumber() != null) {
+            pageable = PageRequest.of(unitDto.getPageNumber(), unitDto.getPageSize());
+        }
+        if (unitDto.getAddOn()!= null) {
+            pageable = PageRequest.of(unitDto.getPageNumber(),unitDto.getPageSize(),Sort.Direction.DESC,"createdOn");
+        }
+        Unit unit=new Unit();
+        //filters
+        Specification<Unit> addUnitSpecification = ((root, criteriaQuery, criteriaBuilder)->{
+            List<Predicate> addUnitPredicate = new ArrayList<>();
+           if(unitDto.getId()!=null){
+                Predicate id = criteriaBuilder.and(root.get("id").in(unitDto.getId()));
+                addUnitPredicate.add(id);
+            }
+            if(unitDto.getUnitName()!=null && !unitDto.getUnitName().isEmpty()){
+               // Predicate unitName = criteriaBuilder.and(root.get("unitName").as(unitDto.getUnitName()));
+                Predicate unitName = criteriaBuilder.and(root.get("unitName").as(String.class).in(unitDto.getUnitName()));
+
+                addUnitPredicate.add(unitName);
+            }
+            if(unitDto.getAddOn()!=null){
+                Predicate createdOn = criteriaBuilder.and(root.get("createdOn").in(unitDto.getAddOn()));
+                addUnitPredicate.add(createdOn);
+            }
+            return criteriaBuilder.and(addUnitPredicate.toArray(new Predicate[0]));
+        });
+        Page <Unit> unitObjectives = unitRpo.findAll(addUnitSpecification, pageable);
+        List<Unit> unitList = null;
+        if(unitObjectives.getContent()!=null){
+            unitList = unitObjectives.stream().toList();
+        }
+
+        return  unitList;
+    }
+
+    @Override
+    public String deleteUnitById(Long id) {
+        Optional<Unit> unitId=unitRpo.findById(id);
+        if(unitId.isPresent()){
+          Unit unit=unitId.get();
+          unit.setIsDeleted(Boolean.TRUE);
+          unit.setIsActive(Boolean.FALSE);
+          unitRpo.save(unit);
+        }
+        return "record delete records successfully";
+    }
+
+    @Override
+    public String  saveChapter(ChapterDto request) {
+        Chapter chapter=chapterRepo.save(dtoToChapter(request));
+        return "saved successfully";
+    }
+
+    @Override
+    public String updateChaptersById(Long id,ChapterDto dto) {
+        Optional<Chapter> optionalChapter=chapterRepo.findById(id);
+        Chapter chapter;
+        if(optionalChapter.isPresent()){
+            chapter=optionalChapter.get();
+            chapter.setChapterName(dto.getChapterName());
+            chapter.setDescription(dto.getDescription());
+            chapter.setProfilePicture(dto.getProfilePicture());
+            chapter.setVideo(dto.getVideo());
+            chapterRepo.save(chapter);
+        }
+        return "update successfully";
+    }
+
+    @Override
+    public List<Chapter> getAllChapters() {
+        List<Chapter> chapterList=chapterRepo.findAll();
+        return chapterList;
+    }
+
+    @Override
+    public String deleteChapterById(Long id) {
+        Optional<Chapter> chapterId=chapterRepo.findById(id);
+        if(chapterId.isPresent()){
+            Chapter chapter=chapterId.get();
+            chapter.setIsDeleted(Boolean.TRUE);
+            chapter.setIsActive(Boolean.FALSE);
+            chapterRepo.save(chapter);
+        }
+        return "record delete records successfully";
+    }
+
+    public Unit dtoToEntity(UnitDto dto) {
+        Unit unit = new Unit();
+        unit.setUnitName(dto.getUnitName());
+        unit.setIsActive(true);
+        return unit;
+    }
+    public UnitDto entityToDto(Unit unit) {
+        UnitDto unitDto = new UnitDto();
+        unitDto.setId(unit.getId());
+        unitDto.setUnitName(unit.getUnitName());
+        unitDto.setStatus(unit.getIsActive());
+        Optional<Unit> optionalAddUnit= unitRpo.findById(unit.getId());
+        if(optionalAddUnit.isPresent()){
+            unitDto.setChapterCount(optionalAddUnit.get().getChapters().size());
+        }
+        unitDto.setAddOn(dateToString(unit.getCreatedOn()));
+        unitDto.setSearchKey(getUnitSearchKey(unit));
+        return unitDto;
+    }
+
+    public UnitDto entityToDtoForGetAll(Unit unit) {
+        UnitDto unitDto = new UnitDto();
+        unitDto.setUnitName(unit.getUnitName());
+        unitDto.setStatus(unit.getIsActive());
+        Optional<Unit> optionalAddUnit= unitRpo.findById(unit.getId());
+        unitDto.setChapterCount(optionalAddUnit.get().getChapters().size());
+        unitDto.setAddOn(dateToString(unit.getCreatedOn()));
+        return unitDto;
+    }
+
+
+    private String getUnitSearchKey(Unit unit) {
+        String searchKey="";
+        if(unit.getId()!=null){
+            searchKey=searchKey+ unit.getId();
+        }
+        if(unit.getUnitName()!=null && !unit.getUnitName().isEmpty()){
+            searchKey=searchKey+" "+unit.getUnitName();
+        }
+        if(unit.getIsActive()!=null){
+            searchKey=searchKey+" "+unit.getIsActive();
+        }
+        if(unit.getCreatedOn()!=null){
+            searchKey=searchKey+" "+unit.getCreatedOn();
+        }
+        return searchKey;
+    }
+
+    public Chapter dtoToChapter(ChapterDto chapterDto) {
+        Chapter chapter = new Chapter();
+        chapter.setChapterName(chapterDto.getChapterName());
+        chapter.setDescription(chapterDto.getDescription());
+        chapter.setProfilePicture(chapterDto.getProfilePicture());
+        chapter.setVideo(chapterDto.getVideo());
+        if(chapterDto.getUnitId()!=null) {
+            Optional<Unit> unitId = unitRpo.findById(chapterDto.getUnitId());
+            if(unitId.isPresent()) {
+                chapter.setUnit(unitId.get());
+            }
+        }
+
+        return chapter;
+    }
+    public ChapterDto entityToChapter(Chapter chapter){
+        ChapterDto chapterDto=new ChapterDto();
+        chapterDto.setChapterName(chapter.getChapterName());
+        chapterDto.setDescription(chapter.getDescription());
+        chapterDto.setProfilePicture(chapter.getProfilePicture());
+        chapterDto.setVideo(chapter.getVideo());
+        return chapterDto;
+    }
+}

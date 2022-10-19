@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.thrymr.enums.Roles;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -40,8 +41,11 @@ public class AppUserDto {
       private RolesDto rolesDto;
 
     private String empId;
+//
+//    private LocalTime date;
+//    private Date dates;
 
-    private LocalTime date;
+   // private Roles roles= Roles.NONE;
 
-    private Date dastes;
+    private String roles;
 }

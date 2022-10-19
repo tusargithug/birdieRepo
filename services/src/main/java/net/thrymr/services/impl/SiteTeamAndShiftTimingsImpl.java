@@ -1,0 +1,488 @@
+package net.thrymr.services.impl;
+
+import net.thrymr.dto.*;
+import net.thrymr.enums.Roles;
+import net.thrymr.enums.SlotShift;
+import net.thrymr.model.AppUser;
+import net.thrymr.model.ShiftTimings;
+import net.thrymr.model.Site;
+import net.thrymr.model.Team;
+import net.thrymr.model.master.MtCity;
+import net.thrymr.model.master.MtCountry;
+import net.thrymr.model.master.MtRegion;
+import net.thrymr.repository.*;
+import net.thrymr.services.SiteTeamAndShiftTimingsService;
+import net.thrymr.utils.ApiResponse;
+import org.apache.poi.sl.draw.geom.GuideIf;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+
+import javax.persistence.criteria.Predicate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Service
+public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsService {
+    @Autowired
+    TeamRepo teamRepo;
+    @Autowired
+    CountryRepo countryRepo;
+    @Autowired
+    CityRepo cityRepo;
+    @Autowired
+    RegionRepo regionRepo;
+    @Autowired
+    AppUserRepo appUserRepo;
+    @Autowired
+    SiteRepo siteRepo;
+
+    @Autowired
+    ShiftTimingsRepo shiftTimingsRepo;
+
+    @Override
+    public String createTeam(TeamDto teamDto) {
+        Team team = new Team();
+        team.setTeamId(teamDto.getTeamId());
+        team.setTeamName(teamDto.getTeamName());
+        //Team_leader
+        if(teamDto.getTeamLeaderId()!=null && appUserRepo.existsById(teamDto.getTeamLeaderId())){
+            Optional<AppUser> optionalAppUser=appUserRepo.findById(teamDto.getTeamLeaderId());
+            optionalAppUser.ifPresent(team::setTeamLeader);
+        }
+        //Team_manager
+        if(teamDto.getTeamManagerId()!=null && appUserRepo.existsById(teamDto.getTeamManagerId())){
+            Optional<AppUser> optionalAppUser=appUserRepo.findById(teamDto.getTeamManagerId());
+            optionalAppUser.ifPresent(team::setTeamManager);
+        }
+       //Site
+        if(teamDto.getSiteId()!=null && siteRepo.existsById(teamDto.getSiteId())){
+            Optional<Site> optionalSite=siteRepo.findById(teamDto.getSiteId());
+            optionalSite.ifPresent(team::setSite);
+        }
+        team.setShiftTimings(dtoToShiftTimings(teamDto.getShiftTimings()));
+        team.setSearchKey(getTeamSearchKey(team));
+        team.setIsActive(teamDto.getStatus());
+        teamRepo.save(team);
+        return "Team save successfully";
+    }
+
+    private ShiftTimings dtoToShiftTimings(ShiftTimingsDto shiftTimingsDto) {
+
+        ShiftTimings shiftTimings=new ShiftTimings();
+        shiftTimings.setShiftName(shiftTimingsDto.getShiftName());
+        shiftTimings.setShiftStatAt(shiftTimingsDto.getShiftStatAt());
+        shiftTimings.setShiftEndAt(shiftTimingsDto.getShiftEndAt());
+        return shiftTimings;
+    }
+
+    @Override
+    public String updateTeam(Long id,TeamDto teamDto) {
+        Optional<Team> teamId = teamRepo.findById(id);
+        Team team;
+        if (teamId.isPresent()) {
+            team = teamId.get();
+            team.setTeamName(teamDto.getTeamName());
+            if (teamDto.getTeamLeader().equals(Roles.valueOf("TEAM_LEADER"))) {
+                team.setTeamLeader(dtoToAppUserEntity(teamDto.getTeamLeader()));
+            }
+            if (teamDto.getTeamLeader().equals(Roles.valueOf("TEAM_MANAGER"))) {
+                team.setTeamManager(dtoToAppUserEntity(teamDto.getTeamManager()));
+            }
+            team.setShiftTimings(dtoToShiftTimings(teamDto.getShiftTimings()));
+            team.setIsActive(teamDto.getStatus());
+            //team.setSearchKey(getTeamSearchKey(team));
+            teamRepo.save(team);
+            return "Team update successfully";
+        }
+        return "this id not in database";
+    }
+
+    @Override
+    public List<Team> getAllTeam() {
+        List<Team> teamList=teamRepo.findAll();
+        return teamList;
+    }
+
+
+
+
+    @Override
+    public String deleteTeamById(Long id) {
+        Optional<Team> teamId=teamRepo.findById(id);
+        Team team;
+        if(teamId.isPresent()){
+            team =teamId.get();
+            team.setIsActive(Boolean.FALSE);
+            team.setIsDeleted(Boolean.TRUE);
+            teamRepo.save(team);
+        }
+        return"delete records successfully";
+    }
+
+    @Override
+    public String saveSite(SiteDto siteDto) {
+        Site site=new Site();
+        site.setSiteId(siteDto.getSiteId());
+        site.setSiteName(siteDto.getSiteName());
+        //Region
+        if(siteDto.getRegionId()!=null && regionRepo.existsById(siteDto.getRegionId())){
+            Optional<MtRegion> optionalRegion=regionRepo.findById(siteDto.getRegionId());
+            optionalRegion.ifPresent(site::setRegion);
+        }
+        //Country
+        if(siteDto.getCountryId()!=null && countryRepo.existsById(siteDto.getCountryId())){
+            Optional<MtCountry> optionalCountry=countryRepo.findById(siteDto.getCountryId());
+            optionalCountry.ifPresent(site::setCountry);
+        }
+        //City
+        if(siteDto.getCityId()!=null && cityRepo.existsById(siteDto.getCityId())){
+            Optional<MtCity> optionalCity=cityRepo.findById(siteDto.getCityId());
+            optionalCity.ifPresent(site::setCity);
+        }
+        //siteManager
+        if(siteDto.getSiteManagerId()!=null && appUserRepo.existsById(siteDto.getSiteManagerId())){
+            Optional<AppUser> optionalAppUser=appUserRepo.findById(siteDto.getSiteManagerId());
+            optionalAppUser.ifPresent(site::setSiteManager);
+        }
+        siteDto.setSearchKey(saveSiteSearchKey(site));
+        site.setIsActive(siteDto.getStatus());
+        siteRepo.save(site);
+        return "site save successfully";
+    }
+
+    @Override
+    public String updateSite(Long id, SiteDto siteDto) {
+        Optional<Site> optionalSite=siteRepo.findById(id);
+        Site site;
+        if(optionalSite.isPresent()){
+            site=optionalSite.get();
+            site.setSiteId(site.getSiteId());
+            site.setSiteName(site.getSiteName());
+            //Region
+            if(siteDto.getRegionId()!=null && regionRepo.existsById(siteDto.getRegionId())){
+                Optional<MtRegion> optionalRegion=regionRepo.findById(siteDto.getRegionId());
+                optionalRegion.ifPresent(site::setRegion);
+            }
+            //Country
+            if(siteDto.getCountryId()!=null && countryRepo.existsById(siteDto.getCountryId())){
+                Optional<MtCountry> optionalCountry=countryRepo.findById(siteDto.getCountryId());
+                optionalCountry.ifPresent(site::setCountry);
+            }
+            //City
+            if(siteDto.getCityId()!=null && cityRepo.existsById(siteDto.getCityId())){
+                Optional<MtCity> optionalCity=cityRepo.findById(siteDto.getCityId());
+                optionalCity.ifPresent(site::setCity);
+            }
+            //siteManager
+            if(siteDto.getSiteManagerId()!=null && appUserRepo.existsById(siteDto.getSiteManagerId())){
+                Optional<AppUser> optionalAppUser=appUserRepo.findById(siteDto.getSiteManagerId());
+                optionalAppUser.ifPresent(site::setSiteManager);
+            }
+            site.setIsActive(siteDto.getStatus());
+            siteRepo.save(site);
+            return"site update successfully";
+        }
+        return "this id not in database";
+    }
+
+    @Override
+    public List<Site> getAllSite() {
+        List<Site> siteList=siteRepo.findAll();
+        return siteList;
+    }
+
+    @Override
+    public List<Site> getAllSitePagination(SiteDto siteDto) {
+        List<Site> siteList=siteRepo.findAll();
+        Pageable pageable = null;
+        if (siteDto.getPageNumber() != null) {
+            pageable = PageRequest.of(siteDto.getPageNumber(), siteDto.getPageSize());
+        }
+        if (siteDto.getSiteId() != null) {
+            pageable = PageRequest.of(siteDto.getPageNumber(), siteDto.getPageSize(), Sort.Direction.ASC, "siteId");
+        }
+        Specification<Site> siteSpecification=((root, criteriaQuery, criteriaBuilder) -> {
+            List<Predicate> addSitePredicate = new ArrayList<>();
+            if (siteDto.getSiteId() != null) {
+                Predicate siteId = criteriaBuilder.and(root.get("siteId").in(siteDto.getSiteId()));
+                addSitePredicate.add(siteId);
+            }
+            if (siteDto.getSiteName() != null && !siteDto.getSiteName().isEmpty()) {
+                Predicate siteName = criteriaBuilder.and(root.get("siteName").in(siteDto.getSiteName()));
+                addSitePredicate.add(siteName);
+            }
+            if (siteDto.getStatus()) {
+                Predicate isActive = criteriaBuilder.and(root.get("status").in(siteDto.getStatus()));
+                addSitePredicate.add(isActive);
+            }
+            if (siteDto.getSiteManager()!= null) {
+                Predicate siteManager = criteriaBuilder.and(root.get("siteManager").in(siteDto.getSiteManager()));
+                addSitePredicate.add(siteManager);
+            }
+            if (siteDto.getCity() != null) {
+                Predicate city = criteriaBuilder.and(root.get("city").in(siteDto.getCity()));
+                addSitePredicate.add(city);
+            }
+            if (siteDto.getCountry() != null) {
+                Predicate country = criteriaBuilder.and(root.get("country").in(siteDto.getCountry()));
+                addSitePredicate.add(country);
+            }
+            if (siteDto.getRegion() != null) {
+                Predicate region = criteriaBuilder.and(root.get("region").in(siteDto.getRegion()));
+                addSitePredicate.add(region);
+            }
+            return criteriaBuilder.and(addSitePredicate.toArray(new Predicate[0]));
+        });
+        Page<Site> siteObjective = siteRepo.findAll(siteSpecification, pageable);
+        if(siteObjective.getContent()!=null) {
+            return siteObjective.stream().collect(Collectors.toList());
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
+    public String deleteSiteById(Long id) {
+        Optional<Site> optionalSite=siteRepo.findById(id);
+        Site site;
+        if(optionalSite.isPresent()){
+            site=optionalSite.get();
+            site.setIsActive(Boolean.FALSE);
+            site.setIsDeleted(Boolean.TRUE);
+            siteRepo.save(site);
+        }
+        return "delete record successfully";
+    }
+
+    @Override
+    public String saveSiftTimings(ShiftTimingsDto shiftTimingsDto) {
+        ShiftTimings shiftTimings=new ShiftTimings();
+        if(shiftTimingsDto.getShiftName().equals(SlotShift.MORNING)) {
+            shiftTimings.setShiftName(SlotShift.MORNING);
+        }
+        if(shiftTimingsDto.getShiftName().equals(SlotShift.AFTERNOON)) {
+            shiftTimings.setShiftName(SlotShift.AFTERNOON);
+        }
+        if(shiftTimingsDto.getShiftName().equals(SlotShift.EVENING)) {
+            shiftTimings.setShiftName(SlotShift.EVENING);
+        }
+        shiftTimings.setShiftStatAt(shiftTimingsDto.getShiftStatAt());
+        shiftTimings.setShiftEndAt(shiftTimingsDto.getShiftEndAt());
+        if(shiftTimingsDto.getSiteId()!=null&&teamRepo.existsById(shiftTimingsDto.getSiteId())){
+            Optional<Site> optionalSite=siteRepo.findById(shiftTimingsDto.getSiteId());
+            optionalSite.ifPresent(shiftTimings::setSite);
+        }
+        Optional<Team> optionalTeamId=teamRepo.findById(shiftTimingsDto.getTeamId());
+        if(optionalTeamId.isPresent()){
+            shiftTimings.setTeam(optionalTeamId.get());
+        }
+        shiftTimingsRepo.save(shiftTimings);
+        return  "shift timings save successfully";
+    }
+
+    @Override
+    public String updateSiftTimings(Long id, ShiftTimingsDto shiftTimingsDto) {
+        Optional<ShiftTimings> shiftTimingsId=shiftTimingsRepo.findById(id);
+        ShiftTimings shiftTimings;
+        if(shiftTimingsId.isPresent()) {
+            shiftTimings = shiftTimingsId.get();
+            shiftTimings.setShiftName(shiftTimingsDto.getShiftName());
+            shiftTimings.setShiftStatAt(shiftTimingsDto.getShiftStatAt());
+            shiftTimings.setShiftEndAt(shiftTimingsDto.getShiftEndAt());
+            shiftTimings.setIsActive(shiftTimingsDto.getStatus());
+            return "shift timings update successfully";
+        }
+        return "this id not in database";
+    }
+
+    @Override
+    public String deleteSiftTimingsById(Long id) {
+        Optional<ShiftTimings> shiftTimingsId=shiftTimingsRepo.findById(id);
+        ShiftTimings shiftTimings;
+        if(shiftTimingsId.isPresent()) {
+            shiftTimings = shiftTimingsId.get();
+            shiftTimings.setIsActive(Boolean.FALSE);
+            shiftTimings.setIsDeleted(Boolean.TRUE);
+            shiftTimingsRepo.save(shiftTimings);
+            return"delete record successfully";
+        }
+        return "this id not in database";
+    }
+
+    @Override
+    public List<Team> getAllTeamPagination(TeamDto teamDto) {
+
+        Pageable pageable = null;
+        if (teamDto.getPageNumber() != null) {
+            pageable = PageRequest.of(teamDto.getPageNumber(), teamDto.getPageSize());
+        }
+        if (teamDto.getTeamId() != null) {
+            pageable = PageRequest.of(teamDto.getPageNumber(), teamDto.getPageSize(), Sort.Direction.ASC, "teamId");
+        }
+        Team team = new Team();
+        //filters
+        Specification<Team> teamSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
+            List<Predicate> addTeamSpecification = new ArrayList<>();
+            if (teamDto.getTeamId() != null) {
+                Predicate teamId = criteriaBuilder.and(root.get("teamId").in(teamDto.getTeamId()));
+                addTeamSpecification.add(teamId);
+            }
+            if (teamDto.getTeamName() != null && !teamDto.getTeamName().isEmpty()) {
+                Predicate teamName = criteriaBuilder.and(root.get("teamName").in(teamDto.getTeamName()));
+                addTeamSpecification.add(teamName);
+            }
+            if (teamDto.getStatus()) {
+                Predicate isActive = criteriaBuilder.and(root.get("status").in(teamDto.getStatus()));
+                addTeamSpecification.add(isActive);
+            }
+            if (teamDto.getTeamLeader() != null) {
+                Predicate teamLeader = criteriaBuilder.and(root.get("TeamLeader").in(teamDto.getTeamLeader()));
+                addTeamSpecification.add(teamLeader);
+            }
+            if (teamDto.getTeamManager() != null) {
+                Predicate teamManager = criteriaBuilder.and(root.get("teamManager").in(teamDto.getTeamManager()));
+                addTeamSpecification.add(teamManager);
+            }
+            return criteriaBuilder.and(addTeamSpecification.toArray(new Predicate[0]));
+        });
+
+        Page<Team> teamObjective = teamRepo.findAll(teamSpecification, pageable);
+        if(teamObjective.getContent()!=null) {
+
+            return teamObjective.stream().collect(Collectors.toList());
+        }
+        return new ArrayList<>();
+    }
+
+
+
+
+    private SiteDto entityToSiteDtoForGetAll(Site site) {
+        SiteDto siteDto=new SiteDto();
+        siteDto.setSiteName(site.getSiteName());
+        siteDto.setSiteId(site.getSiteId());
+        siteDto.setCity(entityToCityDto(site.getCity()));
+        siteDto.setCountry(entityToCountryDtoForGetAll(site.getCountry()));
+        siteDto.setRegion(entityToRegionDtoForGetAll(site.getRegion()));
+        siteDto.setSiteManager(entityToAppUserDto(site.getSiteManager()));
+        siteDto.setStatus(site.getIsActive());
+        return siteDto;
+    }
+
+    private RegionDto entityToRegionDtoForGetAll(MtRegion region) {
+        RegionDto regionDto=new RegionDto();
+        regionDto.setRegionName(regionDto.getRegionName());
+        return regionDto;
+    }
+
+    private CountryDto entityToCountryDtoForGetAll(MtCountry country) {
+        CountryDto countryDto=new CountryDto();
+        countryDto.setCountryName(country.getCountryName());
+        return countryDto;
+    }
+
+    private CityDto entityToCityDto(MtCity mtCity) {
+        CityDto cityDto=new CityDto();
+        cityDto.setCityName(mtCity.getCityName());
+        return cityDto;
+    }
+
+    public TeamDto entityToDtoForGetAll(Team team) {
+        TeamDto teamDto=new TeamDto();
+        teamDto.setTeamName(team.getTeamName());
+        teamDto.setTeamId(team.getTeamId());
+        if(team.getTeamLeader()!=null) {
+            teamDto.setTeamLeader(entityToAppUserDto(team.getTeamLeader()));
+        }
+        if(team.getTeamManager()!=null) {
+            teamDto.setTeamLeader(entityToAppUserDto(team.getTeamManager()));
+        }
+        teamDto.setSite(entityToSiteDto(team.getSite()));
+        teamDto.setShiftTimings(teamDto.getShiftTimings());
+        teamDto.setStatus(team.getIsActive());
+        return teamDto;
+    }
+
+    private SiteDto entityToSiteDto(Site site) {
+        SiteDto siteDto=new SiteDto();
+        siteDto.setSiteName(site.getSiteName());
+       return siteDto;
+    }
+
+
+    public AppUser dtoToAppUserEntity(AppUserDto appUserDto) {
+        AppUser appUser=new AppUser();
+        appUser.setUserName(appUserDto.getUserName());
+        appUser.setEmail(appUserDto.getEmail());
+        appUser.setEmpId(appUserDto.getEmpId());
+        appUser.setFirstName(appUserDto.getFirstName());
+        appUser.setLastName(appUserDto.getLastName());
+        appUser.setMobile(appUserDto.getMobile());
+        appUser.setRoles(Roles.valueOf(appUserDto.getRoles()));
+        appUser.setPassword(appUser.getPassword());
+        return appUser;
+    }
+
+
+
+    public AppUserDto entityToAppUserDto(AppUser appUser) {
+        AppUserDto appUserDto=new AppUserDto();
+        appUserDto.setUserName(appUser.getUserName());
+        appUserDto.setEmail(appUser.getEmail());
+        appUserDto.setEmpId(appUser.getEmpId());
+        appUserDto.setFirstName(appUser.getFirstName());
+        appUserDto.setLastName(appUser.getLastName());
+        appUserDto.setRoles(String.valueOf(appUser.getRoles()));
+        return appUserDto;
+    }
+
+    public String getTeamSearchKey(Team team) {
+        String searchKey="";
+        if(team.getSite()!=null){
+            searchKey=searchKey+" "+ team.getSite();
+        }
+        if(team.getTeamId()!=null){
+            searchKey=searchKey+" "+ team.getTeamId();
+        }
+        if(team.getTeamName()!=null){
+            searchKey=searchKey+" "+ team.getTeamName();
+        }
+        if(team.getTeamLeader()!=null){
+            searchKey=searchKey+" "+ team.getTeamLeader();
+        }
+        if(team.getTeamManager()!=null){
+            searchKey=searchKey+" "+ team.getTeamManager();
+        }
+        if(team.getShiftTimings()!=null){
+            searchKey=searchKey+" "+ team.getShiftTimings();
+        }
+        return searchKey;
+    }
+    public String saveSiteSearchKey(Site site) {
+        String searchKey="";
+        if(site.getRegion()!=null){
+            searchKey=searchKey+" "+ site.getRegion();
+        }
+        if(site.getSiteId()!=null){
+            searchKey=searchKey+" "+ site.getSiteId();
+        }
+        if(site.getSiteName()!=null){
+            searchKey=searchKey+" "+ site.getSiteName();
+        }
+        if(site.getCity()!=null){
+            searchKey=searchKey+" "+ site.getCity();
+        }
+        if(site.getSiteManager()!=null){
+            searchKey=searchKey+" "+ site.getSiteManager();
+        }
+
+        return searchKey;
+    }
+}

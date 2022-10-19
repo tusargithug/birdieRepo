@@ -115,7 +115,7 @@ public class LoginServiceImpl implements LoginService {
         loginResponse.setEmail(loggedInUser.getEmail());
         if(loggedInUser.getRole()!=null){
             Optional<MtRoles>optionalRoles=rolesRepo.findById(loggedInUser.getRole().getId());
-            loginResponse.setUserRole(optionalRoles.map(MtRoles::getName).orElse(null));
+         //   loginResponse.setUserRole(optionalRoles.map(MtRoles::getName).orElse(null));
         }
 
 

@@ -2,6 +2,7 @@ package net.thrymr.constant;
 
 import org.springframework.beans.factory.annotation.Value;
 
+import java.sql.Timestamp;
 
 
 public class Constants {

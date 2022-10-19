@@ -16,27 +16,24 @@ description:String
 category:Int
 }
 
-
 input OptionsDto{
  id:Int
  textAnswer:String
  questionDto:QuestionDto
 }
-
-
-interface ApiResponse{
-statusCode:String!
+scalar Object
+type ApiResponse{
+statusCode:Int
 message:String
-
 status:String
 }
+
 
 input QuestionDto{
 question:String
 answersDto:[OptionsDto]
 videoReference:String
 }
-
 
 input CategoryDto{
 id:Int
@@ -58,3 +55,134 @@ input RolesDto{
 id:Int
 name:String
 }
+
+input ChapterDto{
+ id:Int
+ chapterName:String
+ profilePicture:String
+ isActive:Boolean
+ video:String
+ unitId:Int
+}
+
+input CityDto{
+ id:Int
+ cityName:String
+ mtCountryId:Int
+}
+
+input CountryDto{
+ id:Int
+ countryName:String
+ countryCode:String
+ regionId:Int
+}
+
+input RegionDto{
+ id:Int
+ regionName:String
+}
+
+input SiteDto{
+ id:Int
+# site:String
+ siteName:String
+# city:CityDto
+# country:CountryDto
+# region:RegionDto
+# siteManager:AppUserDto
+ cityId:Int
+ countryId:Int
+ regionId:Int
+ siteManagerId:Int
+ status:Boolean
+ pageSize:Int
+ pageNumber:Int
+ searchKey:String
+}
+
+input TeamDto {
+ id:Int
+ teamId:String
+ teamName:String
+# teamLeader:AppUserDto
+# teamManager:AppUserDto
+ shiftTimings:ShiftTimingsDto
+# site:SiteDto
+ status:Boolean
+ pageNumber:Int
+ PageSize:Int
+ searchKey:String
+ teamLeaderId:Int
+ teamManagerId:Int
+ siteId:Int
+}
+
+input UnitDto {
+ id:Int
+ unitName:String
+ addOn:String
+ chapterCount:Int
+ status:Boolean
+ addChapters:[ChapterDto]
+ searchKey:String
+ pageNumber :Int
+ pageSize:Int
+}
+type MtCountry {
+ id:ID!
+ countryName:String
+ countryCode:String
+ region:MtRegion
+ cities:[MtCity]
+}
+
+interface Result{
+ countryCode:String
+}
+type MtRegion{
+ id:ID!
+ regionName:String
+ mtCountry:[MtCountry]
+ site:Site
+}
+type Site{
+ id:ID!
+ siteId:String
+ siteName:String
+ city:MtCity
+ country:MtCountry
+ region:MtRegion
+ siteManager:AppUser
+ teams:[Team]
+}
+type Team{
+ id:ID!
+ teamId:String
+ teamName:String
+ teamLeader:AppUser
+ teamManager:AppUser
+ site:Site
+ shiftTimings:ShiftTimings
+}
+type MtCity{
+ id:ID!
+ cityName:String
+ country:MtCountry
+ sites:[Site]
+}
+type Chapter{
+ id:ID!
+ chapterName:String
+ profilePicture:FileEntity
+ description:String
+ video:FileEntity
+ unit:Unit
+}
+
+type Unit{
+ id:ID!
+ unitName:String
+ chapters:[Chapter]
+}
+

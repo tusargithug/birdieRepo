@@ -5,6 +5,7 @@ import net.thrymr.constant.Constants;
 import net.thrymr.dto.AppUserDto;
 import net.thrymr.dto.RolesDto;
 import net.thrymr.dto.UserCourseDto;
+import net.thrymr.enums.Roles;
 import net.thrymr.model.AppUser;
 import net.thrymr.model.UserCourse;
 import net.thrymr.model.master.Course;
@@ -33,10 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -272,9 +270,9 @@ public class AppUserServiceImpl implements AppUserService {
         user.setMobile(request.getMobile());
         user.setAlternateMobile(request.getAlternateMobile());
         user.setEmpId(request.getEmpId());
+        user.setRoles(Roles.valueOf(request.getRoles()));
         appUserRepo.save(user);
         return "User Saved successfully";
-
     }
 
     @Override
@@ -353,4 +351,10 @@ public class AppUserServiceImpl implements AppUserService {
         return appUserRepo.findAll();
     }
 
+    @Override
+    public List<Roles> getAllEnumRoles() {
+        List<Roles> rolesList= Arrays.asList(Roles.ADMIN,Roles.COUNSELLOR,Roles.DIRECTOR,Roles.EMPLOYEE,Roles.NONE,Roles.OP_STREAM,Roles.TEAM_LEADER,Roles.TEAM_MANAGER,Roles.VENDOR
+        ,Roles.WELL_BEING_MANGER);
+        return rolesList;
+    }
 }

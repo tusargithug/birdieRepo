@@ -4,40 +4,73 @@ schema {
 }
 
 type Query {
-  moodInfoById(id: ID): MtMoodInfo
-  getAllMoodInfo:[MtMoodInfo]
-  getAllMoodIntensity:[MtMoodIntensity]
-  getAppUserById(id:ID):AppUser
-  getAllAppUsers:[AppUser]
-  mtRoleById(id:ID):MtRoles
-  getAllMtRoles:[MtRoles]
-  getAllCategory:[Category]
-  getAllCourse:[Course]
-
+    moodInfoById(id: ID): MtMoodInfo
+    getAllMoodInfo:[MtMoodInfo]
+    getAllMoodIntensity:[MtMoodIntensity]
+    getAppUserById(id:ID):AppUser
+    getAllAppUsers:[AppUser]
+    mtRoleById(id:ID):MtRoles
+    getAllMtRoles:[MtRoles]
+    getAllCategory:[Category]
+    getAllCourse:[Course]
+    getAllUnit:[Unit]
+    getAllChapters:[Chapter]
+    getLearnPath(input:UnitDto):[Unit]
+    getAllSitePagination(input:SiteDto):[Site]
+    getAllTeamPagination(input:TeamDto):[Team]
+    getAllSite:[Site]
+    getAllTeam:[Team]
+    getAllCountry:[MtCountry]
+    getAllCities:[MtCity]
+    getAllRegions:[MtRegion]
 }
 
 type Mutation {
-  createAppUser(input :AppUserDto): String!
-   updateAppUser(input:AppUserDto!): String!
-   deleteAppUserById(id:ID):String!
-
-   createUserMoodCheckIn(input :MoodSourceIntensityRequestDto):String!
-   createUserMoodSourceCheckIn(input :MoodSourceIntensityRequestDto):String!
-   deleteUserMoodCheckInById(id:ID):String!
+    createAppUser(input :AppUserDto): String!
+    updateAppUser(input:AppUserDto!): String!
+    deleteAppUserById(id:ID):String!
+    createUserMoodCheckIn(input :MoodSourceIntensityRequestDto):String!
+    createUserMoodSourceCheckIn(input :MoodSourceIntensityRequestDto):String!
+    deleteUserMoodCheckInById(id:ID):String!
     deleteUserMoodSourceCheckInById(id:ID):String!
     createUserCourse(input:UserCourseDto):String!
     createCategory(input:CategoryDto):String!
     updateCategory(input:CategoryDto):Category
-    deleteCategoryById(id:ID):String!    
+    deleteCategoryById(id:ID):String!
     createCourse(input:CourseDto):String!
     updateCourse(input:CourseDto):Course
     deleteCourseById(id:ID):String!
     createRole(input:RolesDto):String!
     updateRole(input:RolesDto):String!
     deleteRoleById(id:ID):String!
-
-
- }
+    updateUnitById(id:ID,input:UnitDto):String!
+    updateChaptersById(id:ID,input:ChapterDto):String!
+    saveUnit(input:UnitDto):String!
+    saveChapter(input:ChapterDto):String!
+    deleteUnitById(id:ID):String!
+    deleteChapterById(id:ID):String!
+    createTeam(input:TeamDto):String!
+    updateTeam(id:ID,input:TeamDto):String!
+    deleteTeamById(id:ID):String!
+    saveSite(input:SiteDto):String!
+    updateSite(id:ID,input:SiteDto):String!
+    deleteSiteById(id:ID):String!
+    saveSiftTimings(input:ShiftTimingsDto):String!
+    updateSiftTimings(id:ID,input:ShiftTimingsDto):String!
+    deleteSiftTimingsById(id:ID):String!
+    saveCountry(input:CountryDto):String!
+    #uploadCountryData(file: CountryDto!):String
+    updateCountryById(id:ID,input:CountryDto):String!
+    deleteCountryById(Id:ID):String!
+    saveCity(input:CityDto):String!
+    #uploadCityData(file: CityDto):ApiResponse
+    updateCityById(id:ID,input:CityDto):String!
+    deleteCityById(id:ID):String!
+    saveRegion(input:RegionDto):String!
+    #uploadRegionData(file:RegionDto):ApiResponse
+    updateRegionById(id:ID,input:RegionDto):String!
+    deleteRegionById(id:ID):String!
+}
 
 type MtMoodInfo {
     id: ID!
@@ -51,43 +84,49 @@ type MtMoodInfo {
 type MtMoodIntensity{
     id: ID!
     name: String
-     emoji:String
+    emoji:String
 }
 
 type MtRoles{
      id: ID!
     name: String
 }
-scalar LocalTime
 
-scalar Date
 
 input AppUserDto{
-firstName:String
-lastName:String
-email:String
-mobile:String
-alternateMobile:String
-empId:String
-date:LocalTime
-dastes:Date
+    firstName:String
+    lastName:String
+    email:String
+    mobile:String
+    alternateMobile:String
+    empId:String
+    roles:String
 }
-
+enum Roles{
+    NONE
+    EMPLOYEE
+    WELL_BEING_MANGER
+    COUNSELLOR
+    VENDOR
+    ADMIN
+    DIRECTOR
+    TEAM_MANAGER
+    TEAM_LEADER
+    OP_STREAM
+}
 
 
 type AppUser{
-id:ID!
-firstName:String
-lastName:String
-email:String
-userName:String
-mobile:String
-alternateMobile:String
-empId:String
+    id:ID!
+    firstName:String
+    lastName:String
+    email:String
+    userName:String
+    mobile:String
+    alternateMobile:String
+    empId:String
+    roles:Roles
 }
-
-
-
 
 type FileEntity{
 fileId:ID!
@@ -96,3 +135,17 @@ name:String!
 fileType:String!
 employees:[Course]
 }
+
+type ShiftTimings{
+    shiftName:String
+    site:Site
+    shiftStatAt:String
+    shiftEndAt:String
+    team:Team
+}
+input ShiftTimingsDto{
+    shiftName:String
+    shiftStatAt:String
+    shiftEndAt:String
+}
+
