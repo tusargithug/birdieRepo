@@ -67,7 +67,11 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             Optional<Site> optionalSite=siteRepo.findById(teamDto.getSiteId());
             optionalSite.ifPresent(team::setSite);
         }
-        team.setShiftTimings(dtoToShiftTimings(teamDto.getShiftTimings()));
+        if(teamDto.getShiftTimingsId()!=null && shiftTimingsRepo.existsById(teamDto.getShiftTimingsId())){
+            Optional<ShiftTimings> optionalShiftTimings=shiftTimingsRepo.findById(teamDto.getShiftTimingsId());
+            optionalShiftTimings.ifPresent(team::setShiftTimings);
+        }
+        //team.setShiftTimings(dtoToShiftTimings(teamDto.getShiftTimings()));
         team.setSearchKey(getTeamSearchKey(team));
         team.setIsActive(teamDto.getStatus());
         teamRepo.save(team);
@@ -249,6 +253,11 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     }
 
     @Override
+    public List<Site> getAllShiftTimings() {
+        return null;
+    }
+
+    @Override
     public String deleteSiteById(Long id) {
         Optional<Site> optionalSite=siteRepo.findById(id);
         Site site;
@@ -275,7 +284,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         }
         shiftTimings.setShiftStatAt(shiftTimingsDto.getShiftStatAt());
         shiftTimings.setShiftEndAt(shiftTimingsDto.getShiftEndAt());
-        if(shiftTimingsDto.getSiteId()!=null&&teamRepo.existsById(shiftTimingsDto.getSiteId())){
+        if(shiftTimingsDto.getSiteId()!=null&&siteRepo.existsById(shiftTimingsDto.getSiteId())){
             Optional<Site> optionalSite=siteRepo.findById(shiftTimingsDto.getSiteId());
             optionalSite.ifPresent(shiftTimings::setSite);
         }

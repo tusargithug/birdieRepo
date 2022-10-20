@@ -107,7 +107,7 @@ input TeamDto {
  teamName:String
 # teamLeader:AppUserDto
 # teamManager:AppUserDto
- shiftTimings:ShiftTimingsDto
+# shiftTimings:ShiftTimingsDto
 # site:SiteDto
  status:Boolean
  pageNumber:Int
@@ -116,6 +116,7 @@ input TeamDto {
  teamLeaderId:Int
  teamManagerId:Int
  siteId:Int
+ shiftTimingsId:Int
 }
 
 input UnitDto {
@@ -186,3 +187,18 @@ type Unit{
  chapters:[Chapter]
 }
 
+input TimeSlotDto{
+ counsellorId:Int
+ slotShift:String
+ slots:[SlotDetailsDto]
+}
+input SlotDetailsDto{
+ startTime:String
+ endTime:String
+ duration:Int
+ slotShift: String
+ dayOfWeek: String
+ date: String
+ toDate: String
+ fromDate: String
+}

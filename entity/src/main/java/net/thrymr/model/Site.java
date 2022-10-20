@@ -1,5 +1,6 @@
 package net.thrymr.model;
 
+import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,4 +31,6 @@ public class Site extends BaseEntity {
     private AppUser siteManager;
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Team> teams =new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "site")
+    private List<AppUser> appUser;
 }

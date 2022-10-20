@@ -8,7 +8,8 @@ import net.thrymr.enums.Roles;
 import net.thrymr.model.master.MtRoles;
 
 import javax.persistence.*;
-
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Setter
@@ -48,5 +49,14 @@ public class AppUser extends BaseEntity {
     @Column(name="user_role")
     @Enumerated(EnumType.STRING)
     private Roles roles;
-
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private Site site;
+    @Column(columnDefinition = "TEXT")
+    private String educationDetails;
+    @Column(columnDefinition = "TEXT")
+    private String languages;
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private ShiftTimings shiftTimings;
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "appUser")
+    private List<CounsellorSlot> counsellorSlotList = new ArrayList<>();
 }

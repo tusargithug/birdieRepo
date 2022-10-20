@@ -45,6 +45,7 @@ public class Query implements GraphQLQueryResolver {
     private final CourseRepo courseRepo;
     private final UnitAndChapterServices unitAndChapterServices;
 
+
     public Query(AppUserService appUserService, RoleService roleService, MoodInfoService moodInfoService, MoodIntensityService moodIntensityService, CityCountyAndRegionService cityCountyAndRegionService, SiteTeamAndShiftTimingsService siteTeamAndShiftTimingsService, CategoryRepo categoryRepo, CounsellorSlotService counsellorSlotService, CourseRepo courseRepo, UnitAndChapterServices unitAndChapterServices) {
 
         this.appUserService = appUserService;
@@ -114,10 +115,6 @@ public class Query implements GraphQLQueryResolver {
         return courseRepo.findAll();
     }
 
-    //    @QueryMapping("getCounsellorSlot")
-//    public List<CounsellorSlot> getCounsellorSlot() {
-//        return counsellorSlotService.getCounsellorSlot();
-//    }
     @QueryMapping("getAllCountry")
     public List<MtCountry> getAllCountry() {
         List<MtCountry> countryList = cityCountyAndRegionService.getAllCountry();
@@ -145,12 +142,7 @@ public class Query implements GraphQLQueryResolver {
         //List<Team> teamList= siteTeamAndShiftTimingsService.getAllTeam();
         return siteTeamAndShiftTimingsService.getAllTeam();
     }
-//    @QueryMapping("getAllSiteWithPagination")
-//    public List<Site>(SiteDto siteDto){
-//        ApiResponse apiResponse= siteTeamAndShiftTimingsService.getAllSite(siteDto);
-//        return new ApiResponse(apiResponse.getStatus(), apiResponse.getMessage());
-//    }
-//
+
      @QueryMapping("getAllSite")
     public List<Site>getAllSite(){
 
@@ -180,6 +172,8 @@ public class Query implements GraphQLQueryResolver {
     public List<Site> getAllSitePagination(SiteDto siteDto){
         return siteTeamAndShiftTimingsService.getAllSitePagination(siteDto);
     }
-
-
+    /*@QueryMapping(name="getCounsellorSlot")
+    public List<CounsellorSlot> getCounsellorSlot(String empId) {
+        return counsellorSlotService.getCounsellorSlot(empId);
+    }*/
 }

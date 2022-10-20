@@ -27,4 +27,5 @@ public interface UnitAndChapterServices {
     List<Chapter> getAllChapters();
 
     String deleteChapterById(Long id);
+    List<Chapter> getAllChapterPagination(ChapterDto chapterDto);
 }

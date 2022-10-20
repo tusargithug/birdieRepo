@@ -84,4 +84,9 @@ public class SiteTeamAndShiftTimingsController {
         return siteTeamAndShiftTimingsService.getAllSite();
     }
 
+    @QueryMapping(name = "getAllShiftTimings")
+    public List<Site> getAllShiftTimings(){
+        return siteTeamAndShiftTimingsService.getAllShiftTimings();
+    }
+
 }

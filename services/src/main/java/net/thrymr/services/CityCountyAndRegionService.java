@@ -39,9 +39,9 @@ public interface CityCountyAndRegionService {
 
     String deleteRegionById(Long id);
 
-    ApiResponse uploadCountryData(MultipartFile file);
+    String uploadCountryData(MultipartFile file);
 
-    ApiResponse uploadCityData(MultipartFile file);
+    String uploadCityData(MultipartFile file);
 
-    ApiResponse uploadRegionData(MultipartFile file);
+    String uploadRegionData(MultipartFile file);
 }

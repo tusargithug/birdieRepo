@@ -22,5 +22,5 @@ public class TeamDto {
     private Long teamLeaderId;
     private Long teamManagerId;
     private Long siteId;
-
+    private Long shiftTimingsId;
 }

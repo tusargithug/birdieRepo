@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.thrymr.enums.Roles;
 
+import javax.persistence.Column;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
@@ -44,8 +45,11 @@ public class AppUserDto {
 //
 //    private LocalTime date;
 //    private Date dates;
-
    // private Roles roles= Roles.NONE;
-
     private String roles;
+    private String educationDetails;
+    private String languages;
+    private Long siteId;
+    private Long shiftTimingsId;
+    private Long CounsellorSlotId;
 }

@@ -8,6 +8,8 @@ import org.apache.commons.lang3.builder.ToStringExclude;
 
 import javax.persistence.*;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,4 +25,6 @@ public class ShiftTimings extends BaseEntity {
     private String shiftEndAt;
     @OneToOne(cascade=CascadeType.ALL)
     private Team team;
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "shiftTimings")
+    private List<AppUser> appUser=new ArrayList<>();
 }

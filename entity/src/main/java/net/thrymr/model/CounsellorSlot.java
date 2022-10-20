@@ -36,11 +36,12 @@ public class CounsellorSlot extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private SlotShift slotShift;
 
-
-
     private DayOfWeek days;
 
     private SlotStatus slotStatus;
+
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private AppUser appUser;
 
 //    private final ObjectMapper objectMapper = new ObjectMapper()
 //            .registerModule(new ParameterNamesModule())

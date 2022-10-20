@@ -35,4 +35,6 @@ public interface SiteTeamAndShiftTimingsService {
     List<Team> getAllTeamPagination(TeamDto teamdto);
 
     List<Site> getAllSitePagination(SiteDto siteDto);
+
+    List<Site> getAllShiftTimings();
 }

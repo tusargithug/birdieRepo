@@ -5,8 +5,10 @@ import net.thrymr.dto.slotRequest.SlotDetailsDto;
 import net.thrymr.dto.slotRequest.TimeSlotDto;
 import net.thrymr.enums.SlotShift;
 import net.thrymr.enums.SlotStatus;
+import net.thrymr.model.AppUser;
 import net.thrymr.model.Counsellor;
 import net.thrymr.model.CounsellorSlot;
+import net.thrymr.repository.AppUserRepo;
 import net.thrymr.repository.CounsellorRepo;
 import net.thrymr.repository.CounsellorSlotRepo;
 import net.thrymr.services.CounsellorSlotService;
@@ -28,9 +30,12 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
 
     private final CounsellorSlotRepo counsellorSlotRepo;
 
-    public CounsellorSlotServiceImpl(CounsellorRepo counsellorRepo, CounsellorSlotRepo counsellorSlotRepo) {
+    private final AppUserRepo appUserRepo;
+
+    public CounsellorSlotServiceImpl(CounsellorRepo counsellorRepo, CounsellorSlotRepo counsellorSlotRepo, AppUserRepo appUserRepo) {
         this.counsellorRepo = counsellorRepo;
         this.counsellorSlotRepo = counsellorSlotRepo;
+        this.appUserRepo = appUserRepo;
     }
 
 
@@ -49,6 +54,19 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
         List<CounsellorSlot>counsellorSlots=new ArrayList<>();
         if(Validator.isValid(request.getSlots())){
             for(SlotDetailsDto detailsDto:request.getSlots()){
+                switch (request.getSlotShift()) {
+                    case "MORNING":
+                        slot.setSlotShift(SlotShift.MORNING);
+                        break;
+                    case "AFTERNOON":
+                        slot.setSlotShift(SlotShift.AFTERNOON);
+                        break;
+                    case "EVENING":
+                        slot.setSlotShift(SlotShift.EVENING);
+                        break;
+                    default:
+                        return "please select any shift";
+                }
                 slot.setStartTime(DateUtils.toParseLocalTime(detailsDto.getStartTime(), Constants.TIME_FORMAT_2));
                 slot.setEndTime(DateUtils.toParseLocalTime(detailsDto.getEndTime(),Constants.TIME_FORMAT_2));
                 slot.setDays(DayOfWeek.valueOf(detailsDto.getDayOfWeek()));
@@ -94,8 +112,14 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
     }
 
     @Override
-    public List<CounsellorSlot> getCounsellorSlot() {
-        return null;
+    public List<CounsellorSlot> getCounsellorSlot( String empId) {
+        Optional<AppUser> optionalAppUser = appUserRepo.findByEmpId(empId);
+        AppUser appUser = null;
+        if (optionalAppUser.isPresent()){
+            appUser=optionalAppUser.get();
+        }
+        List<CounsellorSlot> counsellorSlotList = counsellorSlotRepo.findByAppUser(String.valueOf(appUser));
+        return counsellorSlotList;
     }
 
 

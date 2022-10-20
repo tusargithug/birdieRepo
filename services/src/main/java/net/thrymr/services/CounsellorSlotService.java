@@ -8,5 +8,5 @@ import java.util.List;
 public interface CounsellorSlotService {
     String createCounsellorSlot(TimeSlotDto request);
 
-    List<CounsellorSlot> getCounsellorSlot();
+    List<CounsellorSlot> getCounsellorSlot( String empId);
 }

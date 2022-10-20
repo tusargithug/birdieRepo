@@ -16,4 +16,7 @@ public class ChapterDto {
     private Boolean isActive=Boolean.FALSE;
     private FileEntity video;
     private Long unitId;
+    private Integer pageNumber;
+    private Integer pageSize;
+    private String addedOn;
 }

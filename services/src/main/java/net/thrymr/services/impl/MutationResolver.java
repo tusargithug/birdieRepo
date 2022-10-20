@@ -2,15 +2,18 @@ package net.thrymr.services.impl;
         import graphql.kickstart.tools.GraphQLMutationResolver;
         import net.thrymr.dto.*;
         import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
+        import net.thrymr.dto.slotRequest.TimeSlotDto;
+        import net.thrymr.model.CounsellorSlot;
         import net.thrymr.model.master.Category;
         import net.thrymr.model.master.Course;
         import net.thrymr.services.*;
         import org.springframework.graphql.data.method.annotation.Argument;
         import org.springframework.graphql.data.method.annotation.MutationMapping;
         import org.springframework.graphql.data.method.annotation.QueryMapping;
-        import org.springframework.http.ResponseEntity;
         import org.springframework.stereotype.Component;
+
         import java.text.ParseException;
+        import java.util.List;
 
 @Component
 public class MutationResolver implements GraphQLMutationResolver {
@@ -30,8 +33,9 @@ public class MutationResolver implements GraphQLMutationResolver {
 
     private final SiteTeamAndShiftTimingsService siteTeamAndShiftTimingsService;
     private final UnitAndChapterServices unitAndChapterServices;
+    private final CounsellorSlotService counsellorSlotService;
 
-    public MutationResolver(MoodSourceService moodSourceService, RoleService roleService, AppUserService appUserService, MoodIntensityService moodIntensityService, CategoryService categoryService, CourseService courseService, CounsellorSlotService counsellorSlotService, UnitAndChapterServices unitAndChapterServices, CityCountyAndRegionService cityCountyAndRegionService, SiteTeamAndShiftTimingsService siteTeamAndShiftTimingsService, UnitAndChapterServices unitAndChapterServices1) {
+    public MutationResolver(MoodSourceService moodSourceService, RoleService roleService, AppUserService appUserService, MoodIntensityService moodIntensityService, CategoryService categoryService, CourseService courseService, CounsellorSlotService counsellorSlotService, UnitAndChapterServices unitAndChapterServices, CityCountyAndRegionService cityCountyAndRegionService, SiteTeamAndShiftTimingsService siteTeamAndShiftTimingsService, UnitAndChapterServices unitAndChapterServices1, CounsellorSlotService counsellorSlotService1) {
         this.moodSourceService = moodSourceService;
         this.roleService = roleService;
         this.appUserService = appUserService;
@@ -40,7 +44,8 @@ public class MutationResolver implements GraphQLMutationResolver {
         this.courseService = courseService;
         this.cityCountyAndRegionService = cityCountyAndRegionService;
         this.siteTeamAndShiftTimingsService = siteTeamAndShiftTimingsService;
-        this.unitAndChapterServices = unitAndChapterServices1;
+        this.unitAndChapterServices = unitAndChapterServices;
+        this.counsellorSlotService = counsellorSlotService;
     }
 
     @MutationMapping(name = "createAppUser")
@@ -147,11 +152,7 @@ public class MutationResolver implements GraphQLMutationResolver {
         return cityCountyAndRegionService.saveCountry(countryDto);
 
     }
-    /*@MutationMapping(name="upload-excel-country-data")
-    public ResponseEntity<String> uploadCountryData(MultipartFile file) {
-        cityCountyAndRegionService.uploadCountryData(file);
-        return new ResponseEntity<>(String, String.getStatus());
-    }*/
+
 
     @MutationMapping(name="updateCountryById")
     public String updateCountryById(Long id,CountryDto countryDto) {
@@ -274,6 +275,26 @@ public class MutationResolver implements GraphQLMutationResolver {
         return unitAndChapterServices.deleteChapterById(id);
     }
 
+/*    @MutationMapping(name="upload-excel-region-data")
+    public String uploadRegionData(@Argument MultipartFile file) {
+        return cityCountyAndRegionService.uploadRegionData(file);
+    }
+
+    @MutationMapping(name="upload-excel-city-data")
+    public String uploadCityData(@Argument MultipartFile file) {
+        return cityCountyAndRegionService.uploadCityData(file);
+
+    }
+
+    @MutationMapping(name="upload-excel-country-data")
+    public String uploadCountryData(@Argument MultipartFile file) {
+        return  cityCountyAndRegionService.uploadCountryData(file);
+    }*/
+
+   /* @MutationMapping(name = "createCounsellorSlot")
+    private String createCounsellorSlot(@Argument(name = "input") TimeSlotDto request){
+        return counsellorSlotService.createCounsellorSlot(request);
+    }*/
 }
 
 

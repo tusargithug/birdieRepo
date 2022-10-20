@@ -6,8 +6,7 @@ import net.thrymr.dto.AppUserDto;
 import net.thrymr.dto.RolesDto;
 import net.thrymr.dto.UserCourseDto;
 import net.thrymr.enums.Roles;
-import net.thrymr.model.AppUser;
-import net.thrymr.model.UserCourse;
+import net.thrymr.model.*;
 import net.thrymr.model.master.Course;
 import net.thrymr.model.master.MtOptions;
 import net.thrymr.model.master.MtRoles;
@@ -54,13 +53,19 @@ public class AppUserServiceImpl implements AppUserService {
 
     private final MtOptionsRepo mtOptionsRepo;
 
-    public AppUserServiceImpl(AppUserRepo appUserRepo, Environment environment, RoleRepo roleRepo, UserCourseRepo userCourseRepo, CourseRepo courseRepo, MtOptionsRepo mtOptionsRepo) {
+    private final SiteRepo siteRepo;
+
+    private final ShiftTimingsRepo shiftTimingsRepo;
+
+    public AppUserServiceImpl(AppUserRepo appUserRepo, Environment environment, RoleRepo roleRepo, UserCourseRepo userCourseRepo, CourseRepo courseRepo, MtOptionsRepo mtOptionsRepo, SiteRepo siteRepo, ShiftTimingsRepo shiftTimingsRepo, CounsellorSlotRepo counsellorSlotRepo) {
         this.appUserRepo = appUserRepo;
         this.environment = environment;
         this.roleRepo = roleRepo;
         this.userCourseRepo = userCourseRepo;
         this.courseRepo = courseRepo;
         this.mtOptionsRepo = mtOptionsRepo;
+        this.siteRepo = siteRepo;
+        this.shiftTimingsRepo = shiftTimingsRepo;
     }
 
     @Bean
@@ -271,6 +276,16 @@ public class AppUserServiceImpl implements AppUserService {
         user.setAlternateMobile(request.getAlternateMobile());
         user.setEmpId(request.getEmpId());
         user.setRoles(Roles.valueOf(request.getRoles()));
+        user.setLanguages(request.getLanguages());
+        Optional<Site> optionalSite=siteRepo.findById(request.getSiteId());
+        if(optionalSite.isPresent()){
+            user.setSite(optionalSite.get());
+        }
+        user.setEducationDetails(request.getEducationDetails());
+        Optional<ShiftTimings> optionalShiftTimings=shiftTimingsRepo.findById(request.getShiftTimingsId());
+        if(optionalShiftTimings.isPresent()){
+            user.setShiftTimings(optionalShiftTimings.get());
+        }
         appUserRepo.save(user);
         return "User Saved successfully";
     }

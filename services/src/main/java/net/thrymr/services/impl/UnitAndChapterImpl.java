@@ -85,9 +85,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                 addUnitPredicate.add(id);
             }
             if(unitDto.getUnitName()!=null && !unitDto.getUnitName().isEmpty()){
-               // Predicate unitName = criteriaBuilder.and(root.get("unitName").as(unitDto.getUnitName()));
-                Predicate unitName = criteriaBuilder.and(root.get("unitName").as(String.class).in(unitDto.getUnitName()));
-
+                Predicate unitName = criteriaBuilder.and(root.get("unitName").in(unitDto.getUnitName()));
                 addUnitPredicate.add(unitName);
             }
             if(unitDto.getAddOn()!=null){
@@ -97,7 +95,8 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
             return criteriaBuilder.and(addUnitPredicate.toArray(new Predicate[0]));
         });
         Page <Unit> unitObjectives = unitRpo.findAll(addUnitSpecification, pageable);
-        List<Unit> unitList = null;
+
+        List<Unit> unitList =null;
         if(unitObjectives.getContent()!=null){
             unitList = unitObjectives.stream().toList();
         }
@@ -154,6 +153,41 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
             chapterRepo.save(chapter);
         }
         return "record delete records successfully";
+    }
+
+    @Override
+    public List<Chapter> getAllChapterPagination(ChapterDto chapterDto) {
+        Pageable pageable=null;
+        if (chapterDto.getPageNumber() != null) {
+            pageable = PageRequest.of(chapterDto.getPageNumber(), chapterDto.getPageSize());
+        }
+        if (chapterDto.getAddedOn()!= null) {
+            pageable = PageRequest.of(chapterDto.getPageNumber(),chapterDto.getPageSize(),Sort.Direction.DESC,"createdOn");
+        }
+        Chapter chapter=new Chapter();
+        //filters
+        Specification<Chapter> chapterSpecification = ((root, criteriaQuery, criteriaBuilder)->{
+            List<Predicate> addUnitPredicate = new ArrayList<>();
+            if(chapterDto.getId()!=null){
+                Predicate id = criteriaBuilder.and(root.get("id").in(chapterDto.getId()));
+                addUnitPredicate.add(id);
+            }
+            if(chapterDto.getChapterName()!=null && !chapterDto.getChapterName().isEmpty()){
+                Predicate unitName = criteriaBuilder.and(root.get("chapterName").in(chapterDto.getChapterName()));
+                addUnitPredicate.add(unitName);
+            }
+            if(chapterDto.getAddedOn()!=null){
+                Predicate createdOn = criteriaBuilder.and(root.get("createdOn").in(chapterDto.getAddedOn()));
+                addUnitPredicate.add(createdOn);
+            }
+            return criteriaBuilder.and(addUnitPredicate.toArray(new Predicate[0]));
+        });
+        Page <Chapter> chapterObjectives = chapterRepo.findAll(chapterSpecification, pageable);
+        List<Chapter> chapterList = null;
+        if(chapterObjectives.getContent()!=null){
+            chapterList = chapterObjectives.stream().toList();
+        }
+        return null;
     }
 
     public Unit dtoToEntity(UnitDto dto) {

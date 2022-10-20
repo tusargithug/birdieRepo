@@ -183,17 +183,17 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
     }
 
     @Override
-    public ApiResponse uploadCountryData(MultipartFile file) {
+    public String uploadCountryData(MultipartFile file) {
         List<MtCountry> countryList=new ArrayList<>();
         XSSFWorkbook workbook;
         try {
             workbook = new XSSFWorkbook(file.getInputStream());
         } catch (IOException e) {
-            return new ApiResponse(HttpStatus.BAD_REQUEST, "COUNTRY.IMPORT.FORMAT.FAILED");
+            return "COUNTRY.IMPORT.FORMAT.FAILED";
         }
         XSSFSheet worksheet = workbook.getSheetAt(0);
         if (worksheet.getLastRowNum() < 1) {
-            return new ApiResponse(HttpStatus.BAD_REQUEST, "COUNTRY.IMPORT.FORMAT.INVALID.DATA");
+            return "COUNTRY.IMPORT.FORMAT.INVALID.DATA";
         }
         for (int index = 1; index <= worksheet.getLastRowNum(); index++) {
             if (index > 0) {
@@ -216,36 +216,36 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
                     setCountrySearchKey(country);
                     countryList.add(country);
                 }catch (Exception e) {
-                    return new ApiResponse(HttpStatus.BAD_REQUEST, "COUNTRY.IMPORT.FORMAT.FAILED");
+                    return "COUNTRY.IMPORT.FORMAT.FAILED";
                 }
             }
 
         }
         if (Validator.isObjectValid(countryList)) {
             countryRepo.saveAll(countryList);
-            return new ApiResponse(HttpStatus.OK, "COUNTRY.IMPORT.SUCCESS");
+            return "COUNTRY.IMPORT.SUCCESS";
 
         }
-        return new ApiResponse(HttpStatus.BAD_REQUEST, "COUNTRY.IMPORT.FAILED");
+        return "COUNTRY.IMPORT.FAILED";
 
     }
 
     @Override
-    public ApiResponse uploadCityData(MultipartFile file) {
+    public String uploadCityData(MultipartFile file) {
         List<MtCity> mtCityList = new ArrayList<>();
         XSSFWorkbook workbook;
         try {
             workbook = new XSSFWorkbook(file.getInputStream());
         } catch (IOException e) {
-            return new ApiResponse(HttpStatus.BAD_REQUEST, "CITY.IMPORT.FORMAT.FAILED");
+            return "CITY.IMPORT.FORMAT.FAILED";
         }
         XSSFSheet worksheet = workbook.getSheetAt(0);
         if (worksheet.getLastRowNum() < 1) {
-            return new ApiResponse(HttpStatus.BAD_REQUEST, "CITY.IMPORT.FORMAT.INVALID.DATA");
+            return "CITY.IMPORT.FORMAT.INVALID.DATA";
         }
         XSSFSheet workSheet= workbook.getSheetAt(0);
         if (workSheet.getLastRowNum() < 1) {
-            return new ApiResponse(HttpStatus.BAD_REQUEST, "CITY.IMPORT.FORMAT.INVALID.DATA");
+            return "CITY.IMPORT.FORMAT.INVALID.DATA";
         }
         for (int index = 1; index <= workSheet.getLastRowNum(); index++) {
             if (index > 0) {
@@ -265,34 +265,34 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
                     setCitySearchKey(mtCity);
                     mtCityList.add(mtCity);
                 }catch (Exception e) {
-                    return new ApiResponse(HttpStatus.BAD_REQUEST, "CITY.IMPORT.FORMAT.FAILED");
+                    return "CITY.IMPORT.FORMAT.FAILED";
                 }
             }
 
         }
         if (Validator.isObjectValid(mtCityList)) {
             cityRepo.saveAll(mtCityList);
-            return new ApiResponse(HttpStatus.OK, "CITY.IMPORT.SUCCESS");
+            return "CITY.IMPORT.SUCCESS";
         }
-        return new ApiResponse(HttpStatus.BAD_REQUEST, "CITY.IMPORT.FAILED");
+        return "CITY.IMPORT.FAILED";
     }
 
     @Override
-    public ApiResponse uploadRegionData(MultipartFile file) {
+    public String uploadRegionData(MultipartFile file) {
         List<MtRegion> MtRegionList = new ArrayList<>();
         XSSFWorkbook workbook;
         try {
             workbook = new XSSFWorkbook(file.getInputStream());
         } catch (IOException e) {
-            return new ApiResponse(HttpStatus.BAD_REQUEST, "REGION.IMPORT.FORMAT.FAILED");
+            return "REGION.IMPORT.FORMAT.FAILED";
         }
         XSSFSheet worksheet = workbook.getSheetAt(0);
         if (worksheet.getLastRowNum() < 1) {
-            return new ApiResponse(HttpStatus.BAD_REQUEST, "REGION.IMPORT.FORMAT.INVALID.DATA");
+            return "REGION.IMPORT.FORMAT.INVALID.DATA";
         }
         XSSFSheet workSheet= workbook.getSheetAt(0);
         if (workSheet.getLastRowNum() < 1) {
-            return new ApiResponse(HttpStatus.BAD_REQUEST, "REGION.IMPORT.FORMAT.INVALID.DATA");
+            return  "REGION.IMPORT.FORMAT.INVALID.DATA";
         }
         for (int index = 1; index <= workSheet.getLastRowNum(); index++) {
             if (index > 0) {
@@ -306,16 +306,16 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
                     setRegionSearchKey(mtRegion);
                     MtRegionList.add(mtRegion);
                 }catch (Exception e) {
-                    return new ApiResponse(HttpStatus.BAD_REQUEST, "REGION.IMPORT.FORMAT.FAILED");
+                    return  "REGION.IMPORT.FORMAT.FAILED";
                 }
             }
 
         }
         if (Validator.isObjectValid(MtRegionList)) {
             regionRepo.saveAll(MtRegionList);
-            return new ApiResponse(HttpStatus.OK, "REGION.IMPORT.SUCCESS");
+            return "REGION.IMPORT.SUCCESS";
         }
-        return new ApiResponse(HttpStatus.BAD_REQUEST, "REGION.IMPORT.FAILED");
+        return  "REGION.IMPORT.FAILED";
     }
 
     private String getCellValue(XSSFCell cell) {

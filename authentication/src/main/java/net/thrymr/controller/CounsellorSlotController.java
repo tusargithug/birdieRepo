@@ -22,15 +22,15 @@ public class CounsellorSlotController {
         this.counsellorSlotService = counsellorSlotService;
     }
 
-//    @QueryMapping(name="getCounsellorSlot")
-//    public List<CounsellorSlot> getCounsellorSlot() {
-//        return counsellorSlotService.getCounsellorSlot();
-//    }
+    @QueryMapping(name="getCounsellorSlot")
+    public List<CounsellorSlot> getCounsellorSlot(@Argument String empId) {
+        return counsellorSlotService.getCounsellorSlot(empId);
+    }
 
-//    @MutationMapping(name = "createCounsellorSlot")
-//    private String createCounsellorSlot(@Argument(name = "input") TimeSlotDto request){
-//        return counsellorSlotService.createCounsellorSlot(request);
-//    }
+    @MutationMapping(name = "createCounsellorSlot")
+    private String createCounsellorSlot(@Argument(name = "input") TimeSlotDto request){
+        return counsellorSlotService.createCounsellorSlot(request);
+    }
 
 
 }
