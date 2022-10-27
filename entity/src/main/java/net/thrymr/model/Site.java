@@ -33,4 +33,6 @@ public class Site extends BaseEntity {
     private List<Team> teams =new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "site")
     private List<AppUser> appUser;
+    /*@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "site")
+    private List<Counsellor> counsellorList;*/
 }

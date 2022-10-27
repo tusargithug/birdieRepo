@@ -3,6 +3,7 @@ package net.thrymr.dto.slotRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.thrymr.model.AppUser;
 
 import java.util.ArrayList;
 import java.util.List;

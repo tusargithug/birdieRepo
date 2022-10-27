@@ -52,4 +52,5 @@ public class AppUserDto {
     private Long siteId;
     private Long shiftTimingsId;
     private Long CounsellorSlotId;
+    private Long teamId;
 }

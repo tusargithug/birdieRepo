@@ -197,8 +197,11 @@ input SlotDetailsDto{
  endTime:String
  duration:Int
  slotShift: String
+ slotStatus:String
  dayOfWeek: String
  date: String
  toDate: String
  fromDate: String
+ appUserId:Int
+ counsellorId:Int
 }

@@ -23,7 +23,10 @@ type Query {
     getAllCountry:[MtCountry]
     getAllCities:[MtCity]
     getAllRegions:[MtRegion]
-#    getCounsellorSlot(empId:String):[CounsellorSlot]
+    getCounsellorSlot:[CounsellorSlot]
+    getAllShiftTimings:[ShiftTimings]
+    getCounsellorSlotById(id:ID!):CounsellorSlot
+    getAllCounsellor(input:CounsellorDto):[AppUser]
 }
 
 type Mutation {
@@ -68,11 +71,15 @@ type Mutation {
     updateCityById(id:ID,input:CityDto):String!
     deleteCityById(id:ID):String!
     saveRegion(input:RegionDto):String!
-#    uploadRegionData(file:CountryDto!):String!
+    uploadRegionData(file:Upload!):String!
     updateRegionById(id:ID,input:RegionDto):String!
     deleteRegionById(id:ID):String!
-#    createCounsellorSlot(input:TimeSlotDto):String!
+    createCounsellorSlot(input:TimeSlotDto):String!
+    createCounsellor(input:CounsellorDto):String!
+    updateCounsellorById(id:ID!,input:CounsellorDto):String!
+    deleteCounsellorById(id:ID!):String!
 }
+scalar Upload
 type MtMoodInfo {
     id: ID!
     name: String
@@ -102,10 +109,9 @@ input AppUserDto{
     alternateMobile:String
     empId:String
     roles:String
-    educationDetails:String
-    languages:String
     siteId:Int
     shiftTimingsId:Int
+    teamId:Int
 }
 enum Roles{
     NONE
@@ -132,8 +138,7 @@ type AppUser{
     empId:String
     roles:Roles
     site:Site
-    languages:String
-    educationDetails:String
+    team:Team
     shiftTimings:ShiftTimings
 }
 
@@ -159,29 +164,27 @@ input ShiftTimingsDto{
     shiftName:String
     shiftStatAt:String
     shiftEndAt:String
+    counsellorId:Int
 }
-#type CounsellorSlot{
-#    id: ID!
-#    counsellor:Counsellor
-#    startTime:LocalTime
-#    endTime:LocalTime
-#    slotDt:LocalDate
-#    slotShift:SlotShift
-#    days:DayOfWeek
-#    slotStatus:SlotStatus
-#}
-#type Counsellor{
-#    id: ID!
-#    user:AppUser
-#    designation:String
-#    counsellorSlots:[CounsellorSlot]
-#    site:String
-#    educationalDetails:String
-#    languages:[String]
-#    shiftTimings:String
-#}
-#scalar LocalTime
-#scalar LocalDate
+type CounsellorSlot{
+    id: ID!
+    counsellor:Counsellor
+    startTime:LocalTime
+    endTime:LocalTime
+    slotDt:Date
+    slotShift:SlotShift
+    days:DayOfWeek
+    slotStatus:SlotStatus
+}
+type Counsellor{
+appUser:AppUser
+shiftTimings:[ShiftTimings]
+educationalDetails:[String]
+languages:[String]
+bio:String
+}
+scalar LocalTime
+scalar Date
 
 
 enum SlotShift{
@@ -197,11 +200,32 @@ enum SlotStatus{
 }
 
 enum  DayOfWeek{
-MONDAY
-TUESDAY
-WEDNESDAY
-THURSDAY
-FRIDAY
-SATURDAY
-SUNDAY
+    MONDAY
+    TUESDAY
+    WEDNESDAY
+    THURSDAY
+    FRIDAY
+    SATURDAY
+    SUNDAY
+}
+input CounsellorDto {
+    educationalDetails:[String]
+    languages:[String]
+    siteId:Int
+    teamId:Int
+    designation:String
+    shiftTimingsId:Int
+    teamManagerId:Int
+    bio:String
+    appUserName:String
+    employeeId:String
+    emailId:String
+    contactNumber:String
+    appUserId:Int
+    pageNumber:Int
+    pageSize:Int
+    addedOn:String
+    shiftTimings: ShiftTimingsDto
+    site:SiteDto
+    team:TeamDto
 }

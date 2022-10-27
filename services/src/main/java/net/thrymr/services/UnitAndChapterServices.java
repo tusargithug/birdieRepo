@@ -4,7 +4,6 @@ import net.thrymr.dto.ChapterDto;
 import net.thrymr.dto.UnitDto;
 import net.thrymr.model.Chapter;
 import net.thrymr.model.Unit;
-import net.thrymr.utils.ApiResponse;
 
 import java.util.List;
 

@@ -70,13 +70,12 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
     public List<Unit> getLearnPath(UnitDto unitDto) {
 
         Pageable pageable=null;
-        if (unitDto.getPageNumber() != null) {
+        if (unitDto.getPageSize() != null) {
             pageable = PageRequest.of(unitDto.getPageNumber(), unitDto.getPageSize());
         }
         if (unitDto.getAddOn()!= null) {
             pageable = PageRequest.of(unitDto.getPageNumber(),unitDto.getPageSize(),Sort.Direction.DESC,"createdOn");
         }
-        Unit unit=new Unit();
         //filters
         Specification<Unit> addUnitSpecification = ((root, criteriaQuery, criteriaBuilder)->{
             List<Predicate> addUnitPredicate = new ArrayList<>();
@@ -95,7 +94,6 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
             return criteriaBuilder.and(addUnitPredicate.toArray(new Predicate[0]));
         });
         Page <Unit> unitObjectives = unitRpo.findAll(addUnitSpecification, pageable);
-
         List<Unit> unitList =null;
         if(unitObjectives.getContent()!=null){
             unitList = unitObjectives.stream().toList();

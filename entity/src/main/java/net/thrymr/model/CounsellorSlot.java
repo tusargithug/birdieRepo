@@ -11,6 +11,7 @@ import javax.persistence.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Date;
 
 @Setter
 @Getter
@@ -21,7 +22,6 @@ public class CounsellorSlot extends BaseEntity {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "counsellor_slot")
     private Counsellor counsellor;
 
     @Column(name = "start_time")
@@ -31,17 +31,19 @@ public class CounsellorSlot extends BaseEntity {
     private LocalTime endTime;
 
     @Column(name = "slot_date")
-    private LocalDate slotDt;
+    private Date slotDt;
 
     @Enumerated(EnumType.STRING)
     private SlotShift slotShift;
 
     private DayOfWeek days;
 
+    @Enumerated(EnumType.STRING)
     private SlotStatus slotStatus;
 
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private AppUser appUser;
+
 
 //    private final ObjectMapper objectMapper = new ObjectMapper()
 //            .registerModule(new ParameterNamesModule())

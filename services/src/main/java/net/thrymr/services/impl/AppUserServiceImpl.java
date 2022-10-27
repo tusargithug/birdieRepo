@@ -56,8 +56,8 @@ public class AppUserServiceImpl implements AppUserService {
     private final SiteRepo siteRepo;
 
     private final ShiftTimingsRepo shiftTimingsRepo;
-
-    public AppUserServiceImpl(AppUserRepo appUserRepo, Environment environment, RoleRepo roleRepo, UserCourseRepo userCourseRepo, CourseRepo courseRepo, MtOptionsRepo mtOptionsRepo, SiteRepo siteRepo, ShiftTimingsRepo shiftTimingsRepo, CounsellorSlotRepo counsellorSlotRepo) {
+    private final TeamRepo teamRepo;
+    public AppUserServiceImpl(AppUserRepo appUserRepo, Environment environment, RoleRepo roleRepo, UserCourseRepo userCourseRepo, CourseRepo courseRepo, MtOptionsRepo mtOptionsRepo, SiteRepo siteRepo, ShiftTimingsRepo shiftTimingsRepo, CounsellorSlotRepo counsellorSlotRepo, CounsellorRepo counsellorRepo, TeamRepo teamRepo) {
         this.appUserRepo = appUserRepo;
         this.environment = environment;
         this.roleRepo = roleRepo;
@@ -66,6 +66,7 @@ public class AppUserServiceImpl implements AppUserService {
         this.mtOptionsRepo = mtOptionsRepo;
         this.siteRepo = siteRepo;
         this.shiftTimingsRepo = shiftTimingsRepo;
+        this.teamRepo = teamRepo;
     }
 
     @Bean
@@ -276,15 +277,19 @@ public class AppUserServiceImpl implements AppUserService {
         user.setAlternateMobile(request.getAlternateMobile());
         user.setEmpId(request.getEmpId());
         user.setRoles(Roles.valueOf(request.getRoles()));
-        user.setLanguages(request.getLanguages());
         Optional<Site> optionalSite=siteRepo.findById(request.getSiteId());
         if(optionalSite.isPresent()){
             user.setSite(optionalSite.get());
         }
-        user.setEducationDetails(request.getEducationDetails());
         Optional<ShiftTimings> optionalShiftTimings=shiftTimingsRepo.findById(request.getShiftTimingsId());
         if(optionalShiftTimings.isPresent()){
             user.setShiftTimings(optionalShiftTimings.get());
+        }
+        if (request.getTeamId() != null) {
+            Optional<Team> optionalTeamId = teamRepo.findById(request.getTeamId());
+            if (optionalTeamId.isPresent()) {
+                user.setTeam(optionalTeamId.get());
+            }
         }
         appUserRepo.save(user);
         return "User Saved successfully";
