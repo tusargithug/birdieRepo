@@ -16,11 +16,11 @@ public class Chapter extends  BaseEntity{
 
     @Column(name ="chapter_name" )
     private String chapterName;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private FileEntity profilePicture;
     @Column(name = "description",columnDefinition = "TEXT")
     private String description;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private FileEntity video;
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)

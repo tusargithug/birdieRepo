@@ -164,7 +164,6 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         if (chapterDto.getAddedOn()!= null) {
             pageable = PageRequest.of(chapterDto.getPageNumber(),chapterDto.getPageSize(),Sort.Direction.DESC,"createdOn");
         }
-        Chapter chapter=new Chapter();
         //filters
         Specification<Chapter> chapterSpecification = ((root, criteriaQuery, criteriaBuilder)->{
             List<Predicate> addUnitPredicate = new ArrayList<>();

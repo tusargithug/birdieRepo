@@ -3,17 +3,14 @@ package net.thrymr.services.impl;
         import net.thrymr.dto.*;
         import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
         import net.thrymr.dto.slotRequest.TimeSlotDto;
-        import net.thrymr.model.CounsellorSlot;
         import net.thrymr.model.master.Category;
         import net.thrymr.model.master.Course;
         import net.thrymr.services.*;
         import org.springframework.graphql.data.method.annotation.Argument;
         import org.springframework.graphql.data.method.annotation.MutationMapping;
-        import org.springframework.graphql.data.method.annotation.QueryMapping;
         import org.springframework.stereotype.Component;
 
         import java.text.ParseException;
-        import java.util.List;
 
 @Component
 public class MutationResolver implements GraphQLMutationResolver {
@@ -34,8 +31,9 @@ public class MutationResolver implements GraphQLMutationResolver {
     private final SiteTeamAndShiftTimingsService siteTeamAndShiftTimingsService;
     private final UnitAndChapterServices unitAndChapterServices;
     private final CounsellorSlotService counsellorSlotService;
+    private final VendorService vendorService;
 
-    public MutationResolver(MoodSourceService moodSourceService, RoleService roleService, AppUserService appUserService, MoodIntensityService moodIntensityService, CategoryService categoryService, CourseService courseService, CounsellorSlotService counsellorSlotService, UnitAndChapterServices unitAndChapterServices, CityCountyAndRegionService cityCountyAndRegionService, SiteTeamAndShiftTimingsService siteTeamAndShiftTimingsService, UnitAndChapterServices unitAndChapterServices1, CounsellorSlotService counsellorSlotService1) {
+    public MutationResolver(MoodSourceService moodSourceService, RoleService roleService, AppUserService appUserService, MoodIntensityService moodIntensityService, CategoryService categoryService, CourseService courseService, CounsellorSlotService counsellorSlotService, UnitAndChapterServices unitAndChapterServices, CityCountyAndRegionService cityCountyAndRegionService, SiteTeamAndShiftTimingsService siteTeamAndShiftTimingsService, UnitAndChapterServices unitAndChapterServices1, CounsellorSlotService counsellorSlotService1, VendorService vendorService) {
         this.moodSourceService = moodSourceService;
         this.roleService = roleService;
         this.appUserService = appUserService;
@@ -46,6 +44,7 @@ public class MutationResolver implements GraphQLMutationResolver {
         this.siteTeamAndShiftTimingsService = siteTeamAndShiftTimingsService;
         this.unitAndChapterServices = unitAndChapterServices;
         this.counsellorSlotService = counsellorSlotService;
+        this.vendorService = vendorService;
     }
 
     @MutationMapping(name = "createAppUser")
@@ -291,10 +290,26 @@ public class MutationResolver implements GraphQLMutationResolver {
         return  cityCountyAndRegionService.uploadCountryData(file);
     }*/
 
-   /* @MutationMapping(name = "createCounsellorSlot")
-    private String createCounsellorSlot(@Argument(name = "input") TimeSlotDto request){
+    @MutationMapping(name = "createCounsellorSlot")
+    public String createCounsellorSlot(@Argument(name = "input") TimeSlotDto request){
         return counsellorSlotService.createCounsellorSlot(request);
-    }*/
+    }
+    @MutationMapping(name = "saveVendor")
+    public String saveVendor(@Argument(name = "input")VendorDto request) {
+        return vendorService.saveVendor(request);
+    }
+
+    @MutationMapping(name = "deleteVendorById")
+    public String deleteVendorById(@Argument Long id) {
+        return vendorService.deleteVendorById(id);
+    }
+
+
+
+    @MutationMapping(name = "updateVendor")
+    public String updateVendor(@Argument Long id,@Argument(name = "input")VendorDto request) {
+        return vendorService.updateVendor(id,request);
+    }
 }
 
 

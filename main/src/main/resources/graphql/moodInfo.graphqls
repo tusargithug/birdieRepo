@@ -23,7 +23,10 @@ type Query {
     getAllCountry:[MtCountry]
     getAllCities:[MtCity]
     getAllRegions:[MtRegion]
-#    getCounsellorSlot(empId:String):[CounsellorSlot]
+    getAllVendor:[Vendor]
+    getVendorById(id:ID):Vendor
+    getAllVendorPagination(input:VendorDto):[Vendor]
+    #    getCounsellorSlot(empId:String):[CounsellorSlot]
 }
 
 type Mutation {
@@ -60,25 +63,28 @@ type Mutation {
     updateSiftTimings(id:ID,input:ShiftTimingsDto):String!
     deleteSiftTimingsById(id:ID):String!
     saveCountry(input:CountryDto):String!
-#    uploadCountryData(file: CountryDto):String!
+    #    uploadCountryData(file: CountryDto):String!
     updateCountryById(id:ID,input:CountryDto):String!
     deleteCountryById(Id:ID):String!
     saveCity(input:CityDto):String!
-#    uploadCityData(file: CountryDto!):String!
+    #    uploadCityData(file: CountryDto!):String!
     updateCityById(id:ID,input:CityDto):String!
     deleteCityById(id:ID):String!
     saveRegion(input:RegionDto):String!
-#    uploadRegionData(file:CountryDto!):String!
+    #    uploadRegionData(file:CountryDto!):String!
     updateRegionById(id:ID,input:RegionDto):String!
     deleteRegionById(id:ID):String!
-#    createCounsellorSlot(input:TimeSlotDto):String!
+    createCounsellorSlot(input:TimeSlotDto):String!
+    saveVendor(input:VendorDto):String!
+    deleteVendorById(id:ID):String!
+    updateVendor(id:ID,input:VendorDto):String!
 }
 type MtMoodInfo {
     id: ID!
     name: String
     emoji:String
     description:String!
-   intensities:[MtMoodIntensity]
+    intensities:[MtMoodIntensity]
 
 }
 
@@ -89,7 +95,7 @@ type MtMoodIntensity{
 }
 
 type MtRoles{
-     id: ID!
+    id: ID!
     name: String
 }
 
@@ -106,6 +112,8 @@ input AppUserDto{
     languages:String
     siteId:Int
     shiftTimingsId:Int
+    teamId:Int
+    bio:String
 }
 enum Roles{
     NONE
@@ -135,14 +143,16 @@ type AppUser{
     languages:String
     educationDetails:String
     shiftTimings:ShiftTimings
+    team:Team
+    bio:String
 }
 
 type FileEntity{
-fileId:ID!
-contentType:String!
-name:String!
-fileType:String!
-employees:[Course]
+    fileId:ID!
+    contentType:String!
+    name:String!
+    fileType:String!
+    employees:[Course]
 }
 
 type ShiftTimings{
@@ -160,28 +170,28 @@ input ShiftTimingsDto{
     shiftStatAt:String
     shiftEndAt:String
 }
-#type CounsellorSlot{
-#    id: ID!
-#    counsellor:Counsellor
-#    startTime:LocalTime
-#    endTime:LocalTime
-#    slotDt:LocalDate
-#    slotShift:SlotShift
-#    days:DayOfWeek
-#    slotStatus:SlotStatus
-#}
-#type Counsellor{
-#    id: ID!
-#    user:AppUser
-#    designation:String
-#    counsellorSlots:[CounsellorSlot]
-#    site:String
-#    educationalDetails:String
-#    languages:[String]
-#    shiftTimings:String
-#}
-#scalar LocalTime
-#scalar LocalDate
+type CounsellorSlot{
+    id: ID!
+    counsellor:Counsellor
+    startTime:LocalTime
+    endTime:LocalTime
+    slotDt:Date
+    slotShift:SlotShift
+    days:DayOfWeek
+    slotStatus:SlotStatus
+}
+type Counsellor{
+    id: ID!
+    user:AppUser
+    designation:String
+    counsellorSlots:[CounsellorSlot]
+    site:String
+    educationalDetails:String
+    languages:[String]
+    shiftTimings:String
+}
+scalar LocalTime
+scalar Date
 
 
 enum SlotShift{
@@ -197,11 +207,32 @@ enum SlotStatus{
 }
 
 enum  DayOfWeek{
-MONDAY
-TUESDAY
-WEDNESDAY
-THURSDAY
-FRIDAY
-SATURDAY
-SUNDAY
+    MONDAY
+    TUESDAY
+    WEDNESDAY
+    THURSDAY
+    FRIDAY
+    SATURDAY
+    SUNDAY
+}
+
+type Vendor{
+    id:ID!
+    POC:String
+    appUser:AppUser
+}
+input VendorDto{
+    POC:String
+    name: String
+    pageNumber:Int
+    pageSize:Int
+    addedOn:String
+    sortBy:String
+    sideId:Int
+    email:String
+    userName:String
+    mobile:String
+    searchKey:String
+    role:String
+    empId:String
 }

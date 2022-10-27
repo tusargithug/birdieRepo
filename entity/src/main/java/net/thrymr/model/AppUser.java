@@ -59,4 +59,11 @@ public class AppUser extends BaseEntity {
     private ShiftTimings shiftTimings;
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "appUser")
     private List<CounsellorSlot> counsellorSlotList = new ArrayList<>();
+
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private Team team;
+
+    @Column(columnDefinition = "TEXT")
+    private String bio;
+
 }
