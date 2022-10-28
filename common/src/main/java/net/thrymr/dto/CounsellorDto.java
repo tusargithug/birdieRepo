@@ -27,4 +27,5 @@ public class CounsellorDto {
     private ShiftTimingsDto shiftTimings;
     private SiteDto site;
     private TeamDto team;
+    private String searchKey;
 }
