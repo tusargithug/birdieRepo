@@ -8,7 +8,6 @@ import net.thrymr.dto.UserCourseDto;
 import net.thrymr.enums.Roles;
 import net.thrymr.model.AppUser;
 
-import net.thrymr.repository.AppUserRepo;
 import net.thrymr.services.AppUserService;
 import net.thrymr.services.AssignmentService;
 import net.thrymr.services.RoleService;

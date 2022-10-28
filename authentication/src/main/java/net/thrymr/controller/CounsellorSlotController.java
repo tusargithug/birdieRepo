@@ -28,7 +28,7 @@ public class CounsellorSlotController {
     }
 
     @MutationMapping(name = "createCounsellorSlot")
-    private String createCounsellorSlot(@Argument(name = "input") TimeSlotDto request){
+    public String createCounsellorSlot(@Argument(name = "input") TimeSlotDto request){
         return counsellorSlotService.createCounsellorSlot(request);
     }
 

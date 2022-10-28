@@ -24,70 +24,70 @@ import static graphql.scalars.util.Kit.typeName;
 
 @Configuration
 public class ScalarConfig {
-//
-//    @Bean
-//    public GraphQLScalarType nonNegativeTime(){
-//      return   ExtendedScalars.Time;
-//    }
-//
-//    @Bean
-//    public GraphQLScalarType nonDate(){
-//        return   ExtendedScalars.Date;
-//    }
-//
+
+    @Bean
+    public GraphQLScalarType nonNegativeTime(){
+      return   ExtendedScalars.Time;
+    }
+
+    @Bean
+    public GraphQLScalarType nonDate(){
+        return   ExtendedScalars.Date;
+    }
 
 
 
-//
-//
-//        @Bean
-//        public GraphQLScalarType dateScalar() {
-//            return GraphQLScalarType.newScalar()
-//                    .name("Date")
-//                    .description("Java 8 LocalDate as scalar.")
-//                    .coercing(new Coercing<LocalDate, String>() {
-//                        @Override
-//                        public String serialize(final Object dataFetcherResult) {
-//                            if (dataFetcherResult instanceof LocalDate) {
-//                                return dataFetcherResult.toString();
-//                            } else {
-//                                throw new CoercingSerializeException("Expected a LocalDate object.");
-//                            }
-//                        }
-//
-//                        @Override
-//                        public LocalDate parseValue(final Object input) {
-//                            try {
-//                                if (input instanceof String) {
-//                                    return LocalDate.parse((String) input);
-//                                } else {
-//                                    throw new CoercingParseValueException("Expected a String");
-//                                }
-//                            } catch (DateTimeParseException e) {
-//                                throw new CoercingParseValueException(String.format("Not a valid date: '%s'.", input), e
-//                                );
-//                            }
-//                        }
-//
-//                        @Override
-//                        public LocalDate parseLiteral(final Object input) {
-//                            if (input instanceof StringValue) {
-//                                try {
-//                                    return LocalDate.parse(((StringValue) input).getValue());
-//                                } catch (DateTimeParseException e) {
-//                                    throw new CoercingParseLiteralException(e);
-//                                }
-//                            } else {
-//                                throw new CoercingParseLiteralException("Expected a StringValue.");
-//                            }
-//                        }
-//                    }).build();
-//        }
-//
-//
-//
-//
-//    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_TIME;
+
+
+
+        @Bean
+        public GraphQLScalarType dateScalar() {
+            return GraphQLScalarType.newScalar()
+                    .name("Date")
+                    .description("Java 8 LocalDate as scalar.")
+                    .coercing(new Coercing<LocalDate, String>() {
+                        @Override
+                        public String serialize(final Object dataFetcherResult) {
+                            if (dataFetcherResult instanceof LocalDate) {
+                                return dataFetcherResult.toString();
+                            } else {
+                                throw new CoercingSerializeException("Expected a LocalDate object.");
+                            }
+                        }
+
+                        @Override
+                        public LocalDate parseValue(final Object input) {
+                            try {
+                                if (input instanceof String) {
+                                    return LocalDate.parse((String) input);
+                                } else {
+                                    throw new CoercingParseValueException("Expected a String");
+                                }
+                            } catch (DateTimeParseException e) {
+                                throw new CoercingParseValueException(String.format("Not a valid date: '%s'.", input), e
+                                );
+                            }
+                        }
+
+                        @Override
+                        public LocalDate parseLiteral(final Object input) {
+                            if (input instanceof StringValue) {
+                                try {
+                                    return LocalDate.parse(((StringValue) input).getValue());
+                                } catch (DateTimeParseException e) {
+                                    throw new CoercingParseLiteralException(e);
+                                }
+                            } else {
+                                throw new CoercingParseLiteralException("Expected a StringValue.");
+                            }
+                        }
+                    }).build();
+        }
+
+
+
+
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_TIME;
 //
 //    @Override
 //    public String serialize(final Object input) throws CoercingSerializeException {
@@ -149,30 +149,30 @@ public class ScalarConfig {
 //            throw exceptionMaker.apply("Invalid local time value : '" + s + "'. because of : '" + e.getMessage() + "'");
 //        }
 //    }
-//    private static GraphQLScalarType DATE_SCALAR = GraphQLScalarType.newScalar().name("Date").coercing(new Coercing<LocalDate, LocalDate>() {
-//        @Override
-//        public LocalDate serialize(Object input) {
-//            return input == null ? null : LocalDate.parse(input.toString());
-//        }
-//
-//        @Override
-//        public LocalDate parseValue(Object input) {
-//            return input == null ? null : LocalDate.parse(input.toString());
-//        }
-//
-//        @Override
-//        public LocalDate parseLiteral(Object input) {
-//            if (input instanceof StringValue) {
-//                try {
-//                    return LocalDate.parse(((StringValue) input).getValue());
-//                } catch (DateTimeParseException e) {
-//                    throw new CoercingParseLiteralException(e);
-//                }
-//            }
-//
-//            throw new CoercingParseLiteralException();
-//        }
-//    }).build();
+    private static GraphQLScalarType DATE_SCALAR = GraphQLScalarType.newScalar().name("Date").coercing(new Coercing<LocalDate, LocalDate>() {
+        @Override
+        public LocalDate serialize(Object input) {
+            return input == null ? null : LocalDate.parse(input.toString());
+        }
+
+        @Override
+        public LocalDate parseValue(Object input) {
+            return input == null ? null : LocalDate.parse(input.toString());
+        }
+
+        @Override
+        public LocalDate parseLiteral(Object input) {
+            if (input instanceof StringValue) {
+                try {
+                    return LocalDate.parse(((StringValue) input).getValue());
+                } catch (DateTimeParseException e) {
+                    throw new CoercingParseLiteralException(e);
+                }
+            }
+
+            throw new CoercingParseLiteralException();
+        }
+    }).build();
 
 
 

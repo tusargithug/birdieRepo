@@ -7,7 +7,6 @@ import net.thrymr.model.master.MtCity;
 import net.thrymr.model.master.MtCountry;
 import net.thrymr.model.master.MtRegion;
 import net.thrymr.utils.ApiResponse;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -44,4 +43,6 @@ public interface CityCountyAndRegionService {
     String uploadCityData(MultipartFile file);
 
     String uploadRegionData(MultipartFile file);
+
+    ApiResponse uploadRegionDataGraphql(MultipartFile file);
 }

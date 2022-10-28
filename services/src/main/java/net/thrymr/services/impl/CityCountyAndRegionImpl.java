@@ -3,9 +3,6 @@ package net.thrymr.services.impl;
 import net.thrymr.dto.CityDto;
 import net.thrymr.dto.CountryDto;
 import net.thrymr.dto.RegionDto;
-import net.thrymr.dto.UnitDto;
-import net.thrymr.model.Site;
-import net.thrymr.model.Unit;
 import net.thrymr.model.master.MtCity;
 import net.thrymr.model.master.MtCountry;
 import net.thrymr.model.master.MtRegion;
@@ -27,14 +24,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.swing.plaf.synth.Region;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static net.thrymr.utils.DateUtils.dateToString;
 
 @Service
 public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
@@ -316,6 +309,47 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
             return "REGION.IMPORT.SUCCESS";
         }
         return  "REGION.IMPORT.FAILED";
+    }
+
+    @Override
+    public ApiResponse uploadRegionDataGraphql(MultipartFile file) {
+        List<MtRegion> MtRegionList = new ArrayList<>();
+        XSSFWorkbook workbook;
+        try {
+            workbook = new XSSFWorkbook(file.getInputStream());
+        } catch (IOException e) {
+            return new ApiResponse(HttpStatus.BAD_REQUEST, "REGION.IMPORT.FORMAT.FAILED");
+        }
+        XSSFSheet worksheet = workbook.getSheetAt(0);
+        if (worksheet.getLastRowNum() < 1) {
+            return new ApiResponse(HttpStatus.BAD_REQUEST, "REGION.IMPORT.FORMAT.INVALID.DATA");
+        }
+        XSSFSheet workSheet= workbook.getSheetAt(0);
+        if (workSheet.getLastRowNum() < 1) {
+            return new ApiResponse(HttpStatus.BAD_REQUEST, "REGION.IMPORT.FORMAT.INVALID.DATA");
+        }
+        for (int index = 1; index <= workSheet.getLastRowNum(); index++) {
+            if (index > 0) {
+                try {
+                    XSSFRow row = workSheet.getRow(index);
+                    MtRegion mtRegion=new MtRegion();
+
+                    if(row.getCell(9)!=null){
+                        mtRegion.setRegionName(getCellValue(row.getCell(9)));
+                    }
+                    setRegionSearchKey(mtRegion);
+                    MtRegionList.add(mtRegion);
+                }catch (Exception e) {
+                    return new ApiResponse(HttpStatus.BAD_REQUEST, "REGION.IMPORT.FORMAT.FAILED");
+                }
+            }
+
+        }
+        if (Validator.isObjectValid(MtRegionList)) {
+            regionRepo.saveAll(MtRegionList);
+            return new ApiResponse(HttpStatus.OK, "REGION.IMPORT.SUCCESS");
+        }
+        return new ApiResponse(HttpStatus.BAD_REQUEST, "REGION.IMPORT.FAILED");
     }
 
     private String getCellValue(XSSFCell cell) {
