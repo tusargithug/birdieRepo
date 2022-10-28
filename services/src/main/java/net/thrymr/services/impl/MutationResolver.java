@@ -9,7 +9,6 @@ package net.thrymr.services.impl;
         import org.springframework.graphql.data.method.annotation.Argument;
         import org.springframework.graphql.data.method.annotation.MutationMapping;
         import org.springframework.stereotype.Component;
-        import org.springframework.web.multipart.MultipartFile;
 
         import java.text.ParseException;
 
@@ -32,10 +31,11 @@ public class MutationResolver implements GraphQLMutationResolver {
     private final SiteTeamAndShiftTimingsService siteTeamAndShiftTimingsService;
     private final UnitAndChapterServices unitAndChapterServices;
     private final CounsellorSlotService counsellorSlotService;
+    private final VendorService vendorService;
 
     private final CounsellorService counsellorService;
 
-    public MutationResolver(MoodSourceService moodSourceService, RoleService roleService, AppUserService appUserService, MoodIntensityService moodIntensityService, CategoryService categoryService, CourseService courseService, CounsellorSlotService counsellorSlotService, UnitAndChapterServices unitAndChapterServices, CityCountyAndRegionService cityCountyAndRegionService, SiteTeamAndShiftTimingsService siteTeamAndShiftTimingsService, UnitAndChapterServices unitAndChapterServices1, CounsellorSlotService counsellorSlotService1, CounsellorService counsellorService) {
+    public MutationResolver(MoodSourceService moodSourceService, RoleService roleService, AppUserService appUserService, MoodIntensityService moodIntensityService, CategoryService categoryService, CourseService courseService, CounsellorSlotService counsellorSlotService, UnitAndChapterServices unitAndChapterServices, CityCountyAndRegionService cityCountyAndRegionService, SiteTeamAndShiftTimingsService siteTeamAndShiftTimingsService, UnitAndChapterServices unitAndChapterServices1, CounsellorSlotService counsellorSlotService1, CounsellorService counsellorService, VendorService vendorService) {
         this.moodSourceService = moodSourceService;
         this.roleService = roleService;
         this.appUserService = appUserService;
@@ -47,6 +47,7 @@ public class MutationResolver implements GraphQLMutationResolver {
         this.unitAndChapterServices = unitAndChapterServices;
         this.counsellorSlotService = counsellorSlotService;
         this.counsellorService = counsellorService;
+        this.vendorService = vendorService;
     }
 
     @MutationMapping(name = "createAppUser")
@@ -276,12 +277,12 @@ public class MutationResolver implements GraphQLMutationResolver {
         return unitAndChapterServices.deleteChapterById(id);
     }
 
-    @MutationMapping(name="upload-excel-region-data")
-    public String uploadRegionData(@Argument (name = "file") MultipartFile file) {
+/*    @MutationMapping(name="upload-excel-region-data")
+    public String uploadRegionData(@Argument MultipartFile file) {
         return cityCountyAndRegionService.uploadRegionData(file);
     }
 
-    /*@MutationMapping(name="upload-excel-city-data")
+    @MutationMapping(name="upload-excel-city-data")
     public String uploadCityData(@Argument MultipartFile file) {
         return cityCountyAndRegionService.uploadCityData(file);
 
@@ -296,7 +297,20 @@ public class MutationResolver implements GraphQLMutationResolver {
     public String createCounsellorSlot(@Argument(name = "input") TimeSlotDto request) throws ParseException {
         return counsellorSlotService.createCounsellorSlot(request);
     }
+    @MutationMapping(name = "saveVendor")
+    public String saveVendor(@Argument(name = "input")VendorDto request) {
+        return vendorService.saveVendor(request);
+    }
 
+    @MutationMapping(name = "deleteVendorById")
+    public String deleteVendorById(@Argument Long id) {
+        return vendorService.deleteVendorById(id);
+    }
+
+    @MutationMapping(name = "updateVendor")
+    public String updateVendor(@Argument Long id,@Argument(name = "input")VendorDto request) {
+        return vendorService.updateVendor(id,request);
+    }
     @MutationMapping(name ="createCounsellor")
     public String createCounsellor(@Argument(name = "input") CounsellorDto counsellorDto){
         return counsellorService.createCounsellor(counsellorDto);

@@ -149,30 +149,30 @@ public class ScalarConfig {
 //            throw exceptionMaker.apply("Invalid local time value : '" + s + "'. because of : '" + e.getMessage() + "'");
 //        }
 //    }
-//    private static GraphQLScalarType DATE_SCALAR = GraphQLScalarType.newScalar().name("Date").coercing(new Coercing<LocalDate, LocalDate>() {
-//        @Override
-//        public LocalDate serialize(Object input) {
-//            return input == null ? null : LocalDate.parse(input.toString());
-//        }
-//
-//        @Override
-//        public LocalDate parseValue(Object input) {
-//            return input == null ? null : LocalDate.parse(input.toString());
-//        }
-//
-//        @Override
-//        public LocalDate parseLiteral(Object input) {
-//            if (input instanceof StringValue) {
-//                try {
-//                    return LocalDate.parse(((StringValue) input).getValue());
-//                } catch (DateTimeParseException e) {
-//                    throw new CoercingParseLiteralException(e);
-//                }
-//            }
-//
-//            throw new CoercingParseLiteralException();
-//        }
-//    }).build();
+    private static GraphQLScalarType DATE_SCALAR = GraphQLScalarType.newScalar().name("Date").coercing(new Coercing<LocalDate, LocalDate>() {
+        @Override
+        public LocalDate serialize(Object input) {
+            return input == null ? null : LocalDate.parse(input.toString());
+        }
+
+        @Override
+        public LocalDate parseValue(Object input) {
+            return input == null ? null : LocalDate.parse(input.toString());
+        }
+
+        @Override
+        public LocalDate parseLiteral(Object input) {
+            if (input instanceof StringValue) {
+                try {
+                    return LocalDate.parse(((StringValue) input).getValue());
+                } catch (DateTimeParseException e) {
+                    throw new CoercingParseLiteralException(e);
+                }
+            }
+
+            throw new CoercingParseLiteralException();
+        }
+    }).build();
 
 
 

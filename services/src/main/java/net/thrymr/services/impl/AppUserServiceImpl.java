@@ -57,7 +57,7 @@ public class AppUserServiceImpl implements AppUserService {
 
     private final ShiftTimingsRepo shiftTimingsRepo;
     private final TeamRepo teamRepo;
-    public AppUserServiceImpl(AppUserRepo appUserRepo, Environment environment, RoleRepo roleRepo, UserCourseRepo userCourseRepo, CourseRepo courseRepo, MtOptionsRepo mtOptionsRepo, SiteRepo siteRepo, ShiftTimingsRepo shiftTimingsRepo, CounsellorSlotRepo counsellorSlotRepo, CounsellorRepo counsellorRepo, TeamRepo teamRepo) {
+    public AppUserServiceImpl(AppUserRepo appUserRepo, Environment environment, RoleRepo roleRepo, UserCourseRepo userCourseRepo, CourseRepo courseRepo, MtOptionsRepo mtOptionsRepo, SiteRepo siteRepo, ShiftTimingsRepo shiftTimingsRepo, CounsellorSlotRepo counsellorSlotRepo, TeamRepo teamRepo) {
         this.appUserRepo = appUserRepo;
         this.environment = environment;
         this.roleRepo = roleRepo;

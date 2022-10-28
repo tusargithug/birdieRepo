@@ -5,12 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.thrymr.enums.Roles;
 
-import javax.persistence.Column;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.Date;
 
 
 @Setter

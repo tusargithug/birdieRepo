@@ -3,9 +3,6 @@ package net.thrymr.services.impl;
 import net.thrymr.dto.CityDto;
 import net.thrymr.dto.CountryDto;
 import net.thrymr.dto.RegionDto;
-import net.thrymr.dto.UnitDto;
-import net.thrymr.model.Site;
-import net.thrymr.model.Unit;
 import net.thrymr.model.master.MtCity;
 import net.thrymr.model.master.MtCountry;
 import net.thrymr.model.master.MtRegion;
@@ -27,14 +24,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.swing.plaf.synth.Region;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static net.thrymr.utils.DateUtils.dateToString;
 
 @Service
 public class CityCountyAndRegionImpl implements CityCountyAndRegionService {

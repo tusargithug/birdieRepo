@@ -27,6 +27,10 @@ type Query {
     getAllShiftTimings:[ShiftTimings]
     getCounsellorSlotById(id:ID!):CounsellorSlot
     getAllCounsellor(input:CounsellorDto):[AppUser]
+    getAllVendor:[Vendor]
+    getVendorById(id:ID):Vendor
+    getAllVendorPagination(input:VendorDto):[Vendor]
+    #    getCounsellorSlot(empId:String):[CounsellorSlot]
 }
 
 type Mutation {
@@ -78,6 +82,9 @@ type Mutation {
     createCounsellor(input:CounsellorDto):String!
     updateCounsellorById(id:ID!,input:CounsellorDto):String!
     deleteCounsellorById(id:ID!):String!
+    saveVendor(input:VendorDto):String!
+    deleteVendorById(id:ID):String!
+    updateVendor(id:ID,input:VendorDto):String!
 }
 scalar Upload
 type MtMoodInfo {
@@ -85,7 +92,7 @@ type MtMoodInfo {
     name: String
     emoji:String
     description:String!
-   intensities:[MtMoodIntensity]
+    intensities:[MtMoodIntensity]
 
 }
 
@@ -96,7 +103,7 @@ type MtMoodIntensity{
 }
 
 type MtRoles{
-     id: ID!
+    id: ID!
     name: String
 }
 
@@ -143,11 +150,11 @@ type AppUser{
 }
 
 type FileEntity{
-fileId:ID!
-contentType:String!
-name:String!
-fileType:String!
-employees:[Course]
+    fileId:ID!
+    contentType:String!
+    name:String!
+    fileType:String!
+    employees:[Course]
 }
 
 type ShiftTimings{
@@ -228,4 +235,25 @@ input CounsellorDto {
     shiftTimings: ShiftTimingsDto
     site:SiteDto
     team:TeamDto
+}
+
+type Vendor{
+    id:ID!
+    POC:String
+    appUser:AppUser
+}
+input VendorDto{
+    POC:String
+    name: String
+    pageNumber:Int
+    pageSize:Int
+    addedOn:String
+    sortBy:String
+    sideId:Int
+    email:String
+    userName:String
+    mobile:String
+    searchKey:String
+    role:String
+    empId:String
 }

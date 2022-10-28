@@ -1,7 +1,4 @@
 package net.thrymr.controller;
-
-import net.thrymr.dto.CounsellorSlotResponseDto;
-import net.thrymr.dto.slotRequest.SlotDetailsDto;
 import net.thrymr.dto.slotRequest.TimeSlotDto;
 
 import net.thrymr.model.CounsellorSlot;
@@ -14,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.text.ParseException;
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 //@RequestMapping()
@@ -39,8 +36,5 @@ public class CounsellorSlotController {
         return counsellorSlotService.createCounsellorSlot(request);
     }
 
-//    @MutationMapping(name = "getCounsellorSlot")
-//    public String createCounsellorSlot(@Argument(name = "input") TimeSlotDto request) throws ParseException {
-//        return counsellorSlotService.createCounsellorSlot(request);
-//    }
+
 }
