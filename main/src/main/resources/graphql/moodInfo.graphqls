@@ -75,7 +75,7 @@ type Mutation {
     updateCityById(id:ID,input:CityDto):String!
     deleteCityById(id:ID):String!
     saveRegion(input:RegionDto):String!
-    uploadRegionData(file:Upload!):String!
+#    uploadRegionData(file:Upload!):String!
     updateRegionById(id:ID,input:RegionDto):String!
     deleteRegionById(id:ID):String!
     createCounsellorSlot(input:TimeSlotDto):String!

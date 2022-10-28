@@ -110,11 +110,6 @@ public class CityCountyAndRegionController {
          return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
     }*/
 
-    @MutationMapping(name="upload-excel-region-data")
-    public String uploadRegionData(@Argument(name="file")MultipartFile file) {
-         return cityCountyAndRegionService.uploadRegionData(file);
-    }
-
     /*@MutationMapping(name="upload-excel-city-data")
     public String uploadCityData(@Argument(name="file") MultipartFile file) {
        return cityCountyAndRegionService.uploadCityData(file);
