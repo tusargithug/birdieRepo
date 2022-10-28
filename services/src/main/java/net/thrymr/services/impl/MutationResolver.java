@@ -33,7 +33,9 @@ public class MutationResolver implements GraphQLMutationResolver {
     private final CounsellorSlotService counsellorSlotService;
     private final VendorService vendorService;
 
-    public MutationResolver(MoodSourceService moodSourceService, RoleService roleService, AppUserService appUserService, MoodIntensityService moodIntensityService, CategoryService categoryService, CourseService courseService, CounsellorSlotService counsellorSlotService, UnitAndChapterServices unitAndChapterServices, CityCountyAndRegionService cityCountyAndRegionService, SiteTeamAndShiftTimingsService siteTeamAndShiftTimingsService, UnitAndChapterServices unitAndChapterServices1, CounsellorSlotService counsellorSlotService1, VendorService vendorService) {
+    private final CounsellorService counsellorService;
+
+    public MutationResolver(MoodSourceService moodSourceService, RoleService roleService, AppUserService appUserService, MoodIntensityService moodIntensityService, CategoryService categoryService, CourseService courseService, CounsellorSlotService counsellorSlotService, UnitAndChapterServices unitAndChapterServices, CityCountyAndRegionService cityCountyAndRegionService, SiteTeamAndShiftTimingsService siteTeamAndShiftTimingsService, UnitAndChapterServices unitAndChapterServices1, CounsellorSlotService counsellorSlotService1, CounsellorService counsellorService, VendorService vendorService) {
         this.moodSourceService = moodSourceService;
         this.roleService = roleService;
         this.appUserService = appUserService;
@@ -44,6 +46,7 @@ public class MutationResolver implements GraphQLMutationResolver {
         this.siteTeamAndShiftTimingsService = siteTeamAndShiftTimingsService;
         this.unitAndChapterServices = unitAndChapterServices;
         this.counsellorSlotService = counsellorSlotService;
+        this.counsellorService = counsellorService;
         this.vendorService = vendorService;
     }
 
@@ -291,7 +294,7 @@ public class MutationResolver implements GraphQLMutationResolver {
     }*/
 
     @MutationMapping(name = "createCounsellorSlot")
-    public String createCounsellorSlot(@Argument(name = "input") TimeSlotDto request){
+    public String createCounsellorSlot(@Argument(name = "input") TimeSlotDto request) throws ParseException {
         return counsellorSlotService.createCounsellorSlot(request);
     }
     @MutationMapping(name = "saveVendor")
@@ -310,6 +313,19 @@ public class MutationResolver implements GraphQLMutationResolver {
     public String updateVendor(@Argument Long id,@Argument(name = "input")VendorDto request) {
         return vendorService.updateVendor(id,request);
     }
+    @MutationMapping(name ="createCounsellor")
+    public String createCounsellor(@Argument(name = "input") CounsellorDto counsellorDto){
+        return counsellorService.createCounsellor(counsellorDto);
+    }
+    @MutationMapping(name ="updateCounsellorById")
+    public String updateCounsellorById(@Argument Long id,@Argument(name = "input") CounsellorDto counsellorDto){
+        return counsellorService.updateCounsellorById(id,counsellorDto);
+    }
+    @MutationMapping(name ="deleteCounsellorById")
+    public String deleteCounsellorById(@Argument Long id){
+        return counsellorService.deleteCounsellorById(id);
+    }
+
 }
 
 

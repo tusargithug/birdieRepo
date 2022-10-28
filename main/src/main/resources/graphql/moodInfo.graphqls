@@ -23,6 +23,10 @@ type Query {
     getAllCountry:[MtCountry]
     getAllCities:[MtCity]
     getAllRegions:[MtRegion]
+    getCounsellorSlot:[CounsellorSlot]
+    getAllShiftTimings:[ShiftTimings]
+    getCounsellorSlotById(id:ID!):CounsellorSlot
+    getAllCounsellor(input:CounsellorDto):[AppUser]
     getAllVendor:[Vendor]
     getVendorById(id:ID):Vendor
     getAllVendorPagination(input:VendorDto):[Vendor]
@@ -63,22 +67,26 @@ type Mutation {
     updateSiftTimings(id:ID,input:ShiftTimingsDto):String!
     deleteSiftTimingsById(id:ID):String!
     saveCountry(input:CountryDto):String!
-    #    uploadCountryData(file: CountryDto):String!
+#    uploadCountryData(file: CountryDto):String!
     updateCountryById(id:ID,input:CountryDto):String!
     deleteCountryById(Id:ID):String!
     saveCity(input:CityDto):String!
-    #    uploadCityData(file: CountryDto!):String!
+#    uploadCityData(file: CountryDto!):String!
     updateCityById(id:ID,input:CityDto):String!
     deleteCityById(id:ID):String!
     saveRegion(input:RegionDto):String!
-    #    uploadRegionData(file:CountryDto!):String!
+    uploadRegionData(file:Upload!):String!
     updateRegionById(id:ID,input:RegionDto):String!
     deleteRegionById(id:ID):String!
     createCounsellorSlot(input:TimeSlotDto):String!
+    createCounsellor(input:CounsellorDto):String!
+    updateCounsellorById(id:ID!,input:CounsellorDto):String!
+    deleteCounsellorById(id:ID!):String!
     saveVendor(input:VendorDto):String!
     deleteVendorById(id:ID):String!
     updateVendor(id:ID,input:VendorDto):String!
 }
+scalar Upload
 type MtMoodInfo {
     id: ID!
     name: String
@@ -108,12 +116,9 @@ input AppUserDto{
     alternateMobile:String
     empId:String
     roles:String
-    educationDetails:String
-    languages:String
     siteId:Int
     shiftTimingsId:Int
     teamId:Int
-    bio:String
 }
 enum Roles{
     NONE
@@ -140,11 +145,8 @@ type AppUser{
     empId:String
     roles:Roles
     site:Site
-    languages:String
-    educationDetails:String
-    shiftTimings:ShiftTimings
     team:Team
-    bio:String
+    shiftTimings:ShiftTimings
 }
 
 type FileEntity{
@@ -169,6 +171,7 @@ input ShiftTimingsDto{
     shiftName:String
     shiftStatAt:String
     shiftEndAt:String
+    counsellorId:Int
 }
 type CounsellorSlot{
     id: ID!
@@ -181,14 +184,11 @@ type CounsellorSlot{
     slotStatus:SlotStatus
 }
 type Counsellor{
-    id: ID!
-    user:AppUser
-    designation:String
-    counsellorSlots:[CounsellorSlot]
-    site:String
-    educationalDetails:String
-    languages:[String]
-    shiftTimings:String
+appUser:AppUser
+shiftTimings:[ShiftTimings]
+educationalDetails:[String]
+languages:[String]
+bio:String
 }
 scalar LocalTime
 scalar Date
@@ -214,6 +214,27 @@ enum  DayOfWeek{
     FRIDAY
     SATURDAY
     SUNDAY
+}
+input CounsellorDto {
+    educationalDetails:[String]
+    languages:[String]
+    siteId:Int
+    teamId:Int
+    designation:String
+    shiftTimingsId:Int
+    teamManagerId:Int
+    bio:String
+    appUserName:String
+    employeeId:String
+    emailId:String
+    contactNumber:String
+    appUserId:Int
+    pageNumber:Int
+    pageSize:Int
+    addedOn:String
+    shiftTimings: ShiftTimingsDto
+    site:SiteDto
+    team:TeamDto
 }
 
 type Vendor{

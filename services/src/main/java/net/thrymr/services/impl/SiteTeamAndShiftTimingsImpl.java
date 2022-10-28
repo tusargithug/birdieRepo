@@ -3,24 +3,18 @@ package net.thrymr.services.impl;
 import net.thrymr.dto.*;
 import net.thrymr.enums.Roles;
 import net.thrymr.enums.SlotShift;
-import net.thrymr.model.AppUser;
-import net.thrymr.model.ShiftTimings;
-import net.thrymr.model.Site;
-import net.thrymr.model.Team;
+import net.thrymr.model.*;
 import net.thrymr.model.master.MtCity;
 import net.thrymr.model.master.MtCountry;
 import net.thrymr.model.master.MtRegion;
 import net.thrymr.repository.*;
 import net.thrymr.services.SiteTeamAndShiftTimingsService;
-import net.thrymr.utils.ApiResponse;
-import org.apache.poi.sl.draw.geom.GuideIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
@@ -43,9 +37,10 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     AppUserRepo appUserRepo;
     @Autowired
     SiteRepo siteRepo;
-
     @Autowired
     ShiftTimingsRepo shiftTimingsRepo;
+    @Autowired
+    CounsellorRepo counsellorRepo;
 
     @Override
     public String createTeam(TeamDto teamDto) {
@@ -55,12 +50,16 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         //Team_leader
         if(teamDto.getTeamLeaderId()!=null && appUserRepo.existsById(teamDto.getTeamLeaderId())){
             Optional<AppUser> optionalAppUser=appUserRepo.findById(teamDto.getTeamLeaderId());
-            optionalAppUser.ifPresent(team::setTeamLeader);
+            if(optionalAppUser.get().getRoles().equals(Roles.TEAM_LEADER)) {
+                optionalAppUser.ifPresent(team::setTeamLeader);
+            }
         }
         //Team_manager
         if(teamDto.getTeamManagerId()!=null && appUserRepo.existsById(teamDto.getTeamManagerId())){
             Optional<AppUser> optionalAppUser=appUserRepo.findById(teamDto.getTeamManagerId());
-            optionalAppUser.ifPresent(team::setTeamManager);
+            if(optionalAppUser.get().getRoles().equals(Roles.TEAM_MANAGER)) {
+                optionalAppUser.ifPresent(team::setTeamManager);
+            }
         }
        //Site
         if(teamDto.getSiteId()!=null && siteRepo.existsById(teamDto.getSiteId())){
@@ -207,7 +206,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     public List<Site> getAllSitePagination(SiteDto siteDto) {
         List<Site> siteList=siteRepo.findAll();
         Pageable pageable = null;
-        if (siteDto.getPageNumber() != null) {
+        if (siteDto.getPageSize() != null) {
             pageable = PageRequest.of(siteDto.getPageNumber(), siteDto.getPageSize());
         }
         if (siteDto.getSiteId() != null) {
@@ -253,8 +252,9 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     }
 
     @Override
-    public List<Site> getAllShiftTimings() {
-        return null;
+    public List<ShiftTimings> getAllShiftTimings() {
+        List<ShiftTimings> shiftTimingsList=shiftTimingsRepo.findAll();
+        return shiftTimingsList;
     }
 
     @Override
@@ -291,6 +291,10 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         Optional<Team> optionalTeamId=teamRepo.findById(shiftTimingsDto.getTeamId());
         if(optionalTeamId.isPresent()){
             shiftTimings.setTeam(optionalTeamId.get());
+        }
+        Optional<Counsellor> optionalCounsellorId=counsellorRepo.findById(shiftTimingsDto.getCounsellorId());
+        if(optionalCounsellorId.isPresent()){
+            shiftTimings.setCounsellors(optionalCounsellorId.get());
         }
         shiftTimingsRepo.save(shiftTimings);
         return  "shift timings save successfully";
@@ -329,7 +333,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     public List<Team> getAllTeamPagination(TeamDto teamDto) {
 
         Pageable pageable = null;
-        if (teamDto.getPageNumber() != null) {
+        if (teamDto.getPageSize()!= null) {
             pageable = PageRequest.of(teamDto.getPageNumber(), teamDto.getPageSize());
         }
         if (teamDto.getTeamId() != null) {
@@ -495,3 +499,4 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         return searchKey;
     }
 }
+

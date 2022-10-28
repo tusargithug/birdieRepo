@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class AppUserServiceImpl implements AppUserService {
-    private final Logger logger = LoggerFactory.getLogger(AppUserServiceImpl.class);
+    private  final Logger logger = LoggerFactory.getLogger(AppUserServiceImpl.class);
 
     private final AppUserRepo appUserRepo;
 
@@ -138,7 +138,7 @@ public class AppUserServiceImpl implements AppUserService {
                         }
                         if (row.getCell(8) != null) {
                             Optional<MtRoles> optionalRoles = roleRepo.findById(Long.valueOf(getCellValue(row.getCell(8))));
-                            // logger.info("optionalRole{}: " , CommonUtil.getStringFromObject(optionalRoles));
+                           // logger.info("optionalRole{}: " , CommonUtil.getStringFromObject(optionalRoles));
                             optionalRoles.ifPresent(role -> appUser.setMtRoles(role));
                         }
                         if (row.getCell(9) != null) {
@@ -147,7 +147,7 @@ public class AppUserServiceImpl implements AppUserService {
                         setUserSearchKey(appUser);
                         appUsers.add(appUser);
                     } catch (Exception e) {
-                        logger.error("Exception{} ", e);
+                        logger.error("Exception{} " , e);
                         return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("USERS_IMPORT_FORMAT_FAILED"));
                     }
                 }
@@ -174,7 +174,7 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public ApiResponse deleteUserById(Long id) {
-        //TODO validate id
+         //TODO validate id
         Optional<AppUser> optionalAppUser = appUserRepo.findById(id);
         optionalAppUser.ifPresent(appUserRepo::delete);
 
@@ -239,7 +239,6 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     private AppUser dtoToEntity(AppUserDto request) {
-        System.out.println(request);
         AppUser appUser = new AppUser();
         if (Validator.isValid(request.getId())) {
             appUser = appUserRepo.findById(request.getId()).orElse(new AppUser());
@@ -282,14 +281,12 @@ public class AppUserServiceImpl implements AppUserService {
         user.setAlternateMobile(request.getAlternateMobile());
         user.setEmpId(request.getEmpId());
         user.setRoles(Roles.valueOf(request.getRoles()));
-        user.setLanguages(request.getLanguages());
-        Optional<Site> optionalSite = siteRepo.findById(request.getSiteId());
-        if (optionalSite.isPresent()) {
+        Optional<Site> optionalSite=siteRepo.findById(request.getSiteId());
+        if(optionalSite.isPresent()){
             user.setSite(optionalSite.get());
         }
-        user.setEducationDetails(request.getEducationDetails());
-        Optional<ShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(request.getShiftTimingsId());
-        if (optionalShiftTimings.isPresent()) {
+        Optional<ShiftTimings> optionalShiftTimings=shiftTimingsRepo.findById(request.getShiftTimingsId());
+        if(optionalShiftTimings.isPresent()){
             user.setShiftTimings(optionalShiftTimings.get());
         }
         if (request.getTeamId() != null) {
@@ -298,7 +295,6 @@ public class AppUserServiceImpl implements AppUserService {
                 user.setTeam(optionalTeamId.get());
             }
         }
-        user.setBio(request.getBio());
         appUserRepo.save(user);
         return "User Saved successfully";
     }
@@ -381,16 +377,8 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public List<Roles> getAllEnumRoles() {
-        List<Roles> rolesList = Arrays.asList(Roles.ADMIN,
-                Roles.COUNSELLOR,
-                Roles.DIRECTOR,
-                Roles.EMPLOYEE,
-                Roles.NONE,
-                Roles.OP_STREAM,
-                Roles.TEAM_LEADER,
-                Roles.TEAM_MANAGER,
-                Roles.VENDOR,
-                Roles.WELL_BEING_MANGER);
+        List<Roles> rolesList= Arrays.asList(Roles.ADMIN,Roles.COUNSELLOR,Roles.DIRECTOR,Roles.EMPLOYEE,Roles.NONE,Roles.OP_STREAM,Roles.TEAM_LEADER,Roles.TEAM_MANAGER,Roles.VENDOR
+        ,Roles.WELL_BEING_MANGER);
         return rolesList;
     }
 }

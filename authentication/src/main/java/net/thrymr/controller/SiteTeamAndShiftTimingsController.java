@@ -3,6 +3,7 @@ package net.thrymr.controller;
 import net.thrymr.dto.ShiftTimingsDto;
 import net.thrymr.dto.SiteDto;
 import net.thrymr.dto.TeamDto;
+import net.thrymr.model.ShiftTimings;
 import net.thrymr.model.Site;
 import net.thrymr.model.Team;
 import net.thrymr.services.SiteTeamAndShiftTimingsService;
@@ -85,7 +86,7 @@ public class SiteTeamAndShiftTimingsController {
     }
 
     @QueryMapping(name = "getAllShiftTimings")
-    public List<Site> getAllShiftTimings(){
+    public List<ShiftTimings> getAllShiftTimings(){
         return siteTeamAndShiftTimingsService.getAllShiftTimings();
     }
 

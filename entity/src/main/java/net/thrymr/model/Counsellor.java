@@ -14,24 +14,19 @@ import java.util.List;
 @Entity
 public class Counsellor extends BaseEntity {
     @OneToOne
-    private AppUser user;
-
-    private String designation;
-
+    private AppUser appUser;
+    @OneToOne
+    private AppUser teamManager;
     @OneToMany(mappedBy = "counsellor",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<CounsellorSlot>counsellorSlots=new ArrayList<>();
-   // branch
-    private String site;
-
+    @Column(name = "shift_timings")
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "counsellors")
+    private List<ShiftTimings> shiftTimings;
     @Column(name = "educational_details")
-    private String educationalDetails;
-
+    @ElementCollection(targetClass = String.class)
+    private List<String> educationalDetails=new ArrayList<>();
     @ElementCollection(targetClass = String.class)
     private List<String> languages=new ArrayList<>();
-
-    @Column(name = "shift_timings")
-    private String shiftTimings;
-
-//    @Column(name = "shift_allowance")
-//    private boolean shiftAllowance = false;
+    @Column(columnDefinition = "TEXT")
+    private String bio;
 }

@@ -20,4 +20,5 @@ public class ShiftTimingsDto {
     private Long TeamId;
     private Long SiteId;
     private Boolean status;
+    private Long CounsellorId;
 }

@@ -34,7 +34,7 @@ public class AppUserDto {
 
     private Boolean isActive;
 
-    private RolesDto rolesDto;
+      private RolesDto rolesDto;
 
     private String empId;
 //

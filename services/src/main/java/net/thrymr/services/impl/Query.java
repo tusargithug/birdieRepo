@@ -1,4 +1,6 @@
 package net.thrymr.services.impl;
+        import graphql.kickstart.tools.GraphQLQueryResolver;
+        import net.thrymr.dto.CounsellorDto;
         import net.thrymr.dto.SiteDto;
         import net.thrymr.dto.TeamDto;
         import net.thrymr.dto.UnitDto;
@@ -13,9 +15,6 @@ package net.thrymr.services.impl;
         import org.springframework.graphql.data.method.annotation.Argument;
         import org.springframework.graphql.data.method.annotation.QueryMapping;
         import org.springframework.stereotype.Component;
-
-        import graphql.kickstart.tools.GraphQLQueryResolver;
-
         import java.util.List;
 
 @Component
@@ -39,10 +38,11 @@ public class Query implements GraphQLQueryResolver {
 
     private final CourseRepo courseRepo;
     private final UnitAndChapterServices unitAndChapterServices;
+    private final CounsellorService counsellorService;
     private final VendorService vendorService;
 
 
-    public Query(AppUserService appUserService, RoleService roleService, MoodInfoService moodInfoService, MoodIntensityService moodIntensityService, CityCountyAndRegionService cityCountyAndRegionService, SiteTeamAndShiftTimingsService siteTeamAndShiftTimingsService, CategoryRepo categoryRepo, CounsellorSlotService counsellorSlotService, CourseRepo courseRepo, UnitAndChapterServices unitAndChapterServices, VendorService vendorService) {
+    public Query(AppUserService appUserService, RoleService roleService, MoodInfoService moodInfoService, MoodIntensityService moodIntensityService, CityCountyAndRegionService cityCountyAndRegionService, SiteTeamAndShiftTimingsService siteTeamAndShiftTimingsService, CategoryRepo categoryRepo, CounsellorSlotService counsellorSlotService, CourseRepo courseRepo, UnitAndChapterServices unitAndChapterServices, CounsellorService counsellorService,VendorService vendorService) {
 
         this.appUserService = appUserService;
         this.roleService = roleService;
@@ -55,7 +55,8 @@ public class Query implements GraphQLQueryResolver {
         this.counsellorSlotService = counsellorSlotService;
         this.courseRepo = courseRepo;
         this.unitAndChapterServices = unitAndChapterServices;
-        this.vendorService = vendorService;
+        this.counsellorService = counsellorService;
+        this.vendorService=vendorService;
     }
 
     @QueryMapping
@@ -182,5 +183,22 @@ public class Query implements GraphQLQueryResolver {
     @QueryMapping(name = "getAllVendorPagination")
     public List<Vendor> getAllVendorPagination(@Argument(name="input") VendorDto request) {
         return vendorService.getAllVendorPagination(request);
+    }
+    @QueryMapping(name="getCounsellorSlot")
+    public List<CounsellorSlot> getCounsellorSlot() {
+        return counsellorSlotService.getCounsellorSlot();
+    }
+
+    @QueryMapping(name = "getAllShiftTimings")
+    public List<ShiftTimings> getAllShiftTimings(){
+        return siteTeamAndShiftTimingsService.getAllShiftTimings();
+    }
+    @QueryMapping(name="getCounsellorSlotById")
+    public CounsellorSlot getCounsellorSlotById(@Argument Long id) {
+        return counsellorSlotService.getCounsellorSlotById(id);
+    }
+    @QueryMapping(name = "getAllCounsellor")
+    public List<AppUser> getAllCounsellor(@Argument (name = "input") CounsellorDto response){
+        return counsellorService.getAllCounsellor(response);
     }
 }
