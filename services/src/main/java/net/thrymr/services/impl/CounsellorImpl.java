@@ -94,8 +94,8 @@ public class CounsellorImpl implements CounsellorService {
     }
 
     @Override
-    public String updateCounsellorById(Long id, CounsellorDto request) {
-        Optional<Counsellor> optionalCounsellor=counsellorRepo.findById(id);
+    public String updateCounsellorById(CounsellorDto request) {
+        Optional<Counsellor> optionalCounsellor=counsellorRepo.findById(request.getId());
         Counsellor counsellor = null;
         AppUser user=null;
         if(optionalCounsellor.isPresent()){
@@ -108,9 +108,15 @@ public class CounsellorImpl implements CounsellorService {
                     optionalAppUser.ifPresent(counsellor::setTeamManager);
                 }
             }
-            counsellor.setLanguages(request.getLanguages());
-            counsellor.setEducationalDetails(request.getEducationalDetails());
-            counsellor.setBio(request.getBio());
+            if(Validator.isValid(request.getLanguages())) {
+                counsellor.setLanguages(request.getLanguages());
+            }
+            if(Validator.isValid(request.getEducationalDetails())) {
+                counsellor.setEducationalDetails(request.getEducationalDetails());
+            }
+            if(Validator.isValid(request.getBio())) {
+                counsellor.setBio(request.getBio());
+            }
         }
         Optional<AppUser> optionalAppUser=appUserRepo.findById(request.getAppUserId());
         if(optionalAppUser.isPresent()) {

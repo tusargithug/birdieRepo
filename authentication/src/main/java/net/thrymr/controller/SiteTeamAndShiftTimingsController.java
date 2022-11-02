@@ -30,8 +30,8 @@ public class SiteTeamAndShiftTimingsController {
         return siteTeamAndShiftTimingsService.createTeam(teamDto);
     }
     @MutationMapping(name="updateTeam")
-    public String updateTeam(@Argument Long id,@Argument(name = "input")TeamDto teamDto){
-        return siteTeamAndShiftTimingsService.updateTeam(id,teamDto);
+    public String updateTeam(@Argument(name = "input")TeamDto teamDto){
+        return siteTeamAndShiftTimingsService.updateTeam(teamDto);
     }
 
     @MutationMapping(name="deleteTeamById")
@@ -44,8 +44,8 @@ public class SiteTeamAndShiftTimingsController {
         return siteTeamAndShiftTimingsService.saveSite(siteDto);
     }
     @MutationMapping(name="updateSite")
-    public String updateSite(@Argument Long id,@Argument(name = "input")SiteDto siteDto){
-        return siteTeamAndShiftTimingsService.updateSite(id,siteDto);
+    public String updateSite(@Argument(name = "input")SiteDto siteDto){
+        return siteTeamAndShiftTimingsService.updateSite(siteDto);
     }
     @MutationMapping(name="deleteSiteById")
     public String deleteSiteById(Long id){
@@ -58,8 +58,8 @@ public class SiteTeamAndShiftTimingsController {
     }
 
     @MutationMapping(name="updateSiftTimings")
-    public String updateSiftTimings(@Argument Long id,@Argument(name = "input")ShiftTimingsDto shiftTimingsDto){
-        return siteTeamAndShiftTimingsService.updateSiftTimings(id,shiftTimingsDto);
+    public String updateSiftTimings(@Argument(name = "input")ShiftTimingsDto shiftTimingsDto){
+        return siteTeamAndShiftTimingsService.updateSiftTimings(shiftTimingsDto);
     }
     @MutationMapping(name="deleteSiftTimingsById")
     public String deleteSiftTimingsById(Long id){

@@ -9,6 +9,7 @@ import net.thrymr.model.master.MtCountry;
 import net.thrymr.model.master.MtRegion;
 import net.thrymr.repository.*;
 import net.thrymr.services.SiteTeamAndShiftTimingsService;
+import net.thrymr.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -77,30 +78,41 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         return "Team save successfully";
     }
 
-    private ShiftTimings dtoToShiftTimings(ShiftTimingsDto shiftTimingsDto) {
-
-        ShiftTimings shiftTimings=new ShiftTimings();
-        shiftTimings.setShiftName(shiftTimingsDto.getShiftName());
-        shiftTimings.setShiftStatAt(shiftTimingsDto.getShiftStatAt());
-        shiftTimings.setShiftEndAt(shiftTimingsDto.getShiftEndAt());
-        return shiftTimings;
-    }
 
     @Override
-    public String updateTeam(Long id,TeamDto teamDto) {
-        Optional<Team> teamId = teamRepo.findById(id);
+    public String updateTeam(TeamDto teamDto) {
+        Optional<Team> teamId = teamRepo.findById(teamDto.getId());
         Team team;
         if (teamId.isPresent()) {
             team = teamId.get();
-            team.setTeamName(teamDto.getTeamName());
-            if (teamDto.getTeamLeader().equals(Roles.valueOf("TEAM_LEADER"))) {
-                team.setTeamLeader(dtoToAppUserEntity(teamDto.getTeamLeader()));
+            if(Validator.isValid(teamDto.getTeamName())) {
+                team.setTeamName(teamDto.getTeamName());
             }
-            if (teamDto.getTeamLeader().equals(Roles.valueOf("TEAM_MANAGER"))) {
-                team.setTeamManager(dtoToAppUserEntity(teamDto.getTeamManager()));
+            if(teamDto.getTeamLeaderId()!=null && appUserRepo.existsById(teamDto.getTeamLeaderId())){
+                Optional<AppUser> optionalAppUser=appUserRepo.findById(teamDto.getTeamLeaderId());
+                if(optionalAppUser.get().getRoles().equals(Roles.TEAM_LEADER)) {
+                    optionalAppUser.ifPresent(team::setTeamLeader);
+                }
             }
-            team.setShiftTimings(dtoToShiftTimings(teamDto.getShiftTimings()));
-            team.setIsActive(teamDto.getStatus());
+            //Team_manager
+            if(teamDto.getTeamManagerId()!=null && appUserRepo.existsById(teamDto.getTeamManagerId())){
+                Optional<AppUser> optionalAppUser=appUserRepo.findById(teamDto.getTeamManagerId());
+                if(optionalAppUser.get().getRoles().equals(Roles.TEAM_MANAGER)) {
+                    optionalAppUser.ifPresent(team::setTeamManager);
+                }
+            }
+            //Site
+            if(teamDto.getSiteId()!=null && siteRepo.existsById(teamDto.getSiteId())){
+                Optional<Site> optionalSite=siteRepo.findById(teamDto.getSiteId());
+                optionalSite.ifPresent(team::setSite);
+            }
+            if(teamDto.getShiftTimingsId()!=null && shiftTimingsRepo.existsById(teamDto.getShiftTimingsId())){
+                Optional<ShiftTimings> optionalShiftTimings=shiftTimingsRepo.findById(teamDto.getShiftTimingsId());
+                optionalShiftTimings.ifPresent(team::setShiftTimings);
+            }
+            if(teamDto.getStatus()) {
+                team.setIsActive(teamDto.getStatus());
+            }
             //team.setSearchKey(getTeamSearchKey(team));
             teamRepo.save(team);
             return "Team update successfully";
@@ -162,13 +174,17 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     }
 
     @Override
-    public String updateSite(Long id, SiteDto siteDto) {
-        Optional<Site> optionalSite=siteRepo.findById(id);
+    public String updateSite(SiteDto siteDto) {
+        Optional<Site> optionalSite=siteRepo.findById(siteDto.getId());
         Site site;
         if(optionalSite.isPresent()){
             site=optionalSite.get();
-            site.setSiteId(site.getSiteId());
-            site.setSiteName(site.getSiteName());
+            if(Validator.isValid(site.getSiteId())) {
+                site.setSiteId(site.getSiteId());
+            }
+            if (Validator.isValid(site.getSiteName())) {
+                site.setSiteName(site.getSiteName());
+            }
             //Region
             if(siteDto.getRegionId()!=null && regionRepo.existsById(siteDto.getRegionId())){
                 Optional<MtRegion> optionalRegion=regionRepo.findById(siteDto.getRegionId());
@@ -189,7 +205,9 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                 Optional<AppUser> optionalAppUser=appUserRepo.findById(siteDto.getSiteManagerId());
                 optionalAppUser.ifPresent(site::setSiteManager);
             }
-            site.setIsActive(siteDto.getStatus());
+            if(siteDto.getStatus().equals(Boolean.TRUE)) {
+                site.setIsActive(siteDto.getStatus());
+            }
             siteRepo.save(site);
             return"site update successfully";
         }
@@ -301,15 +319,23 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     }
 
     @Override
-    public String updateSiftTimings(Long id, ShiftTimingsDto shiftTimingsDto) {
-        Optional<ShiftTimings> shiftTimingsId=shiftTimingsRepo.findById(id);
+    public String updateSiftTimings(ShiftTimingsDto shiftTimingsDto) {
+        Optional<ShiftTimings> shiftTimingsId=shiftTimingsRepo.findById(shiftTimingsDto.getId());
         ShiftTimings shiftTimings;
         if(shiftTimingsId.isPresent()) {
             shiftTimings = shiftTimingsId.get();
-            shiftTimings.setShiftName(shiftTimingsDto.getShiftName());
-            shiftTimings.setShiftStatAt(shiftTimingsDto.getShiftStatAt());
-            shiftTimings.setShiftEndAt(shiftTimingsDto.getShiftEndAt());
-            shiftTimings.setIsActive(shiftTimingsDto.getStatus());
+            if(Validator.isValid(String.valueOf(shiftTimingsDto.getShiftName()))) {
+                shiftTimings.setShiftName(shiftTimingsDto.getShiftName());
+            }
+            if(Validator.isValid(shiftTimingsDto.getShiftStatAt())) {
+                shiftTimings.setShiftStatAt(shiftTimingsDto.getShiftStatAt());
+            }
+            if (Validator.isValid(shiftTimingsDto.getShiftEndAt())) {
+                shiftTimings.setShiftEndAt(shiftTimingsDto.getShiftEndAt());
+            }
+            if(Validator.isValid(String.valueOf(shiftTimingsDto.getStatus()))) {
+                shiftTimings.setIsActive(shiftTimingsDto.getStatus());
+            }
             return "shift timings update successfully";
         }
         return "this id not in database";

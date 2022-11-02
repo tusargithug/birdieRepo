@@ -8,6 +8,7 @@ import net.thrymr.repository.ChapterRepo;
 import net.thrymr.repository.UnitRpo;
 import net.thrymr.services.UnitAndChapterServices;
 import net.thrymr.utils.ApiResponse;
+import net.thrymr.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -39,20 +40,22 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
     }
 
     @Override
-    public String updateUnitById(Long id,UnitDto request) {
-        if (id!=null) {
-            unitRpo.save(dtoToEntityForUpdate(id,request));
+    public String updateUnitById(UnitDto request) {
+        if (Validator.isValid(request.getId())) {
+            unitRpo.save(dtoToEntityForUpdate(request));
             return "CHAPTER_UPDATED_SUCCESSFULLY";
         }
         return "RECORD_NOT_FOUND_WITH_GIVEN_ID";
     }
 
-    public Unit dtoToEntityForUpdate(Long id,UnitDto dto) {
-        Optional<Unit> optionalAddUnit = unitRpo.findById(id);
+    public Unit dtoToEntityForUpdate(UnitDto dto) {
+        Optional<Unit> optionalAddUnit = unitRpo.findById(dto.getId());
             Unit unit = optionalAddUnit.orElse(new Unit());
             if(optionalAddUnit.isPresent()) {
                 unit=optionalAddUnit.get();
-                unit.setUnitName(dto.getUnitName());
+                if(Validator.isValid(dto.getUnitName())) {
+                    unit.setUnitName(dto.getUnitName());
+                }
             }
         if (dto.getStatus() != null) {
             unit.setIsActive(true);
@@ -121,15 +124,23 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
     }
 
     @Override
-    public String updateChaptersById(Long id,ChapterDto dto) {
-        Optional<Chapter> optionalChapter=chapterRepo.findById(id);
+    public String updateChaptersById(ChapterDto dto) {
+        Optional<Chapter> optionalChapter=chapterRepo.findById(dto.getId());
         Chapter chapter;
         if(optionalChapter.isPresent()){
             chapter=optionalChapter.get();
-            chapter.setChapterName(dto.getChapterName());
-            chapter.setDescription(dto.getDescription());
-            chapter.setProfilePicture(dto.getProfilePicture());
+            if(Validator.isValid(dto.getChapterName())) {
+                chapter.setChapterName(dto.getChapterName());
+            }
+            if(Validator.isValid(dto.getDescription())) {
+                chapter.setDescription(dto.getDescription());
+            }
+            if(Validator.isValid(String.valueOf(dto.getProfilePicture()))) {
+                chapter.setProfilePicture(dto.getProfilePicture());
+            }
+            if(Validator.isValid(String.valueOf(dto.getVideo()))){
             chapter.setVideo(dto.getVideo());
+            }
             chapterRepo.save(chapter);
         }
         return "update successfully";

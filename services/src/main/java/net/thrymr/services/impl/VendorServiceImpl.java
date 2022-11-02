@@ -100,13 +100,15 @@ public class VendorServiceImpl implements VendorService {
 
     @Override
 
-    public String updateVendor(Long id, VendorDto request) {
+    public String updateVendor(VendorDto request) {
         Vendor vendor;
-        if (id != null) {
-            Optional<Vendor> optionalVendor = vendorRepo.findByAppUserId(id);
+        if (Validator.isValid(request.getId())) {
+            Optional<Vendor> optionalVendor = vendorRepo.findByAppUserId(request.getId());
             if (optionalVendor.isPresent()) {
                 vendor = optionalVendor.get();
-                vendor.setPOC(request.getPOC());
+                if(Validator.isValid(request.getPOC())) {
+                    vendor.setPOC(request.getPOC());
+                }
                 vendorRepo.save(vendor);
                 return "Vendor updated successfully";
             }

@@ -51,19 +51,19 @@ public class AppUserServiceImpl implements AppUserService {
 
     private final CourseRepo courseRepo;
 
-    private final MtOptionsRepo mtOptionsRepo;
+    private final OptionsRepo optionsRepo;
 
     private final SiteRepo siteRepo;
 
     private final ShiftTimingsRepo shiftTimingsRepo;
     private final TeamRepo teamRepo;
-    public AppUserServiceImpl(AppUserRepo appUserRepo, Environment environment, RoleRepo roleRepo, UserCourseRepo userCourseRepo, CourseRepo courseRepo, MtOptionsRepo mtOptionsRepo, SiteRepo siteRepo, ShiftTimingsRepo shiftTimingsRepo, CounsellorSlotRepo counsellorSlotRepo, TeamRepo teamRepo) {
+    public AppUserServiceImpl(AppUserRepo appUserRepo, Environment environment, RoleRepo roleRepo, UserCourseRepo userCourseRepo, CourseRepo courseRepo, OptionsRepo optionsRepo, SiteRepo siteRepo, ShiftTimingsRepo shiftTimingsRepo, CounsellorSlotRepo counsellorSlotRepo, TeamRepo teamRepo) {
         this.appUserRepo = appUserRepo;
         this.environment = environment;
         this.roleRepo = roleRepo;
         this.userCourseRepo = userCourseRepo;
         this.courseRepo = courseRepo;
-        this.mtOptionsRepo = mtOptionsRepo;
+        this.optionsRepo = optionsRepo;
         this.siteRepo = siteRepo;
         this.shiftTimingsRepo = shiftTimingsRepo;
         this.teamRepo = teamRepo;
@@ -343,7 +343,7 @@ public class AppUserServiceImpl implements AppUserService {
 
         Optional<Course>optionalCourse=courseRepo.findById(request.getCourseId());
         optionalCourse.ifPresent(userCourse::setCourse);
-        List<MtOptions>mtOptionsList=mtOptionsRepo.findAllByIdIn(request.getMtOptionsIds());
+        List<MtOptions>mtOptionsList= optionsRepo.findAllByIdIn(request.getMtOptionsIds());
         if(Validator.isValid(mtOptionsList)){
             userCourse.setMtOptions(new HashSet<>(mtOptionsList));
         }

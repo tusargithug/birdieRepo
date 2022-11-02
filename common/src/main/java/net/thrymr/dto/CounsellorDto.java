@@ -8,6 +8,7 @@ import java.util.List;
 @Getter
 @Setter
 public class CounsellorDto {
+    private Long id;
     private List<String> educationalDetails;
     private List<String> languages;
     private Long siteId;

@@ -55,13 +55,17 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
     }
 
     @Override
-    public String updateCountryById(Long id,CountryDto countryDto) {
-        Optional<MtCountry> mtCountryId=countryRepo.findById(id);
+    public String updateCountryById(CountryDto countryDto) {
+        Optional<MtCountry> mtCountryId=countryRepo.findById(countryDto.getId());
         MtCountry mtCountry;
-        if(mtCountryId.isPresent()){
-            mtCountry=mtCountryId.get();
-            mtCountry.setCountryName(countryDto.getCountryName());
-            mtCountry.setCountryCode(countryDto.getCountryCode());
+        if(mtCountryId.isPresent()) {
+            mtCountry = mtCountryId.get();
+            if (Validator.isValid(countryDto.getCountryName())) {
+                mtCountry.setCountryName(countryDto.getCountryName());
+            }
+            if(Validator.isValid(countryDto.getCountryCode())) {
+                mtCountry.setCountryCode(countryDto.getCountryCode());
+            }
             countryRepo.save(mtCountry);
             return "Country update successfully";
         }
@@ -102,12 +106,14 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
     }
 
     @Override
-    public String updateCityById(Long id, CityDto cityDto) {
-        Optional<MtCity> mtCityId=cityRepo.findById(id);
+    public String updateCityById(CityDto cityDto) {
+        Optional<MtCity> mtCityId=cityRepo.findById(cityDto.getId());
         MtCity mtCity;
         if(mtCityId.isPresent()){
             mtCity=mtCityId.get();
-            mtCity.setCityName(mtCity.getCityName());
+            if(Validator.isValid(cityDto.getId())) {
+                mtCity.setCityName(mtCity.getCityName());
+            }
             cityRepo.save(mtCity);
            return  "City update successfully";
         }
@@ -144,12 +150,14 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
     }
 
     @Override
-    public String updateRegionById(Long id ,RegionDto regionDto) {
-        Optional<MtRegion> mtRegionId=regionRepo.findById(id);
+    public String updateRegionById(RegionDto regionDto) {
+        Optional<MtRegion> mtRegionId=regionRepo.findById(regionDto.getId());
         MtRegion mtRegion;
         if(mtRegionId.isPresent()){
             mtRegion=mtRegionId.get();
-            mtRegion.setRegionName(regionDto.getRegionName());
+            if(Validator.isValid(regionDto.getId())) {
+                mtRegion.setRegionName(regionDto.getRegionName());
+            }
             regionRepo.save(mtRegion);
             return "region update successfully";
         }
@@ -347,24 +355,4 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
         }
         mtRegion.setSearchKey(searchKey);
     }
-
-    public CountryDto entityToDtoForGetAllCountry(MtCountry mtCountry) {
-        CountryDto countryDto = new CountryDto();
-        countryDto.setCountryName(mtCountry.getCountryName());
-        countryDto.setCountryCode(mtCountry.getCountryCode());
-        return countryDto;
-    }
-
-    public CityDto entityToDtoForGetAllCity(MtCity mtCity){
-       CityDto cityDto=new CityDto();
-       cityDto.setCityName(mtCity.getCityName());
-       return cityDto;
-    }
-
-    public RegionDto entityToDtoForGetAllRegion(MtRegion mtRegion){
-        RegionDto regionDto=new RegionDto();
-        regionDto.setRegionName(mtRegion.getRegionName());
-        return regionDto;
-    }
-
 }

@@ -33,7 +33,4 @@ public class PsychometricTest extends BaseEntity{
 	
 	@OneToMany(mappedBy = "psychometricTest", cascade = CascadeType.ALL , fetch = FetchType.LAZY)
 	private Set<RiskLevel> riskLevels = new HashSet<>();
-	
-	
-
 }

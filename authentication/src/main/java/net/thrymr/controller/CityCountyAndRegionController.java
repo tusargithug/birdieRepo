@@ -36,8 +36,8 @@ public class CityCountyAndRegionController {
     }
 
     @MutationMapping(name="updateCountryById")
-    public String updateCountryById( @Argument Long id,@Argument(name = "input")CountryDto countryDto) {
-        return cityCountyAndRegionService.updateCountryById(id,countryDto);
+    public String updateCountryById(@Argument(name = "input")CountryDto countryDto) {
+        return cityCountyAndRegionService.updateCountryById(countryDto);
     }
 
     @MutationMapping(name="deleteCountryById")
@@ -52,8 +52,8 @@ public class CityCountyAndRegionController {
     }
 
     @MutationMapping(name="updateCityById")
-    public String updateCityById( @Argument Long id,@Argument(name = "input")CityDto cityDto) {
-        return cityCountyAndRegionService.updateCityById(id,cityDto);
+    public String updateCityById(@Argument(name = "input")CityDto cityDto) {
+        return cityCountyAndRegionService.updateCityById(cityDto);
 
     }
 
@@ -68,8 +68,8 @@ public class CityCountyAndRegionController {
     }
 
     @MutationMapping(name="updateRegionById")
-    public String updateRegionById(@Argument Long id,@Argument(name = "input")RegionDto regionDto) {
-        return cityCountyAndRegionService.updateRegionById(id,regionDto);
+    public String updateRegionById(@Argument(name = "input")RegionDto regionDto) {
+        return cityCountyAndRegionService.updateRegionById(regionDto);
     }
 
 
@@ -108,18 +108,22 @@ public class CityCountyAndRegionController {
     public ResponseEntity<ApiResponse> uploadCountryData(@RequestBody MultipartFile file) {
          ApiResponse apiResponse=  cityCountyAndRegionService.uploadCountryData(file);
          return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
-    }*/
+    }
 
     /*@MutationMapping(name="upload-excel-city-data")
     public String uploadCityData(@Argument(name="file") MultipartFile file) {
        return cityCountyAndRegionService.uploadCityData(file);
 
-    }
+    }*/
 
-    @MutationMapping(name="upload-excel-country-data")
+    /*@MutationMapping(name="upload-excel-country-data")
     public String uploadCountryData(@Argument(name="file") MultipartFile file) {
        return cityCountyAndRegionService.uploadCountryData(file);
+    }*/
+
+    @MutationMapping(name="upload-excel-region-data")
+    public String uploadRegionData(@Argument(name= "file") MultipartFile file) {
+        return cityCountyAndRegionService.uploadRegionData(file);
     }
-*/
 }
 

@@ -20,11 +20,9 @@ public class MtOptions extends BaseEntity {
 	@Column(columnDefinition = "TEXT")
 	private String  textAnswer;
 	
-	@ManyToOne
-	private MtQuestion mtQuestion;
+	@ManyToOne(fetch = FetchType.LAZY,cascade =CascadeType.ALL)
+	private MtQuestion question;
 
 	@ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-	private UserCourse userCourseInfo;
-	
-
+	private UserCourse userCourse;
 }

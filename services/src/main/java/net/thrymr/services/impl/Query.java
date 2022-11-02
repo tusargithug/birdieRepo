@@ -5,6 +5,7 @@ package net.thrymr.services.impl;
         import net.thrymr.dto.TeamDto;
         import net.thrymr.dto.UnitDto;
         import net.thrymr.dto.VendorDto;
+        import net.thrymr.enums.Roles;
         import net.thrymr.model.*;
         import net.thrymr.model.master.*;
 
@@ -12,6 +13,7 @@ package net.thrymr.services.impl;
         import net.thrymr.repository.CourseRepo;
         import net.thrymr.services.*;
 
+        import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.graphql.data.method.annotation.Argument;
         import org.springframework.graphql.data.method.annotation.QueryMapping;
         import org.springframework.stereotype.Component;
@@ -21,43 +23,41 @@ package net.thrymr.services.impl;
 public class Query implements GraphQLQueryResolver {
 
 
-    private final MoodInfoService moodInfoService;
+    @Autowired
+    MoodInfoService moodInfoService;
 
-    private final MoodIntensityService moodIntensityService;
+    @Autowired
+    MoodIntensityService moodIntensityService;
 
-    private final AppUserService appUserService;
+    @Autowired
+    AppUserService appUserService;
 
-    private final RoleService roleService;
+    @Autowired
+    RoleService roleService;
 
-    private final CityCountyAndRegionService cityCountyAndRegionService;
+    @Autowired
+    CityCountyAndRegionService cityCountyAndRegionService;
 
-    private final SiteTeamAndShiftTimingsService siteTeamAndShiftTimingsService;
-    private final CategoryRepo categoryRepo;
+    @Autowired
+    SiteTeamAndShiftTimingsService siteTeamAndShiftTimingsService;
+    @Autowired
+    CategoryRepo categoryRepo;
 
-    private final CounsellorSlotService counsellorSlotService;
+    @Autowired
+    CounsellorSlotService counsellorSlotService;
 
-    private final CourseRepo courseRepo;
-    private final UnitAndChapterServices unitAndChapterServices;
-    private final CounsellorService counsellorService;
-    private final VendorService vendorService;
-
-
-    public Query(AppUserService appUserService, RoleService roleService, MoodInfoService moodInfoService, MoodIntensityService moodIntensityService, CityCountyAndRegionService cityCountyAndRegionService, SiteTeamAndShiftTimingsService siteTeamAndShiftTimingsService, CategoryRepo categoryRepo, CounsellorSlotService counsellorSlotService, CourseRepo courseRepo, UnitAndChapterServices unitAndChapterServices, CounsellorService counsellorService,VendorService vendorService) {
-
-        this.appUserService = appUserService;
-        this.roleService = roleService;
-
-        this.moodInfoService = moodInfoService;
-        this.moodIntensityService = moodIntensityService;
-        this.cityCountyAndRegionService = cityCountyAndRegionService;
-        this.siteTeamAndShiftTimingsService = siteTeamAndShiftTimingsService;
-        this.categoryRepo = categoryRepo;
-        this.counsellorSlotService = counsellorSlotService;
-        this.courseRepo = courseRepo;
-        this.unitAndChapterServices = unitAndChapterServices;
-        this.counsellorService = counsellorService;
-        this.vendorService=vendorService;
-    }
+    @Autowired
+    CourseRepo courseRepo;
+    @Autowired
+    UnitAndChapterServices unitAndChapterServices;
+    @Autowired
+    CounsellorService counsellorService;
+    @Autowired
+    VendorService vendorService;
+    @Autowired
+    AssessmentService assessmentService;
+    @Autowired
+    QuestionAndOptionsService questionAndOptionsService;
 
     @QueryMapping
     public MtMoodInfo moodInfoById(Long id) {
@@ -74,7 +74,6 @@ public class Query implements GraphQLQueryResolver {
     @QueryMapping("getAllMoodIntensity")
     public List<MtMoodIntensity> getAllMoodIntensity() {
         return moodIntensityService.getAllMoodIntensity();
-
     }
 
     //get user by id
@@ -130,46 +129,52 @@ public class Query implements GraphQLQueryResolver {
         List<MtRegion> regionList = cityCountyAndRegionService.getAllRegions();
         return regionList;
     }
+
     /*@QueryMapping("getAllTeam")
     public List<Team> getAllTeam(TeamDto teamdto){
         List<Team> teamList= siteTeamAndShiftTimingsService.getAllTeam(teamdto);
         return teamList;
     }*/
     @QueryMapping("getAllTeam")
-    public List<Team> getAllTeam(){
+    public List<Team> getAllTeam() {
         //List<Team> teamList= siteTeamAndShiftTimingsService.getAllTeam();
         return siteTeamAndShiftTimingsService.getAllTeam();
     }
 
-     @QueryMapping("getAllSite")
-    public List<Site>getAllSite(){
+    @QueryMapping("getAllSite")
+    public List<Site> getAllSite() {
 
         return siteTeamAndShiftTimingsService.getAllSite();
     }
+
     @QueryMapping("getAllUnit")
-    public List<Unit> getAllUnit(){
+    public List<Unit> getAllUnit() {
         List<Unit> unitList = unitAndChapterServices.getAllUnit();
         return unitList;
     }
+
     @QueryMapping("getAllChapters")
-    public List<Chapter> getAllChapters(){
+    public List<Chapter> getAllChapters() {
         List<Chapter> chapterList = unitAndChapterServices.getAllChapters();
         return chapterList;
     }
+
     @QueryMapping("getLearnPath")
-    public List<Unit> getLearnPath(UnitDto unitDto){
+    public List<Unit> getLearnPath(UnitDto unitDto) {
         List<Unit> unitList = unitAndChapterServices.getLearnPath(unitDto);
         return unitList;
     }
 
-    @QueryMapping(name="getAllTeamPagination")
-    public List<Team> getAllTeamPagination(TeamDto teamdto){
+    @QueryMapping(name = "getAllTeamPagination")
+    public List<Team> getAllTeamPagination(TeamDto teamdto) {
         return siteTeamAndShiftTimingsService.getAllTeamPagination(teamdto);
     }
-    @QueryMapping(name="getAllSitePagination")
-    public List<Site> getAllSitePagination(SiteDto siteDto){
+
+    @QueryMapping(name = "getAllSitePagination")
+    public List<Site> getAllSitePagination(SiteDto siteDto) {
         return siteTeamAndShiftTimingsService.getAllSitePagination(siteDto);
     }
+
     /*@QueryMapping(name="getCounsellorSlot")
     public List<CounsellorSlot> getCounsellorSlot(String empId) {
         return counsellorSlotService.getCounsellorSlot(empId);
@@ -178,27 +183,67 @@ public class Query implements GraphQLQueryResolver {
     public List<Vendor> getAllVendor() {
         return vendorService.getAllVendor();
     }
+
     @QueryMapping
-    public Vendor getVendorById(@Argument Long id) {return vendorService.getVendorById(id);}
+    public Vendor getVendorById(@Argument Long id) {
+        return vendorService.getVendorById(id);
+    }
+
     @QueryMapping(name = "getAllVendorPagination")
-    public List<Vendor> getAllVendorPagination(@Argument(name="input") VendorDto request) {
+    public List<Vendor> getAllVendorPagination(@Argument(name = "input") VendorDto request) {
         return vendorService.getAllVendorPagination(request);
     }
-    @QueryMapping(name="getCounsellorSlot")
+
+    @QueryMapping(name = "getCounsellorSlot")
     public List<CounsellorSlot> getCounsellorSlot() {
         return counsellorSlotService.getCounsellorSlot();
     }
 
     @QueryMapping(name = "getAllShiftTimings")
-    public List<ShiftTimings> getAllShiftTimings(){
+    public List<ShiftTimings> getAllShiftTimings() {
         return siteTeamAndShiftTimingsService.getAllShiftTimings();
     }
-    @QueryMapping(name="getCounsellorSlotById")
+
+    @QueryMapping(name = "getCounsellorSlotById")
     public CounsellorSlot getCounsellorSlotById(@Argument Long id) {
         return counsellorSlotService.getCounsellorSlotById(id);
     }
+
     @QueryMapping(name = "getAllCounsellor")
-    public List<AppUser> getAllCounsellor(@Argument (name = "input") CounsellorDto response){
+    public List<AppUser> getAllCounsellor(@Argument(name = "input") CounsellorDto response) {
         return counsellorService.getAllCounsellor(response);
+    }
+
+    @QueryMapping("getAllAssessment")
+    public List<MtAssessment> getAllAssessment() {
+        return  assessmentService.getAllAssessment();
+    }
+    @QueryMapping("getAssessmentById")
+    public MtAssessment getAssessmentById(@Argument Long id) {
+        return  assessmentService.getAssessmentById(id);
+    }
+    @QueryMapping("getQuestionById")
+    public MtQuestion getQuestionById(@Argument Long id) {
+        return questionAndOptionsService.getQuestionById(id);
+    }
+
+    @QueryMapping("getAnswersByQuestionId")
+    public List<MtOptions> getAnswersByQuestionId(@Argument Long id) {
+        return questionAndOptionsService.getAnswersByQuestionId(id);
+    }
+
+    @QueryMapping("getAllQuestions")
+    public List<MtQuestion> getAllQuestions() {
+        return questionAndOptionsService.getAllQuestions();
+    }
+
+    @QueryMapping("getOptionById")
+    public MtOptions getOptionById(@Argument Long id) {
+        return questionAndOptionsService.getOptionById(id);
+    }
+
+    @QueryMapping("getAllOption")
+    public List<MtOptions> getAllOption() {
+        return questionAndOptionsService.getAllOption();
     }
 }

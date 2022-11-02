@@ -6,7 +6,6 @@ import java.util.Set;
 import javax.persistence.*;
 
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import net.thrymr.model.BaseEntity;
 import net.thrymr.enums.QuestionCalType;
 
@@ -22,20 +21,17 @@ public class MtQuestion extends BaseEntity{
 	
 	@Column(columnDefinition = "TEXT")
 	private String question;
-	
-	@ManyToOne
-	private MtAssignment courseAssignment;
-	
-	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-	private Set<MtOptions> mtOptions = new HashSet<>();
 
+	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY,mappedBy = "question")
+	private Set<MtOptions> mtOptions = new HashSet<>();
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private PsychometricTest psychometricTest;
-	
 	@Enumerated
 	private QuestionCalType questionCalType;
 	
 	private int sequence;
 
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private MtAssessment assessment;
 }

@@ -13,7 +13,7 @@ import java.util.List;
 public interface SiteTeamAndShiftTimingsService {
     String createTeam(TeamDto teamDto);
 
-    String updateTeam(Long id,TeamDto teamDto);
+    String updateTeam(TeamDto teamDto);
 
     List<Team> getAllTeam();
 
@@ -21,7 +21,7 @@ public interface SiteTeamAndShiftTimingsService {
 
     String saveSite(SiteDto siteDto);
 
-    String updateSite(Long id, SiteDto siteDto);
+    String updateSite(SiteDto siteDto);
 
     List<Site> getAllSite();
 
@@ -29,7 +29,7 @@ public interface SiteTeamAndShiftTimingsService {
 
     String saveSiftTimings(ShiftTimingsDto shiftTimingsDto);
 
-    String updateSiftTimings(Long id,ShiftTimingsDto shiftTimingsDto);
+    String updateSiftTimings(ShiftTimingsDto shiftTimingsDto);
 
     String deleteSiftTimingsById(Long id);
 

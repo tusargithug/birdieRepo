@@ -5,11 +5,10 @@ package net.thrymr.controller;
 import net.thrymr.dto.AppUserDto;
 
 import net.thrymr.dto.UserCourseDto;
-import net.thrymr.enums.Roles;
 import net.thrymr.model.AppUser;
 
 import net.thrymr.services.AppUserService;
-import net.thrymr.services.AssignmentService;
+import net.thrymr.services.AssessmentService;
 import net.thrymr.services.RoleService;
 import net.thrymr.utils.ApiResponse;
 
@@ -36,12 +35,12 @@ public class AppUserController {
     private final Logger logger = LoggerFactory.getLogger(AppUserController.class);
 
     private final RoleService roleService;
-    private final AssignmentService assignmentService;
+    private final AssessmentService assessmentService;
     private final AppUserService appUserService;
 
-    public AppUserController(RoleService roleService, AssignmentService assignmentService, AppUserService appUserService) {
+    public AppUserController(RoleService roleService, AssessmentService assessmentService, AppUserService appUserService) {
         this.roleService = roleService;
-        this.assignmentService = assignmentService;
+        this.assessmentService = assessmentService;
         this.appUserService = appUserService;
     }
 
@@ -53,16 +52,6 @@ public class AppUserController {
         return new ApiResponse(HttpStatus.OK, "All Roles", apiResponse);
     }
 
-
-    //User attempt assignment
-
-    @GetMapping("/get/all/assignments")
-    public ApiResponse getAllAssignment() {
-        logger.info("get all assignment service started");
-        ApiResponse apiResponse = assignmentService.getAllAssignment();
-        logger.info("get all assignment service completed");
-        return new ApiResponse(HttpStatus.OK, "All Roles", apiResponse);
-    }
 
     // get user by id
     @QueryMapping
@@ -94,15 +83,9 @@ public class AppUserController {
 
     }
 
-    // user course update for logged in user
     @MutationMapping(name = "createUserCourse")
     public String createUserCourse(@Argument(name = "input") UserCourseDto request) throws ParseException {
         return appUserService.createUserCourse(request);
     }
 
-    @QueryMapping(name="getAllEnumRoles")
-    public List<Roles> getAllEnumRoles(){
-        List<Roles> rolesList= appUserService.getAllEnumRoles();
-        return rolesList;
-    }
 }

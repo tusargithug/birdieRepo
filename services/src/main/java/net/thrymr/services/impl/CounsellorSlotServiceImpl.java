@@ -17,12 +17,18 @@ import net.thrymr.utils.DateUtils;
 import net.thrymr.utils.Validator;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+
+import static java.time.temporal.ChronoUnit.HOURS;
+import static java.time.temporal.ChronoUnit.MINUTES;
 
 @Service
 public class CounsellorSlotServiceImpl implements CounsellorSlotService {
@@ -73,21 +79,21 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
                 slot.setDays(DayOfWeek.valueOf(detailsDto.getDayOfWeek()));
                 slot.setSlotStatus(SlotStatus.valueOf(detailsDto.getSlotStatus()));
                 slot.setSlotShift(SlotShift.getType(detailsDto.getSlotShift()));
-                Date todayDate= new Date();
-                if(detailsDto.getDate()!=null){
+                Date todayDate = new Date();
+                if (detailsDto.getDate() != null) {
                     slot.setSlotDt(DateUtils.toFormatStringToDate(detailsDto.getToDate(), Constants.DATE_FORMAT));
-                    if(!todayDate.before(slot.getSlotDt())){
+                    if (!todayDate.before(slot.getSlotDt())) {
                         return "Date should not before the Today date";
                     }
 
-                }else if(detailsDto.getFromDate()!=null && detailsDto.getToDate() != null) {
-                    Date fromDate=DateUtils.toFormatStringToDate(detailsDto.getFromDate(), Constants.DATE_FORMAT);
-                    Date toDate=DateUtils.toFormatStringToDate(detailsDto.getToDate(), Constants.DATE_FORMAT);
-                    if(todayDate.after(fromDate) && todayDate.before(toDate)) {
+                } else if (detailsDto.getFromDate() != null && detailsDto.getToDate() != null) {
+                    Date fromDate = DateUtils.toFormatStringToDate(detailsDto.getFromDate(), Constants.DATE_FORMAT);
+                    Date toDate = DateUtils.toFormatStringToDate(detailsDto.getToDate(), Constants.DATE_FORMAT);
+                    if (todayDate.after(fromDate) && todayDate.before(toDate)) {
                         return "From Date should not before the Today date";
                     }
-                    long dateDifference= ChronoUnit.DAYS.between(fromDate.toInstant(), toDate.toInstant());
-                    for(int i=0;i<dateDifference;i++){
+                    long dateDifference = ChronoUnit.DAYS.between(fromDate.toInstant(), toDate.toInstant());
+                    for (int i = 0; i < dateDifference; i++) {
                       /*  slot.setStartTime(DateUtils.toParseLocalTime(detailsDto.getStartTime(), Constants.TIME_FORMAT_2));
                         slot.setEndTime(DateUtils.toParseLocalTime(detailsDto.getEndTime(),Constants.TIME_FORMAT_2));
                         slot.setDays(DayOfWeek.valueOf(detailsDto.getDayOfWeek()));
@@ -99,7 +105,7 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
                         slot.setSlotDt(cal.getTime());
                     }
                     //need to implement
-                }else {
+                } else {
                     return "required date";
                 }
                 if (detailsDto.getAppUserId() != null) {
@@ -124,7 +130,7 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
 
     @Override
     public List<CounsellorSlot> getCounsellorSlot() {
-        List<CounsellorSlot> counsellorSlotList=counsellorSlotRepo.findAll();
+        List<CounsellorSlot> counsellorSlotList = counsellorSlotRepo.findAll();
         return counsellorSlotList;
     }
     /*public List<CounsellorSlot> getCounsellorSlot(TimeSlotDto response) {
@@ -147,10 +153,118 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
     @Override
     public CounsellorSlot getCounsellorSlotById(Long id) {
         CounsellorSlot counsellorSlot = null;
-        if(id!=null) {
+        if (id != null) {
             Optional<CounsellorSlot> optionalCounsellorSlot = counsellorSlotRepo.findById(id);
-            counsellorSlot=optionalCounsellorSlot.get();
+            counsellorSlot = optionalCounsellorSlot.get();
         }
         return counsellorSlot;
     }
+
+    @Override
+    public String rescheduledCounsellorSlot(TimeSlotDto request) throws ParseException {
+        LocalTime localTime = LocalTime.now() ;
+        CounsellorSlot counsellorSlot;
+        List<CounsellorSlot> counsellorSlots = new ArrayList<>();
+        if (Validator.isValid(request.getCounsellorSlotId())) {
+            Optional<CounsellorSlot> optionalCounsellorSlot = counsellorSlotRepo.findById(request.getCounsellorSlotId());
+            if (optionalCounsellorSlot.isPresent()) {
+                counsellorSlot = optionalCounsellorSlot.get();
+                Duration duration = Duration.between(LocalTime.now(),optionalCounsellorSlot.get().getStartTime());
+                if(duration.toMinutes()>=30) {
+                    for (SlotDetailsDto detailsDto : request.getSlots()) {
+                        switch (request.getSlotShift()) {
+                            case "MORNING":
+                                counsellorSlot.setSlotShift(SlotShift.MORNING);
+                                break;
+                            case "AFTERNOON":
+                                counsellorSlot.setSlotShift(SlotShift.AFTERNOON);
+                                break;
+                            case "EVENING":
+                                counsellorSlot.setSlotShift(SlotShift.EVENING);
+                                break;
+                            default:
+                                return "please select any shift";
+                        }
+                        if (Validator.isValid(detailsDto.getStartTime())) {
+                            counsellorSlot.setStartTime(DateUtils.toParseLocalTime(detailsDto.getStartTime(), Constants.TIME_FORMAT_2));
+                        }
+                        if (Validator.isValid(detailsDto.getEndTime())) {
+                            counsellorSlot.setEndTime(DateUtils.toParseLocalTime(detailsDto.getEndTime(), Constants.TIME_FORMAT_2));
+                        }
+                        if(Validator.isValid(detailsDto.getDayOfWeek())) {
+                            counsellorSlot.setDays(DayOfWeek.valueOf(detailsDto.getDayOfWeek()));
+                        }
+                        if(Validator.isValid(detailsDto.getSlotStatus())) {
+                            counsellorSlot.setSlotStatus(SlotStatus.valueOf(detailsDto.getSlotStatus()));
+                        }
+                        if(Validator.isValid(detailsDto.getSlotShift())) {
+                            counsellorSlot.setSlotShift(SlotShift.getType(detailsDto.getSlotShift()));
+                        }
+                        Date todayDate = new Date();
+                        if (detailsDto.getDate() != null) {
+                            counsellorSlot.setSlotDt(DateUtils.toFormatStringToDate(detailsDto.getToDate(), Constants.DATE_FORMAT));
+                            if (!todayDate.before(counsellorSlot.getSlotDt())) {
+                                return "Date should not before the Today date";
+                            }
+
+                        } else if (detailsDto.getFromDate() != null && detailsDto.getToDate() != null) {
+                            Date fromDate = DateUtils.toFormatStringToDate(detailsDto.getFromDate(), Constants.DATE_FORMAT);
+                            Date toDate = DateUtils.toFormatStringToDate(detailsDto.getToDate(), Constants.DATE_FORMAT);
+                            if (todayDate.after(fromDate) && todayDate.before(toDate)) {
+                                return "From Date should not before the Today date";
+                            }
+                            long dateDifference = ChronoUnit.DAYS.between(fromDate.toInstant(), toDate.toInstant());
+                            for (int i = 0; i < dateDifference; i++) {
+                                Calendar cal = Calendar.getInstance();
+                                cal.setTime(fromDate);
+                                cal.add(Calendar.DATE, 1);
+                                counsellorSlot.setSlotDt(cal.getTime());
+                            }
+                            //need to implement
+                        } else {
+                            return "required date";
+                        }
+                        if (detailsDto.getAppUserId() != null) {
+                            Optional<AppUser> optionalAppUserId = appUserRepo.findById(detailsDto.getAppUserId());
+                            if (optionalAppUserId.isPresent()) {
+                                counsellorSlot.setAppUser(optionalAppUserId.get());
+                            }
+                        }
+                        if (detailsDto.getCounsellorId() != null) {
+                            Optional<Counsellor> optionalCounsellorId = counsellorRepo.findById(detailsDto.getCounsellorId());
+                            if (optionalCounsellorId.isPresent()) {
+                                counsellorSlot.setCounsellor(optionalCounsellorId.get());
+                            }
+                        }
+                        counsellorSlots.add(counsellorSlot);
+                        counsellorSlotRepo.saveAll(counsellorSlots);
+                        return "slot rescheduled successfully";
+                    }
+                }
+                else{
+                    return "rescheduling is not possible";
+                }
+            }
+        }
+    return "Invalid Slot Id";
+    }
+
+    @Override
+    public String cancelCounsellorSlot(Long id) {
+        CounsellorSlot counsellorSlot=null;
+        if(Validator.isValid(id)) {
+            Optional<CounsellorSlot> optionalCounsellorSlot = counsellorSlotRepo.findById(id);
+            if(optionalCounsellorSlot.isPresent()){
+                counsellorSlot=optionalCounsellorSlot.get();
+                counsellorSlot.setIsActive(Boolean.FALSE);
+                counsellorSlot.setIsDeleted(Boolean.TRUE);
+                counsellorSlot.setSlotStatus(SlotStatus.DELETED);
+                counsellorSlotRepo.save(counsellorSlot);
+            }
+        }else{
+            return "invalid slot Id";
+        }
+        return "slot canceled successfully";
+    }
 }
+

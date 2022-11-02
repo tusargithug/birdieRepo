@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface MtOptionsRepo extends JpaRepository<MtOptions,Long> {
-    List<MtOptions> findAllByMtQuestionId(Long id);
+public interface OptionsRepo extends JpaRepository<MtOptions,Long> {
+    List<MtOptions> findAllByQuestion(Long id);
 
     List<MtOptions> findAllByIdIn(List<Long> mtOptionsIds);
 }

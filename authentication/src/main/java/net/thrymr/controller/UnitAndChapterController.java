@@ -33,12 +33,12 @@ public class UnitAndChapterController {
     }
 
     @MutationMapping(name="updateUnitById")
-    public String updateUnitById(@Argument Long id,@Argument(name = "input") UnitDto unitDto) {
-        return unitAndChapterServices.updateUnitById(id,unitDto);
+    public String updateUnitById(@Argument(name = "input") UnitDto unitDto) {
+        return unitAndChapterServices.updateUnitById(unitDto);
     }
     @MutationMapping(name="updateChaptersById")
-    public String updateChaptersById(@Argument Long id,@Argument(name = "input") ChapterDto dto) {
-        return unitAndChapterServices.updateChaptersById(id,dto);
+    public String updateChaptersById(@Argument(name = "input") ChapterDto dto) {
+        return unitAndChapterServices.updateChaptersById(dto);
     }
     @MutationMapping(name="deleteUnitById")
     public String deleteUnitById(@Argument Long id){

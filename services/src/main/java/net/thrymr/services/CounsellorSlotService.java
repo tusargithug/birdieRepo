@@ -12,4 +12,8 @@ public interface CounsellorSlotService {
     List<CounsellorSlot> getCounsellorSlot();
 
     CounsellorSlot getCounsellorSlotById(Long id);
+
+    String rescheduledCounsellorSlot(TimeSlotDto request) throws ParseException;
+
+    String cancelCounsellorSlot(Long id);
 }

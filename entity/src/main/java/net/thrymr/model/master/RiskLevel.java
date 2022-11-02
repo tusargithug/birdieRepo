@@ -1,9 +1,6 @@
 package net.thrymr.model.master;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 import lombok.NoArgsConstructor;
 import net.thrymr.model.BaseEntity;
@@ -18,7 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class RiskLevel extends BaseEntity{
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private PsychometricTest psychometricTest;
 
 	@Column(name = "range_from")

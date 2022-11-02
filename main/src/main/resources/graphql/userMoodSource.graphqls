@@ -1,21 +1,21 @@
 input MoodSourceIntensityRequestDto{
-intensityId:Int
-sourceIds:[Int]
-intensityDescription:String
+ intensityId:Int
+ sourceIds:[Int]
+ intensityDescription:String
 }
 
 input UserCourseDto{
-courseId:Int
-mtOptionsIds:[Int]
-startedDate:String
-completedDate:String
-status:CourseStatus
+ courseId:Int
+ mtOptionsIds:[Int]
+ startedDate:String
+ completedDate:String
+ status:CourseStatus
 }
 
 
 enum CourseStatus{
  NOT_STARTED
-  STARTED
+ STARTED
  IN_PROGRESS
  COMPLETED
 }

@@ -11,9 +11,9 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class TimeSlotDto {
-
-
+    private Long id;
     private Long counsellorId;
     private String slotShift;
     private List<SlotDetailsDto> slots = new ArrayList<>();
+    private Long counsellorSlotId;
 }

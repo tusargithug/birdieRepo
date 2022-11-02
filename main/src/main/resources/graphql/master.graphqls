@@ -16,25 +16,12 @@ description:String
 category:Int
 }
 
-input OptionsDto{
- id:Int
- textAnswer:String
- questionDto:QuestionDto
-}
 scalar Object
 type ApiResponse{
 statusCode:Int
 message:String
 status:String
 }
-
-
-input QuestionDto{
-question:String
-answersDto:[OptionsDto]
-videoReference:String
-}
-
 input CategoryDto{
 id:Int
 name:String
@@ -180,6 +167,69 @@ type Chapter{
  video:FileEntity
  unit:Unit
 }
+type MtOptions{
+ textAnswer:String
+ question:MtQuestion
+ userCourse:UserCourse
+}
+type UserCourse{
+ user:AppUser
+ course:Course
+ status:CourseStatus
+ mtOptions:[MtOptions]
+ startedDate:Date
+ completedDate:Date
+}
+type MtQuestion{
+ question:String
+ mtOptions:[MtOptions]
+ psychometricTest:PsychometricTest
+ questionCalType:QuestionCalType
+ sequence:Int
+ assessment:MtAssessment
+}
+enum QuestionCalType{
+ FORWARD
+ REVERSE
+ NONE
+}
+type MtAssessment{
+ id:Int
+ name:String
+ description:String
+ courses:[Course]
+ instructions:String
+ frequencyType:FrequencyType
+ high:String
+ moderate:String
+ low:String
+ questionList:[MtQuestion]
+}
+type PsychometricTest{
+ name:String
+ description:String
+ mtQuestions:[MtQuestion]
+ options:[PsychometricTestOption]
+ riskLevels:[RiskLevel]
+}
+type RiskLevel{
+ psychometricTest:PsychometricTest
+ rangeFrom:Float
+ rangeTo:Float
+ risk:Risk
+}
+enum Risk{
+ LOW
+ MEDIUM
+ HIGH
+ NONE
+}
+
+type PsychometricTestOption{
+ option:String
+ score:Int
+ psychometricTest:PsychometricTest
+}
 
 type Unit{
  id:ID!
@@ -187,8 +237,41 @@ type Unit{
  chapters:[Chapter]
 }
 
-input TimeSlotDto{
+input AssessmentDto{
+ id:Int
+ description:String
+ name:String
+ duration:String
+ instructions:String
+ frequencyType:FrequencyType
+ high: String
+ moderate:String
+ low:String
+}
+enum FrequencyType{
+ NONE
+ ONE_TIME
+ RECURRING
+}
+
+input QuestionDto {
+ id:Int
+ question:String
+ videoReference:String
+ assessmentId:Int
+ psychometricTestId:Int
+ setQuestionCalType:String
+ Sequence:Int
+}
+input OptionsDto{
+ id:Int
+ textAnswer:String
+ questionId:Int
+ userCourseId:Int
+}
+ input TimeSlotDto{
  counsellorId:Int
+ counsellorSlotId:Int
  slotShift:String
  slots:[SlotDetailsDto]
 }

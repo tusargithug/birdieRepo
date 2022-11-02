@@ -36,5 +36,14 @@ public class CounsellorSlotController {
         return counsellorSlotService.createCounsellorSlot(request);
     }
 
+    @MutationMapping(name="rescheduledCounsellorSlot")
+    public String rescheduledCounsellorSlot(@Argument(name = "input") TimeSlotDto request) throws ParseException {
+        return counsellorSlotService.rescheduledCounsellorSlot(request);
+    }
+
+    @MutationMapping(name="cancelCounsellorSlot")
+    public String cancelCounsellorSlot(@Argument Long id){
+        return counsellorSlotService.cancelCounsellorSlot(id);
+    }
 
 }

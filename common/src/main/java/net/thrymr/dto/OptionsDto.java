@@ -8,10 +8,8 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class OptionsDto {
-
     private Long id;
-
     private String  textAnswer;
-
-    private QuestionDto questionDto;
+    private Long questionId;
+    private Long userCourseId;
 }

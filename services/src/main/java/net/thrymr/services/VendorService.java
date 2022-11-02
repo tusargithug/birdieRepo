@@ -11,7 +11,7 @@ public interface VendorService {
     String deleteVendorById(Long id);
     Vendor getVendorById(Long id);
 
-    String updateVendor(Long id,VendorDto request);
+    String updateVendor(VendorDto request);
 
     List<Vendor> getAllVendorPagination(VendorDto vendorDto);
 

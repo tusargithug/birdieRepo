@@ -30,7 +30,13 @@ type Query {
     getAllVendor:[Vendor]
     getVendorById(id:ID):Vendor
     getAllVendorPagination(input:VendorDto):[Vendor]
-    #    getCounsellorSlot(empId:String):[CounsellorSlot]
+    getAllAssessment:[MtAssessment]
+    getAssessmentById(id:ID!):MtAssessment
+    getQuestionById(id:ID!):MtQuestion
+    getAnswersByQuestionId(id:ID!):[MtOptions]
+    getAllQuestions:[MtQuestion]
+    getOptionById(id:ID!):MtOptions
+    getAllOption:[MtOptions]
 }
 
 type Mutation {
@@ -51,40 +57,51 @@ type Mutation {
     createRole(input:RolesDto):String!
     updateRole(input:RolesDto):String!
     deleteRoleById(id:ID):String!
-    updateUnitById(id:ID,input:UnitDto):String!
-    updateChaptersById(id:ID,input:ChapterDto):String!
+    updateUnitById(input:UnitDto):String!
+    updateChaptersById(input:ChapterDto):String!
     saveUnit(input:UnitDto):String!
     saveChapter(input:ChapterDto):String!
     deleteUnitById(id:ID):String!
     deleteChapterById(id:ID):String!
     createTeam(input:TeamDto):String!
-    updateTeam(id:ID,input:TeamDto):String!
+    updateTeam(input:TeamDto):String!
     deleteTeamById(id:ID):String!
     saveSite(input:SiteDto):String!
-    updateSite(id:ID,input:SiteDto):String!
+    updateSite(input:SiteDto):String!
     deleteSiteById(id:ID):String!
     saveSiftTimings(input:ShiftTimingsDto):String!
-    updateSiftTimings(id:ID,input:ShiftTimingsDto):String!
+    updateSiftTimings(input:ShiftTimingsDto):String!
     deleteSiftTimingsById(id:ID):String!
     saveCountry(input:CountryDto):String!
 #    uploadCountryData(file: CountryDto):String!
-    updateCountryById(id:ID,input:CountryDto):String!
+    updateCountryById(input:CountryDto):String!
     deleteCountryById(Id:ID):String!
     saveCity(input:CityDto):String!
 #    uploadCityData(file: CountryDto!):String!
-    updateCityById(id:ID,input:CityDto):String!
+    updateCityById(input:CityDto):String!
     deleteCityById(id:ID):String!
     saveRegion(input:RegionDto):String!
-#    uploadRegionData(file:Upload!):String!
-    updateRegionById(id:ID,input:RegionDto):String!
+    uploadRegionData(file:Upload!):String!
+    updateRegionById(input:RegionDto):String!
     deleteRegionById(id:ID):String!
     createCounsellorSlot(input:TimeSlotDto):String!
     createCounsellor(input:CounsellorDto):String!
-    updateCounsellorById(id:ID!,input:CounsellorDto):String!
+    updateCounsellorById(input:CounsellorDto):String!
     deleteCounsellorById(id:ID!):String!
     saveVendor(input:VendorDto):String!
     deleteVendorById(id:ID):String!
-    updateVendor(id:ID,input:VendorDto):String!
+    updateVendor(input:VendorDto):String!
+    rescheduledCounsellorSlot(input:TimeSlotDto):String!
+    cancelCounsellorSlot(id:ID!):String!
+    createQuestion(input:QuestionDto):String!
+    updateQuestionById(input:QuestionDto):String!
+    deleteQuestionById(id:ID):String!
+    createOptions(input:OptionsDto):String!
+    updateOptionById(input:OptionsDto):String!
+    deleteOptionById(id:ID):String!
+    createAssessment(input:AssessmentDto):String!
+    updateAssessmentById(input:AssessmentDto):String!
+    deleteAssessmentId(id:ID):String!
 }
 scalar Upload
 type MtMoodInfo {

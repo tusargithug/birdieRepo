@@ -16,19 +16,19 @@ public interface CityCountyAndRegionService {
 
     String saveCountry(CountryDto countryDto);
 
-    String updateCountryById(Long id,CountryDto countryDto);
+    String updateCountryById(CountryDto countryDto);
 
     List<MtCountry> getAllCountry();
 
     String saveCity(CityDto cityDto);
 
-    String updateCityById(Long id,CityDto cityDto);
+    String updateCityById(CityDto cityDto);
 
     List<MtCity> getAllCities();
 
     String saveRegion(RegionDto regionDto);
 
-    String updateRegionById(Long id,RegionDto regionDto);
+    String updateRegionById(RegionDto regionDto);
 
     List<MtRegion> getAllRegions();
 

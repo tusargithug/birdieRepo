@@ -6,49 +6,43 @@ package net.thrymr.services.impl;
         import net.thrymr.model.master.Category;
         import net.thrymr.model.master.Course;
         import net.thrymr.services.*;
+        import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.graphql.data.method.annotation.Argument;
         import org.springframework.graphql.data.method.annotation.MutationMapping;
         import org.springframework.stereotype.Component;
-
+        import org.springframework.web.multipart.MultipartFile;
         import java.text.ParseException;
 
 @Component
 public class MutationResolver implements GraphQLMutationResolver {
-    private final MoodSourceService moodSourceService;
-
-    private final RoleService roleService;
-
-    private final AppUserService appUserService;
-
-    private final MoodIntensityService moodIntensityService;
-
-    private final CategoryService categoryService;
-
-    private final CourseService courseService;
-
-    private final CityCountyAndRegionService cityCountyAndRegionService;
-
-    private final SiteTeamAndShiftTimingsService siteTeamAndShiftTimingsService;
-    private final UnitAndChapterServices unitAndChapterServices;
-    private final CounsellorSlotService counsellorSlotService;
-    private final VendorService vendorService;
-
-    private final CounsellorService counsellorService;
-
-    public MutationResolver(MoodSourceService moodSourceService, RoleService roleService, AppUserService appUserService, MoodIntensityService moodIntensityService, CategoryService categoryService, CourseService courseService, CounsellorSlotService counsellorSlotService, UnitAndChapterServices unitAndChapterServices, CityCountyAndRegionService cityCountyAndRegionService, SiteTeamAndShiftTimingsService siteTeamAndShiftTimingsService, UnitAndChapterServices unitAndChapterServices1, CounsellorSlotService counsellorSlotService1, CounsellorService counsellorService, VendorService vendorService) {
-        this.moodSourceService = moodSourceService;
-        this.roleService = roleService;
-        this.appUserService = appUserService;
-        this.moodIntensityService = moodIntensityService;
-        this.categoryService = categoryService;
-        this.courseService = courseService;
-        this.cityCountyAndRegionService = cityCountyAndRegionService;
-        this.siteTeamAndShiftTimingsService = siteTeamAndShiftTimingsService;
-        this.unitAndChapterServices = unitAndChapterServices;
-        this.counsellorSlotService = counsellorSlotService;
-        this.counsellorService = counsellorService;
-        this.vendorService = vendorService;
-    }
+    @Autowired
+    MoodSourceService moodSourceService;
+    @Autowired
+    RoleService roleService;
+    @Autowired
+    AppUserService appUserService;
+    @Autowired
+    MoodIntensityService moodIntensityService;
+    @Autowired
+    CategoryService categoryService;
+    @Autowired
+    CourseService courseService;
+    @Autowired
+    CityCountyAndRegionService cityCountyAndRegionService;
+    @Autowired
+    SiteTeamAndShiftTimingsService siteTeamAndShiftTimingsService;
+    @Autowired
+    UnitAndChapterServices unitAndChapterServices;
+    @Autowired
+    CounsellorSlotService counsellorSlotService;
+    @Autowired
+    VendorService vendorService;
+    @Autowired
+    CounsellorService counsellorService;
+    @Autowired
+    QuestionAndOptionsService questionAndOptionsService;
+    @Autowired
+    AssessmentService assessmentService;
 
     @MutationMapping(name = "createAppUser")
     public String createAppUser(AppUserDto request){
@@ -157,8 +151,8 @@ public class MutationResolver implements GraphQLMutationResolver {
 
 
     @MutationMapping(name="updateCountryById")
-    public String updateCountryById(Long id,CountryDto countryDto) {
-        return cityCountyAndRegionService.updateCountryById(id,countryDto);
+    public String updateCountryById(CountryDto countryDto) {
+        return cityCountyAndRegionService.updateCountryById(countryDto);
     }
 
     @MutationMapping(name="deleteCountryById")
@@ -179,9 +173,8 @@ public class MutationResolver implements GraphQLMutationResolver {
     }*/
 
     @MutationMapping(name="updateCityById")
-    public String updateCityById(Long id,CityDto cityDto) {
-        return cityCountyAndRegionService.updateCityById(id,cityDto);
-        
+    public String updateCityById(CityDto cityDto) {
+        return cityCountyAndRegionService.updateCityById(cityDto);
     }
 
     @MutationMapping(name="deleteCityById")
@@ -201,8 +194,8 @@ public class MutationResolver implements GraphQLMutationResolver {
     }*/
 
     @MutationMapping(name="updateRegionById")
-    public String updateRegionById(Long id,RegionDto regionDto) {
-        return cityCountyAndRegionService.updateRegionById(id,regionDto);
+    public String updateRegionById(RegionDto regionDto) {
+        return cityCountyAndRegionService.updateRegionById(regionDto);
     }
 
     @MutationMapping(name="deleteRegionById")
@@ -214,8 +207,8 @@ public class MutationResolver implements GraphQLMutationResolver {
         return siteTeamAndShiftTimingsService.createTeam(teamDto);
     }
     @MutationMapping(name="updateTeam")
-    public String updateTeam(Long id,TeamDto teamDto){
-        return siteTeamAndShiftTimingsService.updateTeam(id,teamDto);
+    public String updateTeam(TeamDto teamDto){
+        return siteTeamAndShiftTimingsService.updateTeam(teamDto);
     }
 
     @MutationMapping(name="deleteTeamById")
@@ -228,8 +221,8 @@ public class MutationResolver implements GraphQLMutationResolver {
         return siteTeamAndShiftTimingsService.saveSite(siteDto);
     }
     @MutationMapping(name="updateSite")
-    public String updateSite(Long id,SiteDto siteDto){
-        return siteTeamAndShiftTimingsService.updateSite(id,siteDto);
+    public String updateSite(SiteDto siteDto){
+        return siteTeamAndShiftTimingsService.updateSite(siteDto);
     }
     @MutationMapping(name="deleteSiteById")
     public String deleteSiteById(@Argument Long id){
@@ -242,8 +235,8 @@ public class MutationResolver implements GraphQLMutationResolver {
     }
 
     @MutationMapping(name="updateSiftTimings")
-    public String updateSiftTimings(Long id,ShiftTimingsDto shiftTimingsDto){
-        return siteTeamAndShiftTimingsService.updateSiftTimings(id,shiftTimingsDto);
+    public String updateSiftTimings(ShiftTimingsDto shiftTimingsDto){
+        return siteTeamAndShiftTimingsService.updateSiftTimings(shiftTimingsDto);
     }
     @MutationMapping(name="deleteSiftTimingsById")
     public String deleteSiftTimingsById(@Argument Long id){
@@ -260,12 +253,12 @@ public class MutationResolver implements GraphQLMutationResolver {
     }
 
     @MutationMapping(name="updateUnitById")
-    public String updateUnitById(Long id,UnitDto unitDto) {
-        return unitAndChapterServices.updateUnitById(id,unitDto);
+    public String updateUnitById(UnitDto unitDto) {
+        return unitAndChapterServices.updateUnitById(unitDto);
     }
     @MutationMapping(name="updateChaptersById")
-    public String updateChaptersById(Long id,ChapterDto dto) {
-        return unitAndChapterServices.updateChaptersById(id,dto);
+    public String updateChaptersById(ChapterDto dto) {
+        return unitAndChapterServices.updateChaptersById(dto);
     }
     @MutationMapping(name="deleteUnitById")
     public String deleteUnitById(@Argument Long id){
@@ -277,18 +270,18 @@ public class MutationResolver implements GraphQLMutationResolver {
         return unitAndChapterServices.deleteChapterById(id);
     }
 
-/*    @MutationMapping(name="upload-excel-region-data")
-    public String uploadRegionData(@Argument MultipartFile file) {
+    @MutationMapping(name="upload-excel-region-data")
+    public String uploadRegionData(@Argument(name = "file") MultipartFile file) {
         return cityCountyAndRegionService.uploadRegionData(file);
     }
 
-    @MutationMapping(name="upload-excel-city-data")
+    /*@MutationMapping(name="upload-excel-city-data")
     public String uploadCityData(@Argument MultipartFile file) {
         return cityCountyAndRegionService.uploadCityData(file);
 
-    }
+    }*/
 
-    @MutationMapping(name="upload-excel-country-data")
+    /*@MutationMapping(name="upload-excel-country-data")
     public String uploadCountryData(@Argument MultipartFile file) {
         return  cityCountyAndRegionService.uploadCountryData(file);
     }*/
@@ -308,21 +301,68 @@ public class MutationResolver implements GraphQLMutationResolver {
     }
 
     @MutationMapping(name = "updateVendor")
-    public String updateVendor(@Argument Long id,@Argument(name = "input")VendorDto request) {
-        return vendorService.updateVendor(id,request);
+    public String updateVendor(@Argument(name = "input")VendorDto request) {
+        return vendorService.updateVendor(request);
     }
     @MutationMapping(name ="createCounsellor")
     public String createCounsellor(@Argument(name = "input") CounsellorDto counsellorDto){
         return counsellorService.createCounsellor(counsellorDto);
     }
     @MutationMapping(name ="updateCounsellorById")
-    public String updateCounsellorById(@Argument Long id,@Argument(name = "input") CounsellorDto counsellorDto){
-        return counsellorService.updateCounsellorById(id,counsellorDto);
+    public String updateCounsellorById(@Argument(name = "input") CounsellorDto counsellorDto){
+        return counsellorService.updateCounsellorById(counsellorDto);
     }
     @MutationMapping(name ="deleteCounsellorById")
     public String deleteCounsellorById(@Argument Long id){
         return counsellorService.deleteCounsellorById(id);
     }
+    @MutationMapping(name="rescheduledCounsellorSlot")
+    public String rescheduledCounsellorSlot(@Argument(name = "input") TimeSlotDto request) throws ParseException {
+        return counsellorSlotService.rescheduledCounsellorSlot(request);
+    }
+    @MutationMapping(name="cancelCounsellorSlot")
+    public String cancelCounsellorSlot(@Argument Long id){
+        return counsellorSlotService.cancelCounsellorSlot(id);
+    }
+
+    @MutationMapping("createQuestion")
+    public String createQuestion(@Argument(name = "input") QuestionDto request) {
+        return questionAndOptionsService.createQuestion(request);
+    }
+    @MutationMapping("updateQuestionById")
+    public String updateQuestionById(@Argument(name = "input") QuestionDto request) {
+        return questionAndOptionsService.updateQuestionById(request);
+    }
+    @MutationMapping("deleteQuestionById")
+    public String deleteQuestionById(@Argument Long id) {
+        return  questionAndOptionsService.deleteQuestionById(id);
+    }
+    @MutationMapping("createOptions")
+    public String createOptions(@Argument(name="input") OptionsDto request){
+        return questionAndOptionsService.createOptions(request);
+    }
+    @MutationMapping("updateOptionById")
+    public String updateOptionById(@Argument(name="input") OptionsDto request){
+        return questionAndOptionsService.updateOptionById(request);
+    }
+    @MutationMapping("deleteOptionById")
+    public String deleteOptionById(@Argument Long id){
+        return questionAndOptionsService.deleteOptionById(id);
+    }
+    @MutationMapping("createAssessment")
+    public String createAssessment(@Argument(name = "input") AssessmentDto request){
+        return assessmentService.createAssessment(request);
+    }
+    @MutationMapping("updateAssessmentId")
+    public String updateAssessmentById(@Argument(name = "input") AssessmentDto request){
+        return assessmentService.updateAssessmentById(request);
+    }
+
+    @MutationMapping("deleteAssessmentId")
+    public String deleteAssessmentId(@Argument Long id){
+        return assessmentService.deleteAssessmentId(id);
+    }
+
 }
 
 

@@ -9,7 +9,7 @@ import java.util.List;
 public interface CounsellorService {
     String createCounsellor(CounsellorDto counsellorDto);
 
-    String updateCounsellorById(Long id, CounsellorDto counsellorDto);
+    String updateCounsellorById(CounsellorDto counsellorDto);
 
     String deleteCounsellorById(Long id);
 

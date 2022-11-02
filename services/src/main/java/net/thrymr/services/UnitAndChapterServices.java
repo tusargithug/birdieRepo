@@ -10,7 +10,7 @@ import java.util.List;
 public interface UnitAndChapterServices {
     String saveUnit(UnitDto request);
 
-    String updateUnitById(Long id,UnitDto unitDto);
+    String updateUnitById(UnitDto unitDto);
 
     List<Unit> getAllUnit();
 
@@ -21,7 +21,7 @@ public interface UnitAndChapterServices {
 
     String saveChapter(ChapterDto request);
 
-    String updateChaptersById(Long id,ChapterDto  dto);
+    String updateChaptersById(ChapterDto  dto);
 
     List<Chapter> getAllChapters();
 
