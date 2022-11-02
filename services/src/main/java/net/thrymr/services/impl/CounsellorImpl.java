@@ -175,7 +175,7 @@ public class CounsellorImpl implements CounsellorService {
     }
 
     @Override
-    public List<AppUser> getAllCounsellor(CounsellorDto response) {
+    public List<Counsellor> getAllCounsellor(CounsellorDto response) {
         Pageable pageable=null;
         if (response.getPageSize() != null) {
             pageable = PageRequest.of(response.getPageNumber(), response.getPageSize());
@@ -184,52 +184,51 @@ public class CounsellorImpl implements CounsellorService {
             pageable = PageRequest.of(response.getPageNumber(),response.getPageSize(), Sort.Direction.DESC,"userName");
         }
         //filters
-        Specification<AppUser> addUserSpecification = ((root, criteriaQuery, criteriaBuilder)-> {
-            Join<AppUser, Site> appUserSiteJoin = root.join("site");
+        Specification<Counsellor> addUserSpecification = ((root, criteriaQuery, criteriaBuilder)-> {
             List<Predicate> addCounsellorPredicate = new ArrayList<>();
             if (response.getAppUserName() != null) {
-                Predicate appUserName = criteriaBuilder.and(appUserSiteJoin.get("userName").in(response.getAppUserName()));
+                Predicate appUserName = criteriaBuilder.and(root.get("userName").in(response.getAppUserName()));
                 addCounsellorPredicate.add(appUserName);
             }
             if (response.getEmployeeId() != null && !response.getEmployeeId().isEmpty()) {
-                Predicate employeeId = criteriaBuilder.and(appUserSiteJoin.get("empId").in(response.getEmployeeId()));
+                Predicate employeeId = criteriaBuilder.and(root.get("empId").in(response.getEmployeeId()));
                 addCounsellorPredicate.add(employeeId);
             }
             if (response.getAddedOn() != null) {
-                Predicate addedOn = criteriaBuilder.and(appUserSiteJoin.get("createdOn").in(response.getAddedOn()));
+                Predicate addedOn = criteriaBuilder.and(root.get("createdOn").in(response.getAddedOn()));
                 addCounsellorPredicate.add(addedOn);
             }
             if (response.getDesignation() != null) {
-                Predicate designation = criteriaBuilder.and(appUserSiteJoin.get("roles").in(response.getDesignation()));
+                Predicate designation = criteriaBuilder.and(root.get("roles").in(response.getDesignation()));
                 addCounsellorPredicate.add(designation);
             }
             if (response.getShiftTimings() != null) {
-                Predicate shiftTimings = criteriaBuilder.and(appUserSiteJoin.get("shiftTimings").in(response.getShiftTimings()));
+                Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(response.getShiftTimings()));
                 addCounsellorPredicate.add(shiftTimings);
             }
             if (response.getSite() != null) {
-                Predicate site = criteriaBuilder.and(appUserSiteJoin.get("site").in(response.getSite()));
+                Predicate site = criteriaBuilder.and(root.get("site").in(response.getSite()));
                 addCounsellorPredicate.add(site);
             }
             if (response.getTeam()!= null) {
-                Predicate team = criteriaBuilder.and(appUserSiteJoin.get("team").in(response.getTeam()));
+                Predicate team = criteriaBuilder.and(root.get("team").in(response.getTeam()));
                 addCounsellorPredicate.add(team);
             }
             if (Validator.isValid(response.getSearchKey())) {
                 Predicate searchPredicate = criteriaBuilder.like(
-                        criteriaBuilder.lower(appUserSiteJoin.get("searchKey")),
+                        criteriaBuilder.lower(root.get("searchKey")),
                         "%" + response.getSearchKey().toLowerCase() + "%");
                 addCounsellorPredicate.add(searchPredicate);
             }
             return criteriaBuilder.and(addCounsellorPredicate.toArray(new Predicate[0]));
         });
-        Page<AppUser> counsellorObjectives = appUserRepo.findAll(addUserSpecification, pageable);
+        Page<Counsellor> counsellorObjectives = counsellorRepo.findAll(addUserSpecification, pageable);
 
-        List<AppUser> appUserList =new ArrayList<>();
+        List<Counsellor> counsellorList =new ArrayList<>();
         if(counsellorObjectives.getContent()!=null){
-           appUserList = counsellorObjectives.getContent().stream().filter(obj->obj.getRoles().equals(Roles.COUNSELLOR)).collect(Collectors.toList());
+            counsellorList = counsellorObjectives.getContent().stream().filter(obj->obj.getAppUser().getRoles().equals(Roles.COUNSELLOR)).collect(Collectors.toList());
         }
-        return  appUserList;
+        return  counsellorList;
     }
     
 }

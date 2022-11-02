@@ -175,15 +175,19 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
 
     @Override
     public String updateSite(SiteDto siteDto) {
+        if(!Validator.isValid(siteDto.getId())){
+            return "id required";
+        }
+
         Optional<Site> optionalSite=siteRepo.findById(siteDto.getId());
         Site site;
         if(optionalSite.isPresent()){
             site=optionalSite.get();
-            if(Validator.isValid(site.getSiteId())) {
-                site.setSiteId(site.getSiteId());
+            if(Validator.isValid(siteDto.getSiteId())) {
+                site.setSiteId(siteDto.getSiteId());
             }
-            if (Validator.isValid(site.getSiteName())) {
-                site.setSiteName(site.getSiteName());
+            if (Validator.isValid(siteDto.getSiteName())) {
+                site.setSiteName(siteDto.getSiteName());
             }
             //Region
             if(siteDto.getRegionId()!=null && regionRepo.existsById(siteDto.getRegionId())){
@@ -205,9 +209,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                 Optional<AppUser> optionalAppUser=appUserRepo.findById(siteDto.getSiteManagerId());
                 optionalAppUser.ifPresent(site::setSiteManager);
             }
-            if(siteDto.getStatus().equals(Boolean.TRUE)) {
-                site.setIsActive(siteDto.getStatus());
-            }
+
             siteRepo.save(site);
             return"site update successfully";
         }

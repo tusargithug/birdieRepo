@@ -31,7 +31,7 @@ public class CounsellorController {
     }
 
     @QueryMapping(name = "getAllCounsellor")
-    public List<AppUser> getAllCounsellor(@Argument (name = "input") CounsellorDto response){
+    public List<Counsellor> getAllCounsellor(@Argument (name = "input") CounsellorDto response){
         return counsellorService.getAllCounsellor(response);
     }
 }

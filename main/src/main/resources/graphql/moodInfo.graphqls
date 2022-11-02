@@ -26,7 +26,7 @@ type Query {
     getCounsellorSlot:[CounsellorSlot]
     getAllShiftTimings:[ShiftTimings]
     getCounsellorSlotById(id:ID!):CounsellorSlot
-    getAllCounsellor(input:CounsellorDto):[AppUser]
+    getAllCounsellor(input:CounsellorDto):[Counsellor]
     getAllVendor:[Vendor]
     getVendorById(id:ID):Vendor
     getAllVendorPagination(input:VendorDto):[Vendor]
@@ -201,11 +201,13 @@ type CounsellorSlot{
     slotStatus:SlotStatus
 }
 type Counsellor{
-appUser:AppUser
-shiftTimings:[ShiftTimings]
-educationalDetails:[String]
-languages:[String]
-bio:String
+    id:Int
+    appUser:AppUser
+    counsellorSlots:[CounsellorSlot]
+    shiftTimings:[ShiftTimings]
+    educationalDetails:[String]
+    languages:[String]
+    bio:String
 }
 scalar LocalTime
 scalar Date
