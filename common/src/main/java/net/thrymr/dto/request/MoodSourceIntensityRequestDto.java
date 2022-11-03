@@ -12,6 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 public class MoodSourceIntensityRequestDto {
 
+    private Long id;
+    private Long appUserId;
     private Long intensityId;
 
     private List<Long> sourceIds=new ArrayList<>();

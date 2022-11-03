@@ -49,10 +49,10 @@ type Mutation {
     deleteUserMoodSourceCheckInById(id:ID):String!
     createUserCourse(input:UserCourseDto):String!
     createCategory(input:CategoryDto):String!
-    updateCategory(input:CategoryDto):Category
+    updateCategory(input:CategoryDto):String!
     deleteCategoryById(id:ID):String!
     createCourse(input:CourseDto):String!
-    updateCourse(input:CourseDto):Course
+    updateCourse(input:CourseDto):String!
     deleteCourseById(id:ID):String!
     createRole(input:RolesDto):String!
     updateRole(input:RolesDto):String!
@@ -126,6 +126,7 @@ type MtRoles{
 
 
 input AppUserDto{
+    id:Int
     firstName:String
     lastName:String
     email:String
@@ -183,6 +184,7 @@ type ShiftTimings{
     team:Team
 }
 input ShiftTimingsDto{
+    id:Int
     siteId:Int
     teamId:Int
     shiftName:String
@@ -235,6 +237,7 @@ enum  DayOfWeek{
     SUNDAY
 }
 input CounsellorDto {
+    id:Int
     educationalDetails:[String]
     languages:[String]
     siteId:Int
@@ -262,6 +265,7 @@ type Vendor{
     appUser:AppUser
 }
 input VendorDto{
+    id:Int
     POC:String
     name: String
     pageNumber:Int

@@ -6,10 +6,7 @@ import net.thrymr.model.AppUser;
 import net.thrymr.model.UserMoodCheckIn;
 import net.thrymr.model.master.MtMoodInfo;
 import net.thrymr.model.master.MtMoodIntensity;
-import net.thrymr.repository.MoodInfoRepo;
-import net.thrymr.repository.MoodIntensityRepo;
-import net.thrymr.repository.MoodSourceRepo;
-import net.thrymr.repository.UserMoodCheckInRepo;
+import net.thrymr.repository.*;
 import net.thrymr.services.MoodIntensityService;
 import net.thrymr.utils.ApiResponse;
 import net.thrymr.utils.CommonUtil;
@@ -47,13 +44,15 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
     private final UserMoodCheckInRepo userMoodCheckInRepo;
 
     private final MoodSourceRepo moodSourceRepo;
+    private final AppUserRepo appUserRepo;
 
-    public MoodIntensityServiceImpl(Environment environment, MoodInfoRepo moodInfoRepo, MoodIntensityRepo moodIntensityRepo, UserMoodCheckInRepo userMoodCheckInRepo, MoodSourceRepo moodSourceRepo) {
+    public MoodIntensityServiceImpl(Environment environment, MoodInfoRepo moodInfoRepo, MoodIntensityRepo moodIntensityRepo, UserMoodCheckInRepo userMoodCheckInRepo, MoodSourceRepo moodSourceRepo, AppUserRepo appUserRepo) {
         this.environment = environment;
         this.moodInfoRepo = moodInfoRepo;
         this.moodIntensityRepo = moodIntensityRepo;
         this.userMoodCheckInRepo = userMoodCheckInRepo;
         this.moodSourceRepo = moodSourceRepo;
+        this.appUserRepo = appUserRepo;
     }
 
     private String getCellValue(XSSFCell cell) {
@@ -261,24 +260,27 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
 
     @Override
     public String createUserMoodCheckIn(MoodSourceIntensityRequestDto request) {
-        //AppUser user= CommonUtil.getAppUser();
-        Optional<MtMoodIntensity> optionalMoodIntensity=moodIntensityRepo.findById(request.getIntensityId());
-        UserMoodCheckIn userMoodCheckIn=new UserMoodCheckIn();
-        // userMoodCheckIn.setAppUser(user);
-        if(optionalMoodIntensity.isPresent()){
-            if(Validator.isValid(request.getIntensityDescription())){
-                optionalMoodIntensity.get().setDescription(request.getIntensityDescription());
+        UserMoodCheckIn userMoodCheckIn = new UserMoodCheckIn();
+        if (Validator.isValid(request.getIntensityId())) {
+            List<MtMoodIntensity> optionalMoodIntensity = moodIntensityRepo.findAll();
+            if (!optionalMoodIntensity.isEmpty()) {
+                userMoodCheckIn.setIntensities(optionalMoodIntensity);
             }
-            userMoodCheckIn.setIntensities(optionalMoodIntensity.stream().toList());
+                userMoodCheckIn.setDescription(request.getIntensityDescription());
+                userMoodCheckIn.setIntensities(optionalMoodIntensity.stream().toList());
+            }
+            if (Validator.isValid(request.getDescription())) {
+                userMoodCheckIn.setDescription(request.getDescription());
+            }
+            if(Validator.isValid(request.getAppUserId())){
+                Optional<AppUser> optionalAppUser=appUserRepo.findById(request.getAppUserId());
+                if(optionalAppUser.isPresent()){
+                    userMoodCheckIn.setAppUser(optionalAppUser.get());
+                }
+            }
+            userMoodCheckInRepo.save(userMoodCheckIn);
+
+            return environment.getProperty("USER_CHECKED_IN_SAVE");
         }
-        if(Validator.isValid(request.getDescription())){
-            userMoodCheckIn.setDescription(request.getDescription());
-        }
-
-        userMoodCheckInRepo.save(userMoodCheckIn);
-
-        return environment.getProperty("USER_CHECKED_IN_SAVE");
-    }
-
 }
 

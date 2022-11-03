@@ -6,7 +6,7 @@ import net.thrymr.model.master.Course;
 import java.util.List;
 
 public interface CourseService {
-    Course updateCourse(CourseDto request);
+    String updateCourse(CourseDto request);
 
     String createCourse(CourseDto request);
 

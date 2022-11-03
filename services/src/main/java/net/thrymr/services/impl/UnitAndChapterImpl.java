@@ -36,16 +36,16 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
     @Override
     public String  saveUnit(UnitDto request) {
         unitRpo.save(dtoToEntity(request));
-        return  "CHAPTER_SAVED_SUCCESS";
+        return  "unit saved successfully";
     }
 
     @Override
     public String updateUnitById(UnitDto request) {
         if (Validator.isValid(request.getId())) {
             unitRpo.save(dtoToEntityForUpdate(request));
-            return "CHAPTER_UPDATED_SUCCESSFULLY";
+            return "unit update successfully";
         }
-        return "RECORD_NOT_FOUND_WITH_GIVEN_ID";
+        return "record not found";
     }
 
     public Unit dtoToEntityForUpdate(UnitDto dto) {
@@ -125,25 +125,28 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
 
     @Override
     public String updateChaptersById(ChapterDto dto) {
-        Optional<Chapter> optionalChapter=chapterRepo.findById(dto.getId());
-        Chapter chapter;
-        if(optionalChapter.isPresent()){
-            chapter=optionalChapter.get();
-            if(Validator.isValid(dto.getChapterName())) {
-                chapter.setChapterName(dto.getChapterName());
+        if(Validator.isValid(dto.getId())) {
+            Optional<Chapter> optionalChapter = chapterRepo.findById(dto.getId());
+            Chapter chapter;
+            if (optionalChapter.isPresent()) {
+                chapter = optionalChapter.get();
+                if (Validator.isValid(dto.getChapterName())) {
+                    chapter.setChapterName(dto.getChapterName());
+                }
+                if (Validator.isValid(dto.getDescription())) {
+                    chapter.setDescription(dto.getDescription());
+                }
+                if (Validator.isValid(String.valueOf(dto.getProfilePicture()))) {
+                    chapter.setProfilePicture(dto.getProfilePicture());
+                }
+                if (Validator.isValid(String.valueOf(dto.getVideo()))) {
+                    chapter.setVideo(dto.getVideo());
+                }
+                chapterRepo.save(chapter);
             }
-            if(Validator.isValid(dto.getDescription())) {
-                chapter.setDescription(dto.getDescription());
-            }
-            if(Validator.isValid(String.valueOf(dto.getProfilePicture()))) {
-                chapter.setProfilePicture(dto.getProfilePicture());
-            }
-            if(Validator.isValid(String.valueOf(dto.getVideo()))){
-            chapter.setVideo(dto.getVideo());
-            }
-            chapterRepo.save(chapter);
+            return "update successfully";
         }
-        return "update successfully";
+        return "id is not present in database";
     }
 
     @Override

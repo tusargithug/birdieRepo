@@ -131,15 +131,18 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
 
     @Override
     public String deleteTeamById(Long id) {
-        Optional<Team> teamId=teamRepo.findById(id);
-        Team team;
-        if(teamId.isPresent()){
-            team =teamId.get();
-            team.setIsActive(Boolean.FALSE);
-            team.setIsDeleted(Boolean.TRUE);
-            teamRepo.save(team);
+        if(Validator.isValid(id)) {
+            Optional<Team> teamId = teamRepo.findById(id);
+            Team team;
+            if (teamId.isPresent()) {
+                team = teamId.get();
+                team.setIsActive(Boolean.FALSE);
+                team.setIsDeleted(Boolean.TRUE);
+                teamRepo.save(team);
+            }
+            return "delete records successfully";
         }
-        return"delete records successfully";
+        return "this id not present in database";
     }
 
     @Override
@@ -308,13 +311,17 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             Optional<Site> optionalSite=siteRepo.findById(shiftTimingsDto.getSiteId());
             optionalSite.ifPresent(shiftTimings::setSite);
         }
-        Optional<Team> optionalTeamId=teamRepo.findById(shiftTimingsDto.getTeamId());
-        if(optionalTeamId.isPresent()){
-            shiftTimings.setTeam(optionalTeamId.get());
+        if(Validator.isValid(shiftTimingsDto.getTeamId())) {
+            Optional<Team> optionalTeamId = teamRepo.findById(shiftTimingsDto.getTeamId());
+            if (optionalTeamId.isPresent()) {
+                shiftTimings.setTeam(optionalTeamId.get());
+            }
         }
-        Optional<Counsellor> optionalCounsellorId=counsellorRepo.findById(shiftTimingsDto.getCounsellorId());
-        if(optionalCounsellorId.isPresent()){
-            shiftTimings.setCounsellors(optionalCounsellorId.get());
+        if(Validator.isValid(shiftTimingsDto.getCounsellorId())) {
+            Optional<Counsellor> optionalCounsellorId = counsellorRepo.findById(shiftTimingsDto.getCounsellorId());
+            if (optionalCounsellorId.isPresent()) {
+                shiftTimings.setCounsellors(optionalCounsellorId.get());
+            }
         }
         shiftTimingsRepo.save(shiftTimings);
         return  "shift timings save successfully";
@@ -322,23 +329,27 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
 
     @Override
     public String updateSiftTimings(ShiftTimingsDto shiftTimingsDto) {
-        Optional<ShiftTimings> shiftTimingsId=shiftTimingsRepo.findById(shiftTimingsDto.getId());
-        ShiftTimings shiftTimings;
-        if(shiftTimingsId.isPresent()) {
-            shiftTimings = shiftTimingsId.get();
-            if(Validator.isValid(String.valueOf(shiftTimingsDto.getShiftName()))) {
-                shiftTimings.setShiftName(shiftTimingsDto.getShiftName());
+        if (Validator.isValid(shiftTimingsDto.getId())) {
+            Optional<ShiftTimings> shiftTimingsId = shiftTimingsRepo.findById(shiftTimingsDto.getId());
+            ShiftTimings shiftTimings;
+            if (shiftTimingsId.isPresent()) {
+                shiftTimings = shiftTimingsId.get();
+                if (Validator.isValid(String.valueOf(shiftTimingsDto.getShiftName()))) {
+                    System.out.println(shiftTimingsDto.getShiftName());
+                    shiftTimings.setShiftName(shiftTimingsDto.getShiftName());
+                }
+                if (Validator.isValid(shiftTimingsDto.getShiftStatAt())) {
+                    shiftTimings.setShiftStatAt(shiftTimingsDto.getShiftStatAt());
+                }
+                if (Validator.isValid(shiftTimingsDto.getShiftEndAt())) {
+                    shiftTimings.setShiftEndAt(shiftTimingsDto.getShiftEndAt());
+                }
+                if (Validator.isValid(String.valueOf(shiftTimingsDto.getStatus()))) {
+                    shiftTimings.setIsActive(shiftTimingsDto.getStatus());
+                }
+                shiftTimingsRepo.save(shiftTimings);
+                return "shift timings update successfully";
             }
-            if(Validator.isValid(shiftTimingsDto.getShiftStatAt())) {
-                shiftTimings.setShiftStatAt(shiftTimingsDto.getShiftStatAt());
-            }
-            if (Validator.isValid(shiftTimingsDto.getShiftEndAt())) {
-                shiftTimings.setShiftEndAt(shiftTimingsDto.getShiftEndAt());
-            }
-            if(Validator.isValid(String.valueOf(shiftTimingsDto.getStatus()))) {
-                shiftTimings.setIsActive(shiftTimingsDto.getStatus());
-            }
-            return "shift timings update successfully";
         }
         return "this id not in database";
     }

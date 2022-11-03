@@ -12,7 +12,7 @@ public interface CategoryService {
 
     String deleteCategoryById(Long id);
 
-    Category updateCategory(CategoryDto request);
+    String updateCategory(CategoryDto request);
 
     List<Category> getAllCategory();
 }

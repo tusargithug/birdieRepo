@@ -329,9 +329,20 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public String deleteAppUserById(Long id) {
-        Optional<AppUser>optionalAppUser=appUserRepo.findById(id);
-        optionalAppUser.ifPresent(appUserRepo::delete);
-        return "User deleted successfully";
+        AppUser appUser=null;
+        if(Validator.isValid(id)) {
+            Optional<AppUser> optionalAppUser = appUserRepo.findById(id);
+            //optionalAppUser.ifPresent(appUserRepo::delete);
+            if (optionalAppUser.isPresent()) {
+                appUser = optionalAppUser.get();
+                appUser.setIsActive(Boolean.FALSE);
+                appUser.setIsDeleted(Boolean.TRUE);
+                appUserRepo.save(appUser);
+                return "User deleted successfully";
+            }
+
+        }
+        return "this id not present in database";
     }
 
     @Override
@@ -339,10 +350,14 @@ public class AppUserServiceImpl implements AppUserService {
         // AppUser user= CommonUtil.getAppUser();
         UserCourse userCourse=new UserCourse();
         //userCourse.setUser(new AppUser());
-
-
-        Optional<Course>optionalCourse=courseRepo.findById(request.getCourseId());
-        optionalCourse.ifPresent(userCourse::setCourse);
+        if(Validator.isValid(request.getAppUserId())){
+            Optional<AppUser> optionalAppUser=appUserRepo.findById(request.getAppUserId());
+            optionalAppUser.ifPresent(userCourse::setUser);
+        }
+        if(Validator.isValid(request.getCourseId())) {
+            Optional<Course> optionalCourse = courseRepo.findById(request.getCourseId());
+            optionalCourse.ifPresent(userCourse::setCourse);
+        }
         List<MtOptions>mtOptionsList= optionsRepo.findAllByIdIn(request.getMtOptionsIds());
         if(Validator.isValid(mtOptionsList)){
             userCourse.setMtOptions(new HashSet<>(mtOptionsList));

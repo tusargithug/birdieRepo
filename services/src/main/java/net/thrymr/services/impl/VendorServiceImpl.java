@@ -102,11 +102,36 @@ public class VendorServiceImpl implements VendorService {
 
     public String updateVendor(VendorDto request) {
         Vendor vendor;
+        AppUser user=null;
         if (Validator.isValid(request.getId())) {
-            Optional<Vendor> optionalVendor = vendorRepo.findByAppUserId(request.getId());
+            Optional<Vendor> optionalVendor = vendorRepo.findById(request.getId());
             if (optionalVendor.isPresent()) {
                 vendor = optionalVendor.get();
-                if(Validator.isValid(request.getPOC())) {
+                if (Validator.isValid(request.getName())) {
+                    user.setUserName(request.getName());
+                }
+                if (Validator.isValid(request.getRole())) {
+                    user.setRoles(Roles.VENDOR);
+                }
+                if (Validator.isValid(request.getEmpId())) {
+                    user.setEmpId(request.getEmpId());
+                }
+                if (Validator.isValid(request.getEmail())) {
+                    user.setEmail(request.getEmail());
+                }
+                if (Validator.isValid(request.getMobile())) {
+                    user.setMobile(request.getMobile());
+                }
+                if (Validator.isValid(request.getSiteId())) {
+                    Optional<Site> optionalSite = siteRepo.findById(request.getSiteId());
+                    if (optionalSite.isPresent()) {
+                        user.setSite(optionalSite.get());
+                    }
+                }
+                if (Validator.isObjectValid(user)) {
+                    vendor.setAppUser(user);
+                }
+                if (Validator.isValid(request.getPOC())) {
                     vendor.setPOC(request.getPOC());
                 }
                 vendorRepo.save(vendor);

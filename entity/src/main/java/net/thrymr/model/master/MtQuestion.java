@@ -27,7 +27,8 @@ public class MtQuestion extends BaseEntity{
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private PsychometricTest psychometricTest;
-	@Enumerated
+
+	@Enumerated(EnumType.STRING)
 	private QuestionCalType questionCalType;
 	
 	private int sequence;

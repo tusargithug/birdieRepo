@@ -177,7 +177,7 @@ public class MasterController {
 
 
     @MutationMapping("updateCategory")
-    public Category updateCategory( @Argument(name = "input") CategoryDto request){
+    public String updateCategory( @Argument(name = "input") CategoryDto request){
         return categoryService.updateCategory(request);
 
     }
@@ -195,7 +195,7 @@ public class MasterController {
    }
 
    @MutationMapping(name = "updateCourse")
-   public Course updateCourse(@Argument(name = "input") CourseDto request){
+   public String updateCourse(@Argument(name = "input") CourseDto request){
         return courseService.updateCourse(request);
    }
 

@@ -37,7 +37,7 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
     public String createQuestion(QuestionDto request) {
         MtQuestion question=new MtQuestion();
         question.setQuestion(request.getQuestion());
-        question.setQuestionCalType(QuestionCalType.valueOf(request.getSetQuestionCalType()));
+        question.setQuestionCalType(QuestionCalType.valueOf(request.getQuestionCalType()));
         question.setSequence(request.getSequence());
         if(Validator.isValid(request.getPsychometricTestId())) {
             Optional<PsychometricTest> optionalPsychometricTest=psychometricTestRepo.findById(request.getPsychometricTestId());
@@ -107,11 +107,17 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
         MtQuestion question=null;
         if(Validator.isValid(request.getId())){
             Optional<MtQuestion> optionalQuestion=questionRepo.findById(request.getId());
-            if(optionalQuestion.isPresent()){
-                question=optionalQuestion.get();
-                question.setQuestion(request.getQuestion());
-                question.setQuestionCalType(QuestionCalType.valueOf(request.getSetQuestionCalType()));
-                question.setSequence(request.getSequence());
+            if(optionalQuestion.isPresent()) {
+                question = optionalQuestion.get();
+                if (Validator.isValid(request.getQuestion())) {
+                    question.setQuestion(request.getQuestion());
+                }
+                if (Validator.isValid(request.getQuestionCalType())) {
+                    question.setQuestionCalType(QuestionCalType.valueOf(request.getQuestionCalType()));
+                }
+                if(Validator.isValid(request.getSequence())) {
+                    question.setSequence(request.getSequence());
+                }
                 if(Validator.isValid(request.getPsychometricTestId())) {
                     Optional<PsychometricTest> optionalPsychometricTest=psychometricTestRepo.findById(request.getPsychometricTestId());
                     if(optionalPsychometricTest.isPresent()) {
@@ -164,15 +170,17 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
                         options.setQuestion(optionalOptions.get());
                     }
                 }
-                options.setTextAnswer(request.getTextAnswer());
+                if (Validator.isValid(request.getTextAnswer())) {
+                    System.out.println(request.getTextAnswer());
+                    options.setTextAnswer(request.getTextAnswer());
+                }
                 if (Validator.isValid(request.getUserCourseId())) {
                     Optional<UserCourse> optionalUserCourse = userCourseRepo.findById(request.getUserCourseId());
                     if (optionalUserCourse.isPresent()) {
                         options.setUserCourse(optionalUserCourse.get());
                     }
-                    optionsRepo.save(options);
                 }
-
+                optionsRepo.save(options);
             }
             return "Option updated successfully";
         }else {

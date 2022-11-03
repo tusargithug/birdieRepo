@@ -18,6 +18,8 @@ public class UserCourseDto  {
 
     private  Long courseId;
 
+    private Long appUserId;
+
     private List<Long> mtOptionsIds=new ArrayList<>();
 
     private String startedDate;

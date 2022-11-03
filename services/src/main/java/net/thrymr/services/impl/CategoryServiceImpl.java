@@ -26,12 +26,12 @@ public class CategoryServiceImpl implements CategoryService {
     public String deleteCourseById(Long id) {
         Optional<Course> category = courseRepo.findById(id);
         category.ifPresent(courseRepo::delete);
-        return "Intensity deleted successfully";
+        return "course deleted successfully";
     }
 
     @Override
     public String createCategory(CategoryDto request) {
-        Category category=new Category();
+        Category category = new Category();
         category.setName(request.getName());
         category.setDescription(request.getDescription());
         category.setSequence(request.getSequence());
@@ -47,7 +47,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category updateCategory(CategoryDto request) {
+    public String updateCategory(CategoryDto request) {
         final Optional<Category> category = categoryRepo.findById(request.getId()).stream()
                 .filter(c -> c.getId() == request.getId())
                 .findFirst();
@@ -60,7 +60,8 @@ public class CategoryServiceImpl implements CategoryService {
                 .setDescription(request.getDescription());
         category.get()
                 .setSequence(request.getSequence());
-        return categoryRepo.save(category.get());
+        categoryRepo.save(category.get());
+        return "update category successfully";
     }
 
     @Override

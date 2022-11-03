@@ -10,6 +10,8 @@ import lombok.Setter;
 public class CourseDto {
     private Long id;
 
+    private Long CategoryId;
+
     private String code;
 
     private String name;

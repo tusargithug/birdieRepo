@@ -92,7 +92,7 @@ public class MutationResolver implements GraphQLMutationResolver {
 
     }
     @MutationMapping(name="updateCategory")
-    public Category updateCategory( CategoryDto request){
+    public String updateCategory( CategoryDto request){
         return categoryService.updateCategory(request);
 
     }
@@ -117,7 +117,7 @@ public class MutationResolver implements GraphQLMutationResolver {
     }
 
     @MutationMapping(name="updateCourse")
-    public Course updateCourse(CourseDto request){
+    public String updateCourse(CourseDto request){
         return courseService. updateCourse(request);
 
     }
@@ -143,7 +143,7 @@ public class MutationResolver implements GraphQLMutationResolver {
     public String deleteRoleById( Long id){
         return roleService.deleteRoleById(id);
     }
-    @MutationMapping(name="save-country")
+    @MutationMapping(name="saveCountry")
     public String saveCountry(CountryDto countryDto) {
         return cityCountyAndRegionService.saveCountry(countryDto);
 

@@ -31,11 +31,12 @@ coursesIds:[Int]
 }
 
 input CourseDto{
-id:Int
-code:String
-name:String
-sequence:Int
-description:String
+ id:Int
+ categoryId:Int
+ code:String
+ name:String
+ sequence:Int
+ description:String
 }
 
 input RolesDto{
@@ -260,7 +261,7 @@ input QuestionDto {
  videoReference:String
  assessmentId:Int
  psychometricTestId:Int
- setQuestionCalType:String
+ questionCalType:String
  Sequence:Int
 }
 input OptionsDto{

@@ -95,71 +95,76 @@ public class CounsellorImpl implements CounsellorService {
 
     @Override
     public String updateCounsellorById(CounsellorDto request) {
-        Optional<Counsellor> optionalCounsellor=counsellorRepo.findById(request.getId());
-        Counsellor counsellor = null;
-        AppUser user=null;
-        if(optionalCounsellor.isPresent()){
-            counsellor=optionalCounsellor.get();
+        if (Validator.isValid(request.getId())) {
+            Optional<Counsellor> optionalCounsellor = counsellorRepo.findById(request.getId());
+            Counsellor counsellor = null;
+            AppUser user = null;
+            if (optionalCounsellor.isPresent()) {
+                counsellor = optionalCounsellor.get();
 
-            //Team_Manager
-            if(request.getTeamManagerId()!=null && appUserRepo.existsById(request.getTeamManagerId())){
-                Optional<AppUser> optionalAppUser=appUserRepo.findById(request.getTeamManagerId());
-                if(optionalAppUser.isPresent() && optionalAppUser.get().getRoles().equals(Roles.TEAM_MANAGER)) {
-                    optionalAppUser.ifPresent(counsellor::setTeamManager);
+                //Team_Manager
+                if (request.getTeamManagerId() != null && appUserRepo.existsById(request.getTeamManagerId())) {
+                    Optional<AppUser> optionalAppUser = appUserRepo.findById(request.getTeamManagerId());
+                    if (optionalAppUser.isPresent() && optionalAppUser.get().getRoles().equals(Roles.TEAM_MANAGER)) {
+                        optionalAppUser.ifPresent(counsellor::setTeamManager);
+                    }
+                }
+                if (Validator.isValid(request.getLanguages())) {
+                    counsellor.setLanguages(request.getLanguages());
+                }
+                if (Validator.isValid(request.getEducationalDetails())) {
+                    counsellor.setEducationalDetails(request.getEducationalDetails());
+                }
+                if (Validator.isValid(request.getBio())) {
+                    counsellor.setBio(request.getBio());
                 }
             }
-            if(Validator.isValid(request.getLanguages())) {
-                counsellor.setLanguages(request.getLanguages());
+            if(Validator.isValid(request.getAppUserId())) {
+                Optional<AppUser> optionalAppUser = appUserRepo.findById(request.getAppUserId());
+                if (optionalAppUser.isPresent()) {
+                    user = optionalAppUser.get();
+                    if (Validator.isValid(request.getAppUserName())) {
+                        user.setUserName(request.getAppUserName());
+                    }
+                    if (Validator.isValid(request.getEmployeeId())) {
+                        user.setEmpId(request.getEmployeeId());
+                    }
+                    if (Validator.isValid(request.getDesignation())) {
+                        user.setRoles(Roles.COUNSELLOR);
+                    }
+                    if (Validator.isValid(request.getContactNumber())) {
+                        user.setMobile(request.getContactNumber());
+                    }
+                    if (Validator.isValid(request.getEmailId())) {
+                        user.setEmail(request.getEmailId());
+                    }
+                    if (Validator.isValid(request.getTeamId())) {
+                        Optional<Team> optionalTeam = teamRepo.findById(request.getTeamId());
+                        if (optionalTeam.isPresent()) {
+                            user.setTeam(optionalTeam.get());
+                        }
+                    }
+                    if (Validator.isValid(request.getSiteId())) {
+                        Optional<Site> optionalSite = siteRepo.findById(request.getSiteId());
+                        if (optionalSite.isPresent()) {
+                            user.setSite(optionalSite.get());
+                        }
+                    }
+                    if (Validator.isValid(request.getShiftTimingsId())) {
+                        Optional<ShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(request.getShiftTimingsId());
+                        if (optionalShiftTimings.isPresent()) {
+                            user.setShiftTimings(optionalShiftTimings.get());
+                        }
+                    }
+                }
             }
-            if(Validator.isValid(request.getEducationalDetails())) {
-                counsellor.setEducationalDetails(request.getEducationalDetails());
+            if (Validator.isObjectValid(user)) {
+                counsellor.setAppUser(user);
             }
-            if(Validator.isValid(request.getBio())) {
-                counsellor.setBio(request.getBio());
-            }
+            counsellorRepo.save(counsellor);
+            return "counsellor update successfully";
         }
-        Optional<AppUser> optionalAppUser=appUserRepo.findById(request.getAppUserId());
-        if(optionalAppUser.isPresent()) {
-            user=optionalAppUser.get();
-            if (Validator.isValid(request.getAppUserName())) {
-                user.setUserName(request.getAppUserName());
-            }
-            if (Validator.isValid(request.getEmployeeId())) {
-                user.setEmpId(request.getEmployeeId());
-            }
-            if (Validator.isValid(request.getDesignation())) {
-                user.setRoles(Roles.COUNSELLOR);
-            }
-            if (Validator.isValid(request.getContactNumber())) {
-                user.setMobile(request.getContactNumber());
-            }
-            if (Validator.isValid(request.getEmailId())) {
-                user.setEmail(request.getEmailId());
-            }
-            if (Validator.isValid(request.getTeamId())) {
-                Optional<Team> optionalTeam = teamRepo.findById(request.getTeamId());
-                if (optionalTeam.isPresent()) {
-                    user.setTeam(optionalTeam.get());
-                }
-            }
-            if (Validator.isValid(request.getSiteId())) {
-                Optional<Site> optionalSite = siteRepo.findById(request.getSiteId());
-                if (optionalSite.isPresent()) {
-                    user.setSite(optionalSite.get());
-                }
-            }
-            if (Validator.isValid(request.getShiftTimingsId())) {
-                Optional<ShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(request.getShiftTimingsId());
-                if (optionalShiftTimings.isPresent()) {
-                    user.setShiftTimings(optionalShiftTimings.get());
-                }
-            }
-        }
-        if(Validator.isObjectValid(user)) {
-            counsellor.setAppUser(user);
-        }
-        counsellorRepo.save(counsellor);
-        return "counsellor update successfully";
+        return "this id not in database";
     }
 
     @Override

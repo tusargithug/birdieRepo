@@ -4,9 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Setter
 @Getter
 @NoArgsConstructor
@@ -17,7 +14,7 @@ public class QuestionDto {
     private String videoReference;
     private Long assessmentId;
     private Long psychometricTestId;
-    private String setQuestionCalType;
+    private String questionCalType;
     private Integer Sequence;
     //TODO questionType
    // one month

@@ -8,7 +8,4 @@ import java.util.Optional;
 
 @Repository
 public interface VendorRepo extends JpaRepository<Vendor,Long>, JpaSpecificationExecutor<Vendor>  {
-
-    Optional<Vendor> findByAppUserId(Long id);
-
 }

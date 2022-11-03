@@ -111,10 +111,10 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
         MtCity mtCity;
         if(mtCityId.isPresent()){
             mtCity=mtCityId.get();
-            if(Validator.isValid(cityDto.getId())) {
-                mtCity.setCityName(mtCity.getCityName());
+            if(Validator.isValid(cityDto.getCityName())) {
+                mtCity.setCityName(cityDto.getCityName());
+                cityRepo.save(mtCity);
             }
-            cityRepo.save(mtCity);
            return  "City update successfully";
         }
         return "this id not in data base";

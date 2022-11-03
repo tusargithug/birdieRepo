@@ -29,7 +29,7 @@ public class CityCountyAndRegionController {
     CityCountyAndRegionService cityCountyAndRegionService;
     final static Logger log= LoggerFactory.getLogger(CityCountyAndRegionController.class);
 
-    @MutationMapping(name="save-country")
+    @MutationMapping(name="saveCountry")
     public String saveCountry(@Argument(name = "input") CountryDto countryDto) {
         return cityCountyAndRegionService.saveCountry(countryDto);
 

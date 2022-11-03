@@ -17,7 +17,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-@Table(name = "mt_assignment")
+@Table(name = "mt_assessment")
 public class MtAssessment extends BaseEntity{
 	private String name;
 	@Column(columnDefinition = "TEXT")
