@@ -3,23 +3,13 @@ package net.thrymr.config;
 
 import graphql.language.StringValue;
 
-import graphql.scalars.ExtendedScalars;
 import graphql.schema.*;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.graphql.execution.RuntimeWiringConfigurer;
 
-import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.time.temporal.TemporalAccessor;
 
-import java.util.function.Function;
-
-import static graphql.scalars.util.Kit.typeName;
 
 
 @Configuration
