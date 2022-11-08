@@ -41,6 +41,7 @@ type Query {
     getUserAppointmentCountById(id:ID):UserAppointmentResponse
     getAllAppointment:[UserAppointment]
     getCounsellorById(id:ID):Counsellor
+    getAllEnumRoles:[Roles]
 }
 
 type Mutation {
