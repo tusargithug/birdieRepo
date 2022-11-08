@@ -22,6 +22,7 @@ import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class VendorServiceImpl implements VendorService {
@@ -76,7 +77,11 @@ public class VendorServiceImpl implements VendorService {
 
     @Override
     public List<Vendor> getAllVendor() {
-        return vendorRepo.findAll();
+        List<Vendor> vendorList = vendorRepo.findAll();
+        if (!vendorList.isEmpty()) {
+            return vendorList.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
 
     @Override
@@ -95,14 +100,20 @@ public class VendorServiceImpl implements VendorService {
 
     @Override
     public Vendor getVendorById(Long id) {
-        return vendorRepo.findById(id).orElse(null);
+        if (Validator.isValid(id)) {
+            Optional<Vendor> optionalVendor = vendorRepo.findById(id);
+            if (optionalVendor.isPresent() && optionalVendor.get().getIsActive().equals(Boolean.TRUE)) {
+                return optionalVendor.get();
+            }
+        }
+        return new Vendor();
     }
 
     @Override
 
     public String updateVendor(VendorDto request) {
         Vendor vendor;
-        AppUser user=null;
+        AppUser user = null;
         if (Validator.isValid(request.getId())) {
             Optional<Vendor> optionalVendor = vendorRepo.findById(request.getId());
             if (optionalVendor.isPresent()) {
@@ -149,38 +160,31 @@ public class VendorServiceImpl implements VendorService {
             pageable = PageRequest.of(response.getPageNumber(), response.getPageSize());
         }
         if (Validator.isValid(response.getAddedOn())) {
-            pageable = PageRequest.of(response.getPageNumber(),response.getPageSize(),Sort.Direction.DESC,"createdOn");
+            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.DESC, "createdOn");
         }
         //filters
-        Specification<Vendor> addVendorSpecification = ((root, criteriaQuery, criteriaBuilder)->{
+        Specification<Vendor> addVendorSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> addVendorPredicate = new ArrayList<>();
-            if(response.getName()!=null){
+            if (response.getName() != null) {
                 Predicate name = criteriaBuilder.and(root.get("userName").in(response.getName()));
                 addVendorPredicate.add(name);
             }
-            if(response.getPOC()!=null && !response.getPOC().isEmpty()){
+            if (response.getPOC() != null && !response.getPOC().isEmpty()) {
                 Predicate poc = criteriaBuilder.and(root.get("POC").in(response.getPOC()));
                 addVendorPredicate.add(poc);
             }
-            if(response.getSite()!=null){
+            if (response.getSite() != null) {
                 Predicate site = criteriaBuilder.and(root.get("site").in(response.getSite()));
                 addVendorPredicate.add(site);
             }
 
             return criteriaBuilder.and(addVendorPredicate.toArray(new Predicate[0]));
         });
-        Page <Vendor> vendorObjectives = vendorRepo.findAll(addVendorSpecification,pageable);
-        List<Vendor> vendorList = new ArrayList<>();
-
-        if(vendorObjectives.getContent()!=null){
-            vendorList = vendorObjectives.stream().toList();
+        Page<Vendor> vendorObjectives = vendorRepo.findAll(addVendorSpecification, pageable);
+        List<Vendor> vendorList = null;
+        if (vendorObjectives.getContent() != null) {
+            vendorList = vendorObjectives.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).toList();
         }
-
-        return  vendorList;
+        return vendorList;
     }
-
-
-
 }
-
-

@@ -87,6 +87,7 @@ input SiteDto{
  pageSize:Int
  pageNumber:Int
  searchKey:String
+ siteId:Int
 }
 
 input TeamDto {
@@ -139,6 +140,8 @@ type Site{
  id:ID!
  siteId:String
  siteName:String
+ isActive:Boolean
+
  city:MtCity
  country:MtCountry
  region:MtRegion

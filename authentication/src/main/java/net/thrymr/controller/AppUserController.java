@@ -6,6 +6,7 @@ import net.thrymr.dto.AppUserDto;
 
 import net.thrymr.dto.UserCourseDto;
 import net.thrymr.dto.response.UserAppointmentResponse;
+import net.thrymr.enums.Roles;
 import net.thrymr.model.AppUser;
 
 import net.thrymr.services.AppUserService;
@@ -17,7 +18,6 @@ import net.thrymr.utils.ApiResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.*;
 
 import org.springframework.http.HttpStatus;
@@ -89,9 +89,13 @@ public class AppUserController {
         return appUserService.createUserCourse(request);
     }
 
+    @QueryMapping(name = "getAllEnumRoles")
+    public List<Roles> getAllEnumRoles(){
+        return appUserService.getAllEnumRoles();
+    }
+
     @QueryMapping(name="getUserAppointmentCountById")
     public UserAppointmentResponse getUserAppointmentCountById(@Argument Long id){
         return appUserService.getUserAppointmentCountById(id);
     }
-
 }

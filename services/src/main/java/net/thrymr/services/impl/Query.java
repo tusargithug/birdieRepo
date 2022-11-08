@@ -6,6 +6,7 @@ package net.thrymr.services.impl;
         import net.thrymr.dto.UnitDto;
         import net.thrymr.dto.VendorDto;
         import net.thrymr.dto.response.UserAppointmentResponse;
+        import net.thrymr.enums.Roles;
         import net.thrymr.model.*;
         import net.thrymr.model.master.*;
 
@@ -114,7 +115,7 @@ public class Query implements GraphQLQueryResolver {
 
     @QueryMapping("getAllCourse")
     public List<Course> getAllCourse() {
-        return courseService.getAllCourse();
+        return courseRepo.findAll();
     }
 
     @QueryMapping("getAllCountry")
@@ -269,5 +270,9 @@ public class Query implements GraphQLQueryResolver {
     @QueryMapping(name = "getCounsellorById")
     public Counsellor getCounsellorById(@Argument Long id){
         return counsellorService.getCounsellorById(id);
+    }
+    @QueryMapping(name = "getAllEnumRoles")
+    public List<Roles> getAllEnumRoles(){
+        return appUserService.getAllEnumRoles();
     }
 }

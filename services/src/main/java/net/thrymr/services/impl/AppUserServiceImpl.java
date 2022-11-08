@@ -277,7 +277,7 @@ public class AppUserServiceImpl implements AppUserService {
         user.setEmail(request.getEmail());
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
-        user.setUserName(request.getFirstName()+" "+request.getLastName());
+        user.setUserName(request.getUserName());
         user.setMobile(request.getMobile());
         user.setAlternateMobile(request.getAlternateMobile());
         user.setEmpId(request.getEmpId());
