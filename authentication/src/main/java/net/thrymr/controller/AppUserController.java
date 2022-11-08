@@ -5,6 +5,7 @@ package net.thrymr.controller;
 import net.thrymr.dto.AppUserDto;
 
 import net.thrymr.dto.UserCourseDto;
+import net.thrymr.enums.Roles;
 import net.thrymr.model.AppUser;
 
 import net.thrymr.services.AppUserService;
@@ -86,6 +87,11 @@ public class AppUserController {
     @MutationMapping(name = "createUserCourse")
     public String createUserCourse(@Argument(name = "input") UserCourseDto request) throws ParseException {
         return appUserService.createUserCourse(request);
+    }
+
+    @QueryMapping(name = "getAllEnumRoles")
+    public List<Roles> getAllEnumRoles(){
+        return appUserService.getAllEnumRoles();
     }
 
 }

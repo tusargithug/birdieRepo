@@ -1,10 +1,6 @@
 package net.thrymr.services.impl;
         import graphql.kickstart.tools.GraphQLQueryResolver;
-        import net.thrymr.dto.CounsellorDto;
-        import net.thrymr.dto.SiteDto;
-        import net.thrymr.dto.TeamDto;
-        import net.thrymr.dto.UnitDto;
-        import net.thrymr.dto.VendorDto;
+        import net.thrymr.dto.*;
         import net.thrymr.enums.Roles;
         import net.thrymr.model.*;
         import net.thrymr.model.master.*;
@@ -245,5 +241,9 @@ public class Query implements GraphQLQueryResolver {
     @QueryMapping("getAllOption")
     public List<MtOptions> getAllOption() {
         return questionAndOptionsService.getAllOption();
+    }
+    @QueryMapping(name = "getAllEnumRoles")
+    public List<Roles> getAllEnumRoles(){
+        return appUserService.getAllEnumRoles();
     }
 }

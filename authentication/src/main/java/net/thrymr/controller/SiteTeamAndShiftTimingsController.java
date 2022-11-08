@@ -48,7 +48,7 @@ public class SiteTeamAndShiftTimingsController {
         return siteTeamAndShiftTimingsService.updateSite(siteDto);
     }
     @MutationMapping(name="deleteSiteById")
-    public String deleteSiteById(Long id){
+    public String deleteSiteById(@Argument Long id){
         return siteTeamAndShiftTimingsService.deleteSiteById(id);
     }
 
