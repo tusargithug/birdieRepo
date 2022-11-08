@@ -11,10 +11,10 @@ import net.thrymr.model.master.FileEntity;
 public class ChapterDto {
     private Long id;
     private String chapterName;
-    private FileEntity profilePicture;
+    private String profilePicture;
     private String description;
     private Boolean isActive=Boolean.FALSE;
-    private FileEntity video;
+    private String video;
     private Long unitId;
     private Integer pageNumber;
     private Integer pageSize;

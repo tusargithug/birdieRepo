@@ -1,9 +1,11 @@
 package net.thrymr.services.impl;
 
 import net.thrymr.dto.ChapterDto;
+import net.thrymr.dto.FileEntityDto;
 import net.thrymr.dto.UnitDto;
 import net.thrymr.model.Chapter;
 import net.thrymr.model.Unit;
+import net.thrymr.model.master.FileEntity;
 import net.thrymr.repository.ChapterRepo;
 import net.thrymr.repository.UnitRpo;
 import net.thrymr.services.UnitAndChapterServices;
@@ -268,13 +270,5 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         }
 
         return chapter;
-    }
-    public ChapterDto entityToChapter(Chapter chapter){
-        ChapterDto chapterDto=new ChapterDto();
-        chapterDto.setChapterName(chapter.getChapterName());
-        chapterDto.setDescription(chapter.getDescription());
-        chapterDto.setProfilePicture(chapter.getProfilePicture());
-        chapterDto.setVideo(chapter.getVideo());
-        return chapterDto;
     }
 }

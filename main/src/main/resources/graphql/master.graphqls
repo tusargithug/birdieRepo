@@ -52,6 +52,12 @@ input ChapterDto{
  video:String
  unitId:Int
 }
+input FileEntityDto{
+ fileId:ID!
+ contentType:String!
+ name:String!
+ fileType:String!
+}
 
 input CityDto{
  id:Int
@@ -166,9 +172,9 @@ type MtCity{
 type Chapter{
  id:ID!
  chapterName:String
- profilePicture:FileEntity
+ profilePicture:String
  description:String
- video:FileEntity
+ video:String
  unit:Unit
 }
 type MtOptions{
