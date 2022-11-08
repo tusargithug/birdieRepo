@@ -9,8 +9,10 @@ import net.thrymr.services.CourseService;
 import net.thrymr.utils.Validator;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -70,6 +72,10 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<Course> getAllCourse() {
-        return courseRepo.findAll();
+        List<Course> courseList= courseRepo.findAll();
+        if(!courseList.isEmpty()){
+            return courseList.stream().filter(obj->obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
 }

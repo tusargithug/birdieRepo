@@ -5,7 +5,9 @@ import net.thrymr.constant.Constants;
 import net.thrymr.dto.AppUserDto;
 import net.thrymr.dto.RolesDto;
 import net.thrymr.dto.UserCourseDto;
+import net.thrymr.dto.response.UserAppointmentResponse;
 import net.thrymr.enums.Roles;
+import net.thrymr.enums.SlotStatus;
 import net.thrymr.model.*;
 import net.thrymr.model.master.Course;
 import net.thrymr.model.master.MtOptions;
@@ -16,6 +18,7 @@ import net.thrymr.services.AppUserService;
 import net.thrymr.utils.ApiResponse;
 import net.thrymr.utils.DateUtils;
 import net.thrymr.utils.Validator;
+import org.apache.poi.sl.draw.geom.GuideIf;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -57,7 +60,8 @@ public class AppUserServiceImpl implements AppUserService {
 
     private final ShiftTimingsRepo shiftTimingsRepo;
     private final TeamRepo teamRepo;
-    public AppUserServiceImpl(AppUserRepo appUserRepo, Environment environment, RoleRepo roleRepo, UserCourseRepo userCourseRepo, CourseRepo courseRepo, OptionsRepo optionsRepo, SiteRepo siteRepo, ShiftTimingsRepo shiftTimingsRepo, CounsellorSlotRepo counsellorSlotRepo, TeamRepo teamRepo) {
+    private final AppointmentRepo appointmentRepo;
+    public AppUserServiceImpl(AppUserRepo appUserRepo, Environment environment, RoleRepo roleRepo, UserCourseRepo userCourseRepo, CourseRepo courseRepo, OptionsRepo optionsRepo, SiteRepo siteRepo, ShiftTimingsRepo shiftTimingsRepo, CounsellorSlotRepo counsellorSlotRepo, TeamRepo teamRepo, AppointmentRepo appointmentRepo) {
         this.appUserRepo = appUserRepo;
         this.environment = environment;
         this.roleRepo = roleRepo;
@@ -67,6 +71,7 @@ public class AppUserServiceImpl implements AppUserService {
         this.siteRepo = siteRepo;
         this.shiftTimingsRepo = shiftTimingsRepo;
         this.teamRepo = teamRepo;
+        this.appointmentRepo = appointmentRepo;
     }
 
     @Bean
@@ -378,12 +383,24 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public AppUser getAppUserById(Long id) {
-        return appUserRepo.findById(id).orElse(null);
+        AppUser appUser=null;
+        if(Validator.isValid(id)) {
+            Optional<AppUser> optionalAppUser = appUserRepo.findById(id);
+            if (optionalAppUser.isPresent() && optionalAppUser.get().getIsActive().equals(Boolean.TRUE)) {
+                appUser = optionalAppUser.get();
+                return appUser;
+            }
+        }
+       return new AppUser();
     }
 
     @Override
     public List<AppUser> getAllAppUsers() {
-        return appUserRepo.findAll();
+        List<AppUser> appUserList=appUserRepo.findAll();
+        if (!appUserList.isEmpty()) {
+            return appUserList.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
 
     @Override
@@ -391,5 +408,41 @@ public class AppUserServiceImpl implements AppUserService {
         List<Roles> rolesList= Arrays.asList(Roles.ADMIN,Roles.COUNSELLOR,Roles.DIRECTOR,Roles.EMPLOYEE,Roles.NONE,Roles.OP_STREAM,Roles.TEAM_LEADER,Roles.TEAM_MANAGER,Roles.VENDOR
         ,Roles.WELL_BEING_MANGER);
         return rolesList;
+    }
+
+    @Override
+    public UserAppointmentResponse getUserAppointmentCountById(Long id) {
+        UserAppointmentResponse userAppointmentResponse = new UserAppointmentResponse();
+        userAppointmentResponse.setRescheduledAppointmentCount(0);
+        userAppointmentResponse.setCanceledAppointmentCount(0);
+        userAppointmentResponse.setAvailableAppointmentCount(0);
+        userAppointmentResponse.setTotalAppointmentsCount(0);
+        userAppointmentResponse.setBlockedAppointmentCount(0);
+        Optional<AppUser> optionalAppUser = appUserRepo.findById(id);
+        if (optionalAppUser.isPresent() && optionalAppUser.get().getIsActive().equals(Boolean.TRUE)) {
+            userAppointmentResponse.setAppUser(optionalAppUser.get());
+            List<UserAppointment> userAppointmentList = appointmentRepo.findAll();
+            for (UserAppointment userAppointment : userAppointmentList) {
+                if (Objects.equals(userAppointment.getAppUser().getId(), id)) {
+                    if (userAppointment.getSlotStatus().equals(SlotStatus.DELETED)) {
+                        userAppointmentResponse.setCanceledAppointmentCount(userAppointmentResponse.getCanceledAppointmentCount() + 1);
+                    }
+                    if (userAppointment.getSlotStatus().equals(SlotStatus.BOOKED)) {
+                        userAppointmentResponse.setTotalAppointmentsCount(userAppointmentResponse.getTotalAppointmentsCount() + 1);
+                    }
+                    if (userAppointment.getSlotStatus().equals(SlotStatus.AVAILABLE)) {
+                        userAppointmentResponse.setAvailableAppointmentCount(userAppointmentResponse.getAvailableAppointmentCount() + 1);
+                    }
+                    if (userAppointment.getSlotStatus().equals(SlotStatus.BLOCKED)) {
+                        userAppointmentResponse.setBlockedAppointmentCount(userAppointmentResponse.getBlockedAppointmentCount() + 1);
+                    }
+                    if (userAppointment.getSlotStatus().equals(SlotStatus.RESCHEDULED)) {
+                        userAppointmentResponse.setRescheduledAppointmentCount(userAppointmentResponse.getRescheduledAppointmentCount() + 1);
+                    }
+                }
+            }
+            return userAppointmentResponse;
+        }
+        return new UserAppointmentResponse();
     }
 }

@@ -231,9 +231,20 @@ public class CounsellorImpl implements CounsellorService {
 
         List<Counsellor> counsellorList =new ArrayList<>();
         if(counsellorObjectives.getContent()!=null){
-            counsellorList = counsellorObjectives.getContent().stream().filter(obj->obj.getAppUser().getRoles().equals(Roles.COUNSELLOR)).collect(Collectors.toList());
+            counsellorList = counsellorObjectives.getContent().stream().filter(obj->obj.getAppUser().getRoles().equals(Roles.COUNSELLOR) && obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
         }
         return  counsellorList;
     }
-    
+
+    @Override
+    public Counsellor getCounsellorById(Long id) {
+        if(Validator.isValid(id)){
+            Optional<Counsellor> optionalCounsellor=counsellorRepo.findById(id);
+            if(optionalCounsellor.isPresent() && optionalCounsellor.get().getIsActive().equals(Boolean.TRUE)){
+                return optionalCounsellor.get();
+            }
+        }
+        return new Counsellor();
+    }
+
 }

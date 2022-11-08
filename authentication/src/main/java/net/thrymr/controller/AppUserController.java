@@ -5,6 +5,7 @@ package net.thrymr.controller;
 import net.thrymr.dto.AppUserDto;
 
 import net.thrymr.dto.UserCourseDto;
+import net.thrymr.dto.response.UserAppointmentResponse;
 import net.thrymr.model.AppUser;
 
 import net.thrymr.services.AppUserService;
@@ -16,6 +17,7 @@ import net.thrymr.utils.ApiResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.*;
 
 import org.springframework.http.HttpStatus;
@@ -37,7 +39,6 @@ public class AppUserController {
     private final RoleService roleService;
     private final AssessmentService assessmentService;
     private final AppUserService appUserService;
-
     public AppUserController(RoleService roleService, AssessmentService assessmentService, AppUserService appUserService) {
         this.roleService = roleService;
         this.assessmentService = assessmentService;
@@ -86,6 +87,11 @@ public class AppUserController {
     @MutationMapping(name = "createUserCourse")
     public String createUserCourse(@Argument(name = "input") UserCourseDto request) throws ParseException {
         return appUserService.createUserCourse(request);
+    }
+
+    @QueryMapping(name="getUserAppointmentCountById")
+    public UserAppointmentResponse getUserAppointmentCountById(@Argument Long id){
+        return appUserService.getUserAppointmentCountById(id);
     }
 
 }

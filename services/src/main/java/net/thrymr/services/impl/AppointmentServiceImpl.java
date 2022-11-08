@@ -3,6 +3,7 @@ package net.thrymr.services.impl;
 import net.thrymr.constant.Constants;
 import net.thrymr.dto.AppointmentDto;
 import net.thrymr.dto.slotRequest.SlotDetailsDto;
+import net.thrymr.dto.slotRequest.TimeSlotDto;
 import net.thrymr.enums.SlotShift;
 import net.thrymr.enums.SlotStatus;
 import net.thrymr.model.AppUser;
@@ -23,6 +24,7 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
@@ -37,7 +39,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 
     @Override
-    public String createAppointment(AppointmentDto request) {
+    public String createAppointment(TimeSlotDto request) {
         UserAppointment appointment = new UserAppointment();
         if (Validator.isValid(request.getAppUserId())) {
             Optional<AppUser> optionalAppUser = appUserRepo.findById(request.getAppUserId());
@@ -114,19 +116,20 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public UserAppointment getAppointmentByCounsellorSlotId(Long id) {
+    public UserAppointment getAppointmentById(Long id) {
         UserAppointment userAppointment = null;
         if (Validator.isValid(id)) {
             Optional<UserAppointment> optionalUserAppointment = appointmentRepo.findById(id);
-            if (optionalUserAppointment.isPresent()) {
+            if (optionalUserAppointment.isPresent() && optionalUserAppointment.get().getIsActive().equals(Boolean.TRUE)) {
                 userAppointment = optionalUserAppointment.get();
+                return userAppointment;
             }
         }
-        return userAppointment;
+        return new UserAppointment();
     }
 
     @Override
-    public String rescheduledUserAppointment(AppointmentDto request) throws ParseException {
+    public String rescheduledUserAppointment(TimeSlotDto request) throws ParseException {
         UserAppointment userAppointment;
         List<UserAppointment> userAppointmentList = new ArrayList<>();
         if (Validator.isValid(request.getId())) {
@@ -195,6 +198,12 @@ public class AppointmentServiceImpl implements AppointmentService {
             }
         }
         return "Invalid appointment Id";
+    }
+
+    @Override
+    public List<UserAppointment> getAllAppointment() {
+        List<UserAppointment> userAppointmentList=appointmentRepo.findAll();
+        return userAppointmentList.stream().filter(obj->obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
     }
 
 

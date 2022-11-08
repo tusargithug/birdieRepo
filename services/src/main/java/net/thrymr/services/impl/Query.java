@@ -5,7 +5,7 @@ package net.thrymr.services.impl;
         import net.thrymr.dto.TeamDto;
         import net.thrymr.dto.UnitDto;
         import net.thrymr.dto.VendorDto;
-        import net.thrymr.enums.Roles;
+        import net.thrymr.dto.response.UserAppointmentResponse;
         import net.thrymr.model.*;
         import net.thrymr.model.master.*;
 
@@ -58,6 +58,11 @@ public class Query implements GraphQLQueryResolver {
     AssessmentService assessmentService;
     @Autowired
     QuestionAndOptionsService questionAndOptionsService;
+    @Autowired
+    AppointmentService appointmentService;
+
+    @Autowired
+    CourseService courseService;
 
     @QueryMapping
     public MtMoodInfo moodInfoById(Long id) {
@@ -109,7 +114,7 @@ public class Query implements GraphQLQueryResolver {
 
     @QueryMapping("getAllCourse")
     public List<Course> getAllCourse() {
-        return courseRepo.findAll();
+        return courseService.getAllCourse();
     }
 
     @QueryMapping("getAllCountry")
@@ -245,5 +250,24 @@ public class Query implements GraphQLQueryResolver {
     @QueryMapping("getAllOption")
     public List<MtOptions> getAllOption() {
         return questionAndOptionsService.getAllOption();
+    }
+
+    @QueryMapping("getAppointmentById")
+    public UserAppointment getAppointmentById(@Argument Long id){
+        return appointmentService.getAppointmentById(id);
+    }
+
+    @QueryMapping(name="getUserAppointmentCountById")
+    public UserAppointmentResponse getUserAppointmentCountById(@Argument Long id){
+        return appUserService.getUserAppointmentCountById(id);
+    }
+    @QueryMapping("getAllAppointment")
+    public List<UserAppointment> getAllAppointment(){
+        return appointmentService.getAllAppointment();
+    }
+
+    @QueryMapping(name = "getCounsellorById")
+    public Counsellor getCounsellorById(@Argument Long id){
+        return counsellorService.getCounsellorById(id);
     }
 }

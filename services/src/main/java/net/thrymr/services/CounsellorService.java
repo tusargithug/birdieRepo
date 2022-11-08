@@ -14,4 +14,6 @@ public interface CounsellorService {
     String deleteCounsellorById(Long id);
 
     List<Counsellor> getAllCounsellor(CounsellorDto response);
+
+    Counsellor getCounsellorById(Long id);
 }

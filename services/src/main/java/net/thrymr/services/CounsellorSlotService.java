@@ -1,5 +1,6 @@
 package net.thrymr.services;
 
+import net.thrymr.dto.response.UserAppointmentResponse;
 import net.thrymr.dto.slotRequest.TimeSlotDto;
 import net.thrymr.model.CounsellorSlot;
 

@@ -6,10 +6,13 @@ import net.thrymr.model.master.Course;
 import net.thrymr.repository.CategoryRepo;
 import net.thrymr.repository.CourseRepo;
 import net.thrymr.services.CategoryService;
+import net.thrymr.utils.Validator;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -66,6 +69,21 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> getAllCategory() {
-        return categoryRepo.findAll();
+        List<Category> categoryList=categoryRepo.findAll();
+        if(!categoryList.isEmpty()) {
+            return categoryList.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
+    public Course getCourseById(Long id) {
+        if (Validator.isValid(id)) {
+            Optional<Course> optionalCourse=courseRepo.findById(id);
+            if(optionalCourse.isPresent() && optionalCourse.get().getIsActive().equals(Boolean.TRUE)){
+                return optionalCourse.get();
+            }
+        }
+        return new Course();
     }
 }

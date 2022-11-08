@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -60,7 +61,7 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
         MtQuestion question=null;
         if(Validator.isValid(id)) {
             Optional<MtQuestion> optionalQuestion = questionRepo.findById(id);
-            if (optionalQuestion.isPresent()) {
+            if (optionalQuestion.isPresent() && optionalQuestion.get().getIsActive().equals(Boolean.TRUE)) {
                 question=optionalQuestion.get();
                 return question;
             }
@@ -97,7 +98,7 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
     public List<MtQuestion> getAllQuestions() {
         List<MtQuestion> mtQuestionList =questionRepo.findAll();
         if(!mtQuestionList.isEmpty()){
-            return new ArrayList<>(mtQuestionList);
+            return mtQuestionList.stream().filter(obj->obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
         }
         return new ArrayList<>();
     }
@@ -193,7 +194,7 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
         MtOptions option=null;
         if(Validator.isValid(id)) {
             Optional<MtOptions> optionsOptional = optionsRepo.findById(id);
-            if(optionsOptional.isPresent()){
+            if(optionsOptional.isPresent() && optionsOptional.get().getIsActive().equals(Boolean.TRUE)){
                 option=optionsOptional.get();
                 return option;
             }
@@ -203,8 +204,11 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
 
     @Override
     public List<MtOptions> getAllOption() {
-        List<MtOptions> OptionalList=optionsRepo.findAll();
-        return OptionalList;
+        List<MtOptions> optionalList=optionsRepo.findAll();
+        if(!optionalList.isEmpty()) {
+            return optionalList.stream().filter(obj->obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
 
     @Override

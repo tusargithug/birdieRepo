@@ -66,7 +66,10 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
     @Override
     public List<Unit> getAllUnit() {
         List<Unit> unitList = unitRpo.findAll();
-       return unitList;
+        if(!unitList.isEmpty()) {
+            return unitList.stream().filter(obj-> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
 
     @Override
@@ -99,9 +102,8 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         Page <Unit> unitObjectives = unitRpo.findAll(addUnitSpecification, pageable);
         List<Unit> unitList =null;
         if(unitObjectives.getContent()!=null){
-            unitList = unitObjectives.stream().toList();
+            unitList = unitObjectives.stream().filter(obj-> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());;
         }
-
         return  unitList;
     }
 
@@ -152,7 +154,10 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
     @Override
     public List<Chapter> getAllChapters() {
         List<Chapter> chapterList=chapterRepo.findAll();
-        return chapterList;
+        if(!chapterList.isEmpty()) {
+            return chapterList.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
 
     @Override
@@ -196,7 +201,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         Page <Chapter> chapterObjectives = chapterRepo.findAll(chapterSpecification, pageable);
         List<Chapter> chapterList = null;
         if(chapterObjectives.getContent()!=null){
-            chapterList = chapterObjectives.stream().toList();
+            chapterList = chapterObjectives.stream().filter(obj-> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
         }
         return null;
     }

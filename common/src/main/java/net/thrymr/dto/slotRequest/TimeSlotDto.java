@@ -16,4 +16,5 @@ public class TimeSlotDto {
     private String slotShift;
     private List<SlotDetailsDto> slots = new ArrayList<>();
     private Long counsellorSlotId;
+    private Long appUserId;
 }

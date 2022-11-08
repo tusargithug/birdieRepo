@@ -123,11 +123,11 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     @Override
     public List<Team> getAllTeam() {
         List<Team> teamList=teamRepo.findAll();
-        return teamList;
+        if(!teamList.isEmpty()) {
+            return teamList.stream().filter(obj-> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
-
-
-
 
     @Override
     public String deleteTeamById(Long id) {
@@ -168,7 +168,9 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         //siteManager
         if(siteDto.getSiteManagerId()!=null && appUserRepo.existsById(siteDto.getSiteManagerId())){
             Optional<AppUser> optionalAppUser=appUserRepo.findById(siteDto.getSiteManagerId());
-            optionalAppUser.ifPresent(site::setSiteManager);
+            if(optionalAppUser.isPresent() && optionalAppUser.get().getRoles().equals(Roles.SITE_MANAGER)) {
+                optionalAppUser.ifPresent(site::setSiteManager);
+            }
         }
         siteDto.setSearchKey(saveSiteSearchKey(site));
         site.setIsActive(siteDto.getStatus());
@@ -222,7 +224,10 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     @Override
     public List<Site> getAllSite() {
         List<Site> siteList=siteRepo.findAll();
-        return siteList;
+        if(!siteList.isEmpty()) {
+            return siteList.stream().filter(obj-> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
 
     @Override
@@ -269,7 +274,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         });
         Page<Site> siteObjective = siteRepo.findAll(siteSpecification, pageable);
         if(siteObjective.getContent()!=null) {
-            return siteObjective.stream().collect(Collectors.toList());
+            return siteObjective.stream().filter(obj-> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
         }
         return new ArrayList<>();
     }
@@ -277,7 +282,10 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     @Override
     public List<ShiftTimings> getAllShiftTimings() {
         List<ShiftTimings> shiftTimingsList=shiftTimingsRepo.findAll();
-        return shiftTimingsList;
+        if(!shiftTimingsList.isEmpty()) {
+            return shiftTimingsList.stream().filter(obj-> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
 
     @Override
@@ -408,7 +416,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         Page<Team> teamObjective = teamRepo.findAll(teamSpecification, pageable);
         if(teamObjective.getContent()!=null) {
 
-            return teamObjective.stream().collect(Collectors.toList());
+            return teamObjective.stream().filter(obj-> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
         }
         return new ArrayList<>();
     }

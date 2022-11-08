@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
@@ -76,7 +77,10 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
     @Override
     public List<MtCountry> getAllCountry() {
         List<MtCountry> mtCountries=countryRepo.findAll();
-        return mtCountries;
+        if(!mtCountries.isEmpty()) {
+            return mtCountries.stream().filter(obj-> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
     @Override
     public String deleteCountryById(Long id) {
@@ -123,7 +127,10 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
     @Override
     public List<MtCity> getAllCities() {
         List<MtCity> mtCity=cityRepo.findAll();
-        return mtCity;
+        if(!mtCity.isEmpty()) {
+            return mtCity.stream().filter(obj-> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
 
     @Override
@@ -167,7 +174,10 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
     @Override
     public List<MtRegion> getAllRegions() {
         List<MtRegion> mtRegions=regionRepo.findAll();
-        return mtRegions;
+        if(!mtRegions.isEmpty()) {
+            return mtRegions.stream().filter(obj-> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
     @Override
     public String deleteRegionById(Long id) {

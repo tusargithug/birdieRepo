@@ -43,6 +43,8 @@ public class MutationResolver implements GraphQLMutationResolver {
     QuestionAndOptionsService questionAndOptionsService;
     @Autowired
     AssessmentService assessmentService;
+    @Autowired
+    AppointmentService appointmentService;
 
     @MutationMapping(name = "createAppUser")
     public String createAppUser(AppUserDto request){
@@ -361,6 +363,15 @@ public class MutationResolver implements GraphQLMutationResolver {
     @MutationMapping("deleteAssessmentId")
     public String deleteAssessmentId(@Argument Long id){
         return assessmentService.deleteAssessmentId(id);
+    }
+
+    @MutationMapping("createAppointment")
+    public String createAppointment(@Argument(name = "input") TimeSlotDto request){
+        return appointmentService.createAppointment(request);
+    }
+    @MutationMapping("rescheduledUserAppointment")
+    public String rescheduledUserAppointment(@Argument(name = "input") TimeSlotDto request) throws ParseException {
+        return appointmentService.rescheduledUserAppointment(request);
     }
 
 }

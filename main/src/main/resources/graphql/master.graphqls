@@ -271,11 +271,12 @@ input OptionsDto{
  userCourseId:Int
 }
  input TimeSlotDto{
- counsellorId:Int
- counsellorSlotId:Int
- slotShift:String
- slots:[SlotDetailsDto]
-}
+  appUserId:Int
+  counsellorId:Int
+  counsellorSlotId:Int
+  slotShift:String
+  slots:[SlotDetailsDto]
+ }
 input SlotDetailsDto{
  startTime:String
  endTime:String

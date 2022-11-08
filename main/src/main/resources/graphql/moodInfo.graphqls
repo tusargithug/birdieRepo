@@ -1,6 +1,6 @@
 schema {
     query: Query
-     mutation: Mutation
+    mutation: Mutation
 }
 
 type Query {
@@ -37,6 +37,10 @@ type Query {
     getAllQuestions:[MtQuestion]
     getOptionById(id:ID!):MtOptions
     getAllOption:[MtOptions]
+    getAppointmentById(id:ID):UserAppointment
+    getUserAppointmentCountById(id:ID):UserAppointmentResponse
+    getAllAppointment:[UserAppointment]
+    getCounsellorById(id:ID):Counsellor
 }
 
 type Mutation {
@@ -73,11 +77,11 @@ type Mutation {
     updateSiftTimings(input:ShiftTimingsDto):String!
     deleteSiftTimingsById(id:ID):String!
     saveCountry(input:CountryDto):String!
-#    uploadCountryData(file: CountryDto):String!
+    #    uploadCountryData(file: CountryDto):String!
     updateCountryById(input:CountryDto):String!
     deleteCountryById(Id:ID):String!
     saveCity(input:CityDto):String!
-#    uploadCityData(file: CountryDto!):String!
+    #    uploadCityData(file: CountryDto!):String!
     updateCityById(input:CityDto):String!
     deleteCityById(id:ID):String!
     saveRegion(input:RegionDto):String!
@@ -102,6 +106,8 @@ type Mutation {
     createAssessment(input:AssessmentDto):String!
     updateAssessmentById(input:AssessmentDto):String!
     deleteAssessmentId(id:ID):String!
+    createAppointment(input:TimeSlotDto):String!
+    rescheduledUserAppointment(input:TimeSlotDto):String!
 }
 scalar Upload
 type MtMoodInfo {
@@ -123,7 +129,15 @@ type MtRoles{
     id: ID!
     name: String
 }
-
+type UserAppointmentResponse{
+    id:Int
+    availableAppointmentCount:Int
+    rescheduledAppointmentCount:Int
+    canceledAppointmentCount:Int
+    totalAppointmentsCount:Int
+    blockedAppointmentCount:Int
+    appUser:AppUser
+}
 
 input AppUserDto{
     id:Int
@@ -279,4 +293,17 @@ input VendorDto{
     searchKey:String
     role:String
     empId:String
+}
+
+type UserAppointment {
+    id:Int
+    startTime:LocalTime
+    endTime:LocalTime
+    slotDate:Date
+    slotShift:SlotShift
+    days:DayOfWeek
+    slotStatus:SlotStatus
+    appUser:AppUser
+    counsellor:Counsellor
+    isCurrentAppointment:Boolean
 }

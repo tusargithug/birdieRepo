@@ -167,7 +167,6 @@ public class MasterController {
         public List<Category> getAllCategory() {
             logger.info("get all Category service started");
             return categoryService.getAllCategory();
-
         }
 
         @MutationMapping(name = "createCategory")
@@ -188,10 +187,9 @@ public class MasterController {
 
     }
    
-   @QueryMapping
+   @QueryMapping(name = "getAllCourse")
    public List<Course> getAllCourse() {
         return courseService.getAllCourse();
-
    }
 
    @MutationMapping(name = "updateCourse")
@@ -203,7 +201,11 @@ public class MasterController {
     @MutationMapping(name = "createCourse")
     public String createCourse(@Argument(name = "input") CourseDto request) {
         return courseService.createCourse(request);
+    }
 
+    @QueryMapping(name="getCourseById")
+    public Course getCourseById(@Argument Long id){
+        return categoryService.getCourseById(id);
     }
 
 

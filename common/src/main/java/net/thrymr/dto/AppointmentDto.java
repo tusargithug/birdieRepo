@@ -19,10 +19,9 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class AppointmentDto {
-   private Long id;
+    private Long id;
     private Long appUserId;
     private LocalTime startTime;
-
     private LocalTime endTime;
 
     private Date slotDate;

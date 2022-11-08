@@ -1,7 +1,7 @@
 package net.thrymr.enums;
 
 public enum SlotStatus {
-	AVAILABLE, BOOKED, BLOCKED,DELETED,NONE;
+	AVAILABLE, BOOKED, BLOCKED,DELETED,RESCHEDULED,NONE;
 	public static SlotStatus getValue(String value){
 		if(value!=null && value.isEmpty()){
 			String upperCase=value.toUpperCase();
@@ -10,6 +10,7 @@ public enum SlotStatus {
 				case "booked","BOOKED"->BOOKED;
 				case "blocked","BLOCKED"->BLOCKED;
 				case "deleted","DELETED"->DELETED;
+				case "rescheduled","RESCHEDULED"->RESCHEDULED;
 				default->NONE;
 			};
 		}else {

@@ -1,7 +1,7 @@
 package net.thrymr.enums;
 
 public enum Roles {
-    NONE,EMPLOYEE,WELL_BEING_MANGER,COUNSELLOR,VENDOR,ADMIN,DIRECTOR,TEAM_MANAGER,TEAM_LEADER,OP_STREAM;
+    NONE,EMPLOYEE,WELL_BEING_MANGER,COUNSELLOR,VENDOR,ADMIN,DIRECTOR,TEAM_MANAGER,TEAM_LEADER,OP_STREAM,SITE_MANAGER;
 
     public static Roles roles(String values){
         if(values!= null && !values.isEmpty()){
@@ -15,6 +15,7 @@ public enum Roles {
               case "DIRECTOR"->DIRECTOR;
               case "TEAM_MANAGER","TEAM MANAGER"->TEAM_MANAGER;
               case "TEAM_LEADER","TEAM LEADER"->TEAM_LEADER;
+              case "SITE_MANAGER","SITE MANAGER"->SITE_MANAGER;
               default ->NONE;
             };
         }else {

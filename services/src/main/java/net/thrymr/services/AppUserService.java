@@ -1,6 +1,7 @@
 package net.thrymr.services;
 import net.thrymr.dto.AppUserDto;
 import net.thrymr.dto.UserCourseDto;
+import net.thrymr.dto.response.UserAppointmentResponse;
 import net.thrymr.enums.Roles;
 import net.thrymr.model.AppUser;
 import net.thrymr.utils.ApiResponse;
@@ -33,4 +34,5 @@ public interface AppUserService {
 
     List<AppUser> getAllAppUsers();
     List<Roles> getAllEnumRoles();
+    UserAppointmentResponse getUserAppointmentCountById(Long id);
 }

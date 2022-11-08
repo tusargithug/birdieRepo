@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AssessmentServiceImpl implements AssessmentService {
@@ -24,8 +25,7 @@ public class AssessmentServiceImpl implements AssessmentService {
     public List<MtAssessment> getAllAssessment() {
         List<MtAssessment> mtAssessmentList = assessmentRepo.findAll();
         if(!mtAssessmentList.isEmpty()){
-            System.out.println("enter");
-            return mtAssessmentList;
+            return mtAssessmentList.stream().filter(obj->obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
         }
         return new ArrayList<>();
     }
@@ -104,11 +104,11 @@ public class AssessmentServiceImpl implements AssessmentService {
         MtAssessment assessment=null;
         if(Validator.isValid(id)) {
             Optional<MtAssessment> optionalAssessment = assessmentRepo.findById(id);
-            if (optionalAssessment.isPresent()) {
-                assessment = optionalAssessment.get();
+            if (optionalAssessment.isPresent() && optionalAssessment.get().getIsActive().equals(Boolean.TRUE)) {
+                return optionalAssessment.get();
             }
         }
-        return assessment;
+        return new MtAssessment();
     }
 
 }

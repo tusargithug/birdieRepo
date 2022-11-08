@@ -34,4 +34,9 @@ public class CounsellorController {
     public List<Counsellor> getAllCounsellor(@Argument (name = "input") CounsellorDto response){
         return counsellorService.getAllCounsellor(response);
     }
+
+    @QueryMapping(name = "getCounsellorById")
+    public Counsellor getCounsellorById(@Argument Long id){
+        return counsellorService.getCounsellorById(id);
+    }
 }
