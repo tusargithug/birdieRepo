@@ -25,4 +25,5 @@ public class SlotDetailsDto {
     private String fromDate;
     private Long appUserId;
     private String slotStatus;
+    private Boolean isActive;
 }

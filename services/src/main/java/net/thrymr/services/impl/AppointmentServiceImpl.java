@@ -57,6 +57,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                 appointment.setDays(DayOfWeek.valueOf(detailsDto.getDayOfWeek()));
                 appointment.setSlotStatus(SlotStatus.valueOf(detailsDto.getSlotStatus()));
                 appointment.setSlotShift(SlotShift.getType(detailsDto.getSlotShift()));
+                appointment.setIsActive(detailsDto.getIsActive());
                 Date todayDate = new Date();
                 if (detailsDto.getDate() != null) {
                     System.out.println(detailsDto.getDate());
@@ -152,11 +153,14 @@ public class AppointmentServiceImpl implements AppointmentService {
                             default:
                                 return "please select any shift";
                         }
-                        userAppointment.setStartTime(DateUtils.toParseLocalTime(detailsDto.getStartTime(), Constants.TIME_FORMAT_2));
+                        if(Validator.isValid(detailsDto.getStartTime())) {
+                            userAppointment.setStartTime(DateUtils.toParseLocalTime(detailsDto.getStartTime(), Constants.TIME_FORMAT_2));
+                        }
                         userAppointment.setEndTime(DateUtils.toParseLocalTime(detailsDto.getEndTime(), Constants.TIME_FORMAT_2));
                         userAppointment.setDays(DayOfWeek.valueOf(detailsDto.getDayOfWeek()));
                         userAppointment.setSlotStatus(SlotStatus.valueOf(detailsDto.getSlotStatus()));
                         userAppointment.setSlotShift(SlotShift.getType(detailsDto.getSlotShift()));
+                        userAppointment.setIsActive(detailsDto.getIsActive());
                         Date todayDate = new Date();
                         if (detailsDto.getDate() != null) {
                             userAppointment.setSlotDate(DateUtils.toFormatStringToDate(detailsDto.getToDate(), Constants.DATE_FORMAT));

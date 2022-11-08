@@ -72,8 +72,10 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             optionalShiftTimings.ifPresent(team::setShiftTimings);
         }
         //team.setShiftTimings(dtoToShiftTimings(teamDto.getShiftTimings()));
+        if(teamDto.getStatus()) {
+            team.setIsActive(teamDto.getStatus());
+        }
         team.setSearchKey(getTeamSearchKey(team));
-        team.setIsActive(teamDto.getStatus());
         teamRepo.save(team);
         return "Team save successfully";
     }
@@ -215,6 +217,9 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                 optionalAppUser.ifPresent(site::setSiteManager);
             }
 
+            if(siteDto.getStatus()){
+                site.setIsActive(siteDto.getStatus());
+            }
             siteRepo.save(site);
             return"site update successfully";
         }

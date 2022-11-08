@@ -68,12 +68,12 @@ public class AppUserController {
     }
 
     @MutationMapping(name = "createAppUser")
-    public String createAppUser(@Argument(name = "input") AppUserDto request) {
+    public String createAppUser(@Argument(name = "input") AppUserDto request) throws ParseException {
         return appUserService.createAppUser(request);
     }
 
     @MutationMapping(name = "updateAppUser")
-    public String updateAppUser(@Argument(name = "input") AppUserDto request) {
+    public String updateAppUser(@Argument(name = "input") AppUserDto request) throws ParseException {
         return appUserService.updateAppUser(request);
 
     }

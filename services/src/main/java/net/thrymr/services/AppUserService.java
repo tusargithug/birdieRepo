@@ -24,9 +24,9 @@ public interface AppUserService {
 
     AppUser getAppUserById(Long id);
 
-    String createAppUser(AppUserDto request);
+    String createAppUser(AppUserDto request) throws ParseException;
 
-    String updateAppUser(AppUserDto request);
+    String updateAppUser(AppUserDto request) throws ParseException;
 
     String deleteAppUserById(Long id);
 

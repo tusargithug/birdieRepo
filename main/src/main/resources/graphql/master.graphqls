@@ -79,12 +79,7 @@ input RegionDto{
 
 input SiteDto{
  id:Int
-# site:String
  siteName:String
-# city:CityDto
-# country:CountryDto
-# region:RegionDto
-# siteManager:AppUserDto
  cityId:Int
  countryId:Int
  regionId:Int
@@ -147,7 +142,6 @@ type Site{
  siteId:String
  siteName:String
  isActive:Boolean
-
  city:MtCity
  country:MtCountry
  region:MtRegion
@@ -162,6 +156,7 @@ type Team{
  teamManager:AppUser
  site:Site
  shiftTimings:ShiftTimings
+ isActive:Boolean
 }
 type MtCity{
  id:ID!

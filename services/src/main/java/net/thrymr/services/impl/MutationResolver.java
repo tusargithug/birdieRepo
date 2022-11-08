@@ -47,12 +47,12 @@ public class MutationResolver implements GraphQLMutationResolver {
     AppointmentService appointmentService;
 
     @MutationMapping(name = "createAppUser")
-    public String createAppUser(AppUserDto request){
+    public String createAppUser(AppUserDto request)throws  Exception{
         return  appUserService.createAppUser(request);
     }
 
     @MutationMapping(name = "updateAppUser")
-    public String  updateAppUser(AppUserDto request){
+    public String  updateAppUser(AppUserDto request) throws  Exception{
         return appUserService.updateAppUser(request);
     }
 

@@ -272,7 +272,7 @@ public class AppUserServiceImpl implements AppUserService {
         return dto;
     }
     @Override
-    public String createAppUser(AppUserDto request) {
+    public String createAppUser(AppUserDto request) throws ParseException {
         AppUser user=new AppUser();
         user.setEmail(request.getEmail());
         user.setFirstName(request.getFirstName());
@@ -282,6 +282,12 @@ public class AppUserServiceImpl implements AppUserService {
         user.setAlternateMobile(request.getAlternateMobile());
         user.setEmpId(request.getEmpId());
         user.setRoles(Roles.valueOf(request.getRoles()));
+        if(request.getDateOfJoining()!=null) {
+            user.setDateOfJoining(DateUtils.toFormatStringToDate(String.valueOf(request.getDateOfJoining()),Constants.DATE_FORMAT));
+        }
+        if(request.getIsActive().equals(Boolean.TRUE)) {
+            user.setIsActive(request.getIsActive());
+        }
         Optional<Site> optionalSite=siteRepo.findById(request.getSiteId());
         if(optionalSite.isPresent()){
             user.setSite(optionalSite.get());
@@ -301,7 +307,7 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public String updateAppUser(AppUserDto request) {
+    public String updateAppUser(AppUserDto request) throws ParseException {
         Optional<AppUser>optionalAppUser=appUserRepo.findById(request.getId());
         if(optionalAppUser.isPresent()){
             AppUser user= optionalAppUser.get();
@@ -322,7 +328,12 @@ public class AppUserServiceImpl implements AppUserService {
             if(request.getEmail()!=null) {
                 user.setEmail(request.getEmail());
             }
-
+            if(request.getDateOfJoining()!=null) {
+                user.setDateOfJoining(DateUtils.toFormatStringToDate(String.valueOf(request.getDateOfJoining()),Constants.DATE_FORMAT));
+            }
+            if(request.getIsActive().equals(Boolean.TRUE)) {
+                user.setIsActive(request.getIsActive());
+            }
             if(request.getAlternateMobile()!=null) {
                 user.setAlternateMobile(request.getAlternateMobile());
             }

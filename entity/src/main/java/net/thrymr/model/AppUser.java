@@ -9,6 +9,7 @@ import net.thrymr.model.master.MtRoles;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -45,6 +46,8 @@ public class AppUser extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
     private MtRoles mtRoles;
+    @Column(name = "date_of_joining")
+    private Date dateOfJoining;
 
     @Column(name="user_role")
     @Enumerated(EnumType.STRING)

@@ -153,6 +153,8 @@ input AppUserDto{
     siteId:Int
     shiftTimingsId:Int
     teamId:Int
+    isActive:Boolean
+    dateOfJoining:String
 }
 enum Roles{
     NONE
@@ -181,6 +183,8 @@ type AppUser{
     site:Site
     team:Team
     shiftTimings:ShiftTimings
+    isActive:Boolean
+    dateOfJoining:Date
 }
 
 type FileEntity{
