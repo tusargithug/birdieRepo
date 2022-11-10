@@ -49,4 +49,5 @@ public class AppUserDto {
     private Long CounsellorSlotId;
     private Long teamId;
     private String dateOfJoining;
+    private String alerts;
 }

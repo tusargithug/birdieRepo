@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -555,6 +556,16 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         }
 
         return searchKey;
+    }
+
+    @Override
+    public List<AppUser> getAllAppUserByAlerts(AppUserDto request) {
+        List<Roles> appUserList = Arrays.asList(Roles.TEAM_LEADER, Roles.TEAM_MANAGER);
+        if (Validator.isValid(request.getAlerts())){
+            return appUserRepo.findAllByAlertsAndRolesIn(request.getAlerts(),appUserList);
+        }
+
+        return new ArrayList<>();
     }
 }
 

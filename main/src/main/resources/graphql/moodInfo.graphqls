@@ -42,6 +42,7 @@ type Query {
     getAllAppointment:[UserAppointment]
     getCounsellorById(id:ID):Counsellor
     getAllEnumRoles:[Roles]
+    getAllAppUserByAlerts(input:AppUserDto):[AppUser]
 }
 
 type Mutation {
@@ -158,6 +159,7 @@ input AppUserDto{
     teamId:Int
     isActive:Boolean
     dateOfJoining:String
+    alerts:String
 }
 enum Roles{
     NONE
@@ -188,6 +190,7 @@ type AppUser{
     shiftTimings:ShiftTimings
     isActive:Boolean
     dateOfJoining:Date
+    alerts:Alerts
 }
 
 type FileEntity{
@@ -262,6 +265,13 @@ enum  DayOfWeek{
     FRIDAY
     SATURDAY
     SUNDAY
+}
+
+enum Alerts{
+    RED_ALERT
+    ORANGE_ALERT
+    GREEN_ALERT
+    NONE
 }
 input CounsellorDto {
     id:Int
