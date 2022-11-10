@@ -1,12 +1,8 @@
 package net.thrymr;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import graphql.kickstart.servlet.apollo.ApolloScalars;
 import graphql.scalars.ExtendedScalars;
 import graphql.schema.GraphQLScalarType;
-import net.thrymr.config.UploadCoercing;
 import net.thrymr.services.impl.MutationResolver;
 import net.thrymr.services.impl.Query;
 import org.slf4j.Logger;

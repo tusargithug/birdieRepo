@@ -202,8 +202,8 @@ type ShiftTimings{
     id: ID!
     shiftName:String
     site:Site
-    shiftStatAt:String
-    shiftEndAt:String
+    shiftStatAt:LocalTime
+    shiftEndAt:LocalTime
     team:Team
     isActive:Boolean
 }
@@ -212,8 +212,8 @@ input ShiftTimingsDto{
     siteId:Int
     teamId:Int
     shiftName:String
-    shiftStatAt:String
-    shiftEndAt:String
+    shiftStatAt:LocalTime
+    shiftEndAt:LocalTime
     counsellorId:Int
     status:Boolean
 }

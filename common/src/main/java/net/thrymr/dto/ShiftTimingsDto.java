@@ -15,8 +15,8 @@ public class ShiftTimingsDto {
     private Long id;
     private SlotShift shiftName;
     private SiteDto site;
-    private String shiftStatAt;
-    private String shiftEndAt;
+    private LocalTime shiftStatAt;
+    private LocalTime shiftEndAt;
     private Long TeamId;
     private Long SiteId;
     private Boolean status;

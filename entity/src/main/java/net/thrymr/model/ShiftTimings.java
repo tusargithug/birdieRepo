@@ -6,6 +6,7 @@ import lombok.Setter;
 import net.thrymr.enums.SlotShift;
 
 import javax.persistence.*;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +20,8 @@ public class ShiftTimings extends BaseEntity {
     private SlotShift shiftName;
     @OneToOne(cascade = CascadeType.ALL)
     private Site site;
-    private String shiftStatAt;
-    private String shiftEndAt;
+    private LocalTime shiftStatAt;
+    private LocalTime shiftEndAt;
     @OneToOne(cascade=CascadeType.ALL,mappedBy = "shiftTimings")
     private Team team;
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "shiftTimings")
