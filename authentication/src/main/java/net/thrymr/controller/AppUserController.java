@@ -63,7 +63,7 @@ public class AppUserController {
 
     // get all Users
     @QueryMapping("getAllAppUsers")
-    public List<AppUser> getAllAppUsers() {
+    public List<AppUser> getAllAppUsers() throws ParseException {
         return appUserService. getAllAppUsers();
     }
 

@@ -18,6 +18,7 @@ package net.thrymr.services.impl;
         import org.springframework.graphql.data.method.annotation.Argument;
         import org.springframework.graphql.data.method.annotation.QueryMapping;
         import org.springframework.stereotype.Component;
+        import java.text.ParseException;
         import java.util.List;
 
 @Component
@@ -91,7 +92,7 @@ public class Query implements GraphQLQueryResolver {
 
     // get all Users
     @QueryMapping("getAllAppUsers")
-    public List<AppUser> getAllAppUsers() {
+    public List<AppUser> getAllAppUsers() throws ParseException {
         return appUserService.getAllAppUsers();
 
     }

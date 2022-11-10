@@ -2,9 +2,7 @@ package net.thrymr.services.impl;
 
 
 import net.thrymr.constant.Constants;
-import net.thrymr.dto.AppUserDto;
-import net.thrymr.dto.RolesDto;
-import net.thrymr.dto.UserCourseDto;
+import net.thrymr.dto.*;
 import net.thrymr.dto.response.UserAppointmentResponse;
 import net.thrymr.enums.Roles;
 import net.thrymr.enums.SlotStatus;
@@ -406,8 +404,9 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public List<AppUser> getAllAppUsers() {
+    public List<AppUser> getAllAppUsers() throws ParseException {
         List<AppUser> appUserList=appUserRepo.findAll();
+        EmployeeDto employeeDto=new EmployeeDto();
         if (!appUserList.isEmpty()) {
             return appUserList.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
         }
