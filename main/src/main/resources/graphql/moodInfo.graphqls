@@ -202,6 +202,7 @@ type ShiftTimings{
     shiftStatAt:String
     shiftEndAt:String
     team:Team
+    isActive:Boolean
 }
 input ShiftTimingsDto{
     id:Int
@@ -211,6 +212,7 @@ input ShiftTimingsDto{
     shiftStatAt:String
     shiftEndAt:String
     counsellorId:Int
+    status:Boolean
 }
 type CounsellorSlot{
     id: ID!

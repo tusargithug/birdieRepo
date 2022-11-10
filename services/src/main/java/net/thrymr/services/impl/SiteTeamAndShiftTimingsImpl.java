@@ -330,12 +330,12 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                 shiftTimings.setTeam(optionalTeamId.get());
             }
         }
-        if(Validator.isValid(shiftTimingsDto.getCounsellorId())) {
             Optional<Counsellor> optionalCounsellorId = counsellorRepo.findById(shiftTimingsDto.getCounsellorId());
             if (optionalCounsellorId.isPresent()) {
                 shiftTimings.setCounsellors(optionalCounsellorId.get());
             }
-        }
+
+        shiftTimings.setIsActive(shiftTimingsDto.getStatus());
         shiftTimingsRepo.save(shiftTimings);
         return  "shift timings save successfully";
     }
