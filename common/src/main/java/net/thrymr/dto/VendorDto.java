@@ -24,6 +24,6 @@ public class VendorDto {
     private String email;
     private String mobile;
     private String empId;
-
+    private Boolean isActive;
     private String searchKey;
 }

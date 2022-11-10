@@ -19,4 +19,6 @@ public class CourseDto {
     private int sequence;
 
     private String description;
+
+    private Boolean isActive;
 }

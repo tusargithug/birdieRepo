@@ -29,4 +29,5 @@ public class CounsellorDto {
     private SiteDto site;
     private TeamDto team;
     private String searchKey;
+    private Boolean isActive;
 }

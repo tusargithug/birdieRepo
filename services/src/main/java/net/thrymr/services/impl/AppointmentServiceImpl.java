@@ -32,7 +32,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     AppUserRepo appUserRepo;
     @Autowired
     AppointmentRepo appointmentRepo;
-//    @Autowired
+    //    @Autowired
 //    CounsellorSlotRepo counsellorSlotRepo;
     @Autowired
     CounsellorRepo counsellorRepo;
@@ -57,7 +57,9 @@ public class AppointmentServiceImpl implements AppointmentService {
                 appointment.setDays(DayOfWeek.valueOf(detailsDto.getDayOfWeek()));
                 appointment.setSlotStatus(SlotStatus.valueOf(detailsDto.getSlotStatus()));
                 appointment.setSlotShift(SlotShift.getType(detailsDto.getSlotShift()));
-                appointment.setIsActive(detailsDto.getIsActive());
+                if (request.getIsActive().equals(Boolean.TRUE)) {
+                    appointment.setIsActive(detailsDto.getIsActive());
+                }
                 Date todayDate = new Date();
                 if (detailsDto.getDate() != null) {
                     System.out.println(detailsDto.getDate());
@@ -153,14 +155,16 @@ public class AppointmentServiceImpl implements AppointmentService {
                             default:
                                 return "please select any shift";
                         }
-                        if(Validator.isValid(detailsDto.getStartTime())) {
+                        if (Validator.isValid(detailsDto.getStartTime())) {
                             userAppointment.setStartTime(DateUtils.toParseLocalTime(detailsDto.getStartTime(), Constants.TIME_FORMAT_2));
                         }
                         userAppointment.setEndTime(DateUtils.toParseLocalTime(detailsDto.getEndTime(), Constants.TIME_FORMAT_2));
                         userAppointment.setDays(DayOfWeek.valueOf(detailsDto.getDayOfWeek()));
                         userAppointment.setSlotStatus(SlotStatus.valueOf(detailsDto.getSlotStatus()));
                         userAppointment.setSlotShift(SlotShift.getType(detailsDto.getSlotShift()));
-                        userAppointment.setIsActive(detailsDto.getIsActive());
+                        if (request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
+                            userAppointment.setIsActive(detailsDto.getIsActive());
+                        }
                         Date todayDate = new Date();
                         if (detailsDto.getDate() != null) {
                             userAppointment.setSlotDate(DateUtils.toFormatStringToDate(detailsDto.getToDate(), Constants.DATE_FORMAT));
@@ -206,8 +210,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public List<UserAppointment> getAllAppointment() {
-        List<UserAppointment> userAppointmentList=appointmentRepo.findAll();
-        return userAppointmentList.stream().filter(obj->obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+        List<UserAppointment> userAppointmentList = appointmentRepo.findAll();
+        return userAppointmentList.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
     }
 
 

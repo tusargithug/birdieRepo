@@ -1,5 +1,7 @@
 package net.thrymr.controller;
 
+import graphql.kickstart.servlet.context.DefaultGraphQLServletContext;
+import graphql.schema.DataFetchingEnvironment;
 import net.thrymr.dto.*;
 import net.thrymr.model.Chapter;
 import net.thrymr.model.Unit;
@@ -18,8 +20,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.Part;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -27,51 +32,50 @@ public class CityCountyAndRegionController {
 
     @Autowired
     CityCountyAndRegionService cityCountyAndRegionService;
-    final static Logger log= LoggerFactory.getLogger(CityCountyAndRegionController.class);
+    final static Logger log = LoggerFactory.getLogger(CityCountyAndRegionController.class);
 
-    @MutationMapping(name="saveCountry")
+    @MutationMapping(name = "saveCountry")
     public String saveCountry(@Argument(name = "input") CountryDto countryDto) {
         return cityCountyAndRegionService.saveCountry(countryDto);
 
     }
 
-    @MutationMapping(name="updateCountryById")
-    public String updateCountryById(@Argument(name = "input")CountryDto countryDto) {
+    @MutationMapping(name = "updateCountryById")
+    public String updateCountryById(@Argument(name = "input") CountryDto countryDto) {
         return cityCountyAndRegionService.updateCountryById(countryDto);
     }
 
-    @MutationMapping(name="deleteCountryById")
-    public String deleteCountryById(@Argument Long id){
+    @MutationMapping(name = "deleteCountryById")
+    public String deleteCountryById(@Argument Long id) {
         return cityCountyAndRegionService.deleteCountryById(id);
 
     }
 
-    @MutationMapping(name="saveCity")
+    @MutationMapping(name = "saveCity")
     public String saveCity(@Argument(name = "input") CityDto cityDto) {
         return cityCountyAndRegionService.saveCity(cityDto);
     }
 
-    @MutationMapping(name="updateCityById")
-    public String updateCityById(@Argument(name = "input")CityDto cityDto) {
+    @MutationMapping(name = "updateCityById")
+    public String updateCityById(@Argument(name = "input") CityDto cityDto) {
         return cityCountyAndRegionService.updateCityById(cityDto);
 
     }
 
-    @MutationMapping(name="deleteCityById")
-    public String deleteCityById(@Argument Long id){
+    @MutationMapping(name = "deleteCityById")
+    public String deleteCityById(@Argument Long id) {
         return cityCountyAndRegionService.deleteCityById(id);
     }
 
-    @MutationMapping(name="saveRegion")
+    @MutationMapping(name = "saveRegion")
     public String saveRegion(@Argument(name = "input") RegionDto regionDto) {
         return cityCountyAndRegionService.saveRegion(regionDto);
     }
 
-    @MutationMapping(name="updateRegionById")
-    public String updateRegionById(@Argument(name = "input")RegionDto regionDto) {
+    @MutationMapping(name = "updateRegionById")
+    public String updateRegionById(@Argument(name = "input") RegionDto regionDto) {
         return cityCountyAndRegionService.updateRegionById(regionDto);
     }
-
 
 
     @QueryMapping("getAllCountry")
@@ -121,9 +125,26 @@ public class CityCountyAndRegionController {
        return cityCountyAndRegionService.uploadCountryData(file);
     }*/
 
-    @MutationMapping(name="upload-excel-region-data")
-    public String uploadRegionData(@Argument(name= "file") MultipartFile file) {
+    @MutationMapping(name = "upload-excel-region-data")
+    public String uploadRegionData(@Argument(name = "file") MultipartFile file) {
         return cityCountyAndRegionService.uploadRegionData(file);
+    }
+
+    @MutationMapping(name = "testMultiFilesUpload")
+    public Boolean testMultiFilesUpload(List<Part> parts, DataFetchingEnvironment env) {
+        // get file parts from DataFetchingEnvironment, the parts parameter is not use
+        List<Part> attachmentParts = env.getArgument("files");
+        int i = 1;
+        for (Part part : attachmentParts) {
+            String uploadName = "copy" + i;
+            try {
+                part.write("your path:" + uploadName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            i++;
+        }
+        return true;
     }
 }
 

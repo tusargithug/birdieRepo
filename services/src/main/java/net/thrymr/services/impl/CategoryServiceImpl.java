@@ -38,6 +38,9 @@ public class CategoryServiceImpl implements CategoryService {
         category.setName(request.getName());
         category.setDescription(request.getDescription());
         category.setSequence(request.getSequence());
+        if (request.getIsActive() != null && request.getIsActive().equals(Boolean.TRUE)) {
+            category.setIsActive(request.getIsActive());
+        }
         categoryRepo.save(category);
         return "Course Created successfully";
     }
@@ -63,14 +66,17 @@ public class CategoryServiceImpl implements CategoryService {
                 .setDescription(request.getDescription());
         category.get()
                 .setSequence(request.getSequence());
+        if (request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
+            category.get().setIsActive(request.getIsActive());
+        }
         categoryRepo.save(category.get());
         return "update category successfully";
     }
 
     @Override
     public List<Category> getAllCategory() {
-        List<Category> categoryList=categoryRepo.findAll();
-        if(!categoryList.isEmpty()) {
+        List<Category> categoryList = categoryRepo.findAll();
+        if (!categoryList.isEmpty()) {
             return categoryList.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
         }
         return new ArrayList<>();
@@ -79,8 +85,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Course getCourseById(Long id) {
         if (Validator.isValid(id)) {
-            Optional<Course> optionalCourse=courseRepo.findById(id);
-            if(optionalCourse.isPresent() && optionalCourse.get().getIsActive().equals(Boolean.TRUE)){
+            Optional<Course> optionalCourse = courseRepo.findById(id);
+            if (optionalCourse.isPresent() && optionalCourse.get().getIsActive().equals(Boolean.TRUE)) {
                 return optionalCourse.get();
             }
         }

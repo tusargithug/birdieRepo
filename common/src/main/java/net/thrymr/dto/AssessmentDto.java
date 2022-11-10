@@ -35,4 +35,6 @@ public class AssessmentDto {
     private String moderate;
 
     private String low;
+
+    private Boolean isActive;
 }

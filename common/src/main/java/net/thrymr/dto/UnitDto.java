@@ -15,7 +15,7 @@ public class UnitDto {
     private String unitName;
     private String addOn;
     private Integer chapterCount;
-    private Boolean status;
+    private Boolean isActive;
     private List<ChapterDto> addChapters=new ArrayList<>();
     private String searchKey;
     private Integer pageNumber;

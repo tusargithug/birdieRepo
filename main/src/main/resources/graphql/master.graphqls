@@ -1,33 +1,35 @@
 
 type Category{
-id:ID!
-name:String
-description:String
-sequence:Int
-courses:[Int]
+ id:ID!
+ name:String
+ description:String
+ sequence:Int
+ courses:[Int]
+ isActive:Boolean
 }
 
 type Course{
-id:ID!
-name:String
-code:String
-sequence:Int
-description:String
-category:Int
+ id:ID!
+ name:String
+ code:String
+ sequence:Int
+ description:String
+ category:Int
+ isActive:Boolean
 }
 
-scalar Object
 type ApiResponse{
-statusCode:Int
-message:String
-status:String
+ statusCode:Int
+ message:String
+ status:String
 }
 input CategoryDto{
-id:Int
-name:String
-description:String
-sequence:Int
-coursesIds:[Int]
+ id:Int
+ name:String
+ description:String
+ sequence:Int
+ coursesIds:[Int]
+ isActive:Boolean
 }
 
 input CourseDto{
@@ -37,6 +39,7 @@ input CourseDto{
  name:String
  sequence:Int
  description:String
+ isActive:Boolean
 }
 
 input RolesDto{
@@ -51,6 +54,7 @@ input ChapterDto{
  isActive:Boolean
  video:String
  unitId:Int
+ description:String
 }
 input FileEntityDto{
  fileId:ID!
@@ -63,6 +67,7 @@ input CityDto{
  id:Int
  cityName:String
  mtCountryId:Int
+ isActive:Boolean
 }
 
 input CountryDto{
@@ -70,11 +75,13 @@ input CountryDto{
  countryName:String
  countryCode:String
  regionId:Int
+ isActive:Boolean
 }
 
 input RegionDto{
  id:Int
  regionName:String
+ isActive:Boolean
 }
 
 input SiteDto{
@@ -88,7 +95,7 @@ input SiteDto{
  pageSize:Int
  pageNumber:Int
  searchKey:String
- siteId:Int
+ siteId:String
 }
 
 input TeamDto {
@@ -114,7 +121,7 @@ input UnitDto {
  unitName:String
  addOn:String
  chapterCount:Int
- status:Boolean
+ isActive:Boolean
  addChapters:[ChapterDto]
  searchKey:String
  pageNumber :Int
@@ -126,6 +133,7 @@ type MtCountry {
  countryCode:String
  region:MtRegion
  cities:[MtCity]
+ isActive:Boolean
 }
 
 interface Result{
@@ -136,6 +144,7 @@ type MtRegion{
  regionName:String
  mtCountry:[MtCountry]
  site:Site
+ isActive:Boolean
 }
 type Site{
  id:ID!
@@ -163,6 +172,7 @@ type MtCity{
  cityName:String
  country:MtCountry
  sites:[Site]
+ isActive:Boolean
 }
 type Chapter{
  id:ID!
@@ -171,11 +181,13 @@ type Chapter{
  description:String
  video:String
  unit:Unit
+ isActive:Boolean
 }
 type MtOptions{
  textAnswer:String
  question:MtQuestion
  userCourse:UserCourse
+ isActive:Boolean
 }
 type UserCourse{
  user:AppUser
@@ -184,6 +196,7 @@ type UserCourse{
  mtOptions:[MtOptions]
  startedDate:Date
  completedDate:Date
+ isActive:Boolean
 }
 type MtQuestion{
  question:String
@@ -192,6 +205,7 @@ type MtQuestion{
  questionCalType:QuestionCalType
  sequence:Int
  assessment:MtAssessment
+ isActive:Boolean
 }
 enum QuestionCalType{
  FORWARD
@@ -209,6 +223,7 @@ type MtAssessment{
  moderate:String
  low:String
  questionList:[MtQuestion]
+ isActive:Boolean
 }
 type PsychometricTest{
  name:String
@@ -216,12 +231,14 @@ type PsychometricTest{
  mtQuestions:[MtQuestion]
  options:[PsychometricTestOption]
  riskLevels:[RiskLevel]
+ isActive:Boolean
 }
 type RiskLevel{
  psychometricTest:PsychometricTest
  rangeFrom:Float
  rangeTo:Float
  risk:Risk
+ isActive:Boolean
 }
 enum Risk{
  LOW
@@ -234,12 +251,14 @@ type PsychometricTestOption{
  option:String
  score:Int
  psychometricTest:PsychometricTest
+ isActive:Boolean
 }
 
 type Unit{
  id:ID!
  unitName:String
  chapters:[Chapter]
+ isActive:Boolean
 }
 
 input AssessmentDto{
@@ -267,12 +286,14 @@ input QuestionDto {
  psychometricTestId:Int
  questionCalType:String
  Sequence:Int
+ isActive:Boolean
 }
 input OptionsDto{
  id:Int
  textAnswer:String
  questionId:Int
  userCourseId:Int
+ isActive:Boolean
 }
  input TimeSlotDto{
   appUserId:Int
@@ -280,6 +301,7 @@ input OptionsDto{
   counsellorSlotId:Int
   slotShift:String
   slots:[SlotDetailsDto]
+  isActive:Boolean
  }
 input SlotDetailsDto{
  startTime:String
@@ -293,4 +315,5 @@ input SlotDetailsDto{
  fromDate: String
  appUserId:Int
  counsellorId:Int
+ isActive:Boolean
 }

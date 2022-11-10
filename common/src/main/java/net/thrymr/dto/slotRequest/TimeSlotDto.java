@@ -17,4 +17,5 @@ public class TimeSlotDto {
     private List<SlotDetailsDto> slots = new ArrayList<>();
     private Long counsellorSlotId;
     private Long appUserId;
+    private Boolean isActive;
 }

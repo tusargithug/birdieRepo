@@ -27,4 +27,6 @@ public class CategoryDto {
     private List<Long> coursesIds = new ArrayList<>();
 
     private int sequence;
+
+    private Boolean isActive;
 }

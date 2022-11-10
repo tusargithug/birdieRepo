@@ -12,4 +12,5 @@ public class OptionsDto {
     private String  textAnswer;
     private Long questionId;
     private Long userCourseId;
+    private Boolean isActive;
 }

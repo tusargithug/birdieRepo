@@ -16,6 +16,7 @@ import net.thrymr.repository.CounsellorSlotRepo;
 import net.thrymr.services.CounsellorSlotService;
 import net.thrymr.utils.DateUtils;
 import net.thrymr.utils.Validator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -29,20 +30,17 @@ import java.util.stream.Collectors;
 @Service
 public class CounsellorSlotServiceImpl implements CounsellorSlotService {
 
-    private final CounsellorRepo counsellorRepo;
+    @Autowired
+    CounsellorRepo counsellorRepo;
 
-    private final CounsellorSlotRepo counsellorSlotRepo;
+    @Autowired
+    CounsellorSlotRepo counsellorSlotRepo;
 
-    private final AppUserRepo appUserRepo;
+    @Autowired
+    AppUserRepo appUserRepo;
 
-    private final AppointmentRepo appointmentRepo;
-
-    public CounsellorSlotServiceImpl(CounsellorRepo counsellorRepo, CounsellorSlotRepo counsellorSlotRepo, AppUserRepo appUserRepo, AppointmentRepo appointmentRepo) {
-        this.counsellorRepo = counsellorRepo;
-        this.counsellorSlotRepo = counsellorSlotRepo;
-        this.appUserRepo = appUserRepo;
-        this.appointmentRepo = appointmentRepo;
-    }
+    @Autowired
+    AppointmentRepo appointmentRepo;
 
 
     @Override
@@ -119,6 +117,9 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
                         slot.setCounsellor(optionalCounsellorId.get());
                     }
                 }
+                if (request.getIsActive().equals(Boolean.TRUE)) {
+                    slot.setIsActive(request.getIsActive());
+                }
                 counsellorSlots.add(slot);
             }
 
@@ -130,8 +131,8 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
     @Override
     public List<CounsellorSlot> getCounsellorSlot() {
         List<CounsellorSlot> counsellorSlotList = counsellorSlotRepo.findAll();
-        if(!counsellorSlotList.isEmpty()){
-            return counsellorSlotList.stream().filter(obj->obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+        if (!counsellorSlotList.isEmpty()) {
+            return counsellorSlotList.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
         }
         return new ArrayList<>();
     }
@@ -240,6 +241,9 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
                             if (optionalCounsellorId.isPresent()) {
                                 counsellorSlot.setCounsellor(optionalCounsellorId.get());
                             }
+                        }
+                        if (request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
+                            counsellorSlot.setIsActive(request.getIsActive());
                         }
                         counsellorSlots.add(counsellorSlot);
                         counsellorSlotRepo.saveAll(counsellorSlots);

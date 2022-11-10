@@ -1,5 +1,8 @@
 package net.thrymr.services.impl;
+        import graphql.kickstart.servlet.context.DefaultGraphQLServletContext;
         import graphql.kickstart.tools.GraphQLMutationResolver;
+        import graphql.schema.DataFetchingEnvironment;
+        import lombok.extern.slf4j.Slf4j;
         import net.thrymr.dto.*;
         import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
         import net.thrymr.dto.slotRequest.TimeSlotDto;
@@ -11,8 +14,14 @@ package net.thrymr.services.impl;
         import org.springframework.graphql.data.method.annotation.MutationMapping;
         import org.springframework.stereotype.Component;
         import org.springframework.web.multipart.MultipartFile;
-        import java.text.ParseException;
 
+        import javax.servlet.http.Part;
+        import java.io.IOException;
+        import java.text.ParseException;
+        import java.util.List;
+        import java.util.UUID;
+
+@Slf4j
 @Component
 public class MutationResolver implements GraphQLMutationResolver {
     @Autowired
@@ -373,6 +382,24 @@ public class MutationResolver implements GraphQLMutationResolver {
     public String rescheduledUserAppointment(@Argument(name = "input") TimeSlotDto request) throws ParseException {
         return appointmentService.rescheduledUserAppointment(request);
     }
+
+
+   @MutationMapping(name = "testMultiFilesUpload")
+   public Boolean testMultiFilesUpload(List<Part> parts, DataFetchingEnvironment env) {
+       // get file parts from DataFetchingEnvironment, the parts parameter is not use
+       List<Part> attachmentParts = env.getArgument("files");
+       int i = 1;
+       for (Part part : attachmentParts) {
+           String uploadName = "copy" + i;
+           try {
+               part.write("your path:" + uploadName);
+           } catch (IOException e) {
+               e.printStackTrace();
+           }
+           i++;
+       }
+       return true;
+   }
 
 }
 

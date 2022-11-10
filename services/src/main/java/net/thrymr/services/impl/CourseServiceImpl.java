@@ -7,6 +7,7 @@ import net.thrymr.repository.CategoryRepo;
 import net.thrymr.repository.CourseRepo;
 import net.thrymr.services.CourseService;
 import net.thrymr.utils.Validator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,33 +18,34 @@ import java.util.stream.Collectors;
 @Service
 public class CourseServiceImpl implements CourseService {
 
-    private final CourseRepo courseRepo;
+    @Autowired
+    CourseRepo courseRepo;
 
-    private final CategoryRepo categoryRepo;
+    @Autowired
+    CategoryRepo categoryRepo;
 
-    public CourseServiceImpl(CourseRepo courseRepo, CategoryRepo categoryRepo) {
-        this.courseRepo = courseRepo;
-        this.categoryRepo = categoryRepo;
-    }
 
     @Override
     public String updateCourse(CourseDto request) {
-        if(Validator.isValid(request.getId())) {
+        if (Validator.isValid(request.getId())) {
             Optional<Course> optionalCourse = courseRepo.findById(request.getId());
             Course course = null;
             if (optionalCourse.isPresent()) {
                 course = optionalCourse.get();
-                if(Validator.isValid(request.getCode())) {
+                if (Validator.isValid(request.getCode())) {
                     course.setCode(request.getCode());
                 }
-                if(Validator.isValid(request.getDescription())) {
+                if (Validator.isValid(request.getDescription())) {
                     course.setDescription(request.getDescription());
                 }
-                if(Validator.isValid(request.getSequence())) {
+                if (Validator.isValid(request.getSequence())) {
                     course.setSequence(request.getSequence());
                 }
                 if (Validator.isValid(request.getName())) {
                     course.setName(request.getName());
+                }
+                if (request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
+                    course.setIsActive(request.getIsActive());
                 }
                 courseRepo.save(course);
             }
@@ -61,10 +63,13 @@ public class CourseServiceImpl implements CourseService {
         course.setSequence(request.getSequence());
         course.setName(request.getName());
         if (Validator.isValid(request.getCategoryId())) {
-            Optional<Category> optionalCategory=categoryRepo.findById(request.getCategoryId());
-            if(optionalCategory.isPresent()){
+            Optional<Category> optionalCategory = categoryRepo.findById(request.getCategoryId());
+            if (optionalCategory.isPresent()) {
                 course.setCategory(optionalCategory.get());
             }
+        }
+        if (request.getIsActive().equals(Boolean.TRUE)) {
+            course.setIsActive(request.getIsActive());
         }
         courseRepo.save(course);
         return "Course Created successfully";
@@ -72,9 +77,9 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<Course> getAllCourse() {
-        List<Course> courseList= courseRepo.findAll();
-        if(!courseList.isEmpty()){
-            return courseList.stream().filter(obj->obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+        List<Course> courseList = courseRepo.findAll();
+        if (!courseList.isEmpty()) {
+            return courseList.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
         }
         return new ArrayList<>();
     }

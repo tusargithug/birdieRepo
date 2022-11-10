@@ -24,8 +24,8 @@ public class AssessmentServiceImpl implements AssessmentService {
     @Override
     public List<MtAssessment> getAllAssessment() {
         List<MtAssessment> mtAssessmentList = assessmentRepo.findAll();
-        if(!mtAssessmentList.isEmpty()){
-            return mtAssessmentList.stream().filter(obj->obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+        if (!mtAssessmentList.isEmpty()) {
+            return mtAssessmentList.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
         }
         return new ArrayList<>();
     }
@@ -36,8 +36,9 @@ public class AssessmentServiceImpl implements AssessmentService {
         assessmentRepo.save(dtoToAssessmentEntity(request));
         return "create Assessment successfully";
     }
+
     private MtAssessment dtoToAssessmentEntity(AssessmentDto request) {
-        MtAssessment assessment=new MtAssessment();
+        MtAssessment assessment = new MtAssessment();
         assessment.setName(request.getName());
         assessment.setDescription(request.getDescription());
         assessment.setInstructions(request.getInstructions());
@@ -45,36 +46,42 @@ public class AssessmentServiceImpl implements AssessmentService {
         assessment.setHigh(request.getHigh());
         assessment.setModerate(request.getModerate());
         assessment.setLow(request.getLow());
+        if (request.getIsActive() != null && request.getIsActive().equals(Boolean.TRUE)) {
+            assessment.setIsActive(request.getIsActive());
+        }
         return assessment;
     }
 
     @Override
     public String updateAssessmentById(AssessmentDto request) {
-        MtAssessment assessment=null;
-        if(Validator.isValid(request.getId())){
-        Optional<MtAssessment> optionalAssessment=assessmentRepo.findById(request.getId());
-            if(optionalAssessment.isPresent()){
-                assessment=optionalAssessment.get();
-                if(Validator.isValid(request.getName())) {
+        MtAssessment assessment = null;
+        if (Validator.isValid(request.getId())) {
+            Optional<MtAssessment> optionalAssessment = assessmentRepo.findById(request.getId());
+            if (optionalAssessment.isPresent()) {
+                assessment = optionalAssessment.get();
+                if (Validator.isValid(request.getName())) {
                     assessment.setName(request.getName());
                 }
                 if (Validator.isValid(request.getDescription())) {
                     assessment.setDescription(request.getDescription());
                 }
-                if(Validator.isValid(request.getInstructions())) {
+                if (Validator.isValid(request.getInstructions())) {
                     assessment.setInstructions(request.getInstructions());
                 }
                 if (Validator.isValid(String.valueOf(request.getFrequencyType()))) {
                     assessment.setFrequencyType(request.getFrequencyType());
                 }
-                if(Validator.isValid(request.getHigh())) {
+                if (Validator.isValid(request.getHigh())) {
                     assessment.setHigh(request.getHigh());
                 }
-                if(Validator.isValid(request.getModerate())) {
+                if (Validator.isValid(request.getModerate())) {
                     assessment.setModerate(request.getModerate());
                 }
-                if(Validator.isValid(request.getLow())) {
+                if (Validator.isValid(request.getLow())) {
                     assessment.setLow(request.getLow());
+                }
+                if (request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
+                    assessment.setIsActive(request.getIsActive());
                 }
                 assessmentRepo.save(assessment);
                 return "Assessment update successfully";
@@ -85,11 +92,11 @@ public class AssessmentServiceImpl implements AssessmentService {
 
     @Override
     public String deleteAssessmentId(Long id) {
-        MtAssessment assessment=null;
-        if(Validator.isValid(id)) {
+        MtAssessment assessment = null;
+        if (Validator.isValid(id)) {
             Optional<MtAssessment> optionalAssessment = assessmentRepo.findById(id);
-            if(optionalAssessment.isPresent()){
-                assessment=optionalAssessment.get();
+            if (optionalAssessment.isPresent()) {
+                assessment = optionalAssessment.get();
                 assessment.setIsActive(Boolean.FALSE);
                 assessment.setIsDeleted(Boolean.TRUE);
                 assessmentRepo.save(assessment);
@@ -101,8 +108,8 @@ public class AssessmentServiceImpl implements AssessmentService {
 
     @Override
     public MtAssessment getAssessmentById(Long id) {
-        MtAssessment assessment=null;
-        if(Validator.isValid(id)) {
+        MtAssessment assessment = null;
+        if (Validator.isValid(id)) {
             Optional<MtAssessment> optionalAssessment = assessmentRepo.findById(id);
             if (optionalAssessment.isPresent() && optionalAssessment.get().getIsActive().equals(Boolean.TRUE)) {
                 return optionalAssessment.get();

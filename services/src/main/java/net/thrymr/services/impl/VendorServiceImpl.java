@@ -10,6 +10,7 @@ import net.thrymr.repository.SiteRepo;
 import net.thrymr.repository.VendorRepo;
 import net.thrymr.services.VendorService;
 import net.thrymr.utils.Validator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,19 +27,14 @@ import java.util.stream.Collectors;
 
 @Service
 public class VendorServiceImpl implements VendorService {
-    private final VendorRepo vendorRepo;
-    private final SiteRepo siteRepo;
+    @Autowired
+    VendorRepo vendorRepo;
+    @Autowired
+    SiteRepo siteRepo;
 
-    private final AppUserRepo appUserRepo;
+    @Autowired
+    AppUserRepo appUserRepo;
 
-    private final Environment environment;
-
-    public VendorServiceImpl(VendorRepo vendorRepo, SiteRepo siteRepo, AppUserRepo appUserRepo, Environment environment) {
-        this.vendorRepo = vendorRepo;
-        this.siteRepo = siteRepo;
-        this.appUserRepo = appUserRepo;
-        this.environment = environment;
-    }
 
     @Override
     public String saveVendor(VendorDto request) {
@@ -63,7 +59,9 @@ public class VendorServiceImpl implements VendorService {
             if (optionalSite.isPresent()) {
                 user.setSite(optionalSite.get());
             }
-
+        }
+        if (request.getIsActive().equals(Boolean.TRUE)) {
+            user.setIsActive(request.getIsActive());
         }
         appUserRepo.save(user);
         if (Validator.isValid(request.getPOC())) {
@@ -144,6 +142,9 @@ public class VendorServiceImpl implements VendorService {
                 }
                 if (Validator.isValid(request.getPOC())) {
                     vendor.setPOC(request.getPOC());
+                }
+                if (request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
+                    user.setIsActive(request.getIsActive());
                 }
                 vendorRepo.save(vendor);
                 return "Vendor updated successfully";

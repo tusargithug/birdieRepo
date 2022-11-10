@@ -1,7 +1,12 @@
 package net.thrymr;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import graphql.kickstart.servlet.apollo.ApolloScalars;
 import graphql.scalars.ExtendedScalars;
 import graphql.schema.GraphQLScalarType;
+import net.thrymr.config.UploadCoercing;
 import net.thrymr.services.impl.MutationResolver;
 import net.thrymr.services.impl.Query;
 import org.slf4j.Logger;
@@ -18,7 +23,6 @@ import org.springframework.boot.actuate.endpoint.web.annotation.ServletEndpoints
 import org.springframework.boot.actuate.endpoint.web.servlet.WebMvcEndpointHandlerMapping;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
@@ -29,6 +33,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import javax.servlet.http.Part;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -95,22 +100,27 @@ public class BaseApplication {
     public RuntimeWiringConfigurer runtimeWiringConfigurer() {
         return wiringBuilder -> wiringBuilder.scalar(ExtendedScalars.LocalTime);
     }
+
     @Bean
-    public RuntimeWiringConfigurer runtimeWiringConfigurerUpload() {
+    public RuntimeWiringConfigurer runtimeWiringConfigureUpload() {
         return wiringBuilder -> wiringBuilder.scalar(ApolloScalars.Upload);
     }
+
     @Bean
     public RuntimeWiringConfigurer runtimeWiringConfigure() {
         return wiringBuilder -> wiringBuilder.scalar(ExtendedScalars.Date);
     }
+
     @Bean
     public RuntimeWiringConfigurer runtimeWiringConfigurJson() {
         return wiringBuilder -> wiringBuilder.scalar(ExtendedScalars.Json);
     }
+
     @Bean
     public RuntimeWiringConfigurer runtimeWiringConfigurObject() {
         return wiringBuilder -> wiringBuilder.scalar(ExtendedScalars.Object);
     }
+
     @Bean
     public GraphQLScalarType date() {
         return ExtendedScalars.LocalTime;
@@ -125,10 +135,12 @@ public class BaseApplication {
     public GraphQLScalarType objectType() {
         return ExtendedScalars.Object;
     }
+
     @Bean
     public GraphQLScalarType jsonType() {
         return ExtendedScalars.Json;
     }
+
     @Bean
     public GraphQLScalarType uploadScalarDefine() {
         return ApolloScalars.Upload;

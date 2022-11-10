@@ -28,5 +28,7 @@ public class UserCourseDto  {
 
     private CourseStatus status = CourseStatus.NOT_STARTED;
 
+    private Boolean isActive;
+
 
 }

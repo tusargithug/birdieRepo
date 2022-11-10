@@ -14,6 +14,7 @@ import net.thrymr.services.QuestionAndOptionsService;
 import net.thrymr.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,21 +37,24 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
 
     @Override
     public String createQuestion(QuestionDto request) {
-        MtQuestion question=new MtQuestion();
+        MtQuestion question = new MtQuestion();
         question.setQuestion(request.getQuestion());
         question.setQuestionCalType(QuestionCalType.valueOf(request.getQuestionCalType()));
         question.setSequence(request.getSequence());
-        if(Validator.isValid(request.getPsychometricTestId())) {
-            Optional<PsychometricTest> optionalPsychometricTest=psychometricTestRepo.findById(request.getPsychometricTestId());
-            if(optionalPsychometricTest.isPresent()) {
+        if (Validator.isValid(request.getPsychometricTestId())) {
+            Optional<PsychometricTest> optionalPsychometricTest = psychometricTestRepo.findById(request.getPsychometricTestId());
+            if (optionalPsychometricTest.isPresent()) {
                 question.setPsychometricTest(optionalPsychometricTest.get());
             }
         }
         if (Validator.isValid(request.getAssessmentId())) {
-            Optional<MtAssessment> optionalAssessment=assessmentRepo.findById(request.getAssessmentId());
-            if(optionalAssessment.isPresent()){
+            Optional<MtAssessment> optionalAssessment = assessmentRepo.findById(request.getAssessmentId());
+            if (optionalAssessment.isPresent()) {
                 question.setAssessment(optionalAssessment.get());
             }
+        }
+        if (request.getIsActive().equals(Boolean.TRUE)) {
+            question.setIsActive(request.getIsActive());
         }
         questionRepo.save(question);
         return "create question successfully";
@@ -58,11 +62,11 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
 
     @Override
     public MtQuestion getQuestionById(Long id) {
-        MtQuestion question=null;
-        if(Validator.isValid(id)) {
+        MtQuestion question = null;
+        if (Validator.isValid(id)) {
             Optional<MtQuestion> optionalQuestion = questionRepo.findById(id);
             if (optionalQuestion.isPresent() && optionalQuestion.get().getIsActive().equals(Boolean.TRUE)) {
-                question=optionalQuestion.get();
+                question = optionalQuestion.get();
                 return question;
             }
         }
@@ -71,11 +75,11 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
 
     @Override
     public String deleteQuestionById(Long id) {
-        MtQuestion question=null;
-        if(Validator.isValid(id)) {
+        MtQuestion question = null;
+        if (Validator.isValid(id)) {
             Optional<MtQuestion> optionalQuestion = questionRepo.findById(id);
-            if(optionalQuestion.isPresent()) {
-                question=optionalQuestion.get();
+            if (optionalQuestion.isPresent()) {
+                question = optionalQuestion.get();
                 question.setIsActive(Boolean.FALSE);
                 question.setIsDeleted(Boolean.TRUE);
                 questionRepo.save(question);
@@ -88,7 +92,7 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
     @Override
     public List<MtOptions> getAnswersByQuestionId(Long id) {
         List<MtOptions> mtOptionsList = optionsRepo.findAllByQuestion(id);
-        if(!mtOptionsList.isEmpty()){
+        if (!mtOptionsList.isEmpty()) {
             return new ArrayList<>(mtOptionsList);
         }
         return new ArrayList<>();
@@ -96,19 +100,19 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
 
     @Override
     public List<MtQuestion> getAllQuestions() {
-        List<MtQuestion> mtQuestionList =questionRepo.findAll();
-        if(!mtQuestionList.isEmpty()){
-            return mtQuestionList.stream().filter(obj->obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+        List<MtQuestion> mtQuestionList = questionRepo.findAll();
+        if (!mtQuestionList.isEmpty()) {
+            return mtQuestionList.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
         }
         return new ArrayList<>();
     }
 
     @Override
-    public String updateQuestionById(QuestionDto request){
-        MtQuestion question=null;
-        if(Validator.isValid(request.getId())){
-            Optional<MtQuestion> optionalQuestion=questionRepo.findById(request.getId());
-            if(optionalQuestion.isPresent()) {
+    public String updateQuestionById(QuestionDto request) {
+        MtQuestion question = null;
+        if (Validator.isValid(request.getId())) {
+            Optional<MtQuestion> optionalQuestion = questionRepo.findById(request.getId());
+            if (optionalQuestion.isPresent()) {
                 question = optionalQuestion.get();
                 if (Validator.isValid(request.getQuestion())) {
                     question.setQuestion(request.getQuestion());
@@ -116,20 +120,23 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
                 if (Validator.isValid(request.getQuestionCalType())) {
                     question.setQuestionCalType(QuestionCalType.valueOf(request.getQuestionCalType()));
                 }
-                if(Validator.isValid(request.getSequence())) {
+                if (Validator.isValid(request.getSequence())) {
                     question.setSequence(request.getSequence());
                 }
-                if(Validator.isValid(request.getPsychometricTestId())) {
-                    Optional<PsychometricTest> optionalPsychometricTest=psychometricTestRepo.findById(request.getPsychometricTestId());
-                    if(optionalPsychometricTest.isPresent()) {
+                if (Validator.isValid(request.getPsychometricTestId())) {
+                    Optional<PsychometricTest> optionalPsychometricTest = psychometricTestRepo.findById(request.getPsychometricTestId());
+                    if (optionalPsychometricTest.isPresent()) {
                         question.setPsychometricTest(optionalPsychometricTest.get());
                     }
                 }
                 if (Validator.isValid(request.getAssessmentId())) {
-                    Optional<MtAssessment> optionalAssessment=assessmentRepo.findById(request.getAssessmentId());
-                    if(optionalAssessment.isPresent()){
+                    Optional<MtAssessment> optionalAssessment = assessmentRepo.findById(request.getAssessmentId());
+                    if (optionalAssessment.isPresent()) {
                         question.setAssessment(optionalAssessment.get());
                     }
+                }
+                if (request.getIsActive().equals(Boolean.TRUE)) {
+                    question.setIsActive(request.getIsActive());
                 }
                 questionRepo.save(question);
                 return "update question successfully";
@@ -153,18 +160,21 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
             if (optionalUserCourse.isPresent()) {
                 options.setUserCourse(optionalUserCourse.get());
             }
-            optionsRepo.save(options);
         }
-        return "create option successfully";
+        if (request.getIsActive().equals(Boolean.TRUE)) {
+            options.setIsActive(request.getIsActive());
+        }
+        optionsRepo.save(options);
+        return "created option successfully";
     }
 
     @Override
     public String updateOptionById(OptionsDto request) {
-        MtOptions options=null;
-        if(Validator.isValid(request.getId())) {
+        MtOptions options = null;
+        if (Validator.isValid(request.getId())) {
             Optional<MtOptions> optionsOptional = optionsRepo.findById(request.getId());
-            if(optionsOptional.isPresent()){
-                options=optionsOptional.get();
+            if (optionsOptional.isPresent()) {
+                options = optionsOptional.get();
                 if (Validator.isValid(request.getQuestionId())) {
                     Optional<MtQuestion> optionalOptions = questionRepo.findById(request.getQuestionId());
                     if (optionalOptions.isPresent()) {
@@ -181,21 +191,24 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
                         options.setUserCourse(optionalUserCourse.get());
                     }
                 }
+                if (request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
+                    options.setIsActive(request.getIsActive());
+                }
                 optionsRepo.save(options);
             }
             return "Option updated successfully";
-        }else {
+        } else {
             return "this option id not in database ";
         }
     }
 
     @Override
     public MtOptions getOptionById(Long id) {
-        MtOptions option=null;
-        if(Validator.isValid(id)) {
+        MtOptions option = null;
+        if (Validator.isValid(id)) {
             Optional<MtOptions> optionsOptional = optionsRepo.findById(id);
-            if(optionsOptional.isPresent() && optionsOptional.get().getIsActive().equals(Boolean.TRUE)){
-                option=optionsOptional.get();
+            if (optionsOptional.isPresent() && optionsOptional.get().getIsActive().equals(Boolean.TRUE)) {
+                option = optionsOptional.get();
                 return option;
             }
         }
@@ -204,20 +217,20 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
 
     @Override
     public List<MtOptions> getAllOption() {
-        List<MtOptions> optionalList=optionsRepo.findAll();
-        if(!optionalList.isEmpty()) {
-            return optionalList.stream().filter(obj->obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+        List<MtOptions> optionalList = optionsRepo.findAll();
+        if (!optionalList.isEmpty()) {
+            return optionalList.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
         }
         return new ArrayList<>();
     }
 
     @Override
     public String deleteOptionById(Long id) {
-        MtOptions options=null;
-        if(Validator.isValid(id)) {
+        MtOptions options = null;
+        if (Validator.isValid(id)) {
             Optional<MtOptions> optionsOptional = optionsRepo.findById(id);
-            if(optionsOptional.isPresent()){
-                options=optionsOptional.get();
+            if (optionsOptional.isPresent()) {
+                options = optionsOptional.get();
                 options.setIsActive(Boolean.FALSE);
                 options.setIsDeleted(Boolean.TRUE);
                 optionsRepo.save(options);
