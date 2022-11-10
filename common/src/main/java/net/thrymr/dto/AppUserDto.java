@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+import net.thrymr.enums.Alerts;
 
 
 @Setter
@@ -49,5 +49,5 @@ public class AppUserDto {
     private Long CounsellorSlotId;
     private Long teamId;
     private String dateOfJoining;
-    private String alerts;
+    private Alerts alerts;
 }

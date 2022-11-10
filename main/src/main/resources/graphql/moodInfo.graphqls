@@ -190,7 +190,7 @@ type AppUser{
     shiftTimings:ShiftTimings
     isActive:Boolean
     dateOfJoining:Date
-    alerts:Alerts
+    alerts:String
 }
 
 type FileEntity{

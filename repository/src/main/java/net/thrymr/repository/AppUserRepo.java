@@ -1,6 +1,7 @@
 package net.thrymr.repository;
 
 
+import net.thrymr.enums.Alerts;
 import net.thrymr.enums.Roles;
 import net.thrymr.model.AppUser;
 
@@ -17,5 +18,5 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> , JpaSpecifica
 	Optional<AppUser> findByMobileAndIsActiveAndIsDeleted(String mobile, Boolean aTrue, Boolean aFalse);
 	Optional<AppUser> findByEmail(String email);
 
-	List<AppUser> findAllByAlertsAndRolesIn(String alert, List<Roles> appUserList);
+	List<AppUser> findAllByAlertsAndRolesIn(Alerts alert, List<Roles> appUserList);
 }

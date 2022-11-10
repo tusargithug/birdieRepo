@@ -561,7 +561,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     @Override
     public List<AppUser> getAllAppUserByAlerts(AppUserDto request) {
         List<Roles> appUserList = Arrays.asList(Roles.TEAM_LEADER, Roles.TEAM_MANAGER);
-        if (Validator.isValid(request.getAlerts())){
+        if (Validator.isValid(request.getAlerts().name())){
             return appUserRepo.findAllByAlertsAndRolesIn(request.getAlerts(),appUserList);
         }
 
