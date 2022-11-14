@@ -3,15 +3,18 @@ package net.thrymr.services.impl;
         import graphql.kickstart.tools.GraphQLMutationResolver;
         import graphql.schema.DataFetchingEnvironment;
         import lombok.extern.slf4j.Slf4j;
+        import net.thrymr.FileDocument;
         import net.thrymr.dto.*;
         import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
         import net.thrymr.dto.slotRequest.TimeSlotDto;
+        import net.thrymr.model.MiniSession;
         import net.thrymr.model.master.Category;
         import net.thrymr.model.master.Course;
         import net.thrymr.services.*;
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.graphql.data.method.annotation.Argument;
         import org.springframework.graphql.data.method.annotation.MutationMapping;
+        import org.springframework.graphql.data.method.annotation.QueryMapping;
         import org.springframework.stereotype.Component;
         import org.springframework.web.multipart.MultipartFile;
 
@@ -54,6 +57,12 @@ public class MutationResolver implements GraphQLMutationResolver {
     AssessmentService assessmentService;
     @Autowired
     AppointmentService appointmentService;
+
+    @Autowired
+    MiniSessionService miniSessionService;
+
+    @Autowired
+    FileService fileService;
 
     @MutationMapping(name = "createAppUser")
     public String createAppUser(AppUserDto request)throws  Exception{
@@ -381,6 +390,37 @@ public class MutationResolver implements GraphQLMutationResolver {
     @MutationMapping("rescheduledUserAppointment")
     public String rescheduledUserAppointment(@Argument(name = "input") TimeSlotDto request) throws ParseException {
         return appointmentService.rescheduledUserAppointment(request);
+    }
+
+    @MutationMapping(name="createGroup")
+    public String createGroup(@Argument(name = "input") GroupsDto request){
+        return miniSessionService.createGroup(request);
+    }
+
+    @MutationMapping(name = "saveMiniSession")
+    public String saveMiniSession(@Argument(name = "input") MiniSessionDto request) {
+        return miniSessionService.saveMiniSession(request);
+    }
+
+    @MutationMapping(name = "updateMiniSession")
+    public String updateMiniSession(@Argument(name = "input") MiniSessionDto request) {
+        return miniSessionService.updateMiniSession(request);
+    }
+
+    @MutationMapping(name = "deleteMiniSessionById")
+    public String deleteMiniSessionById(@Argument Long id) {
+        return miniSessionService.deleteMiniSessionById(id);
+    }
+
+    @MutationMapping(name = "uploadFiles")
+    public String uploadFiles(@Argument(name = "file") MultipartFile file) throws IOException {
+        return fileService.addFile(file);
+    }
+
+
+    @MutationMapping("deleteFiles")
+    public String deleteFiles(@Argument String id) {
+        return fileService.deleteFile(id);
     }
 
 

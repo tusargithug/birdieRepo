@@ -1,7 +1,6 @@
 package net.thrymr.services.impl;
 
 import net.thrymr.dto.ChapterDto;
-import net.thrymr.dto.FileEntityDto;
 import net.thrymr.dto.UnitDto;
 import net.thrymr.model.Chapter;
 import net.thrymr.model.Unit;

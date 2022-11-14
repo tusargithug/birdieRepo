@@ -309,39 +309,60 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public String updateAppUser(AppUserDto request) throws ParseException {
-        Optional<AppUser> optionalAppUser = appUserRepo.findById(request.getId());
-        if (optionalAppUser.isPresent()) {
-            AppUser user = optionalAppUser.get();
-            if (request.getEmpId() != null) {
-                user.setEmpId(request.getEmpId());
+        if(Validator.isValid(request.getId())) {
+            Optional<AppUser> optionalAppUser = appUserRepo.findById(request.getId());
+            if (optionalAppUser.isPresent()) {
+                AppUser user = optionalAppUser.get();
+                if (Validator.isValid(request.getEmpId())) {
+                    user.setEmpId(request.getEmpId());
+                }
+                if (Validator.isValid(request.getMobile())) {
+                    user.setMobile(request.getMobile());
+                }
+                if(Validator.isValid(request.getAlternateMobile())){
+                    user.setAlternateMobile(request.getAlternateMobile());
+                }
+                if (Validator.isValid(request.getLastName())) {
+                    user.setLastName(request.getLastName());
+                }
+                if (request.getFirstName() != null) {
+                    user.setFirstName(request.getFirstName());
+                }
+                if (Validator.isValid(request.getUserName())) {
+                    user.setUserName(request.getUserName());
+                }
+                if (Validator.isValid(request.getEmail())) {
+                    user.setEmail(request.getEmail());
+                }
+                if (Validator.isValid(request.getDateOfJoining())) {
+                    user.setDateOfJoining(DateUtils.toFormatStringToDate(String.valueOf(request.getDateOfJoining()), Constants.DATE_FORMAT));
+                }
+                if (request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
+                    user.setIsActive(request.getIsActive());
+                }
+                if (Validator.isValid(request.getSiteId())) {
+                    Optional<Site> optionalSite = siteRepo.findById(request.getSiteId());
+                    if (optionalSite.isPresent()) {
+                        user.setSite(optionalSite.get());
+                    }
+                }
+                if (Validator.isValid(request.getShiftTimingsId())) {
+                    Optional<ShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(request.getShiftTimingsId());
+                    if (optionalShiftTimings.isPresent()) {
+                        user.setShiftTimings(optionalShiftTimings.get());
+                    }
+                }
+                if (Validator.isValid(request.getTeamId())) {
+                    Optional<Team> optionalTeamId = teamRepo.findById(request.getTeamId());
+                    if (optionalTeamId.isPresent()) {
+                        user.setTeam(optionalTeamId.get());
+                    }
+                }
+                appUserRepo.save(user);
+                return "User updated successfully";
             }
-            if (request.getMobile() != null) {
-                user.setMobile(request.getMobile());
-            }
-
-            // user.setPassword(request.getPassword());
-            if (request.getLastName() != null) {
-                user.setLastName(request.getLastName());
-            }
-            if (request.getFirstName() != null) {
-                user.setFirstName(request.getFirstName());
-            }
-            if (request.getEmail() != null) {
-                user.setEmail(request.getEmail());
-            }
-            if (request.getDateOfJoining() != null) {
-                user.setDateOfJoining(DateUtils.toFormatStringToDate(String.valueOf(request.getDateOfJoining()), Constants.DATE_FORMAT));
-            }
-            if (request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
-                user.setIsActive(request.getIsActive());
-            }
-            if (request.getAlternateMobile() != null) {
-                user.setAlternateMobile(request.getAlternateMobile());
-            }
-            appUserRepo.save(user);
-            return "User updated successfully";
         }
-        return "No data found";
+        return "This id not present in database";
     }
 
     @Override

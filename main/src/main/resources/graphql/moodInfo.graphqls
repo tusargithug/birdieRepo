@@ -42,6 +42,9 @@ type Query {
     getAllAppointment:[UserAppointment]
     getCounsellorById(id:ID):Counsellor
     getAllEnumRoles:[Roles]
+    getMiniSessionById(id:ID!):MiniSession
+    getAllMiniSession:[MiniSession]
+    downloads(id:String):FileDocument
 }
 
 type Mutation {
@@ -110,6 +113,12 @@ type Mutation {
     createAppointment(input:TimeSlotDto):String!
     rescheduledUserAppointment(input:TimeSlotDto):String!
     testMultiFilesUpload(files: [Upload!]!): Boolean
+    saveMiniSession(input:MiniSessionDto):String!
+    updateMiniSession(input:MiniSessionDto):String!
+    deleteMiniSessionById(id:ID!):String!
+    createGroup(input:GroupsDto):String!
+    #downloads(id:String):FileDocument
+    deleteFiles(id:String):String
 }
 scalar Upload
 type MtMoodInfo {
@@ -188,14 +197,6 @@ type AppUser{
     shiftTimings:ShiftTimings
     isActive:Boolean
     dateOfJoining:Date
-}
-
-type FileEntity{
-    fileId:ID!
-    contentType:String!
-    name:String!
-    fileType:String!
-    employees:[Course]
 }
 
 type ShiftTimings{
@@ -323,4 +324,57 @@ type UserAppointment {
     counsellor:Counsellor
     isCurrentAppointment:Boolean
     isActive:Boolean
+}
+
+type Groups{
+    id:ID
+    isActive:Boolean
+    groupName:String
+    text:String
+    miniSession:MiniSession
+    fileDetails:[FileDetails]
+}
+type MiniSession{
+    id:ID
+    isActive:Boolean
+    groupsList:[Groups]
+    tags:[String]
+}
+type FileDetails{
+    id:ID
+    isActive:Boolean
+    fileId:String
+    fileName:String
+    fileType:String
+    fileSize:Int
+    fileContentType:String
+}
+input GroupsDto{
+    miniSessionId:Int
+    groupName:String
+    text:String
+}
+input FileDetailsDto{
+    id:Int
+    fileId:String
+    fileName:String
+    fileType:String
+    fileSize:Int
+    contentType:String
+}
+
+type FileDocument{
+    fileId:String
+    fileName:String
+    fileContentType:String
+    fileSizeInBytes:String
+    fileType:String
+    publicUrl:String
+    file:Byte
+}
+scalar Byte
+
+input MiniSessionDto {
+id:Int
+tags:[String]
 }

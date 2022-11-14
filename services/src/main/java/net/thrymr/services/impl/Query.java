@@ -1,5 +1,6 @@
 package net.thrymr.services.impl;
         import graphql.kickstart.tools.GraphQLQueryResolver;
+        import net.thrymr.FileDocument;
         import net.thrymr.dto.CounsellorDto;
         import net.thrymr.dto.SiteDto;
         import net.thrymr.dto.TeamDto;
@@ -18,6 +19,8 @@ package net.thrymr.services.impl;
         import org.springframework.graphql.data.method.annotation.Argument;
         import org.springframework.graphql.data.method.annotation.QueryMapping;
         import org.springframework.stereotype.Component;
+
+        import java.io.IOException;
         import java.text.ParseException;
         import java.util.List;
 
@@ -65,6 +68,12 @@ public class Query implements GraphQLQueryResolver {
 
     @Autowired
     CourseService courseService;
+
+    @Autowired
+    FileService fileService;
+
+    @Autowired
+    MiniSessionService miniSessionService;
 
     @QueryMapping
     public MtMoodInfo moodInfoById(Long id) {
@@ -275,5 +284,20 @@ public class Query implements GraphQLQueryResolver {
     @QueryMapping(name = "getAllEnumRoles")
     public List<Roles> getAllEnumRoles(){
         return appUserService.getAllEnumRoles();
+    }
+
+    @QueryMapping(name = "getMiniSessionById")
+    public MiniSession getMiniSessionById(@Argument Long id) {
+        return miniSessionService.getMiniSessionById(id);
+    }
+
+    @QueryMapping(name = "getAllMiniSession")
+    public List<MiniSession> getAllMiniSession() {
+        return miniSessionService.getAllMiniSession();
+    }
+    @QueryMapping(name = "downloads")
+    public FileDocument downloads(@Argument String id) throws IOException {
+        FileDocument loadFile = fileService.downloadFile(id);
+        return loadFile;
     }
 }

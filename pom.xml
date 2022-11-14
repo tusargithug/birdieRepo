@@ -98,7 +98,6 @@
 		<dependency>
 			<groupId>com.graphql-java</groupId>
 			<artifactId>graphql-java</artifactId>
-
 		</dependency>
 
 	</dependencies>
@@ -111,6 +110,8 @@
 		<module>common</module>
 		<module>authentication</module>
 		<module>services</module>
+		<module>mongo-document</module>
+		<module>mongo-repository</module>
 	</modules>
 
 	<build>
