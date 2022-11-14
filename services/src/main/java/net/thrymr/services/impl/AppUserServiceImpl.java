@@ -278,7 +278,7 @@ public class AppUserServiceImpl implements AppUserService {
         user.setEmail(request.getEmail());
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
-        user.setUserName(request.getUserName());
+        user.setUserName(request.getFirstName()+" "+request.getLastName());
         user.setMobile(request.getMobile());
         user.setAlternateMobile(request.getAlternateMobile());
         user.setEmpId(request.getEmpId());
@@ -328,11 +328,14 @@ public class AppUserServiceImpl implements AppUserService {
                 if (request.getFirstName() != null) {
                     user.setFirstName(request.getFirstName());
                 }
-                if (Validator.isValid(request.getUserName())) {
-                    user.setUserName(request.getUserName());
+                if (Validator.isValid(request.getFirstName()) && Validator.isValid(request.getLastName())) {
+                    user.setUserName(request.getFirstName()+" "+request.getLastName());
                 }
                 if (Validator.isValid(request.getEmail())) {
                     user.setEmail(request.getEmail());
+                }
+                if(Validator.isValid(request.getRoles())){
+                    user.setRoles(Roles.valueOf(request.getRoles()));
                 }
                 if (Validator.isValid(request.getDateOfJoining())) {
                     user.setDateOfJoining(DateUtils.toFormatStringToDate(String.valueOf(request.getDateOfJoining()), Constants.DATE_FORMAT));

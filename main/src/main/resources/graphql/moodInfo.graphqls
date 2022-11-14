@@ -205,7 +205,7 @@ type ShiftTimings{
     site:Site
     shiftStatAt:LocalTime
     shiftEndAt:LocalTime
-    team:Team
+    team:[Team]
     isActive:Boolean
 }
 input ShiftTimingsDto{

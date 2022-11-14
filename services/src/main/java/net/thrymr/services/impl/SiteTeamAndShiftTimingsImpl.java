@@ -326,12 +326,6 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             Optional<Site> optionalSite = siteRepo.findById(shiftTimingsDto.getSiteId());
             optionalSite.ifPresent(shiftTimings::setSite);
         }
-        if (Validator.isValid(shiftTimingsDto.getTeamId())) {
-            Optional<Team> optionalTeamId = teamRepo.findById(shiftTimingsDto.getTeamId());
-            if (optionalTeamId.isPresent()) {
-                shiftTimings.setTeam(optionalTeamId.get());
-            }
-        }
         if (Validator.isValid(shiftTimingsDto.getCounsellorId())) {
             Optional<Counsellor> optionalCounsellorId = counsellorRepo.findById(shiftTimingsDto.getCounsellorId());
             if (optionalCounsellorId.isPresent()) {

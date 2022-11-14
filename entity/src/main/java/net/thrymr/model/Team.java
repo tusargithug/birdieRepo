@@ -23,9 +23,9 @@ public class Team extends BaseEntity {
     private AppUser teamLeader;
     @OneToOne(cascade = CascadeType.ALL)
     private AppUser teamManager;
-    @ManyToOne(cascade = CascadeType.ALL,optional = false)
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private Site site;
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private ShiftTimings shiftTimings;
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "team")
     private List<AppUser> appUserList;
