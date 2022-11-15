@@ -19,7 +19,7 @@ public class SiteDto {
     private Long countryId;
     private Long regionId;
     private Long siteManagerId;
-    private Boolean status=Boolean.FALSE;
+    private Boolean status;
     private Integer pageSize;
     private Integer PageNumber;
     private String searchKey;
