@@ -22,4 +22,7 @@ public class Groups extends BaseEntity{
 
     @Column(columnDefinition = "text")
     private String text;
+
+    @ElementCollection(targetClass = String.class)
+    private List<String> tags;
 }

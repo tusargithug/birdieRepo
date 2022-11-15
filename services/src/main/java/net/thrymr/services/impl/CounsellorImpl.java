@@ -172,7 +172,7 @@ public class CounsellorImpl implements CounsellorService {
             if (Validator.isValid(request.getBio())) {
                 counsellor.setBio(request.getBio());
             }
-            if (request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
+            if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
                 counsellor.setIsActive(request.getIsActive());
             }
             counsellorRepo.save(counsellor);

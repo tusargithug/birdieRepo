@@ -59,7 +59,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                 unit.setUnitName(dto.getUnitName());
             }
         }
-        if (dto.getIsActive().equals(Boolean.TRUE) || dto.getIsActive().equals(Boolean.FALSE)) {
+        if (dto.getIsActive()!=null && dto.getIsActive().equals(Boolean.TRUE) || dto.getIsActive().equals(Boolean.FALSE)) {
             unit.setIsActive(dto.getIsActive());
         }
         return unit;
@@ -146,7 +146,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                 if (Validator.isValid(String.valueOf(dto.getVideo()))) {
                     chapter.setVideo(dto.getVideo());
                 }
-                if (dto.getIsActive().equals(Boolean.TRUE) || dto.getIsActive().equals(Boolean.FALSE)) {
+                if (dto.getIsActive()!=null && dto.getIsActive().equals(Boolean.TRUE) || dto.getIsActive().equals(Boolean.FALSE)) {
                     chapter.setIsActive(dto.getIsActive());
                 }
                 chapterRepo.save(chapter);
@@ -214,7 +214,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
     public Unit dtoToEntity(UnitDto dto) {
         Unit unit = new Unit();
         unit.setUnitName(dto.getUnitName());
-        if (dto.getIsActive().equals(Boolean.TRUE)) {
+        if (dto.getIsActive()!=null && dto.getIsActive().equals(Boolean.TRUE)) {
             unit.setIsActive(dto.getIsActive());
         }
         return unit;
@@ -274,7 +274,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                 chapter.setUnit(unitId.get());
             }
         }
-        if (chapterDto.getIsActive().equals(Boolean.TRUE)) {
+        if (chapter.getIsActive() != null && chapterDto.getIsActive().equals(Boolean.TRUE)) {
             chapter.setIsActive(chapterDto.getIsActive());
         }
         return chapter;

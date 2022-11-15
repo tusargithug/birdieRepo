@@ -338,7 +338,6 @@ type MiniSession{
     id:ID
     isActive:Boolean
     groupsList:[Groups]
-    tags:[String]
 }
 type FileDetails{
     id:ID
@@ -353,6 +352,8 @@ input GroupsDto{
     miniSessionId:Int
     groupName:String
     text:String
+    tags:[String]
+    isActive:Boolean
 }
 input FileDetailsDto{
     id:Int
@@ -376,5 +377,5 @@ scalar Byte
 
 input MiniSessionDto {
 id:Int
-tags:[String]
+isActive:Boolean
 }

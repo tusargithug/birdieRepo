@@ -18,4 +18,6 @@ public interface MiniSessionService {
     List<MiniSession> getAllMiniSession();
 
     String createGroup(GroupsDto request);
+
+    String updateGroupById(GroupsDto request);
 }

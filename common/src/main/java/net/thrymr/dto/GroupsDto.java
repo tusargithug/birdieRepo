@@ -15,4 +15,5 @@ public class GroupsDto {
     private String text;
     private Long miniSessionId;
     private Boolean isActive;
+    private List<String> tags;
 }

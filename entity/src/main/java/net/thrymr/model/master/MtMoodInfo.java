@@ -40,5 +40,4 @@ public class MtMoodInfo extends BaseEntity {
 
 	@Column(name = "intensity_name")
 	private String intensityName;
-
 }

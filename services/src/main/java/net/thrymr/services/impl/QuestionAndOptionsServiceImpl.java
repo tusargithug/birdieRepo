@@ -53,7 +53,7 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
                 question.setAssessment(optionalAssessment.get());
             }
         }
-        if (request.getIsActive().equals(Boolean.TRUE)) {
+        if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE)) {
             question.setIsActive(request.getIsActive());
         }
         questionRepo.save(question);
@@ -135,7 +135,7 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
                         question.setAssessment(optionalAssessment.get());
                     }
                 }
-                if (request.getIsActive().equals(Boolean.TRUE)) {
+                if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
                     question.setIsActive(request.getIsActive());
                 }
                 questionRepo.save(question);

@@ -42,7 +42,6 @@ public class MiniSessionImpl implements MiniSessionService {
     @Override
     public String saveMiniSession(MiniSessionDto request) {
         MiniSession miniSession = new MiniSession();
-        miniSession.setTags(request.getTags());
         if(request.getIsActive().equals(Boolean.TRUE)) {
             miniSession.setIsActive(request.getIsActive());
         }
@@ -57,14 +56,11 @@ public class MiniSessionImpl implements MiniSessionService {
             Optional<MiniSession> optionalMiniSession = miniSessionRepo.findById(request.getId());
             if (optionalMiniSession.isPresent()) {
                 miniSession = optionalMiniSession.get();
-                if (Validator.isValid(request.getId())) {
-                    miniSession.setTags(request.getTags());
-                    if(request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
-                        miniSession.setIsActive(request.getIsActive());
-                    }
-                    miniSessionRepo.save(miniSession);
-                    return "Mini session updated successfully";
+                if (request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
+                    miniSession.setIsActive(request.getIsActive());
                 }
+                miniSessionRepo.save(miniSession);
+                return "Mini session updated successfully";
             }
         }
         return "This mini session id not present in database";
@@ -109,14 +105,41 @@ public class MiniSessionImpl implements MiniSessionService {
     public String createGroup(GroupsDto request) {
         Groups groups = new Groups();
         groups.setGroupName(request.getGroupName());
-        groups.setIsActive(request.getIsActive());
+        if(request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE)) {
+            groups.setIsActive(request.getIsActive());
+        }
         groups.setText(request.getText());
+        groups.setTags(request.getTags());
         if (Validator.isValid(request.getMiniSessionId())) {
             Optional<MiniSession> optionalMiniSession = miniSessionRepo.findById(request.getMiniSessionId());
             groups.setMiniSession(optionalMiniSession.get());
         }
         groupRepo.save(groups);
         return "group saved successfully";
+    }
+
+    @Override
+    public String updateGroupById(GroupsDto request) {
+        Groups groups=null;
+        if(Validator.isValid(request.getId())){
+            Optional<Groups> optionalGroups=groupRepo.findById(request.getId());
+            if(optionalGroups.isPresent()){
+                groups=optionalGroups.get();
+                groups.setGroupName(request.getGroupName());
+                if(request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
+                    groups.setIsActive(request.getIsActive());
+                }
+                groups.setText(request.getText());
+                groups.setTags(request.getTags());
+                if (Validator.isValid(request.getMiniSessionId())) {
+                    Optional<MiniSession> optionalMiniSession = miniSessionRepo.findById(request.getMiniSessionId());
+                    groups.setMiniSession(optionalMiniSession.get());
+                }
+                groupRepo.save(groups);
+                return "Group update successfully";
+            }
+        }
+        return "This id not present in database";
     }
 
 

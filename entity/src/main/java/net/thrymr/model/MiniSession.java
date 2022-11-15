@@ -14,6 +14,4 @@ import java.util.List;
 public class MiniSession extends BaseEntity{
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "miniSession")
     private List<Groups> groupsList;
-    @ElementCollection(targetClass = String.class)
-    private List<String> tags;
 }

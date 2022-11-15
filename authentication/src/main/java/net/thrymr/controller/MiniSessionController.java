@@ -47,4 +47,8 @@ public class MiniSessionController {
         return miniSessionService.createGroup(request);
     }
 
+    @MutationMapping(name = "updateGroupById")
+    public String updateGroupById(@Argument(name = "input") GroupsDto request) {
+        return miniSessionService.updateGroupById(request);
+    }
 }

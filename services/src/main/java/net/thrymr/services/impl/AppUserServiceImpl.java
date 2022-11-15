@@ -286,18 +286,22 @@ public class AppUserServiceImpl implements AppUserService {
         if (request.getDateOfJoining() != null) {
             user.setDateOfJoining(DateUtils.toFormatStringToDate(String.valueOf(request.getDateOfJoining()), Constants.DATE_FORMAT));
         }
-        if (request.getIsActive().equals(Boolean.TRUE)) {
+        if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE)) {
             user.setIsActive(request.getIsActive());
         }
-        Optional<Site> optionalSite = siteRepo.findById(request.getSiteId());
-        if (optionalSite.isPresent()) {
-            user.setSite(optionalSite.get());
+        if(Validator.isValid(request.getSiteId())) {
+            Optional<Site> optionalSite = siteRepo.findById(request.getSiteId());
+            if (optionalSite.isPresent()) {
+                user.setSite(optionalSite.get());
+            }
         }
-        Optional<ShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(request.getShiftTimingsId());
-        if (optionalShiftTimings.isPresent()) {
-            user.setShiftTimings(optionalShiftTimings.get());
+        if(Validator.isValid(request.getShiftTimingsId())) {
+            Optional<ShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(request.getShiftTimingsId());
+            if (optionalShiftTimings.isPresent()) {
+                user.setShiftTimings(optionalShiftTimings.get());
+            }
         }
-        if (request.getTeamId() != null) {
+        if (Validator.isValid(request.getTeamId())) {
             Optional<Team> optionalTeamId = teamRepo.findById(request.getTeamId());
             if (optionalTeamId.isPresent()) {
                 user.setTeam(optionalTeamId.get());
@@ -340,7 +344,7 @@ public class AppUserServiceImpl implements AppUserService {
                 if (Validator.isValid(request.getDateOfJoining())) {
                     user.setDateOfJoining(DateUtils.toFormatStringToDate(String.valueOf(request.getDateOfJoining()), Constants.DATE_FORMAT));
                 }
-                if (request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
+                if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
                     user.setIsActive(request.getIsActive());
                 }
                 if (Validator.isValid(request.getSiteId())) {

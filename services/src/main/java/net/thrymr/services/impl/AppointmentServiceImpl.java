@@ -57,7 +57,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                 appointment.setDays(DayOfWeek.valueOf(detailsDto.getDayOfWeek()));
                 appointment.setSlotStatus(SlotStatus.valueOf(detailsDto.getSlotStatus()));
                 appointment.setSlotShift(SlotShift.getType(detailsDto.getSlotShift()));
-                if (request.getIsActive().equals(Boolean.TRUE)) {
+                if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE)) {
                     appointment.setIsActive(detailsDto.getIsActive());
                 }
                 Date todayDate = new Date();
@@ -162,7 +162,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                         userAppointment.setDays(DayOfWeek.valueOf(detailsDto.getDayOfWeek()));
                         userAppointment.setSlotStatus(SlotStatus.valueOf(detailsDto.getSlotStatus()));
                         userAppointment.setSlotShift(SlotShift.getType(detailsDto.getSlotShift()));
-                        if (request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
+                        if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
                             userAppointment.setIsActive(detailsDto.getIsActive());
                         }
                         Date todayDate = new Date();
