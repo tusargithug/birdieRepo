@@ -25,68 +25,74 @@ public class SiteTeamAndShiftTimingsController {
     SiteTeamAndShiftTimingsService siteTeamAndShiftTimingsService;
 
 
-    @MutationMapping(name="createTeam")
-    public String createTeam(@Argument(name = "input") TeamDto teamDto){
+    @MutationMapping(name = "createTeam")
+    public String createTeam(@Argument(name = "input") TeamDto teamDto) {
         return siteTeamAndShiftTimingsService.createTeam(teamDto);
     }
-    @MutationMapping(name="updateTeam")
-    public String updateTeam(@Argument(name = "input")TeamDto teamDto){
+
+    @MutationMapping(name = "updateTeam")
+    public String updateTeam(@Argument(name = "input") TeamDto teamDto) {
         return siteTeamAndShiftTimingsService.updateTeam(teamDto);
     }
 
-    @MutationMapping(name="deleteTeamById")
-    public String deleteTeamById(Long id){
+    @MutationMapping(name = "deleteTeamById")
+    public String deleteTeamById(Long id) {
         return siteTeamAndShiftTimingsService.deleteTeamById(id);
     }
 
-    @MutationMapping(name="saveSite")
-    public String saveSite(@Argument(name = "input")SiteDto siteDto){
+    @MutationMapping(name = "saveSite")
+    public String saveSite(@Argument(name = "input") SiteDto siteDto) {
         return siteTeamAndShiftTimingsService.saveSite(siteDto);
     }
-    @MutationMapping(name="updateSite")
-    public String updateSite(@Argument(name = "input")SiteDto siteDto){
+
+    @MutationMapping(name = "updateSite")
+    public String updateSite(@Argument(name = "input") SiteDto siteDto) {
         return siteTeamAndShiftTimingsService.updateSite(siteDto);
     }
-    @MutationMapping(name="deleteSiteById")
-    public String deleteSiteById(Long id){
+
+    @MutationMapping(name = "deleteSiteById")
+    public String deleteSiteById(Long id) {
         return siteTeamAndShiftTimingsService.deleteSiteById(id);
     }
 
-    @MutationMapping(name="saveSiftTimings")
-    public String saveSiftTimings(@Argument(name = "input")ShiftTimingsDto shiftTimingsDto){
+    @MutationMapping(name = "saveSiftTimings")
+    public String saveSiftTimings(@Argument(name = "input") ShiftTimingsDto shiftTimingsDto) {
         return siteTeamAndShiftTimingsService.saveSiftTimings(shiftTimingsDto);
     }
 
-    @MutationMapping(name="updateSiftTimings")
-    public String updateSiftTimings(@Argument(name = "input")ShiftTimingsDto shiftTimingsDto){
+    @MutationMapping(name = "updateSiftTimings")
+    public String updateSiftTimings(@Argument(name = "input") ShiftTimingsDto shiftTimingsDto) {
         return siteTeamAndShiftTimingsService.updateSiftTimings(shiftTimingsDto);
     }
-    @MutationMapping(name="deleteSiftTimingsById")
-    public String deleteSiftTimingsById(Long id){
+
+    @MutationMapping(name = "deleteSiftTimingsById")
+    public String deleteSiftTimingsById(Long id) {
         return siteTeamAndShiftTimingsService.deleteSiftTimingsById(id);
     }
 
     @QueryMapping("getAllTeamPagination")
-    public List<Team> getAllTeamPagination(@Argument(name = "input")TeamDto teamdto){
+    public List<Team> getAllTeamPagination(@Argument(name = "input") TeamDto teamdto) {
         return siteTeamAndShiftTimingsService.getAllTeamPagination(teamdto);
     }
+
     @QueryMapping("getAllSitePagination")
-    public List<Site> getAllSitePagination(@Argument(name = "input") SiteDto siteDto){
+    public List<Site> getAllSitePagination(@Argument(name = "input") SiteDto siteDto) {
         return siteTeamAndShiftTimingsService.getAllSitePagination(siteDto);
     }
 
     @QueryMapping(name = "getAllTeam")
-    public List<Team> getAllTeam(){
-        List<Team> teamList= siteTeamAndShiftTimingsService.getAllTeam();
+    public List<Team> getAllTeam() {
+        List<Team> teamList = siteTeamAndShiftTimingsService.getAllTeam();
         return teamList;
     }
+
     @QueryMapping(name = "getAllSite")
-    public List<Site> getAllSite(){
+    public List<Site> getAllSite() {
         return siteTeamAndShiftTimingsService.getAllSite();
     }
 
     @QueryMapping(name = "getAllShiftTimings")
-    public List<ShiftTimings> getAllShiftTimings(){
+    public List<ShiftTimings> getAllShiftTimings() {
         return siteTeamAndShiftTimingsService.getAllShiftTimings();
     }
 

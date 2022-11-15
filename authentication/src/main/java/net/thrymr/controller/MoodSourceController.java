@@ -30,8 +30,7 @@ public class MoodSourceController {
     private final MoodSourceService moodSourceService;
 
 
-
-    public MoodSourceController(MoodSourceService moodSourceService ) {
+    public MoodSourceController(MoodSourceService moodSourceService) {
         this.moodSourceService = moodSourceService;
 
     }
@@ -40,9 +39,9 @@ public class MoodSourceController {
     @PostMapping("/save")
     public ApiResponse moodSourceSave(@RequestBody MoodSourceDto request) {
         logger.info("save mood source service started");
-        ApiResponse apiResponse=   moodSourceService.moodSourceSave(request);
+        ApiResponse apiResponse = moodSourceService.moodSourceSave(request);
         logger.info("save mood source service completed");
-        return new ApiResponse(HttpStatus.OK, "",apiResponse);
+        return new ApiResponse(HttpStatus.OK, "", apiResponse);
     }
 
     // get all mood sources
@@ -51,7 +50,7 @@ public class MoodSourceController {
         logger.info("get all mood sources service started");
         ApiResponse apiResponse = moodSourceService.getAllMoodSources();
         logger.info("get all mood sources service completed");
-        return new ApiResponse(HttpStatus.OK, "All MoodSources details",apiResponse);
+        return new ApiResponse(HttpStatus.OK, "All MoodSources details", apiResponse);
     }
 
 
@@ -60,18 +59,19 @@ public class MoodSourceController {
     @PutMapping("/update")
     public ApiResponse updateMoodSource(@RequestBody MoodSourceIntensityRequestDto request) {
         logger.info("Get update mood service started");
-        ApiResponse apiResponse=   moodSourceService.updateMoodSource(request);
+        ApiResponse apiResponse = moodSourceService.updateMoodSource(request);
         logger.info("Get update mood service completed");
-        return new ApiResponse(HttpStatus.OK,"", apiResponse);
+        return new ApiResponse(HttpStatus.OK, "", apiResponse);
     }
 
     @MutationMapping(name = "createUserMoodSourceCheckIn")
     public String createUserMoodSourceCheckIn(@Argument(name = "input") MoodSourceIntensityRequestDto request) {
-        return   moodSourceService.createUserMoodSourceCheckIn(request);
+        return moodSourceService.createUserMoodSourceCheckIn(request);
 
     }
+
     @MutationMapping(name = "deleteUserMoodSourceCheckInById")
-    public String deleteUserMoodSourceCheckInById(@Argument Long id){
-        return   moodSourceService.deleteUserMoodSourceCheckInById( id);
+    public String deleteUserMoodSourceCheckInById(@Argument Long id) {
+        return moodSourceService.deleteUserMoodSourceCheckInById(id);
     }
 }

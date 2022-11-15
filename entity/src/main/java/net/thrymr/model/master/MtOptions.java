@@ -16,13 +16,13 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "mt_options")
 public class MtOptions extends BaseEntity {
-	
-	@Column(columnDefinition = "TEXT")
-	private String  textAnswer;
-	
-	@ManyToOne(fetch = FetchType.LAZY,cascade =CascadeType.ALL)
-	private MtQuestion question;
 
-	@ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-	private UserCourse userCourse;
+    @Column(columnDefinition = "TEXT")
+    private String textAnswer;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private MtQuestion question;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private UserCourse userCourse;
 }

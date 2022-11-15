@@ -1,291 +1,290 @@
-
 type Category{
-id:ID!
-name:String
-description:String
-sequence:Int
-courses:[Int]
+    id:ID!
+    name:String
+    description:String
+    sequence:Int
+    courses:[Int]
 }
 
 type Course{
-id:ID!
-name:String
-code:String
-sequence:Int
-description:String
-category:Int
+    id:ID!
+    name:String
+    code:String
+    sequence:Int
+    description:String
+    category:Int
 }
 
 scalar Object
 type ApiResponse{
-statusCode:Int
-message:String
-status:String
+    statusCode:Int
+    message:String
+    status:String
 }
 input CategoryDto{
-id:Int
-name:String
-description:String
-sequence:Int
-coursesIds:[Int]
+    id:Int
+    name:String
+    description:String
+    sequence:Int
+    coursesIds:[Int]
 }
 
 input CourseDto{
- id:Int
- categoryId:Int
- code:String
- name:String
- sequence:Int
- description:String
+    id:Int
+    categoryId:Int
+    code:String
+    name:String
+    sequence:Int
+    description:String
 }
 
 input RolesDto{
-id:Int
-name:String
+    id:Int
+    name:String
 }
 
 input ChapterDto{
- id:Int
- chapterName:String
- profilePicture:String
- isActive:Boolean
- video:String
- unitId:Int
+    id:Int
+    chapterName:String
+    profilePicture:String
+    isActive:Boolean
+    video:String
+    unitId:Int
 }
 
 input CityDto{
- id:Int
- cityName:String
- mtCountryId:Int
+    id:Int
+    cityName:String
+    mtCountryId:Int
 }
 
 input CountryDto{
- id:Int
- countryName:String
- countryCode:String
- regionId:Int
+    id:Int
+    countryName:String
+    countryCode:String
+    regionId:Int
 }
 
 input RegionDto{
- id:Int
- regionName:String
+    id:Int
+    regionName:String
 }
 
 input SiteDto{
- id:Int
-# site:String
- siteName:String
-# city:CityDto
-# country:CountryDto
-# region:RegionDto
-# siteManager:AppUserDto
- cityId:Int
- countryId:Int
- regionId:Int
- siteManagerId:Int
- status:Boolean
- pageSize:Int
- pageNumber:Int
- searchKey:String
+    id:Int
+    # site:String
+    siteName:String
+    # city:CityDto
+    # country:CountryDto
+    # region:RegionDto
+    # siteManager:AppUserDto
+    cityId:Int
+    countryId:Int
+    regionId:Int
+    siteManagerId:Int
+    status:Boolean
+    pageSize:Int
+    pageNumber:Int
+    searchKey:String
 }
 
 input TeamDto {
- id:Int
- teamId:String
- teamName:String
-# teamLeader:AppUserDto
-# teamManager:AppUserDto
-# shiftTimings:ShiftTimingsDto
-# site:SiteDto
- status:Boolean
- pageNumber:Int
- PageSize:Int
- searchKey:String
- teamLeaderId:Int
- teamManagerId:Int
- siteId:Int
- shiftTimingsId:Int
+    id:Int
+    teamId:String
+    teamName:String
+    # teamLeader:AppUserDto
+    # teamManager:AppUserDto
+    # shiftTimings:ShiftTimingsDto
+    # site:SiteDto
+    status:Boolean
+    pageNumber:Int
+    PageSize:Int
+    searchKey:String
+    teamLeaderId:Int
+    teamManagerId:Int
+    siteId:Int
+    shiftTimingsId:Int
 }
 
 input UnitDto {
- id:Int
- unitName:String
- addOn:String
- chapterCount:Int
- status:Boolean
- addChapters:[ChapterDto]
- searchKey:String
- pageNumber :Int
- pageSize:Int
+    id:Int
+    unitName:String
+    addOn:String
+    chapterCount:Int
+    status:Boolean
+    addChapters:[ChapterDto]
+    searchKey:String
+    pageNumber :Int
+    pageSize:Int
 }
 type MtCountry {
- id:ID!
- countryName:String
- countryCode:String
- region:MtRegion
- cities:[MtCity]
+    id:ID!
+    countryName:String
+    countryCode:String
+    region:MtRegion
+    cities:[MtCity]
 }
 
 interface Result{
- countryCode:String
+    countryCode:String
 }
 type MtRegion{
- id:ID!
- regionName:String
- mtCountry:[MtCountry]
- site:Site
+    id:ID!
+    regionName:String
+    mtCountry:[MtCountry]
+    site:Site
 }
 type Site{
- id:ID!
- siteId:String
- siteName:String
- city:MtCity
- country:MtCountry
- region:MtRegion
- siteManager:AppUser
- teams:[Team]
+    id:ID!
+    siteId:String
+    siteName:String
+    city:MtCity
+    country:MtCountry
+    region:MtRegion
+    siteManager:AppUser
+    teams:[Team]
 }
 type Team{
- id:ID!
- teamId:String
- teamName:String
- teamLeader:AppUser
- teamManager:AppUser
- site:Site
- shiftTimings:ShiftTimings
+    id:ID!
+    teamId:String
+    teamName:String
+    teamLeader:AppUser
+    teamManager:AppUser
+    site:Site
+    shiftTimings:ShiftTimings
 }
 type MtCity{
- id:ID!
- cityName:String
- country:MtCountry
- sites:[Site]
+    id:ID!
+    cityName:String
+    country:MtCountry
+    sites:[Site]
 }
 type Chapter{
- id:ID!
- chapterName:String
- profilePicture:FileEntity
- description:String
- video:FileEntity
- unit:Unit
+    id:ID!
+    chapterName:String
+    profilePicture:FileEntity
+    description:String
+    video:FileEntity
+    unit:Unit
 }
 type MtOptions{
- textAnswer:String
- question:MtQuestion
- userCourse:UserCourse
+    textAnswer:String
+    question:MtQuestion
+    userCourse:UserCourse
 }
 type UserCourse{
- user:AppUser
- course:Course
- status:CourseStatus
- mtOptions:[MtOptions]
- startedDate:Date
- completedDate:Date
+    user:AppUser
+    course:Course
+    status:CourseStatus
+    mtOptions:[MtOptions]
+    startedDate:Date
+    completedDate:Date
 }
 type MtQuestion{
- question:String
- mtOptions:[MtOptions]
- psychometricTest:PsychometricTest
- questionCalType:QuestionCalType
- sequence:Int
- assessment:MtAssessment
+    question:String
+    mtOptions:[MtOptions]
+    psychometricTest:PsychometricTest
+    questionCalType:QuestionCalType
+    sequence:Int
+    assessment:MtAssessment
 }
 enum QuestionCalType{
- FORWARD
- REVERSE
- NONE
+    FORWARD
+    REVERSE
+    NONE
 }
 type MtAssessment{
- id:Int
- name:String
- description:String
- courses:[Course]
- instructions:String
- frequencyType:FrequencyType
- high:String
- moderate:String
- low:String
- questionList:[MtQuestion]
+    id:Int
+    name:String
+    description:String
+    courses:[Course]
+    instructions:String
+    frequencyType:FrequencyType
+    high:String
+    moderate:String
+    low:String
+    questionList:[MtQuestion]
 }
 type PsychometricTest{
- name:String
- description:String
- mtQuestions:[MtQuestion]
- options:[PsychometricTestOption]
- riskLevels:[RiskLevel]
+    name:String
+    description:String
+    mtQuestions:[MtQuestion]
+    options:[PsychometricTestOption]
+    riskLevels:[RiskLevel]
 }
 type RiskLevel{
- psychometricTest:PsychometricTest
- rangeFrom:Float
- rangeTo:Float
- risk:Risk
+    psychometricTest:PsychometricTest
+    rangeFrom:Float
+    rangeTo:Float
+    risk:Risk
 }
 enum Risk{
- LOW
- MEDIUM
- HIGH
- NONE
+    LOW
+    MEDIUM
+    HIGH
+    NONE
 }
 
 type PsychometricTestOption{
- option:String
- score:Int
- psychometricTest:PsychometricTest
+    option:String
+    score:Int
+    psychometricTest:PsychometricTest
 }
 
 type Unit{
- id:ID!
- unitName:String
- chapters:[Chapter]
+    id:ID!
+    unitName:String
+    chapters:[Chapter]
 }
 
 input AssessmentDto{
- id:Int
- description:String
- name:String
- duration:String
- instructions:String
- frequencyType:FrequencyType
- high: String
- moderate:String
- low:String
+    id:Int
+    description:String
+    name:String
+    duration:String
+    instructions:String
+    frequencyType:FrequencyType
+    high: String
+    moderate:String
+    low:String
 }
 enum FrequencyType{
- NONE
- ONE_TIME
- RECURRING
+    NONE
+    ONE_TIME
+    RECURRING
 }
 
 input QuestionDto {
- id:Int
- question:String
- videoReference:String
- assessmentId:Int
- psychometricTestId:Int
- questionCalType:String
- Sequence:Int
+    id:Int
+    question:String
+    videoReference:String
+    assessmentId:Int
+    psychometricTestId:Int
+    questionCalType:String
+    Sequence:Int
 }
 input OptionsDto{
- id:Int
- textAnswer:String
- questionId:Int
- userCourseId:Int
+    id:Int
+    textAnswer:String
+    questionId:Int
+    userCourseId:Int
 }
- input TimeSlotDto{
- counsellorId:Int
- counsellorSlotId:Int
- slotShift:String
- slots:[SlotDetailsDto]
+input TimeSlotDto{
+    counsellorId:Int
+    counsellorSlotId:Int
+    slotShift:String
+    slots:[SlotDetailsDto]
 }
 input SlotDetailsDto{
- startTime:String
- endTime:String
- duration:Int
- slotShift: String
- slotStatus:String
- dayOfWeek: String
- date: String
- toDate: String
- fromDate: String
- appUserId:Int
- counsellorId:Int
+    startTime:String
+    endTime:String
+    duration:Int
+    slotShift: String
+    slotStatus:String
+    dayOfWeek: String
+    date: String
+    toDate: String
+    fromDate: String
+    appUserId:Int
+    counsellorId:Int
 }

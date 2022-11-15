@@ -1,4 +1,5 @@
 package net.thrymr;
+
 import graphql.kickstart.servlet.apollo.ApolloScalars;
 import graphql.scalars.ExtendedScalars;
 import graphql.schema.GraphQLScalarType;
@@ -95,22 +96,27 @@ public class BaseApplication {
     public RuntimeWiringConfigurer runtimeWiringConfigurer() {
         return wiringBuilder -> wiringBuilder.scalar(ExtendedScalars.LocalTime);
     }
+
     @Bean
     public RuntimeWiringConfigurer runtimeWiringConfigurerUpload() {
         return wiringBuilder -> wiringBuilder.scalar(ApolloScalars.Upload);
     }
+
     @Bean
     public RuntimeWiringConfigurer runtimeWiringConfigure() {
         return wiringBuilder -> wiringBuilder.scalar(ExtendedScalars.Date);
     }
+
     @Bean
     public RuntimeWiringConfigurer runtimeWiringConfigurJson() {
         return wiringBuilder -> wiringBuilder.scalar(ExtendedScalars.Json);
     }
+
     @Bean
     public RuntimeWiringConfigurer runtimeWiringConfigurObject() {
         return wiringBuilder -> wiringBuilder.scalar(ExtendedScalars.Object);
     }
+
     @Bean
     public GraphQLScalarType date() {
         return ExtendedScalars.LocalTime;
@@ -125,10 +131,12 @@ public class BaseApplication {
     public GraphQLScalarType objectType() {
         return ExtendedScalars.Object;
     }
+
     @Bean
     public GraphQLScalarType jsonType() {
         return ExtendedScalars.Json;
     }
+
     @Bean
     public GraphQLScalarType uploadScalarDefine() {
         return ApolloScalars.Upload;

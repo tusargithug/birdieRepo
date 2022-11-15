@@ -34,15 +34,17 @@ public class VendorController {
     }
 
     @QueryMapping
-    public Vendor getVendorById(@Argument Long id) {return vendorService.getVendorById(id);}
+    public Vendor getVendorById(@Argument Long id) {
+        return vendorService.getVendorById(id);
+    }
 
     @MutationMapping(name = "updateVendor")
-    public String updateVendor(@Argument(name = "input")VendorDto request) {
+    public String updateVendor(@Argument(name = "input") VendorDto request) {
         return vendorService.updateVendor(request);
     }
 
     @QueryMapping(name = "getAllVendorPagination")
-    public List<Vendor> getAllVendorPagination(@Argument(name="input") VendorDto request) {
+    public List<Vendor> getAllVendorPagination(@Argument(name = "input") VendorDto request) {
         return vendorService.getAllVendorPagination(request);
     }
 }

@@ -29,10 +29,10 @@ public class MtCountry extends BaseEntity {
     @Column(name = "country_code")
     private String countryCode;
 
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private MtRegion region;
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY, mappedBy = "country")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "country")
     private List<MtCity> cities = new ArrayList<>();
 
 }

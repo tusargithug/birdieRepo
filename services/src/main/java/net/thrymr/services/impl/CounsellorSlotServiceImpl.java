@@ -162,15 +162,15 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
 
     @Override
     public String rescheduledCounsellorSlot(TimeSlotDto request) throws ParseException {
-        LocalTime localTime = LocalTime.now() ;
+        LocalTime localTime = LocalTime.now();
         CounsellorSlot counsellorSlot;
         List<CounsellorSlot> counsellorSlots = new ArrayList<>();
         if (Validator.isValid(request.getCounsellorSlotId())) {
             Optional<CounsellorSlot> optionalCounsellorSlot = counsellorSlotRepo.findById(request.getCounsellorSlotId());
             if (optionalCounsellorSlot.isPresent()) {
                 counsellorSlot = optionalCounsellorSlot.get();
-                Duration duration = Duration.between(LocalTime.now(),optionalCounsellorSlot.get().getStartTime());
-                if(duration.toMinutes()>=30) {
+                Duration duration = Duration.between(LocalTime.now(), optionalCounsellorSlot.get().getStartTime());
+                if (duration.toMinutes() >= 30) {
                     for (SlotDetailsDto detailsDto : request.getSlots()) {
                         switch (request.getSlotShift()) {
                             case "MORNING":
@@ -191,13 +191,13 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
                         if (Validator.isValid(detailsDto.getEndTime())) {
                             counsellorSlot.setEndTime(DateUtils.toParseLocalTime(detailsDto.getEndTime(), Constants.TIME_FORMAT_2));
                         }
-                        if(Validator.isValid(detailsDto.getDayOfWeek())) {
+                        if (Validator.isValid(detailsDto.getDayOfWeek())) {
                             counsellorSlot.setDays(DayOfWeek.valueOf(detailsDto.getDayOfWeek()));
                         }
-                        if(Validator.isValid(detailsDto.getSlotStatus())) {
+                        if (Validator.isValid(detailsDto.getSlotStatus())) {
                             counsellorSlot.setSlotStatus(SlotStatus.valueOf(detailsDto.getSlotStatus()));
                         }
-                        if(Validator.isValid(detailsDto.getSlotShift())) {
+                        if (Validator.isValid(detailsDto.getSlotShift())) {
                             counsellorSlot.setSlotShift(SlotShift.getType(detailsDto.getSlotShift()));
                         }
                         Date todayDate = new Date();
@@ -240,28 +240,27 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
                         counsellorSlotRepo.saveAll(counsellorSlots);
                         return "slot rescheduled successfully";
                     }
-                }
-                else{
+                } else {
                     return "rescheduling is not possible";
                 }
             }
         }
-    return "Invalid Slot Id";
+        return "Invalid Slot Id";
     }
 
     @Override
     public String cancelCounsellorSlot(Long id) {
-        CounsellorSlot counsellorSlot=null;
-        if(Validator.isValid(id)) {
+        CounsellorSlot counsellorSlot = null;
+        if (Validator.isValid(id)) {
             Optional<CounsellorSlot> optionalCounsellorSlot = counsellorSlotRepo.findById(id);
-            if(optionalCounsellorSlot.isPresent()){
-                counsellorSlot=optionalCounsellorSlot.get();
+            if (optionalCounsellorSlot.isPresent()) {
+                counsellorSlot = optionalCounsellorSlot.get();
                 counsellorSlot.setIsActive(Boolean.FALSE);
                 counsellorSlot.setIsDeleted(Boolean.TRUE);
                 counsellorSlot.setSlotStatus(SlotStatus.DELETED);
                 counsellorSlotRepo.save(counsellorSlot);
             }
-        }else{
+        } else {
             return "invalid slot Id";
         }
         return "slot canceled successfully";

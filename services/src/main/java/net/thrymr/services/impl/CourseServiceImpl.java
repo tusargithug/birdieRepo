@@ -26,18 +26,18 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public String updateCourse(CourseDto request) {
-        if(Validator.isValid(request.getId())) {
+        if (Validator.isValid(request.getId())) {
             Optional<Course> optionalCourse = courseRepo.findById(request.getId());
             Course course = null;
             if (optionalCourse.isPresent()) {
                 course = optionalCourse.get();
-                if(Validator.isValid(request.getCode())) {
+                if (Validator.isValid(request.getCode())) {
                     course.setCode(request.getCode());
                 }
-                if(Validator.isValid(request.getDescription())) {
+                if (Validator.isValid(request.getDescription())) {
                     course.setDescription(request.getDescription());
                 }
-                if(Validator.isValid(request.getSequence())) {
+                if (Validator.isValid(request.getSequence())) {
                     course.setSequence(request.getSequence());
                 }
                 if (Validator.isValid(request.getName())) {
@@ -59,8 +59,8 @@ public class CourseServiceImpl implements CourseService {
         course.setSequence(request.getSequence());
         course.setName(request.getName());
         if (Validator.isValid(request.getCategoryId())) {
-            Optional<Category> optionalCategory=categoryRepo.findById(request.getCategoryId());
-            if(optionalCategory.isPresent()){
+            Optional<Category> optionalCategory = categoryRepo.findById(request.getCategoryId());
+            if (optionalCategory.isPresent()) {
                 course.setCategory(optionalCategory.get());
             }
         }

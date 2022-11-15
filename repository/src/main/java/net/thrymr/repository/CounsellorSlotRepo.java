@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CounsellorSlotRepo extends JpaRepository<CounsellorSlot,Long> {
+public interface CounsellorSlotRepo extends JpaRepository<CounsellorSlot, Long> {
     List<CounsellorSlot> findByAppUser(String empId);
 }

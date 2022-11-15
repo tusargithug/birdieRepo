@@ -18,24 +18,24 @@ import net.thrymr.model.master.MtOptions;
 @Setter
 @Getter
 @NoArgsConstructor
-public class UserCourse extends BaseEntity{
-	
-	@ManyToOne
-	private AppUser user;
-	
-	@ManyToOne
-	private Course course;
-	
-	@Enumerated
-	private CourseStatus status = CourseStatus.NOT_STARTED;
+public class UserCourse extends BaseEntity {
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userCourse",fetch = FetchType.LAZY)
-	private Set<MtOptions> mtOptions = new HashSet<>();
+    @ManyToOne
+    private AppUser user;
 
-	@Column(name = "started_date")
-	private Date startedDate;
+    @ManyToOne
+    private Course course;
 
-	@Column(name = "completed_date")
-	private Date completedDate;
+    @Enumerated
+    private CourseStatus status = CourseStatus.NOT_STARTED;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userCourse", fetch = FetchType.LAZY)
+    private Set<MtOptions> mtOptions = new HashSet<>();
+
+    @Column(name = "started_date")
+    private Date startedDate;
+
+    @Column(name = "completed_date")
+    private Date completedDate;
 
 }

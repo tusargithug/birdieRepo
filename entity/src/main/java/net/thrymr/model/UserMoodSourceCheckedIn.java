@@ -22,11 +22,11 @@ public class UserMoodSourceCheckedIn extends BaseEntity {
 
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "mood_check_in_source", joinColumns = { @JoinColumn(name = "mood_info_id") }, inverseJoinColumns = {
-            @JoinColumn(name = "mood_source_id") })
+    @JoinTable(name = "mood_check_in_source", joinColumns = {@JoinColumn(name = "mood_info_id")}, inverseJoinColumns = {
+            @JoinColumn(name = "mood_source_id")})
     private List<MtMoodSource> sources = new ArrayList<>();
 
 
-    @Column(name = "description",columnDefinition = "TEXT")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 }

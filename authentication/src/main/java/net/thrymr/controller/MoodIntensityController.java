@@ -33,42 +33,45 @@ public class MoodIntensityController {
     private final MoodIntensityRepo moodIntensityRepo;
 
 
-
     public MoodIntensityController(MoodIntensityService moodIntensityService, MoodIntensityRepo moodIntensityRepo) {
         this.moodIntensityService = moodIntensityService;
         this.moodIntensityRepo = moodIntensityRepo;
     }
+
     // save mood intensity
     @PostMapping("/save")
     public ApiResponse moodIntensitySave(@RequestBody MoodIntensityDto request) {
         logger.info("save mood intensity service started");
-        ApiResponse apiResponse=   moodIntensityService.moodIntensitySave(request);
+        ApiResponse apiResponse = moodIntensityService.moodIntensitySave(request);
         logger.info("save mood intensity service completed");
-        return new ApiResponse(HttpStatus.OK, "",apiResponse);
+        return new ApiResponse(HttpStatus.OK, "", apiResponse);
     }
+
     // get mood intensity by id
     @GetMapping("/get/{id}")
     public ApiResponse getMoodIntensitiesById(@PathVariable Long id) {
         logger.info("Get mood intensity service started");
-        ApiResponse apiResponse=   moodIntensityService.getMoodIntensitiesById(id);
+        ApiResponse apiResponse = moodIntensityService.getMoodIntensitiesById(id);
         logger.info("Get mood intensity service completed");
-        return new ApiResponse(HttpStatus.OK,"", apiResponse);
+        return new ApiResponse(HttpStatus.OK, "", apiResponse);
     }
+
     // deleted by id
     @DeleteMapping("/delete/{id}")
     public ApiResponse deleteMoodIntensitiesById(@PathVariable Long id) {
         logger.info("delete mood intensity service started");
-        ApiResponse apiResponse=   moodIntensityService.deleteMoodIntensitiesById(id);
+        ApiResponse apiResponse = moodIntensityService.deleteMoodIntensitiesById(id);
         logger.info("delete mood intensity service completed");
-        return new ApiResponse(HttpStatus.OK, "",apiResponse);
+        return new ApiResponse(HttpStatus.OK, "", apiResponse);
     }
+
     // get all mood-intensity
     @GetMapping("/get/all")
     public ApiResponse getAllMoodIntensities() {
         logger.info("Get all mood intensity service started");
-        ApiResponse apiResponse=   moodIntensityService.getAllMoodIntensities();
+        ApiResponse apiResponse = moodIntensityService.getAllMoodIntensities();
         logger.info("Get all mood intensity service completed");
-        return new ApiResponse(HttpStatus.OK,"", apiResponse);
+        return new ApiResponse(HttpStatus.OK, "", apiResponse);
     }
 
 //get all mood intensity based on mood info id
@@ -76,23 +79,23 @@ public class MoodIntensityController {
     @GetMapping("/get/all/{id}")
     public ApiResponse getAllMoodIntensitiesByMoodInfoId(@PathVariable Long id) {
         logger.info("Get all mood intensity service started");
-        ApiResponse apiResponse=   moodIntensityService.getAllMoodIntensitiesByMoodInfoId(id);
+        ApiResponse apiResponse = moodIntensityService.getAllMoodIntensitiesByMoodInfoId(id);
         logger.info("Get all mood intensity service completed");
-        return new ApiResponse(HttpStatus.OK,"", apiResponse);
+        return new ApiResponse(HttpStatus.OK, "", apiResponse);
     }
     //update mood intensity    on daily basis in userCheckedIn  table
 
     @PutMapping("/update")
     public ApiResponse updateMoodIntensity(@RequestBody MoodSourceIntensityRequestDto request) {
         logger.info("Get update mood service started");
-        ApiResponse apiResponse=   moodIntensityService.updateMoodIntensity(request);
+        ApiResponse apiResponse = moodIntensityService.updateMoodIntensity(request);
         logger.info("Get update mood service completed");
-        return new ApiResponse(HttpStatus.OK,"", apiResponse);
+        return new ApiResponse(HttpStatus.OK, "", apiResponse);
     }
 
 
     @MutationMapping(name = "createUserMoodCheckIn")
-    public String createUserMoodCheckIn(@Argument(name = "input") MoodSourceIntensityRequestDto request){
+    public String createUserMoodCheckIn(@Argument(name = "input") MoodSourceIntensityRequestDto request) {
         return moodIntensityService.createUserMoodCheckIn(request);
 
 
@@ -100,12 +103,13 @@ public class MoodIntensityController {
 
 
     @MutationMapping(name = "deleteUserMoodCheckInById")
-    public String deleteUserMoodCheckInById(@Argument Long id){
+    public String deleteUserMoodCheckInById(@Argument Long id) {
         return moodIntensityService.deleteUserMoodCheckInById(id);
 
     }
+
     @QueryMapping("getAllMoodIntensity")
-    public List<MtMoodIntensity> getAllMoodIntensity(){
+    public List<MtMoodIntensity> getAllMoodIntensity() {
         return moodIntensityService.getAllMoodIntensity();
 
     }

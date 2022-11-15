@@ -12,17 +12,17 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @Entity
-public class Chapter extends  BaseEntity {
+public class Chapter extends BaseEntity {
 
-    @Column(name ="chapter_name" )
+    @Column(name = "chapter_name")
     private String chapterName;
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private FileEntity profilePicture;
-    @Column(name = "description",columnDefinition = "TEXT")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private FileEntity video;//tutorial
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private Unit unit;
-    }
+}

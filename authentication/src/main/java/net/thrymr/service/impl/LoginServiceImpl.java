@@ -59,6 +59,7 @@ public class LoginServiceImpl implements LoginService {
         appUserRepo.save(appUser);
         return new ApiResponse(HttpStatus.OK, "SignUp Successfully Completed");
     }
+
     private AppUser dtoToModel(AppUserDto request) {
         AppUser appUser = new AppUser();
         if (request.getId() != null && request.getId() > 0) {
@@ -71,11 +72,10 @@ public class LoginServiceImpl implements LoginService {
         appUser.setUserName(request.getUserName());
         appUser.setPassword(new BCryptPasswordEncoder().encode(request.getPassword()));
         appUser.setAlternateMobile(request.getAlternateMobile());
-        if(request.getRolesDto()!=null){
-            Optional<MtRoles>optionalRoles=rolesRepo.findById(request.getRolesDto().getId());
+        if (request.getRolesDto() != null) {
+            Optional<MtRoles> optionalRoles = rolesRepo.findById(request.getRolesDto().getId());
             appUser.setMtRoles(optionalRoles.get());
         }
-
 
 
         return appUser;
@@ -113,9 +113,9 @@ public class LoginServiceImpl implements LoginService {
         loginResponse.setLastName(loggedInUser.getLastName());
         loginResponse.setContactNumber(loggedInUser.getContactNumber());
         loginResponse.setEmail(loggedInUser.getEmail());
-        if(loggedInUser.getRole()!=null){
-            Optional<MtRoles>optionalRoles=rolesRepo.findById(loggedInUser.getRole().getId());
-         //   loginResponse.setUserRole(optionalRoles.map(MtRoles::getName).orElse(null));
+        if (loggedInUser.getRole() != null) {
+            Optional<MtRoles> optionalRoles = rolesRepo.findById(loggedInUser.getRole().getId());
+            //   loginResponse.setUserRole(optionalRoles.map(MtRoles::getName).orElse(null));
         }
 
 

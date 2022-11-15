@@ -27,51 +27,50 @@ public class CityCountyAndRegionController {
 
     @Autowired
     CityCountyAndRegionService cityCountyAndRegionService;
-    final static Logger log= LoggerFactory.getLogger(CityCountyAndRegionController.class);
+    final static Logger log = LoggerFactory.getLogger(CityCountyAndRegionController.class);
 
-    @MutationMapping(name="saveCountry")
+    @MutationMapping(name = "saveCountry")
     public String saveCountry(@Argument(name = "input") CountryDto countryDto) {
         return cityCountyAndRegionService.saveCountry(countryDto);
 
     }
 
-    @MutationMapping(name="updateCountryById")
-    public String updateCountryById(@Argument(name = "input")CountryDto countryDto) {
+    @MutationMapping(name = "updateCountryById")
+    public String updateCountryById(@Argument(name = "input") CountryDto countryDto) {
         return cityCountyAndRegionService.updateCountryById(countryDto);
     }
 
-    @MutationMapping(name="deleteCountryById")
-    public String deleteCountryById(@Argument Long id){
+    @MutationMapping(name = "deleteCountryById")
+    public String deleteCountryById(@Argument Long id) {
         return cityCountyAndRegionService.deleteCountryById(id);
 
     }
 
-    @MutationMapping(name="saveCity")
+    @MutationMapping(name = "saveCity")
     public String saveCity(@Argument(name = "input") CityDto cityDto) {
         return cityCountyAndRegionService.saveCity(cityDto);
     }
 
-    @MutationMapping(name="updateCityById")
-    public String updateCityById(@Argument(name = "input")CityDto cityDto) {
+    @MutationMapping(name = "updateCityById")
+    public String updateCityById(@Argument(name = "input") CityDto cityDto) {
         return cityCountyAndRegionService.updateCityById(cityDto);
 
     }
 
-    @MutationMapping(name="deleteCityById")
-    public String deleteCityById(@Argument Long id){
+    @MutationMapping(name = "deleteCityById")
+    public String deleteCityById(@Argument Long id) {
         return cityCountyAndRegionService.deleteCityById(id);
     }
 
-    @MutationMapping(name="saveRegion")
+    @MutationMapping(name = "saveRegion")
     public String saveRegion(@Argument(name = "input") RegionDto regionDto) {
         return cityCountyAndRegionService.saveRegion(regionDto);
     }
 
-    @MutationMapping(name="updateRegionById")
-    public String updateRegionById(@Argument(name = "input")RegionDto regionDto) {
+    @MutationMapping(name = "updateRegionById")
+    public String updateRegionById(@Argument(name = "input") RegionDto regionDto) {
         return cityCountyAndRegionService.updateRegionById(regionDto);
     }
-
 
 
     @QueryMapping("getAllCountry")
@@ -121,8 +120,8 @@ public class CityCountyAndRegionController {
        return cityCountyAndRegionService.uploadCountryData(file);
     }*/
 
-    @MutationMapping(name="upload-excel-region-data")
-    public String uploadRegionData(@Argument(name= "file") MultipartFile file) {
+    @MutationMapping(name = "upload-excel-region-data")
+    public String uploadRegionData(@Argument(name = "file") MultipartFile file) {
         return cityCountyAndRegionService.uploadRegionData(file);
     }
 }

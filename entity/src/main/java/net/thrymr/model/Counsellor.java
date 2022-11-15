@@ -17,16 +17,16 @@ public class Counsellor extends BaseEntity {
     private AppUser appUser;
     @OneToOne
     private AppUser teamManager;
-    @OneToMany(mappedBy = "counsellor",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private List<CounsellorSlot>counsellorSlots=new ArrayList<>();
+    @OneToMany(mappedBy = "counsellor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<CounsellorSlot> counsellorSlots = new ArrayList<>();
     @Column(name = "shift_timings")
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "counsellors")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "counsellors")
     private List<ShiftTimings> shiftTimings;
     @Column(name = "educational_details")
     @ElementCollection(targetClass = String.class)
-    private List<String> educationalDetails=new ArrayList<>();
+    private List<String> educationalDetails = new ArrayList<>();
     @ElementCollection(targetClass = String.class)
-    private List<String> languages=new ArrayList<>();
+    private List<String> languages = new ArrayList<>();
     @Column(columnDefinition = "TEXT")
     private String bio;
 }

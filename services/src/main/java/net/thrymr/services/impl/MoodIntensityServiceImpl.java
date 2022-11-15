@@ -128,7 +128,7 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
                     mtMoodIntensityList = moodIntensityRepo.saveAll(mtMoodIntensityList);
 
                 } catch (Exception e) {
-                    logger.error("Exception{} " , e);
+                    logger.error("Exception{} ", e);
                     return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_INTENSITY_IMPORT_FORMAT_FAILED"));
                 }
             }
@@ -148,102 +148,104 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
                 moodIntensityDto.setName(mtMoodIntensity1.getName());
                 moodIntensityDto.setScore(mtMoodIntensity1.getScore());
                 moodIntensityDto.setSequence(mtMoodIntensity1.getSequence());
-                moodIntensityDtos.add(moodIntensityDto);}}
-        return new ApiResponse(HttpStatus.OK,environment.getProperty("SUCCESS"),moodIntensityDtos);
+                moodIntensityDtos.add(moodIntensityDto);
+            }
         }
+        return new ApiResponse(HttpStatus.OK, environment.getProperty("SUCCESS"), moodIntensityDtos);
+    }
 
     @Override
     public ApiResponse moodIntensitySave(MoodIntensityDto request) {
-        MtMoodIntensity intensity=new MtMoodIntensity();
+        MtMoodIntensity intensity = new MtMoodIntensity();
         intensity.setName(request.getName());
         intensity.setDescription(request.getDescription());
         intensity.setScore(request.getScore());
         intensity.setEmoji(request.getEmoji());
         intensity.setSequence(request.getSequence());
         // need to set mood info
-       // intensity.setMoodInfo(request.getMoodInfoDto());
+        // intensity.setMoodInfo(request.getMoodInfoDto());
 
         moodIntensityRepo.save(intensity);
 
-        return new ApiResponse(HttpStatus.OK,environment.getProperty("MOOD_INTENSITY_SAVED"));
+        return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_INTENSITY_SAVED"));
     }
 
     @Override
     public ApiResponse getMoodIntensitiesById(Long id) {
-        Optional<MtMoodIntensity> optionalMoodIntensity=moodIntensityRepo.findById(id);
-        if(optionalMoodIntensity.isPresent()){
-            MoodIntensityDto dto=entityToDto(optionalMoodIntensity.get());
-            return new ApiResponse(HttpStatus.OK,environment.getProperty("SUCCESS"),dto);
+        Optional<MtMoodIntensity> optionalMoodIntensity = moodIntensityRepo.findById(id);
+        if (optionalMoodIntensity.isPresent()) {
+            MoodIntensityDto dto = entityToDto(optionalMoodIntensity.get());
+            return new ApiResponse(HttpStatus.OK, environment.getProperty("SUCCESS"), dto);
         }
 
-        return new ApiResponse(HttpStatus.OK,environment.getProperty("MOOD_INTENSITY_NOT_FOUND"));
+        return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_INTENSITY_NOT_FOUND"));
     }
 
     @Override
     public ApiResponse deleteMoodIntensitiesById(Long id) {
-        Optional<MtMoodIntensity> optionalMoodIntensity=moodIntensityRepo.findById(id);
-        if(optionalMoodIntensity.isPresent()){
+        Optional<MtMoodIntensity> optionalMoodIntensity = moodIntensityRepo.findById(id);
+        if (optionalMoodIntensity.isPresent()) {
             moodIntensityRepo.delete(optionalMoodIntensity.get());
-            return new ApiResponse(HttpStatus.OK,environment.getProperty("MOOD_INTENSITY_DELETED"));
+            return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_INTENSITY_DELETED"));
         }
 
-        return new ApiResponse(HttpStatus.OK,environment.getProperty("MOOD_INTENSITY_NOT_FOUND"));
+        return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_INTENSITY_NOT_FOUND"));
     }
 
     @Override
     public ApiResponse getAllMoodIntensities() {
-        List<MtMoodIntensity> mtMoodIntensityList =moodIntensityRepo.findAll();
+        List<MtMoodIntensity> mtMoodIntensityList = moodIntensityRepo.findAll();
 
-        if(!mtMoodIntensityList.isEmpty()){
-          List<MoodIntensityDto>  moodIntensityDtoList =  mtMoodIntensityList.stream().map(this::entityToDto).toList();
-            return new ApiResponse(HttpStatus.OK,environment.getProperty("SUCCESS"),moodIntensityDtoList);
+        if (!mtMoodIntensityList.isEmpty()) {
+            List<MoodIntensityDto> moodIntensityDtoList = mtMoodIntensityList.stream().map(this::entityToDto).toList();
+            return new ApiResponse(HttpStatus.OK, environment.getProperty("SUCCESS"), moodIntensityDtoList);
         }
 
 
-        return new ApiResponse(HttpStatus.OK,environment.getProperty("MOOD_INTENSITY_NOT_FOUND"));
+        return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_INTENSITY_NOT_FOUND"));
     }
 
     @Override
     public ApiResponse getAllMoodIntensitiesByMoodInfoId(Long id) {
-        List<MtMoodIntensity> mtMoodIntensityList =moodIntensityRepo.findByMtMoodInfoId(id);
-        if(!mtMoodIntensityList.isEmpty()){
-            List<MoodIntensityDto>  moodIntensityDtoList =  mtMoodIntensityList.stream().map(this::entityToDto).toList();
-            return new ApiResponse(HttpStatus.OK,"",moodIntensityDtoList);
+        List<MtMoodIntensity> mtMoodIntensityList = moodIntensityRepo.findByMtMoodInfoId(id);
+        if (!mtMoodIntensityList.isEmpty()) {
+            List<MoodIntensityDto> moodIntensityDtoList = mtMoodIntensityList.stream().map(this::entityToDto).toList();
+            return new ApiResponse(HttpStatus.OK, "", moodIntensityDtoList);
         }
-        return new ApiResponse(HttpStatus.OK,environment.getProperty("MOOD_INTENSITY_NOT_FOUND"));
+        return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_INTENSITY_NOT_FOUND"));
     }
 
     @Override
     public ApiResponse updateMoodIntensity(MoodSourceIntensityRequestDto request) {
 
-        AppUser user= CommonUtil.getAppUser();
-        Optional<MtMoodIntensity>optionalMoodIntensity=moodIntensityRepo.findById(request.getIntensityId());
-        UserMoodCheckIn userMoodCheckIn=new UserMoodCheckIn();
+        AppUser user = CommonUtil.getAppUser();
+        Optional<MtMoodIntensity> optionalMoodIntensity = moodIntensityRepo.findById(request.getIntensityId());
+        UserMoodCheckIn userMoodCheckIn = new UserMoodCheckIn();
         userMoodCheckIn.setAppUser(user);
-        if(optionalMoodIntensity.isPresent()){
-            if(Validator.isValid(request.getIntensityDescription())){
+        if (optionalMoodIntensity.isPresent()) {
+            if (Validator.isValid(request.getIntensityDescription())) {
                 optionalMoodIntensity.get().setDescription(request.getIntensityDescription());
             }
             userMoodCheckIn.setIntensities(optionalMoodIntensity.stream().toList());
         }
-          if(Validator.isValid(request.getDescription())){
-              userMoodCheckIn.setDescription(request.getDescription());
-          }
+        if (Validator.isValid(request.getDescription())) {
+            userMoodCheckIn.setDescription(request.getDescription());
+        }
 
-          userMoodCheckInRepo.save(userMoodCheckIn);
+        userMoodCheckInRepo.save(userMoodCheckIn);
 
-        return new ApiResponse(HttpStatus.OK,environment.getProperty("USER_CHECKED_IN_SAVE"));
+        return new ApiResponse(HttpStatus.OK, environment.getProperty("USER_CHECKED_IN_SAVE"));
     }
 
 
-    private MoodIntensityDto entityToDto(MtMoodIntensity request){
-        MoodIntensityDto dto=new MoodIntensityDto();
+    private MoodIntensityDto entityToDto(MtMoodIntensity request) {
+        MoodIntensityDto dto = new MoodIntensityDto();
         dto.setId(request.getId());
         dto.setName(request.getName());
         dto.setDescription(request.getDescription());
         dto.setEmoji(request.getEmoji());
-      //  dto.setMoodInfoDto(request.getMoodInfo());
-       return dto;
+        //  dto.setMoodInfoDto(request.getMoodInfo());
+        return dto;
     }
 
     @Override
@@ -253,7 +255,7 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
 
     @Override
     public String deleteUserMoodCheckInById(Long id) {
-        Optional<MtMoodIntensity>optionalMtMoodIntensity=moodIntensityRepo.findById(id);
+        Optional<MtMoodIntensity> optionalMtMoodIntensity = moodIntensityRepo.findById(id);
         optionalMtMoodIntensity.ifPresent(moodIntensityRepo::delete);
         return "Intensity deleted successfully";
     }
@@ -266,21 +268,21 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
             if (!optionalMoodIntensity.isEmpty()) {
                 userMoodCheckIn.setIntensities(optionalMoodIntensity);
             }
-                userMoodCheckIn.setDescription(request.getIntensityDescription());
-                userMoodCheckIn.setIntensities(optionalMoodIntensity.stream().toList());
-            }
-            if (Validator.isValid(request.getDescription())) {
-                userMoodCheckIn.setDescription(request.getDescription());
-            }
-            if(Validator.isValid(request.getAppUserId())){
-                Optional<AppUser> optionalAppUser=appUserRepo.findById(request.getAppUserId());
-                if(optionalAppUser.isPresent()){
-                    userMoodCheckIn.setAppUser(optionalAppUser.get());
-                }
-            }
-            userMoodCheckInRepo.save(userMoodCheckIn);
-
-            return environment.getProperty("USER_CHECKED_IN_SAVE");
+            userMoodCheckIn.setDescription(request.getIntensityDescription());
+            userMoodCheckIn.setIntensities(optionalMoodIntensity.stream().toList());
         }
+        if (Validator.isValid(request.getDescription())) {
+            userMoodCheckIn.setDescription(request.getDescription());
+        }
+        if (Validator.isValid(request.getAppUserId())) {
+            Optional<AppUser> optionalAppUser = appUserRepo.findById(request.getAppUserId());
+            if (optionalAppUser.isPresent()) {
+                userMoodCheckIn.setAppUser(optionalAppUser.get());
+            }
+        }
+        userMoodCheckInRepo.save(userMoodCheckIn);
+
+        return environment.getProperty("USER_CHECKED_IN_SAVE");
+    }
 }
 

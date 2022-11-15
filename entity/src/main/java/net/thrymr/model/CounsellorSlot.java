@@ -41,7 +41,7 @@ public class CounsellorSlot extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private SlotStatus slotStatus;
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private AppUser appUser;
 
 //    private final ObjectMapper objectMapper = new ObjectMapper()

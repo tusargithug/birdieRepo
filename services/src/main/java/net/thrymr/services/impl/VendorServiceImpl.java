@@ -102,7 +102,7 @@ public class VendorServiceImpl implements VendorService {
 
     public String updateVendor(VendorDto request) {
         Vendor vendor;
-        AppUser user=null;
+        AppUser user = null;
         if (Validator.isValid(request.getId())) {
             Optional<Vendor> optionalVendor = vendorRepo.findById(request.getId());
             if (optionalVendor.isPresent()) {
@@ -149,36 +149,35 @@ public class VendorServiceImpl implements VendorService {
             pageable = PageRequest.of(response.getPageNumber(), response.getPageSize());
         }
         if (Validator.isValid(response.getAddedOn())) {
-            pageable = PageRequest.of(response.getPageNumber(),response.getPageSize(),Sort.Direction.DESC,"createdOn");
+            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.DESC, "createdOn");
         }
         //filters
-        Specification<Vendor> addVendorSpecification = ((root, criteriaQuery, criteriaBuilder)->{
+        Specification<Vendor> addVendorSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> addVendorPredicate = new ArrayList<>();
-            if(response.getName()!=null){
+            if (response.getName() != null) {
                 Predicate name = criteriaBuilder.and(root.get("userName").in(response.getName()));
                 addVendorPredicate.add(name);
             }
-            if(response.getPOC()!=null && !response.getPOC().isEmpty()){
+            if (response.getPOC() != null && !response.getPOC().isEmpty()) {
                 Predicate poc = criteriaBuilder.and(root.get("POC").in(response.getPOC()));
                 addVendorPredicate.add(poc);
             }
-            if(response.getSite()!=null){
+            if (response.getSite() != null) {
                 Predicate site = criteriaBuilder.and(root.get("site").in(response.getSite()));
                 addVendorPredicate.add(site);
             }
 
             return criteriaBuilder.and(addVendorPredicate.toArray(new Predicate[0]));
         });
-        Page <Vendor> vendorObjectives = vendorRepo.findAll(addVendorSpecification,pageable);
+        Page<Vendor> vendorObjectives = vendorRepo.findAll(addVendorSpecification, pageable);
         List<Vendor> vendorList = new ArrayList<>();
 
-        if(vendorObjectives.getContent()!=null){
+        if (vendorObjectives.getContent() != null) {
             vendorList = vendorObjectives.stream().toList();
         }
 
-        return  vendorList;
+        return vendorList;
     }
-
 
 
 }

@@ -26,8 +26,8 @@ public class MtRegion extends BaseEntity {
     @Column(name = "region_name")
     private String regionName;
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "region")
-    private List<MtCountry> mtCountry =new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "region")
+    private List<MtCountry> mtCountry = new ArrayList<>();
 
     @ManyToOne
     private Site site;

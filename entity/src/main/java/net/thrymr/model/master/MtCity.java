@@ -26,10 +26,10 @@ public class MtCity extends BaseEntity {
     @Column(name = "city_name")
     private String cityName;
 
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private MtCountry country;
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "city")
-    private List<Site> sites=new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "city")
+    private List<Site> sites = new ArrayList<>();
 
 }

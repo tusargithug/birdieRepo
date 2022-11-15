@@ -1,6 +1,6 @@
 schema {
     query: Query
-     mutation: Mutation
+    mutation: Mutation
 }
 
 type Query {
@@ -73,11 +73,11 @@ type Mutation {
     updateSiftTimings(input:ShiftTimingsDto):String!
     deleteSiftTimingsById(id:ID):String!
     saveCountry(input:CountryDto):String!
-#    uploadCountryData(file: CountryDto):String!
+    #    uploadCountryData(file: CountryDto):String!
     updateCountryById(input:CountryDto):String!
     deleteCountryById(Id:ID):String!
     saveCity(input:CityDto):String!
-#    uploadCityData(file: CountryDto!):String!
+    #    uploadCityData(file: CountryDto!):String!
     updateCityById(input:CityDto):String!
     deleteCityById(id:ID):String!
     saveRegion(input:RegionDto):String!

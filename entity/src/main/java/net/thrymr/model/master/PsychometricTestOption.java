@@ -14,12 +14,12 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class PsychometricTestOption extends BaseEntity{
-	
-	private String option;
-	
-	private int score;
-	
-	@ManyToOne(cascade = CascadeType.ALL)
-	private PsychometricTest psychometricTest;
+public class PsychometricTestOption extends BaseEntity {
+
+    private String option;
+
+    private int score;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    private PsychometricTest psychometricTest;
 }

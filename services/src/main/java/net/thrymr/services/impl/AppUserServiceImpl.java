@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class AppUserServiceImpl implements AppUserService {
-    private  final Logger logger = LoggerFactory.getLogger(AppUserServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(AppUserServiceImpl.class);
 
     private final AppUserRepo appUserRepo;
 
@@ -57,6 +57,7 @@ public class AppUserServiceImpl implements AppUserService {
 
     private final ShiftTimingsRepo shiftTimingsRepo;
     private final TeamRepo teamRepo;
+
     public AppUserServiceImpl(AppUserRepo appUserRepo, Environment environment, RoleRepo roleRepo, UserCourseRepo userCourseRepo, CourseRepo courseRepo, OptionsRepo optionsRepo, SiteRepo siteRepo, ShiftTimingsRepo shiftTimingsRepo, CounsellorSlotRepo counsellorSlotRepo, TeamRepo teamRepo) {
         this.appUserRepo = appUserRepo;
         this.environment = environment;
@@ -73,7 +74,6 @@ public class AppUserServiceImpl implements AppUserService {
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
 
     @Override
@@ -137,7 +137,7 @@ public class AppUserServiceImpl implements AppUserService {
                         }
                         if (row.getCell(8) != null) {
                             Optional<MtRoles> optionalRoles = roleRepo.findById(Long.valueOf(getCellValue(row.getCell(8))));
-                           // logger.info("optionalRole{}: " , CommonUtil.getStringFromObject(optionalRoles));
+                            // logger.info("optionalRole{}: " , CommonUtil.getStringFromObject(optionalRoles));
                             optionalRoles.ifPresent(role -> appUser.setMtRoles(role));
                         }
                         if (row.getCell(9) != null) {
@@ -146,7 +146,7 @@ public class AppUserServiceImpl implements AppUserService {
                         setUserSearchKey(appUser);
                         appUsers.add(appUser);
                     } catch (Exception e) {
-                        logger.error("Exception{} " , e);
+                        logger.error("Exception{} ", e);
                         return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("USERS_IMPORT_FORMAT_FAILED"));
                     }
                 }
@@ -173,7 +173,7 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public ApiResponse deleteUserById(Long id) {
-         //TODO validate id
+        //TODO validate id
         Optional<AppUser> optionalAppUser = appUserRepo.findById(id);
         optionalAppUser.ifPresent(appUserRepo::delete);
 
@@ -186,11 +186,11 @@ public class AppUserServiceImpl implements AppUserService {
         //TODO validate id
         Optional<AppUser> optionalAppUser = appUserRepo.findById(id);
 
-        if(optionalAppUser.isPresent()){
-         AppUser user=optionalAppUser.get();
-            AppUserDto dto=entityToDto(user);
-            return new ApiResponse(HttpStatus.OK,environment.getProperty("SUCCESS"),dto);
-        }else {
+        if (optionalAppUser.isPresent()) {
+            AppUser user = optionalAppUser.get();
+            AppUserDto dto = entityToDto(user);
+            return new ApiResponse(HttpStatus.OK, environment.getProperty("SUCCESS"), dto);
+        } else {
             return new ApiResponse(HttpStatus.OK, environment.getProperty("USER_NOT_FOUND"));
         }
 
@@ -200,9 +200,9 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public ApiResponse getAllUsers() {
 
-        List<AppUser>appUserList=appUserRepo.findAll();
-        List<AppUserDto>appUserDtoList=appUserList.stream().map(this::entityToDto).toList();
-        return new ApiResponse(HttpStatus.OK,"",appUserDtoList);
+        List<AppUser> appUserList = appUserRepo.findAll();
+        List<AppUserDto> appUserDtoList = appUserList.stream().map(this::entityToDto).toList();
+        return new ApiResponse(HttpStatus.OK, "", appUserDtoList);
     }
 
     private String getCellValue(XSSFCell cell) {
@@ -228,6 +228,7 @@ public class AppUserServiceImpl implements AppUserService {
         }
         appUser.setSearchKey(searchKey);
     }
+
     private RolesDto entityToDto(MtRoles request) {
         RolesDto dto = new RolesDto();
         dto.setName(request.getName());
@@ -235,6 +236,7 @@ public class AppUserServiceImpl implements AppUserService {
         dto.setUsersDto(request.getUsers().stream().map(this::entityToDto).toList());
         return dto;
     }
+
     private AppUser dtoToEntity(AppUserDto request) {
         AppUser appUser = new AppUser();
         if (Validator.isValid(request.getId())) {
@@ -251,14 +253,14 @@ public class AppUserServiceImpl implements AppUserService {
         appUser.setAlternateMobile(request.getAlternateMobile());
         appUser.setPassword(bCryptPasswordEncoder().encode(request.getPassword()));
         if (request.getRolesDto() != null && !request.getRolesDto().getName().isEmpty()) {
-            Optional<MtRoles>optionalRoles= roleRepo.findByName(request.getRolesDto().getName());
+            Optional<MtRoles> optionalRoles = roleRepo.findByName(request.getRolesDto().getName());
             appUser.setMtRoles(optionalRoles.get());
         }
         return appUser;
     }
 
-    private AppUserDto entityToDto(AppUser user){
-        AppUserDto dto=new AppUserDto();
+    private AppUserDto entityToDto(AppUser user) {
+        AppUserDto dto = new AppUserDto();
         dto.setId(user.getId());
         dto.setUserName(user.getUserName());
         dto.setMobile(user.getMobile());
@@ -266,23 +268,24 @@ public class AppUserServiceImpl implements AppUserService {
 
         return dto;
     }
+
     @Override
     public String createAppUser(AppUserDto request) {
-        AppUser user=new AppUser();
+        AppUser user = new AppUser();
         user.setEmail(request.getEmail());
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
-        user.setUserName(request.getFirstName()+" "+request.getLastName());
+        user.setUserName(request.getFirstName() + " " + request.getLastName());
         user.setMobile(request.getMobile());
         user.setAlternateMobile(request.getAlternateMobile());
         user.setEmpId(request.getEmpId());
         user.setRoles(Roles.valueOf(request.getRoles()));
-        Optional<Site> optionalSite=siteRepo.findById(request.getSiteId());
-        if(optionalSite.isPresent()){
+        Optional<Site> optionalSite = siteRepo.findById(request.getSiteId());
+        if (optionalSite.isPresent()) {
             user.setSite(optionalSite.get());
         }
-        Optional<ShiftTimings> optionalShiftTimings=shiftTimingsRepo.findById(request.getShiftTimingsId());
-        if(optionalShiftTimings.isPresent()){
+        Optional<ShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(request.getShiftTimingsId());
+        if (optionalShiftTimings.isPresent()) {
             user.setShiftTimings(optionalShiftTimings.get());
         }
         if (request.getTeamId() != null) {
@@ -297,28 +300,28 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public String updateAppUser(AppUserDto request) {
-        Optional<AppUser>optionalAppUser=appUserRepo.findById(request.getId());
-        if(optionalAppUser.isPresent()){
-            AppUser user= optionalAppUser.get();
-            if(request.getEmpId()!=null){
+        Optional<AppUser> optionalAppUser = appUserRepo.findById(request.getId());
+        if (optionalAppUser.isPresent()) {
+            AppUser user = optionalAppUser.get();
+            if (request.getEmpId() != null) {
                 user.setEmpId(request.getEmpId());
             }
-            if(request.getMobile()!=null) {
+            if (request.getMobile() != null) {
                 user.setMobile(request.getMobile());
             }
 
             // user.setPassword(request.getPassword());
-            if(request.getLastName()!=null) {
+            if (request.getLastName() != null) {
                 user.setLastName(request.getLastName());
             }
-            if(request.getFirstName()!=null) {
+            if (request.getFirstName() != null) {
                 user.setFirstName(request.getFirstName());
             }
-            if(request.getEmail()!=null) {
+            if (request.getEmail() != null) {
                 user.setEmail(request.getEmail());
             }
 
-            if(request.getAlternateMobile()!=null) {
+            if (request.getAlternateMobile() != null) {
                 user.setAlternateMobile(request.getAlternateMobile());
             }
             appUserRepo.save(user);
@@ -329,8 +332,8 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public String deleteAppUserById(Long id) {
-        AppUser appUser=null;
-        if(Validator.isValid(id)) {
+        AppUser appUser = null;
+        if (Validator.isValid(id)) {
             Optional<AppUser> optionalAppUser = appUserRepo.findById(id);
             //optionalAppUser.ifPresent(appUserRepo::delete);
             if (optionalAppUser.isPresent()) {
@@ -348,27 +351,27 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public String createUserCourse(UserCourseDto request) throws ParseException {
         // AppUser user= CommonUtil.getAppUser();
-        UserCourse userCourse=new UserCourse();
+        UserCourse userCourse = new UserCourse();
         //userCourse.setUser(new AppUser());
-        if(Validator.isValid(request.getAppUserId())){
-            Optional<AppUser> optionalAppUser=appUserRepo.findById(request.getAppUserId());
+        if (Validator.isValid(request.getAppUserId())) {
+            Optional<AppUser> optionalAppUser = appUserRepo.findById(request.getAppUserId());
             optionalAppUser.ifPresent(userCourse::setUser);
         }
-        if(Validator.isValid(request.getCourseId())) {
+        if (Validator.isValid(request.getCourseId())) {
             Optional<Course> optionalCourse = courseRepo.findById(request.getCourseId());
             optionalCourse.ifPresent(userCourse::setCourse);
         }
-        List<MtOptions>mtOptionsList= optionsRepo.findAllByIdIn(request.getMtOptionsIds());
-        if(Validator.isValid(mtOptionsList)){
+        List<MtOptions> mtOptionsList = optionsRepo.findAllByIdIn(request.getMtOptionsIds());
+        if (Validator.isValid(mtOptionsList)) {
             userCourse.setMtOptions(new HashSet<>(mtOptionsList));
         }
-        if(Validator.isValid(request.getStartedDate())){
+        if (Validator.isValid(request.getStartedDate())) {
             userCourse.setStartedDate(DateUtils.toFormatStringToDate(request.getStartedDate(), Constants.DATE_FORMAT));
         }
-        if(Validator.isValid(request.getCompletedDate())){
+        if (Validator.isValid(request.getCompletedDate())) {
             userCourse.setCompletedDate(DateUtils.toFormatStringToDate(request.getCompletedDate(), Constants.DATE_FORMAT));
         }
-        if(request.getStatus()!=null){
+        if (request.getStatus() != null) {
             userCourse.setStatus(request.getStatus());
         }
         userCourseRepo.save(userCourse);
@@ -388,8 +391,8 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public List<Roles> getAllEnumRoles() {
-        List<Roles> rolesList= Arrays.asList(Roles.ADMIN,Roles.COUNSELLOR,Roles.DIRECTOR,Roles.EMPLOYEE,Roles.NONE,Roles.OP_STREAM,Roles.TEAM_LEADER,Roles.TEAM_MANAGER,Roles.VENDOR
-        ,Roles.WELL_BEING_MANGER);
+        List<Roles> rolesList = Arrays.asList(Roles.ADMIN, Roles.COUNSELLOR, Roles.DIRECTOR, Roles.EMPLOYEE, Roles.NONE, Roles.OP_STREAM, Roles.TEAM_LEADER, Roles.TEAM_MANAGER, Roles.VENDOR
+                , Roles.WELL_BEING_MANGER);
         return rolesList;
     }
 }

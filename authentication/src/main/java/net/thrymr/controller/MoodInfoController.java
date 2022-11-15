@@ -27,8 +27,6 @@ public class MoodInfoController {
     private final Logger logger = LoggerFactory.getLogger(MoodInfoController.class);
 
 
-
-
     private final MoodInfoService moodInfoService;
 
 
@@ -40,17 +38,18 @@ public class MoodInfoController {
     @GetMapping("/get/{id}")
     public ApiResponse getMoodInfoById(@PathVariable Long id) {
         logger.info("get  mood info service started");
-        ApiResponse apiResponse=   moodInfoService.getMoodInfoById(id);
+        ApiResponse apiResponse = moodInfoService.getMoodInfoById(id);
         logger.info("get  mood info completed");
-        return new ApiResponse(HttpStatus.OK,"", apiResponse);
+        return new ApiResponse(HttpStatus.OK, "", apiResponse);
     }
+
     // get all mood info
     @GetMapping("/get/all")
     public ApiResponse getAllMoodNames() {
         logger.info("get all mood info service started");
         ApiResponse apiResponse = moodInfoService.getAllMoods();
         logger.info("get all mood info service completed");
-        return new ApiResponse(HttpStatus.OK, "All MoodInfo details",apiResponse);
+        return new ApiResponse(HttpStatus.OK, "All MoodInfo details", apiResponse);
     }
 
     @DeleteMapping("/get/all")

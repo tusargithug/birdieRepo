@@ -17,22 +17,22 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @Table(name = "mt_question")
-public class MtQuestion extends BaseEntity{
-	
-	@Column(columnDefinition = "TEXT")
-	private String question;
+public class MtQuestion extends BaseEntity {
 
-	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY,mappedBy = "question")
-	private Set<MtOptions> mtOptions = new HashSet<>();
-	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private PsychometricTest psychometricTest;
+    @Column(columnDefinition = "TEXT")
+    private String question;
 
-	@Enumerated(EnumType.STRING)
-	private QuestionCalType questionCalType;
-	
-	private int sequence;
+    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, mappedBy = "question")
+    private Set<MtOptions> mtOptions = new HashSet<>();
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private MtAssessment assessment;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private PsychometricTest psychometricTest;
+
+    @Enumerated(EnumType.STRING)
+    private QuestionCalType questionCalType;
+
+    private int sequence;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private MtAssessment assessment;
 }

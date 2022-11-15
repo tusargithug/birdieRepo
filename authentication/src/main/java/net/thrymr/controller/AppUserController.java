@@ -1,7 +1,6 @@
 package net.thrymr.controller;
 
 
-
 import net.thrymr.dto.AppUserDto;
 
 import net.thrymr.dto.UserCourseDto;
@@ -11,7 +10,6 @@ import net.thrymr.services.AppUserService;
 import net.thrymr.services.AssessmentService;
 import net.thrymr.services.RoleService;
 import net.thrymr.utils.ApiResponse;
-
 
 
 import org.slf4j.Logger;
@@ -26,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.text.ParseException;
 
 import java.util.List;
-
 
 
 @RestController
@@ -56,14 +53,14 @@ public class AppUserController {
     // get user by id
     @QueryMapping
     public AppUser getAppUserById(@Argument Long id) {
-        return appUserService. getAppUserById(id);
+        return appUserService.getAppUserById(id);
 
     }
 
     // get all Users
     @QueryMapping("getAllAppUsers")
     public List<AppUser> getAllAppUsers() {
-        return appUserService. getAllAppUsers();
+        return appUserService.getAllAppUsers();
     }
 
     @MutationMapping(name = "createAppUser")

@@ -28,7 +28,7 @@ public class AppUser extends BaseEntity {
     @Column(unique = true)
     private String email;
 
-    @Column(name = "user_name",unique = true)
+    @Column(name = "user_name", unique = true)
     private String userName;
 
     private String mobile;
@@ -38,24 +38,24 @@ public class AppUser extends BaseEntity {
 
     @Column(name = "password")
     private String password;
-    
-    @Column(name = "emp_id",unique = true)
+
+    @Column(name = "emp_id", unique = true)
     private String empId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
     private MtRoles mtRoles;
 
-    @Column(name="user_role")
+    @Column(name = "user_role")
     @Enumerated(EnumType.STRING)
     private Roles roles;
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Site site;
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private ShiftTimings shiftTimings;
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "appUser")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "appUser")
     private List<CounsellorSlot> counsellorSlotList = new ArrayList<>();
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "appUser")
-    @OneToOne(cascade =CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "appUser")
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Team team;
 }

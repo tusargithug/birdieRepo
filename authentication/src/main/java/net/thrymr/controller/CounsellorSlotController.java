@@ -1,4 +1,5 @@
 package net.thrymr.controller;
+
 import net.thrymr.dto.slotRequest.TimeSlotDto;
 
 import net.thrymr.model.CounsellorSlot;
@@ -22,11 +23,13 @@ public class CounsellorSlotController {
     public CounsellorSlotController(CounsellorSlotService counsellorSlotService) {
         this.counsellorSlotService = counsellorSlotService;
     }
-    @QueryMapping(name="getCounsellorSlot")
+
+    @QueryMapping(name = "getCounsellorSlot")
     public List<CounsellorSlot> getCounsellorSlot() {
         return counsellorSlotService.getCounsellorSlot();
     }
-    @QueryMapping(name="getCounsellorSlotById")
+
+    @QueryMapping(name = "getCounsellorSlotById")
     public CounsellorSlot getCounsellorSlotById(@Argument Long id) {
         return counsellorSlotService.getCounsellorSlotById(id);
     }
@@ -36,13 +39,13 @@ public class CounsellorSlotController {
         return counsellorSlotService.createCounsellorSlot(request);
     }
 
-    @MutationMapping(name="rescheduledCounsellorSlot")
+    @MutationMapping(name = "rescheduledCounsellorSlot")
     public String rescheduledCounsellorSlot(@Argument(name = "input") TimeSlotDto request) throws ParseException {
         return counsellorSlotService.rescheduledCounsellorSlot(request);
     }
 
-    @MutationMapping(name="cancelCounsellorSlot")
-    public String cancelCounsellorSlot(@Argument Long id){
+    @MutationMapping(name = "cancelCounsellorSlot")
+    public String cancelCounsellorSlot(@Argument Long id) {
         return counsellorSlotService.cancelCounsellorSlot(id);
     }
 
