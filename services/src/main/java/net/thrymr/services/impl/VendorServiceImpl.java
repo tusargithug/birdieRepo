@@ -157,7 +157,6 @@ public class VendorServiceImpl implements VendorService {
     public List<Vendor> getAllVendorPagination(VendorDto response) {
         Pageable pageable = null;
         if (Validator.isValid(response.getPageSize())) {
-            System.out.println("Entered");
             pageable = PageRequest.of(response.getPageNumber(), response.getPageSize());
         }
         if (Validator.isValid(response.getAddedOn())) {

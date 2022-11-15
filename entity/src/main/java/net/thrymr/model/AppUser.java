@@ -63,5 +63,7 @@ public class AppUser extends BaseEntity {
     private Team team;
     @Enumerated(EnumType.STRING)
     private Alerts alerts;
+    @Column(name = "assigned_counsellor_id")
+    private Long assignedCounsellorId;
 
 }

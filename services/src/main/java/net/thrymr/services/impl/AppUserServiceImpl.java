@@ -16,7 +16,6 @@ import net.thrymr.services.AppUserService;
 import net.thrymr.utils.ApiResponse;
 import net.thrymr.utils.DateUtils;
 import net.thrymr.utils.Validator;
-import org.apache.poi.sl.draw.geom.GuideIf;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -27,11 +26,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.criteria.Predicate;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
@@ -60,7 +65,9 @@ public class AppUserServiceImpl implements AppUserService {
     private final TeamRepo teamRepo;
     private final AppointmentRepo appointmentRepo;
 
-    public AppUserServiceImpl(AppUserRepo appUserRepo, Environment environment, RoleRepo roleRepo, UserCourseRepo userCourseRepo, CourseRepo courseRepo, OptionsRepo optionsRepo, SiteRepo siteRepo, ShiftTimingsRepo shiftTimingsRepo, CounsellorSlotRepo counsellorSlotRepo, TeamRepo teamRepo, AppointmentRepo appointmentRepo) {
+    private final CounsellorRepo counsellorRepo;
+
+    public AppUserServiceImpl(AppUserRepo appUserRepo, Environment environment, RoleRepo roleRepo, UserCourseRepo userCourseRepo, CourseRepo courseRepo, OptionsRepo optionsRepo, SiteRepo siteRepo, ShiftTimingsRepo shiftTimingsRepo, CounsellorSlotRepo counsellorSlotRepo, TeamRepo teamRepo, AppointmentRepo appointmentRepo, CounsellorRepo counsellorRepo) {
         this.appUserRepo = appUserRepo;
         this.environment = environment;
         this.roleRepo = roleRepo;
@@ -71,6 +78,7 @@ public class AppUserServiceImpl implements AppUserService {
         this.shiftTimingsRepo = shiftTimingsRepo;
         this.teamRepo = teamRepo;
         this.appointmentRepo = appointmentRepo;
+        this.counsellorRepo = counsellorRepo;
     }
 
     @Bean
@@ -410,7 +418,7 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public List<AppUser> getAllAppUsers() throws ParseException {
+    public List<AppUser> getAllAppUsers() {
         List<AppUser> appUserList = appUserRepo.findAll();
         if (!appUserList.isEmpty()) {
             return appUserList.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
@@ -460,4 +468,59 @@ public class AppUserServiceImpl implements AppUserService {
         }
         return new UserAppointmentResponse();
     }
+
+    @Override
+    public List<AppUser> getAllAppUserPagination(AppUserDto response) {
+        Pageable pageable = null;
+        if (Validator.isValid(response.getPageSize())) {
+            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize());
+        }
+        pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.ASC, "createdOn");
+        if (Validator.isValid(response.getAddedOn())) {
+            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.ASC, "createdOn");
+        }
+
+        Specification<AppUser> appUserSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
+            List<Predicate> addVendorPredicate = new ArrayList<>();
+            if (response.getUserName() != null) {
+                Predicate userName = criteriaBuilder.and(root.get("userName").in(response.getUserName()));
+                addVendorPredicate.add(userName);
+            }
+            if (response.getEmpId() != null && !response.getEmpId().isEmpty()) {
+                Predicate empId = criteriaBuilder.and(root.get("empId").in(response.getEmpId()));
+                addVendorPredicate.add(empId);
+            }
+            if (response.getRoles() != null) {
+                Predicate roles = criteriaBuilder.and(root.get("roles").in(response.getRoles()));
+                addVendorPredicate.add(roles);
+            }
+            if (response.getAlerts() != null) {
+                Predicate alerts = criteriaBuilder.and(root.get("alerts").in(response.getAlerts()));
+                addVendorPredicate.add(alerts);
+            }
+            if (response.getShiftTimingsId() != null) {
+                Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(response.getShiftTimingsId()));
+                addVendorPredicate.add(shiftTimings);
+            }
+            if (response.getTeamId() != null) {
+                Predicate teamId = criteriaBuilder.and(root.get("team").in(response.getTeamId()));
+                addVendorPredicate.add(teamId);
+            }
+
+//            List<Counsellor> counsellorList = counsellorRepo.findAll();
+            if (response.getRoles() != null && response.getRoles().equalsIgnoreCase(Roles.COUNSELLOR.toString())) {
+                Predicate roles = criteriaBuilder.and(root.get("userName").in(response.getCounsellorId()));
+                addVendorPredicate.add(roles);
+            }
+            return criteriaBuilder.and(addVendorPredicate.toArray(new Predicate[0]));
+        });
+        Page<AppUser> appUserObjectives = appUserRepo.findAll(appUserSpecification, pageable);
+        List<AppUser> appUserList = null;
+        if (appUserObjectives.getContent() != null) {
+            appUserList = appUserObjectives.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).toList();
+        }
+        return appUserList;
+    }
+
+
 }

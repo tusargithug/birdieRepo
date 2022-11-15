@@ -32,7 +32,10 @@ public interface AppUserService {
 
     String createUserCourse(UserCourseDto request) throws ParseException;
 
-    List<AppUser> getAllAppUsers() throws ParseException;
+    List<AppUser> getAllAppUsers();
     List<Roles> getAllEnumRoles();
     UserAppointmentResponse getUserAppointmentCountById(Long id);
+
+    List<AppUser> getAllAppUserPagination(AppUserDto response);
+
 }

@@ -43,6 +43,7 @@ type Query {
     getCounsellorById(id:ID):Counsellor
     getAllEnumRoles:[Roles]
     getAllAppUserByAlerts(input:AppUserDto):[AppUser]
+    getAllAppUserPagination(input:AppUserDto):[AppUser]
 }
 
 type Mutation {
@@ -120,7 +121,7 @@ type MtMoodInfo {
     description:String!
     intensities:[MtMoodIntensity]
     isActive:Boolean
-
+    intensityName:String
 }
 
 type MtMoodIntensity{
@@ -160,6 +161,9 @@ input AppUserDto{
     isActive:Boolean
     dateOfJoining:String
     alerts:String
+    pageSize:Int
+   pageNumber:Int
+    counsellorId:Int
 }
 enum Roles{
     NONE

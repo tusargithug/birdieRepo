@@ -63,7 +63,7 @@ public class AppUserController {
 
     // get all Users
     @QueryMapping("getAllAppUsers")
-    public List<AppUser> getAllAppUsers() throws ParseException {
+    public List<AppUser> getAllAppUsers() {
         return appUserService. getAllAppUsers();
     }
 
@@ -97,5 +97,10 @@ public class AppUserController {
     @QueryMapping(name="getUserAppointmentCountById")
     public UserAppointmentResponse getUserAppointmentCountById(@Argument Long id){
         return appUserService.getUserAppointmentCountById(id);
+    }
+
+    @QueryMapping(name = "getAllAppUserPagination")
+    public List<AppUser> getAllAppUserPagination(@Argument(name = "input") AppUserDto request) {
+        return appUserService.getAllAppUserPagination(request);
     }
 }

@@ -50,4 +50,9 @@ public class AppUserDto {
     private Long teamId;
     private String dateOfJoining;
     private Alerts alerts;
+    private Integer pageSize;
+    private Integer pageNumber;
+    private String addedOn;
+private String teamName;
+private Long counsellorId;
 }
