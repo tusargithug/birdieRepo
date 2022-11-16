@@ -39,7 +39,7 @@ public class CounsellorController {
     }
 
     @QueryMapping(name = "getCounsellorById")
-    public Counsellor getCounsellorById(@Argument Long id){
+    public MtCounsellor getCounsellorById(@Argument Long id){
         return counsellorService.getCounsellorById(id);
     }
 }

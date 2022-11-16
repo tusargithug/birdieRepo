@@ -352,12 +352,8 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                     System.out.println(shiftTimingsDto.getShiftName());
                     mtShiftTimings.setShiftName(shiftTimingsDto.getShiftName());
                 }
-                if (Validator.isValid(shiftTimingsDto.getShiftStatAt())) {
-                    mtShiftTimings.setShiftStatAt(shiftTimingsDto.getShiftStatAt());
-                }
-                if (Validator.isValid(shiftTimingsDto.getShiftEndAt())) {
-                    mtShiftTimings.setShiftEndAt(shiftTimingsDto.getShiftEndAt());
-                }
+                mtShiftTimings.setShiftStatAt(shiftTimingsDto.getShiftStatAt());
+                mtShiftTimings.setShiftEndAt(shiftTimingsDto.getShiftEndAt());
                 if (Validator.isValid(String.valueOf(shiftTimingsDto.getStatus()))) {
                     mtShiftTimings.setIsActive(shiftTimingsDto.getStatus());
                 }

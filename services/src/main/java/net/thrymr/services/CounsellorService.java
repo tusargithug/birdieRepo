@@ -14,5 +14,5 @@ public interface CounsellorService {
 
     List<MtCounsellor> getAllCounsellor(CounsellorDto response);
 
-    Counsellor getCounsellorById(Long id);
+    MtCounsellor getCounsellorById(Long id);
 }

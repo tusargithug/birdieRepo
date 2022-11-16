@@ -6,7 +6,6 @@ import lombok.Setter;
 import net.thrymr.model.AppUser;
 import net.thrymr.model.BaseEntity;
 import net.thrymr.model.CounsellorSlot;
-import net.thrymr.model.MtShiftTimings;
 
 import javax.persistence.*;
 import java.util.ArrayList;

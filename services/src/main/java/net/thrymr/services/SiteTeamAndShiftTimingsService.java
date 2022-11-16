@@ -3,7 +3,7 @@ package net.thrymr.services;
 import net.thrymr.dto.ShiftTimingsDto;
 import net.thrymr.dto.SiteDto;
 import net.thrymr.dto.TeamDto;
-import net.thrymr.model.MtShiftTimings;
+import net.thrymr.model.master.MtShiftTimings;
 import net.thrymr.model.master.MtSite;
 import net.thrymr.model.master.MtTeam;
 

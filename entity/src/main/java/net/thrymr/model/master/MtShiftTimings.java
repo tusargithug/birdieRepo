@@ -1,14 +1,17 @@
-package net.thrymr.model;
+package net.thrymr.model.master;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.thrymr.enums.SlotShift;
+import net.thrymr.model.AppUser;
+import net.thrymr.model.BaseEntity;
 import net.thrymr.model.master.MtCounsellor;
 import net.thrymr.model.master.MtSite;
 import net.thrymr.model.master.MtTeam;
 
 import javax.persistence.*;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,8 +25,8 @@ public class MtShiftTimings extends BaseEntity {
     private SlotShift shiftName;
     @OneToOne(cascade = CascadeType.ALL)
     private MtSite mtSite;
-    private String shiftStatAt;
-    private String shiftEndAt;
+    private LocalTime shiftStatAt;
+    private LocalTime shiftEndAt;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "mtShiftTimings")
     private MtTeam mtTeam;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "mtShiftTimings")

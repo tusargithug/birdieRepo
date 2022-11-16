@@ -163,7 +163,7 @@ type MtTeam{
     teamLeader:AppUser
     teamManager:AppUser
     mtSite:MtSite
-    mtShiftTimings:ShiftTimings
+    mtShiftTimings:MtShiftTimings
     isActive:Boolean
 }
 type MtCity{

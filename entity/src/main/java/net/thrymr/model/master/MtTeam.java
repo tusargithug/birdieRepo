@@ -1,8 +1,10 @@
-package net.thrymr.model;
+package net.thrymr.model.master;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.thrymr.model.AppUser;
+import net.thrymr.model.BaseEntity;
 
 import javax.persistence.*;
 import java.util.List;
@@ -27,7 +29,7 @@ public class MtTeam extends BaseEntity {
     private MtSite mtSite;
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private MtShiftTimings mtShiftTimings;
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "mt_team")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<AppUser> appUserList;
     /*@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "team")
     private List<Counsellor> counsellorList;*/

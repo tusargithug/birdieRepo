@@ -7,8 +7,8 @@ import net.thrymr.dto.slotRequest.TimeSlotDto;
 import net.thrymr.enums.SlotShift;
 import net.thrymr.enums.SlotStatus;
 import net.thrymr.model.AppUser;
-import net.thrymr.model.Counsellor;
 import net.thrymr.model.UserAppointment;
+import net.thrymr.model.master.MtCounsellor;
 import net.thrymr.repository.AppUserRepo;
 import net.thrymr.repository.AppointmentRepo;
 import net.thrymr.repository.CounsellorRepo;
@@ -103,7 +103,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                     return "required date";
                 }
                 if (Validator.isValid(request.getCounsellorId())) {
-                    Optional<Counsellor> optionalCounsellorSlot = counsellorRepo.findById(request.getCounsellorId());
+                    Optional<MtCounsellor> optionalCounsellorSlot = counsellorRepo.findById(request.getCounsellorId());
                     if (optionalCounsellorSlot.isPresent()) {
                         appointment.setCounsellor(optionalCounsellorSlot.get());
                     }
@@ -190,7 +190,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                             return "required date";
                         }
                         if (Validator.isValid(request.getCounsellorId())) {
-                            Optional<Counsellor> optionalCounsellor = counsellorRepo.findById(request.getCounsellorId());
+                            Optional<MtCounsellor> optionalCounsellor = counsellorRepo.findById(request.getCounsellorId());
                             if (optionalCounsellor.isPresent() && optionalUserAppointment.get().getSlotShift().equals(request.getSlotShift())) {
                                 userAppointment.setCounsellor(optionalCounsellor.get());
                             }

@@ -1,11 +1,9 @@
 package net.thrymr.services.impl;
 
 import net.thrymr.dto.ChapterDto;
-import net.thrymr.dto.FileEntityDto;
 import net.thrymr.dto.UnitDto;
 import net.thrymr.model.Chapter;
 import net.thrymr.model.Unit;
-import net.thrymr.model.master.FileEntity;
 import net.thrymr.repository.ChapterRepo;
 import net.thrymr.repository.UnitRpo;
 import net.thrymr.services.UnitAndChapterServices;
@@ -226,7 +224,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         UnitDto unitDto = new UnitDto();
         unitDto.setId(unit.getId());
         unitDto.setUnitName(unit.getUnitName());
-        unitDto.setStatus(unit.getIsActive());
+        unitDto.setIsActive(unit.getIsActive());
         Optional<Unit> optionalAddUnit = unitRpo.findById(unit.getId());
         if (optionalAddUnit.isPresent()) {
             unitDto.setChapterCount(optionalAddUnit.get().getChapters().size());
@@ -239,7 +237,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
     public UnitDto entityToDtoForGetAll(Unit unit) {
         UnitDto unitDto = new UnitDto();
         unitDto.setUnitName(unit.getUnitName());
-        unitDto.setStatus(unit.getIsActive());
+        unitDto.setIsActive(unit.getIsActive());
         Optional<Unit> optionalAddUnit = unitRpo.findById(unit.getId());
         unitDto.setChapterCount(optionalAddUnit.get().getChapters().size());
         unitDto.setAddOn(dateToString(unit.getCreatedOn()));

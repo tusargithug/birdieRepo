@@ -24,9 +24,9 @@ type Query {
     getAllCities:[MtCity]
     getAllRegions:[MtRegion]
     getCounsellorSlot:[CounsellorSlot]
-    getAllShiftTimings:[ShiftTimings]
+    getAllShiftTimings:[MtShiftTimings]
     getCounsellorSlotById(id:ID!):CounsellorSlot
-    getAllCounsellor(input:CounsellorDto):[Counsellor]
+    getAllCounsellor(input:CounsellorDto):[MtCounsellor]
     getAllVendor:[Vendor]
     getVendorById(id:ID):Vendor
     getAllVendorPagination(input:VendorDto):[Vendor]
@@ -40,7 +40,7 @@ type Query {
     getAppointmentById(id:ID):UserAppointment
     getUserAppointmentCountById(id:ID):UserAppointmentResponse
     getAllAppointment:[UserAppointment]
-    getCounsellorById(id:ID):Counsellor
+    getCounsellorById(id:ID):MtCounsellor
     getAllEnumRoles:[Roles]
 }
 
@@ -185,7 +185,7 @@ type AppUser{
     roles:Roles
     mtSite:MtSite
     mtTeam:MtTeam
-    mtShiftTimings:ShiftTimings
+    mtShiftTimings:MtShiftTimings
     isActive:Boolean
     dateOfJoining:Date
 }
@@ -198,7 +198,7 @@ type FileEntity{
     employees:[Course]
 }
 
-type ShiftTimings{
+type MtShiftTimings{
     id: ID!
     shiftName:String
     mtSite:MtSite
@@ -219,7 +219,7 @@ input ShiftTimingsDto{
 }
 type CounsellorSlot{
     id: ID!
-    mtCounsellor:Counsellor
+    mtCounsellor:MtCounsellor
     startTime:LocalTime
     endTime:LocalTime
     slotDt:Date
@@ -228,11 +228,11 @@ type CounsellorSlot{
     slotStatus:SlotStatus
     isActive:Boolean
 }
-type Counsellor{
+type MtCounsellor{
     id:Int
     appUser:AppUser
     counsellorSlots:[CounsellorSlot]
-    mtShiftTimings:[ShiftTimings]
+    mtShiftTimings:[MtShiftTimings]
     educationalDetails:[String]
     languages:[String]
     bio:String
@@ -320,7 +320,7 @@ type UserAppointment {
     days:DayOfWeek
     slotStatus:SlotStatus
     appUser:AppUser
-    counsellor:Counsellor
+    counsellor:MtCounsellor
     isCurrentAppointment:Boolean
     isActive:Boolean
 }

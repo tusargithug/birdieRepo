@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.thrymr.enums.Roles;
 import net.thrymr.model.master.MtRoles;
+import net.thrymr.model.master.MtShiftTimings;
 import net.thrymr.model.master.MtSite;
 import net.thrymr.model.master.MtTeam;
 

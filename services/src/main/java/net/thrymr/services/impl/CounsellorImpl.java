@@ -4,6 +4,7 @@ import net.thrymr.dto.CounsellorDto;
 import net.thrymr.enums.Roles;
 import net.thrymr.model.*;
 import net.thrymr.model.master.MtCounsellor;
+import net.thrymr.model.master.MtShiftTimings;
 import net.thrymr.model.master.MtSite;
 import net.thrymr.model.master.MtTeam;
 import net.thrymr.repository.*;
@@ -238,7 +239,7 @@ public class CounsellorImpl implements CounsellorService {
 
 
     @Override
-    public Counsellor getCounsellorById(Long id) {
+    public MtCounsellor getCounsellorById(Long id) {
         if (Validator.isValid(id)) {
             Optional<MtCounsellor> optionalCounsellor = counsellorRepo.findById(id);
             if (optionalCounsellor.isPresent() && optionalCounsellor.get().getIsActive().equals(Boolean.TRUE)) {

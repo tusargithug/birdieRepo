@@ -4,12 +4,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.thrymr.dto.slotRequest.SlotDetailsDto;
-import net.thrymr.enums.SlotShift;
 import net.thrymr.enums.SlotStatus;
 import net.thrymr.model.AppUser;
-import net.thrymr.model.Counsellor;
+import net.thrymr.model.master.MtCounsellor;
 
-import javax.persistence.*;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.Date;
@@ -34,7 +32,7 @@ public class AppointmentDto {
 
     private AppUser appUser;
 
-    private Counsellor counsellor;
+    private MtCounsellor counsellor;
 
     private Boolean isCurrentAppointment = Boolean.FALSE;
 

@@ -5,16 +5,12 @@ import net.thrymr.dto.SiteDto;
 import net.thrymr.dto.TeamDto;
 import net.thrymr.model.master.MtTeam;
 import net.thrymr.model.master.MtSite;
-import net.thrymr.model.MtShiftTimings;
+import net.thrymr.model.master.MtShiftTimings;
 import net.thrymr.services.SiteTeamAndShiftTimingsService;
-import net.thrymr.utils.ApiResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

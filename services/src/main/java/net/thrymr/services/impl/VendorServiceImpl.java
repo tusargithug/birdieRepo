@@ -104,7 +104,7 @@ public class VendorServiceImpl implements VendorService {
                 return optionalMtVendor.get();
             }
         }
-        return new Vendor();
+        return new MtVendor();
     }
 
     @Override
