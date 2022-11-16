@@ -1,8 +1,10 @@
-package net.thrymr.model;
+package net.thrymr.model.master;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.thrymr.model.AppUser;
+import net.thrymr.model.BaseEntity;
 
 import javax.persistence.*;
 
@@ -10,8 +12,8 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "vendor")
-public class Vendor extends BaseEntity {
+@Table(name = "mt_vendor")
+public class MtVendor extends BaseEntity {
     @Column(name = "vendorPOC")
     private String POC;
 

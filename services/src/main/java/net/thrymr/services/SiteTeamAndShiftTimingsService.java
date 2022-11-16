@@ -3,10 +3,9 @@ package net.thrymr.services;
 import net.thrymr.dto.ShiftTimingsDto;
 import net.thrymr.dto.SiteDto;
 import net.thrymr.dto.TeamDto;
-import net.thrymr.model.ShiftTimings;
-import net.thrymr.model.Site;
-import net.thrymr.model.Team;
-import net.thrymr.utils.ApiResponse;
+import net.thrymr.model.MtShiftTimings;
+import net.thrymr.model.master.MtSite;
+import net.thrymr.model.master.MtTeam;
 
 import java.util.List;
 
@@ -15,7 +14,7 @@ public interface SiteTeamAndShiftTimingsService {
 
     String updateTeam(TeamDto teamDto);
 
-    List<Team> getAllTeam();
+    List<MtTeam> getAllTeam();
 
     String deleteTeamById(Long id);
 
@@ -23,7 +22,7 @@ public interface SiteTeamAndShiftTimingsService {
 
     String updateSite(SiteDto siteDto);
 
-    List<Site> getAllSite();
+    List<MtSite> getAllSite();
 
     String deleteSiteById(Long id);
 
@@ -33,9 +32,9 @@ public interface SiteTeamAndShiftTimingsService {
 
     String deleteSiftTimingsById(Long id);
 
-    List<Team> getAllTeamPagination(TeamDto teamdto);
+    List<MtTeam> getAllTeamPagination(TeamDto teamdto);
 
-    List<Site> getAllSitePagination(SiteDto siteDto);
+    List<MtSite> getAllSitePagination(SiteDto siteDto);
 
-    List<ShiftTimings> getAllShiftTimings();
+    List<MtShiftTimings> getAllShiftTimings();
 }

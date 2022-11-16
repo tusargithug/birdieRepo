@@ -1,12 +1,10 @@
-package net.thrymr.model;
+package net.thrymr.model.master;
 
-import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.thrymr.model.master.MtCity;
-import net.thrymr.model.master.MtCountry;
-import net.thrymr.model.master.MtRegion;
+import net.thrymr.model.AppUser;
+import net.thrymr.model.BaseEntity;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,7 +14,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
-public class Site extends BaseEntity {
+public class MtSite extends BaseEntity {
     @Column(name = "site_id")
     private String siteId;
     @Column(name = "site_name")
@@ -30,8 +28,8 @@ public class Site extends BaseEntity {
     @OneToOne(cascade = CascadeType.ALL)
     private AppUser siteManager;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Team> teams = new ArrayList<>();
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "site")
+    private List<MtTeam> mtTeams = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "mtSite")
     private List<AppUser> appUser;
     /*@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "site")
     private List<Counsellor> counsellorList;*/

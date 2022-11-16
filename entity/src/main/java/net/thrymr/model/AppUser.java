@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.thrymr.enums.Roles;
 import net.thrymr.model.master.MtRoles;
+import net.thrymr.model.master.MtSite;
+import net.thrymr.model.master.MtTeam;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -50,12 +52,12 @@ public class AppUser extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Roles roles;
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Site site;
+    private MtSite mtSite;
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private ShiftTimings shiftTimings;
+    private MtShiftTimings mtShiftTimings;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "appUser")
     private List<CounsellorSlot> counsellorSlotList = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "appUser")
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Team team;
+    private MtTeam mtTeam;
 }

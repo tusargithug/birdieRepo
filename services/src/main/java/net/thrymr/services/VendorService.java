@@ -1,21 +1,21 @@
 package net.thrymr.services;
 
 import net.thrymr.dto.VendorDto;
-import net.thrymr.model.Vendor;
+import net.thrymr.model.master.MtVendor;
 
 import java.util.List;
 
 public interface VendorService {
     String saveVendor(VendorDto request);
 
-    List<Vendor> getAllVendor();
+    List<MtVendor> getAllVendor();
 
     String deleteVendorById(Long id);
 
-    Vendor getVendorById(Long id);
+    MtVendor getVendorById(Long id);
 
     String updateVendor(VendorDto request);
 
-    List<Vendor> getAllVendorPagination(VendorDto vendorDto);
+    List<MtVendor> getAllVendorPagination(VendorDto vendorDto);
 
 }

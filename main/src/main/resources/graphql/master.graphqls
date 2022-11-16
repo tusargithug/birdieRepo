@@ -72,7 +72,7 @@ input RegionDto{
 
 input SiteDto{
     id:Int
-    # site:String
+    # mtSite:String
     siteName:String
     # city:CityDto
     # country:CountryDto
@@ -94,8 +94,8 @@ input TeamDto {
     teamName:String
     # teamLeader:AppUserDto
     # teamManager:AppUserDto
-    # shiftTimings:ShiftTimingsDto
-    # site:SiteDto
+    # mtShiftTimings:ShiftTimingsDto
+    # mtSite:SiteDto
     status:Boolean
     pageNumber:Int
     PageSize:Int
@@ -132,9 +132,9 @@ type MtRegion{
     id:ID!
     regionName:String
     mtCountry:[MtCountry]
-    site:Site
+    mtSite:MtSite
 }
-type Site{
+type MtSite{
     id:ID!
     siteId:String
     siteName:String
@@ -142,22 +142,22 @@ type Site{
     country:MtCountry
     region:MtRegion
     siteManager:AppUser
-    teams:[Team]
+    mtTeams:[MtTeam]
 }
-type Team{
+type MtTeam{
     id:ID!
     teamId:String
     teamName:String
     teamLeader:AppUser
     teamManager:AppUser
-    site:Site
-    shiftTimings:ShiftTimings
+    mtSite:MtSite
+    mtShiftTimings:ShiftTimings
 }
 type MtCity{
     id:ID!
     cityName:String
     country:MtCountry
-    sites:[Site]
+    mtSites:[MtSite]
 }
 type Chapter{
     id:ID!

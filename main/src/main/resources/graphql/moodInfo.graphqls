@@ -16,10 +16,10 @@ type Query {
     getAllUnit:[Unit]
     getAllChapters:[Chapter]
     getLearnPath(input:UnitDto):[Unit]
-    getAllSitePagination(input:SiteDto):[Site]
-    getAllTeamPagination(input:TeamDto):[Team]
-    getAllSite:[Site]
-    getAllTeam:[Team]
+    getAllSitePagination(input:SiteDto):[MtSite]
+    getAllTeamPagination(input:TeamDto):[MtTeam]
+    getAllSite:[MtSite]
+    getAllTeam:[MtTeam]
     getAllCountry:[MtCountry]
     getAllCities:[MtCity]
     getAllRegions:[MtRegion]
@@ -162,9 +162,9 @@ type AppUser{
     alternateMobile:String
     empId:String
     roles:Roles
-    site:Site
-    team:Team
-    shiftTimings:ShiftTimings
+    mtSite:MtSite
+    mtTeam:MtTeam
+    mtShiftTimings:ShiftTimings
 }
 
 type FileEntity{
@@ -178,10 +178,10 @@ type FileEntity{
 type ShiftTimings{
     id: ID!
     shiftName:String
-    site:Site
+    mtSite:MtSite
     shiftStatAt:String
     shiftEndAt:String
-    team:Team
+    mtTeam:MtTeam
 }
 input ShiftTimingsDto{
     id:Int
@@ -194,7 +194,7 @@ input ShiftTimingsDto{
 }
 type CounsellorSlot{
     id: ID!
-    counsellor:Counsellor
+    mtCounsellor:Counsellor
     startTime:LocalTime
     endTime:LocalTime
     slotDt:Date
@@ -206,7 +206,7 @@ type Counsellor{
     id:Int
     appUser:AppUser
     counsellorSlots:[CounsellorSlot]
-    shiftTimings:[ShiftTimings]
+    mtShiftTimings:[ShiftTimings]
     educationalDetails:[String]
     languages:[String]
     bio:String
@@ -254,9 +254,9 @@ input CounsellorDto {
     pageNumber:Int
     pageSize:Int
     addedOn:String
-    shiftTimings: ShiftTimingsDto
-    site:SiteDto
-    team:TeamDto
+    mtShiftTimings: ShiftTimingsDto
+    mtSite:SiteDto
+    mtTeam:TeamDto
 }
 
 type Vendor{

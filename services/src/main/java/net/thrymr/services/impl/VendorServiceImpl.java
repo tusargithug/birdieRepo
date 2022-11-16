@@ -3,8 +3,8 @@ package net.thrymr.services.impl;
 import net.thrymr.dto.VendorDto;
 import net.thrymr.enums.Roles;
 import net.thrymr.model.AppUser;
-import net.thrymr.model.Site;
-import net.thrymr.model.Vendor;
+import net.thrymr.model.master.MtSite;
+import net.thrymr.model.master.MtVendor;
 import net.thrymr.repository.AppUserRepo;
 import net.thrymr.repository.SiteRepo;
 import net.thrymr.repository.VendorRepo;
@@ -41,7 +41,7 @@ public class VendorServiceImpl implements VendorService {
 
     @Override
     public String saveVendor(VendorDto request) {
-        Vendor vendor = new Vendor();
+        MtVendor mtVendor = new MtVendor();
         AppUser user = new AppUser();
 
         if (Validator.isValid(request.getName())) {
@@ -58,55 +58,55 @@ public class VendorServiceImpl implements VendorService {
             user.setMobile(request.getMobile());
         }
         if (Validator.isValid(request.getSiteId())) {
-            Optional<Site> optionalSite = siteRepo.findById(request.getSiteId());
+            Optional<MtSite> optionalSite = siteRepo.findById(request.getSiteId());
             if (optionalSite.isPresent()) {
-                user.setSite(optionalSite.get());
+                user.setMtSite(optionalSite.get());
             }
 
         }
         appUserRepo.save(user);
         if (Validator.isValid(request.getPOC())) {
-            vendor.setPOC(request.getPOC());
+            mtVendor.setPOC(request.getPOC());
         }
-        vendor.setAppUser(user);
+        mtVendor.setAppUser(user);
 
-        vendorRepo.save(vendor);
+        vendorRepo.save(mtVendor);
         return "vendor creation success";
     }
 
     @Override
-    public List<Vendor> getAllVendor() {
+    public List<MtVendor> getAllVendor() {
         return vendorRepo.findAll();
     }
 
     @Override
     public String deleteVendorById(Long id) {
-        Optional<Vendor> vendorEntityId = vendorRepo.findById(id);
-        Vendor vendor;
+        Optional<MtVendor> vendorEntityId = vendorRepo.findById(id);
+        MtVendor mtVendor;
         if (vendorEntityId.isPresent()) {
-            vendor = vendorEntityId.get();
-            vendor.setIsActive(Boolean.FALSE);
-            vendor.setIsDeleted(Boolean.TRUE);
-            vendorRepo.save(vendor);
+            mtVendor = vendorEntityId.get();
+            mtVendor.setIsActive(Boolean.FALSE);
+            mtVendor.setIsDeleted(Boolean.TRUE);
+            vendorRepo.save(mtVendor);
             return "deleted record successfully";
         }
         return "this id is not in the database";
     }
 
     @Override
-    public Vendor getVendorById(Long id) {
+    public MtVendor getVendorById(Long id) {
         return vendorRepo.findById(id).orElse(null);
     }
 
     @Override
 
     public String updateVendor(VendorDto request) {
-        Vendor vendor;
+        MtVendor mtVendor;
         AppUser user = null;
         if (Validator.isValid(request.getId())) {
-            Optional<Vendor> optionalVendor = vendorRepo.findById(request.getId());
+            Optional<MtVendor> optionalVendor = vendorRepo.findById(request.getId());
             if (optionalVendor.isPresent()) {
-                vendor = optionalVendor.get();
+                mtVendor = optionalVendor.get();
                 if (Validator.isValid(request.getName())) {
                     user.setUserName(request.getName());
                 }
@@ -123,18 +123,18 @@ public class VendorServiceImpl implements VendorService {
                     user.setMobile(request.getMobile());
                 }
                 if (Validator.isValid(request.getSiteId())) {
-                    Optional<Site> optionalSite = siteRepo.findById(request.getSiteId());
+                    Optional<MtSite> optionalSite = siteRepo.findById(request.getSiteId());
                     if (optionalSite.isPresent()) {
-                        user.setSite(optionalSite.get());
+                        user.setMtSite(optionalSite.get());
                     }
                 }
                 if (Validator.isObjectValid(user)) {
-                    vendor.setAppUser(user);
+                    mtVendor.setAppUser(user);
                 }
                 if (Validator.isValid(request.getPOC())) {
-                    vendor.setPOC(request.getPOC());
+                    mtVendor.setPOC(request.getPOC());
                 }
-                vendorRepo.save(vendor);
+                vendorRepo.save(mtVendor);
                 return "Vendor updated successfully";
             }
         }
@@ -142,7 +142,7 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
-    public List<Vendor> getAllVendorPagination(VendorDto response) {
+    public List<MtVendor> getAllVendorPagination(VendorDto response) {
         Pageable pageable = null;
         if (Validator.isValid(response.getPageSize())) {
             System.out.println("Entered");
@@ -152,7 +152,7 @@ public class VendorServiceImpl implements VendorService {
             pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.DESC, "createdOn");
         }
         //filters
-        Specification<Vendor> addVendorSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
+        Specification<MtVendor> addVendorSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> addVendorPredicate = new ArrayList<>();
             if (response.getName() != null) {
                 Predicate name = criteriaBuilder.and(root.get("userName").in(response.getName()));
@@ -169,14 +169,14 @@ public class VendorServiceImpl implements VendorService {
 
             return criteriaBuilder.and(addVendorPredicate.toArray(new Predicate[0]));
         });
-        Page<Vendor> vendorObjectives = vendorRepo.findAll(addVendorSpecification, pageable);
-        List<Vendor> vendorList = new ArrayList<>();
+        Page<MtVendor> vendorObjectives = vendorRepo.findAll(addVendorSpecification, pageable);
+        List<MtVendor> mtVendorList = new ArrayList<>();
 
         if (vendorObjectives.getContent() != null) {
-            vendorList = vendorObjectives.stream().toList();
+            mtVendorList = vendorObjectives.stream().toList();
         }
 
-        return vendorList;
+        return mtVendorList;
     }
 
 

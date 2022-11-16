@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.thrymr.model.BaseEntity;
-import net.thrymr.model.Site;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ import java.util.List;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "country")
+@Table(name = "mt_country")
 public class MtCountry extends BaseEntity {
 
     @Column(name = "country_name")

@@ -3,6 +3,9 @@ package net.thrymr.services.impl;
 import net.thrymr.dto.CounsellorDto;
 import net.thrymr.enums.Roles;
 import net.thrymr.model.*;
+import net.thrymr.model.master.MtCounsellor;
+import net.thrymr.model.master.MtSite;
+import net.thrymr.model.master.MtTeam;
 import net.thrymr.repository.*;
 import net.thrymr.services.CounsellorService;
 import net.thrymr.utils.Validator;
@@ -13,7 +16,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +43,7 @@ public class CounsellorImpl implements CounsellorService {
     @Override
     public String createCounsellor(CounsellorDto request) {
         AppUser user = new AppUser();
-        Counsellor counsellor = new Counsellor();
+        MtCounsellor mtCounsellor = new MtCounsellor();
         if (Validator.isValid(request.getAppUserName())) {
             user.setUserName(request.getAppUserName());
         }
@@ -58,37 +60,37 @@ public class CounsellorImpl implements CounsellorService {
             user.setEmail(request.getEmailId());
         }
         if (Validator.isValid(request.getTeamId())) {
-            Optional<Team> optionalTeam = teamRepo.findById(request.getTeamId());
+            Optional<MtTeam> optionalTeam = teamRepo.findById(request.getTeamId());
             if (optionalTeam.isPresent()) {
-                user.setTeam(optionalTeam.get());
+                user.setMtTeam(optionalTeam.get());
             }
         }
         if (Validator.isValid(request.getSiteId())) {
-            Optional<Site> optionalSite = siteRepo.findById(request.getSiteId());
+            Optional<MtSite> optionalSite = siteRepo.findById(request.getSiteId());
             if (optionalSite.isPresent()) {
-                user.setSite(optionalSite.get());
+                user.setMtSite(optionalSite.get());
             }
         }
         if (Validator.isValid(request.getShiftTimingsId())) {
-            Optional<ShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(request.getShiftTimingsId());
+            Optional<MtShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(request.getShiftTimingsId());
             if (optionalShiftTimings.isPresent()) {
-                user.setShiftTimings(optionalShiftTimings.get());
+                user.setMtShiftTimings(optionalShiftTimings.get());
             }
         }
-        counsellor.setAppUser(user);
+        mtCounsellor.setAppUser(user);
 
         //Team_Manager
         if (request.getTeamManagerId() != null && appUserRepo.existsById(request.getTeamManagerId())) {
             Optional<AppUser> optionalAppUser = appUserRepo.findById(request.getTeamManagerId());
             if (optionalAppUser.isPresent() && optionalAppUser.get().getRoles().equals(Roles.TEAM_MANAGER)) {
-                optionalAppUser.ifPresent(counsellor::setTeamManager);
+                optionalAppUser.ifPresent(mtCounsellor::setTeamManager);
             }
         }
         appUserRepo.save(user);
-        counsellor.setLanguages(request.getLanguages());
-        counsellor.setEducationalDetails(request.getEducationalDetails());
-        counsellor.setBio(request.getBio());
-        counsellorRepo.save(counsellor);
+        mtCounsellor.setLanguages(request.getLanguages());
+        mtCounsellor.setEducationalDetails(request.getEducationalDetails());
+        mtCounsellor.setBio(request.getBio());
+        counsellorRepo.save(mtCounsellor);
 
         return "counsellor create successfully";
     }
@@ -96,27 +98,27 @@ public class CounsellorImpl implements CounsellorService {
     @Override
     public String updateCounsellorById(CounsellorDto request) {
         if (Validator.isValid(request.getId())) {
-            Optional<Counsellor> optionalCounsellor = counsellorRepo.findById(request.getId());
-            Counsellor counsellor = null;
+            Optional<MtCounsellor> optionalCounsellor = counsellorRepo.findById(request.getId());
+            MtCounsellor mtCounsellor = null;
             AppUser user = null;
             if (optionalCounsellor.isPresent()) {
-                counsellor = optionalCounsellor.get();
+                mtCounsellor = optionalCounsellor.get();
 
                 //Team_Manager
                 if (request.getTeamManagerId() != null && appUserRepo.existsById(request.getTeamManagerId())) {
                     Optional<AppUser> optionalAppUser = appUserRepo.findById(request.getTeamManagerId());
                     if (optionalAppUser.isPresent() && optionalAppUser.get().getRoles().equals(Roles.TEAM_MANAGER)) {
-                        optionalAppUser.ifPresent(counsellor::setTeamManager);
+                        optionalAppUser.ifPresent(mtCounsellor::setTeamManager);
                     }
                 }
                 if (Validator.isValid(request.getLanguages())) {
-                    counsellor.setLanguages(request.getLanguages());
+                    mtCounsellor.setLanguages(request.getLanguages());
                 }
                 if (Validator.isValid(request.getEducationalDetails())) {
-                    counsellor.setEducationalDetails(request.getEducationalDetails());
+                    mtCounsellor.setEducationalDetails(request.getEducationalDetails());
                 }
                 if (Validator.isValid(request.getBio())) {
-                    counsellor.setBio(request.getBio());
+                    mtCounsellor.setBio(request.getBio());
                 }
             }
             if (Validator.isValid(request.getAppUserId())) {
@@ -139,29 +141,29 @@ public class CounsellorImpl implements CounsellorService {
                         user.setEmail(request.getEmailId());
                     }
                     if (Validator.isValid(request.getTeamId())) {
-                        Optional<Team> optionalTeam = teamRepo.findById(request.getTeamId());
+                        Optional<MtTeam> optionalTeam = teamRepo.findById(request.getTeamId());
                         if (optionalTeam.isPresent()) {
-                            user.setTeam(optionalTeam.get());
+                            user.setMtTeam(optionalTeam.get());
                         }
                     }
                     if (Validator.isValid(request.getSiteId())) {
-                        Optional<Site> optionalSite = siteRepo.findById(request.getSiteId());
+                        Optional<MtSite> optionalSite = siteRepo.findById(request.getSiteId());
                         if (optionalSite.isPresent()) {
-                            user.setSite(optionalSite.get());
+                            user.setMtSite(optionalSite.get());
                         }
                     }
                     if (Validator.isValid(request.getShiftTimingsId())) {
-                        Optional<ShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(request.getShiftTimingsId());
+                        Optional<MtShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(request.getShiftTimingsId());
                         if (optionalShiftTimings.isPresent()) {
-                            user.setShiftTimings(optionalShiftTimings.get());
+                            user.setMtShiftTimings(optionalShiftTimings.get());
                         }
                     }
                 }
             }
             if (Validator.isObjectValid(user)) {
-                counsellor.setAppUser(user);
+                mtCounsellor.setAppUser(user);
             }
-            counsellorRepo.save(counsellor);
+            counsellorRepo.save(mtCounsellor);
             return "counsellor update successfully";
         }
         return "this id not in database";
@@ -169,18 +171,18 @@ public class CounsellorImpl implements CounsellorService {
 
     @Override
     public String deleteCounsellorById(Long id) {
-        Optional<Counsellor> optionalCounsellor = counsellorRepo.findById(id);
-        Counsellor counsellor = null;
+        Optional<MtCounsellor> optionalCounsellor = counsellorRepo.findById(id);
+        MtCounsellor mtCounsellor = null;
         if (optionalCounsellor.isPresent()) {
-            counsellor = optionalCounsellor.get();
-            counsellor.setIsDeleted(Boolean.TRUE);
-            counsellor.setIsActive(Boolean.FALSE);
+            mtCounsellor = optionalCounsellor.get();
+            mtCounsellor.setIsDeleted(Boolean.TRUE);
+            mtCounsellor.setIsActive(Boolean.FALSE);
         }
         return "counsellor delete successfully";
     }
 
     @Override
-    public List<Counsellor> getAllCounsellor(CounsellorDto response) {
+    public List<MtCounsellor> getAllCounsellor(CounsellorDto response) {
         Pageable pageable = null;
         if (response.getPageSize() != null) {
             pageable = PageRequest.of(response.getPageNumber(), response.getPageSize());
@@ -189,7 +191,7 @@ public class CounsellorImpl implements CounsellorService {
             pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.DESC, "userName");
         }
         //filters
-        Specification<Counsellor> addUserSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
+        Specification<MtCounsellor> addUserSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> addCounsellorPredicate = new ArrayList<>();
             if (response.getAppUserName() != null) {
                 Predicate appUserName = criteriaBuilder.and(root.get("userName").in(response.getAppUserName()));
@@ -227,13 +229,13 @@ public class CounsellorImpl implements CounsellorService {
             }
             return criteriaBuilder.and(addCounsellorPredicate.toArray(new Predicate[0]));
         });
-        Page<Counsellor> counsellorObjectives = counsellorRepo.findAll(addUserSpecification, pageable);
+        Page<MtCounsellor> counsellorObjectives = counsellorRepo.findAll(addUserSpecification, pageable);
 
-        List<Counsellor> counsellorList = new ArrayList<>();
+        List<MtCounsellor> mtCounsellorList = new ArrayList<>();
         if (counsellorObjectives.getContent() != null) {
-            counsellorList = counsellorObjectives.getContent().stream().filter(obj -> obj.getAppUser().getRoles().equals(Roles.COUNSELLOR)).collect(Collectors.toList());
+            mtCounsellorList = counsellorObjectives.getContent().stream().filter(obj -> obj.getAppUser().getRoles().equals(Roles.COUNSELLOR)).collect(Collectors.toList());
         }
-        return counsellorList;
+        return mtCounsellorList;
     }
 
 }

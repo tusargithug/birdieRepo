@@ -1,8 +1,7 @@
 package net.thrymr.controller;
 
 import net.thrymr.dto.CounsellorDto;
-import net.thrymr.model.AppUser;
-import net.thrymr.model.Counsellor;
+import net.thrymr.model.master.MtCounsellor;
 import net.thrymr.services.CounsellorService;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -35,7 +34,7 @@ public class CounsellorController {
     }
 
     @QueryMapping(name = "getAllCounsellor")
-    public List<Counsellor> getAllCounsellor(@Argument(name = "input") CounsellorDto response) {
+    public List<MtCounsellor> getAllCounsellor(@Argument(name = "input") CounsellorDto response) {
         return counsellorService.getAllCounsellor(response);
     }
 }

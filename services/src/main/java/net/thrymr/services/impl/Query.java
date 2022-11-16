@@ -6,7 +6,6 @@ import net.thrymr.dto.SiteDto;
 import net.thrymr.dto.TeamDto;
 import net.thrymr.dto.UnitDto;
 import net.thrymr.dto.VendorDto;
-import net.thrymr.enums.Roles;
 import net.thrymr.model.*;
 import net.thrymr.model.master.*;
 
@@ -138,13 +137,13 @@ public class Query implements GraphQLQueryResolver {
         return teamList;
     }*/
     @QueryMapping("getAllTeam")
-    public List<Team> getAllTeam() {
+    public List<MtTeam> getAllTeam() {
         //List<Team> teamList= siteTeamAndShiftTimingsService.getAllTeam();
         return siteTeamAndShiftTimingsService.getAllTeam();
     }
 
     @QueryMapping("getAllSite")
-    public List<Site> getAllSite() {
+    public List<MtSite> getAllSite() {
 
         return siteTeamAndShiftTimingsService.getAllSite();
     }
@@ -168,12 +167,12 @@ public class Query implements GraphQLQueryResolver {
     }
 
     @QueryMapping(name = "getAllTeamPagination")
-    public List<Team> getAllTeamPagination(TeamDto teamdto) {
+    public List<MtTeam> getAllTeamPagination(TeamDto teamdto) {
         return siteTeamAndShiftTimingsService.getAllTeamPagination(teamdto);
     }
 
     @QueryMapping(name = "getAllSitePagination")
-    public List<Site> getAllSitePagination(SiteDto siteDto) {
+    public List<MtSite> getAllSitePagination(SiteDto siteDto) {
         return siteTeamAndShiftTimingsService.getAllSitePagination(siteDto);
     }
 
@@ -182,17 +181,17 @@ public class Query implements GraphQLQueryResolver {
         return counsellorSlotService.getCounsellorSlot(empId);
     }*/
     @QueryMapping("getAllVendor")
-    public List<Vendor> getAllVendor() {
+    public List<MtVendor> getAllVendor() {
         return vendorService.getAllVendor();
     }
 
     @QueryMapping
-    public Vendor getVendorById(@Argument Long id) {
+    public MtVendor getVendorById(@Argument Long id) {
         return vendorService.getVendorById(id);
     }
 
     @QueryMapping(name = "getAllVendorPagination")
-    public List<Vendor> getAllVendorPagination(@Argument(name = "input") VendorDto request) {
+    public List<MtVendor> getAllVendorPagination(@Argument(name = "input") VendorDto request) {
         return vendorService.getAllVendorPagination(request);
     }
 
@@ -202,7 +201,7 @@ public class Query implements GraphQLQueryResolver {
     }
 
     @QueryMapping(name = "getAllShiftTimings")
-    public List<ShiftTimings> getAllShiftTimings() {
+    public List<MtShiftTimings> getAllShiftTimings() {
         return siteTeamAndShiftTimingsService.getAllShiftTimings();
     }
 
@@ -212,7 +211,7 @@ public class Query implements GraphQLQueryResolver {
     }
 
     @QueryMapping(name = "getAllCounsellor")
-    public List<Counsellor> getAllCounsellor(@Argument(name = "input") CounsellorDto response) {
+    public List<MtCounsellor> getAllCounsellor(@Argument(name = "input") CounsellorDto response) {
         return counsellorService.getAllCounsellor(response);
     }
 

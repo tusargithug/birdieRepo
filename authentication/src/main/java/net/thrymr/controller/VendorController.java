@@ -1,7 +1,7 @@
 package net.thrymr.controller;
 
 import net.thrymr.dto.VendorDto;
-import net.thrymr.model.Vendor;
+import net.thrymr.model.master.MtVendor;
 import net.thrymr.services.VendorService;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -24,7 +24,7 @@ public class VendorController {
     }
 
     @QueryMapping(name = "getAllVendor")
-    public List<Vendor> getAllVendor() {
+    public List<MtVendor> getAllVendor() {
         return vendorService.getAllVendor();
     }
 
@@ -34,7 +34,7 @@ public class VendorController {
     }
 
     @QueryMapping
-    public Vendor getVendorById(@Argument Long id) {
+    public MtVendor getVendorById(@Argument Long id) {
         return vendorService.getVendorById(id);
     }
 
@@ -44,7 +44,7 @@ public class VendorController {
     }
 
     @QueryMapping(name = "getAllVendorPagination")
-    public List<Vendor> getAllVendorPagination(@Argument(name = "input") VendorDto request) {
+    public List<MtVendor> getAllVendorPagination(@Argument(name = "input") VendorDto request) {
         return vendorService.getAllVendorPagination(request);
     }
 }

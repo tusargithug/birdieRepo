@@ -3,18 +3,14 @@ package net.thrymr.controller;
 import net.thrymr.dto.ShiftTimingsDto;
 import net.thrymr.dto.SiteDto;
 import net.thrymr.dto.TeamDto;
-import net.thrymr.model.ShiftTimings;
-import net.thrymr.model.Site;
-import net.thrymr.model.Team;
+import net.thrymr.model.master.MtTeam;
+import net.thrymr.model.master.MtSite;
+import net.thrymr.model.MtShiftTimings;
 import net.thrymr.services.SiteTeamAndShiftTimingsService;
-import net.thrymr.utils.ApiResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -71,28 +67,28 @@ public class SiteTeamAndShiftTimingsController {
     }
 
     @QueryMapping("getAllTeamPagination")
-    public List<Team> getAllTeamPagination(@Argument(name = "input") TeamDto teamdto) {
+    public List<MtTeam> getAllTeamPagination(@Argument(name = "input") TeamDto teamdto) {
         return siteTeamAndShiftTimingsService.getAllTeamPagination(teamdto);
     }
 
     @QueryMapping("getAllSitePagination")
-    public List<Site> getAllSitePagination(@Argument(name = "input") SiteDto siteDto) {
+    public List<MtSite> getAllSitePagination(@Argument(name = "input") SiteDto siteDto) {
         return siteTeamAndShiftTimingsService.getAllSitePagination(siteDto);
     }
 
     @QueryMapping(name = "getAllTeam")
-    public List<Team> getAllTeam() {
-        List<Team> teamList = siteTeamAndShiftTimingsService.getAllTeam();
-        return teamList;
+    public List<MtTeam> getAllTeam() {
+        List<MtTeam> mtTeamList = siteTeamAndShiftTimingsService.getAllTeam();
+        return mtTeamList;
     }
 
     @QueryMapping(name = "getAllSite")
-    public List<Site> getAllSite() {
+    public List<MtSite> getAllSite() {
         return siteTeamAndShiftTimingsService.getAllSite();
     }
 
     @QueryMapping(name = "getAllShiftTimings")
-    public List<ShiftTimings> getAllShiftTimings() {
+    public List<MtShiftTimings> getAllShiftTimings() {
         return siteTeamAndShiftTimingsService.getAllShiftTimings();
     }
 

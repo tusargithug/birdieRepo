@@ -7,9 +7,7 @@ import net.thrymr.dto.RolesDto;
 import net.thrymr.dto.UserCourseDto;
 import net.thrymr.enums.Roles;
 import net.thrymr.model.*;
-import net.thrymr.model.master.Course;
-import net.thrymr.model.master.MtOptions;
-import net.thrymr.model.master.MtRoles;
+import net.thrymr.model.master.*;
 import net.thrymr.repository.*;
 import net.thrymr.services.AppUserService;
 
@@ -280,18 +278,18 @@ public class AppUserServiceImpl implements AppUserService {
         user.setAlternateMobile(request.getAlternateMobile());
         user.setEmpId(request.getEmpId());
         user.setRoles(Roles.valueOf(request.getRoles()));
-        Optional<Site> optionalSite = siteRepo.findById(request.getSiteId());
+        Optional<MtSite> optionalSite = siteRepo.findById(request.getSiteId());
         if (optionalSite.isPresent()) {
-            user.setSite(optionalSite.get());
+            user.setMtSite(optionalSite.get());
         }
-        Optional<ShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(request.getShiftTimingsId());
+        Optional<MtShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(request.getShiftTimingsId());
         if (optionalShiftTimings.isPresent()) {
-            user.setShiftTimings(optionalShiftTimings.get());
+            user.setMtShiftTimings(optionalShiftTimings.get());
         }
         if (request.getTeamId() != null) {
-            Optional<Team> optionalTeamId = teamRepo.findById(request.getTeamId());
+            Optional<MtTeam> optionalTeamId = teamRepo.findById(request.getTeamId());
             if (optionalTeamId.isPresent()) {
-                user.setTeam(optionalTeamId.get());
+                user.setMtTeam(optionalTeamId.get());
             }
         }
         appUserRepo.save(user);
