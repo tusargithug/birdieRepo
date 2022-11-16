@@ -175,6 +175,7 @@ enum Roles{
     TEAM_MANAGER
     TEAM_LEADER
     OP_STREAM
+    SITE_MANAGER
 }
 
 
