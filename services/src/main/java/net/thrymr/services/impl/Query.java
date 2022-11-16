@@ -75,18 +75,19 @@ public class Query implements GraphQLQueryResolver {
     @Autowired
     MiniSessionService miniSessionService;
 
-    @QueryMapping
-    public MtMoodInfo moodInfoById(Long id) {
-        return moodInfoService.moodInfoById(id);
-
+    @QueryMapping(name = "getMoodInfoById")
+    public MtMoodInfo getMoodInfoById(@Argument Long id) {
+        return moodInfoService.getMoodInfoById(id);
     }
 
-    @QueryMapping
+    @QueryMapping(name = "getAllMoodInfo")
     public List<MtMoodInfo> getAllMoodInfo() {
         return moodInfoService.getAllMoodInfo();
-
     }
-
+    @QueryMapping(name = "getAllMoodCheckIn")
+    public List<UserMoodCheckIn> getAllMoodCheckIn(){
+        return moodIntensityService.getAllMoodCheckIn();
+    }
     @QueryMapping("getAllMoodIntensity")
     public List<MtMoodIntensity> getAllMoodIntensity() {
         return moodIntensityService.getAllMoodIntensity();

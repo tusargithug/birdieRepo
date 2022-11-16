@@ -3,6 +3,7 @@ package net.thrymr.services;
 
 import net.thrymr.dto.MoodIntensityDto;
 import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
+import net.thrymr.model.UserMoodCheckIn;
 import net.thrymr.model.master.MtMoodIntensity;
 import net.thrymr.utils.ApiResponse;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,4 +34,6 @@ public interface MoodIntensityService {
     List<MtMoodIntensity> getAllMoodIntensity();
 
     String deleteUserMoodCheckInById(Long id);
+
+    List<UserMoodCheckIn> getAllMoodCheckIn();
 }

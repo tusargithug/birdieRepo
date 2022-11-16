@@ -94,15 +94,15 @@ public class MoodIntensityController {
     @MutationMapping(name = "createUserMoodCheckIn")
     public String createUserMoodCheckIn(@Argument(name = "input") MoodSourceIntensityRequestDto request){
         return moodIntensityService.createUserMoodCheckIn(request);
-
-
     }
-
+    @QueryMapping(name = "getAllMoodCheckIn")
+    public List<UserMoodCheckIn> getAllMoodCheckIn(){
+        return moodIntensityService.getAllMoodCheckIn();
+    }
 
     @MutationMapping(name = "deleteUserMoodCheckInById")
     public String deleteUserMoodCheckInById(@Argument Long id){
         return moodIntensityService.deleteUserMoodCheckInById(id);
-
     }
     @QueryMapping("getAllMoodIntensity")
     public List<MtMoodIntensity> getAllMoodIntensity(){

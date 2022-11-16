@@ -34,7 +34,7 @@ public class MtMoodIntensity extends BaseEntity{
 	
 	private Float score;
 	
-	@ManyToMany(mappedBy = "intensities")
+	@ManyToMany
 	private List<UserMoodCheckIn> userMoodCheckIns = new ArrayList<>();
 
 }

@@ -16,6 +16,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -25,38 +26,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
 public class MoodInfoServiceImpl implements MoodInfoService {
-    private final Logger logger = LoggerFactory.getLogger(MoodInfoServiceImpl.class);
+    Logger logger = LoggerFactory.getLogger(MoodInfoServiceImpl.class);
 
-    private final Environment environment;
+    @Autowired
+    Environment environment;
+    @Autowired
+    MoodInfoRepo moodInfoRepo;
+    @Autowired
+    MoodIntensityRepo moodIntensityRepo;
 
-    private final MoodInfoRepo moodInfoRepo;
-
-    private final MoodIntensityRepo moodIntensityRepo;
-
-
-    public MoodInfoServiceImpl(Environment environment, MoodInfoRepo moodInfoRepo, MoodIntensityRepo moodIntensityRepo) {
-        this.environment = environment;
-        this.moodInfoRepo = moodInfoRepo;
-        this.moodIntensityRepo = moodIntensityRepo;
-    }
-
-//    private ApiResponse validateMoodRequest(MultipartFile request) {
-//        if (!Validator.isObjectValid(request)) {
-//            return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("INVALID_REQUEST"));
-//        }
-//        return null;
-//    }
-//
-//    private ApiResponse validateMoodRequestDto(List<MoodInfoDto> request) {
-//        if (!Validator.isObjectValid(request)) {
-//            return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("INVALID_REQUEST"));
-//        }
-//        return null;
-//    }
 
     private String getCellValue(XSSFCell cell) {
         String value;
@@ -120,68 +103,77 @@ public class MoodInfoServiceImpl implements MoodInfoService {
                     mtMoodInfoList = moodInfoRepo.saveAll(mtMoodInfoList);
 
                 } catch (Exception e) {
-                    logger.error("Exception{}; " , e);
+                    logger.error("Exception{}; ", e);
                     return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_IMPORT_FORMAT_FAILED"));
                 }
             }
         }
-
-
         return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_IMPORT_SUCCESS"));
     }
 
+
     @Override
-    public ApiResponse getAllMoods() {
-        List<MtMoodInfo> mtMoodInfos = moodInfoRepo.findAll();
-        List<MoodInfoDto> moodInfoDtos = new ArrayList<>();
-        if (!mtMoodInfos.isEmpty()) {
-            mtMoodInfos.forEach(model -> moodInfoDtos.add(setModelToDto(model)));
-            return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_FOUND"), moodInfoDtos);
+    public MtMoodInfo getMoodInfoById(Long id) {
+        MtMoodInfo mtMoodInfo = null;
+        if (Validator.isValid(id)) {
+            Optional<MtMoodInfo> optionalMoodInfo = moodInfoRepo.findById(id);
+            if (optionalMoodInfo.isPresent() && optionalMoodInfo.get().getIsActive().equals(Boolean.TRUE)) {
+                mtMoodInfo = optionalMoodInfo.get();
+                return mtMoodInfo;
+            }
         }
-
-            return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_NOT_FOUND"), moodInfoDtos);
-
+        return new MtMoodInfo();
     }
 
     @Override
-    public ApiResponse getMoodInfoById(Long id) {
-        Optional<MtMoodInfo>optionalMoodInfo=moodInfoRepo.findById(id);
-        return optionalMoodInfo.map(moodInfo -> new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_FOUND"), this.setModelToDto(moodInfo))).orElseGet(() -> new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_NOT_FOUND")));
-
-    }
-
-    @Override
-    public ApiResponse deleteMoodInfoById(Long id) {
-        Optional<MtMoodInfo>optionalMoodInfo=moodInfoRepo.findById(id);
-
-        if(optionalMoodInfo.isPresent()){
-            MtMoodInfo mtMoodInfo =optionalMoodInfo.get();
-            moodInfoRepo.delete(mtMoodInfo);
-            return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_INFO_DELETE"));
+    public String deleteMoodInfoById(Long id) {
+        MtMoodInfo mtMoodInfo = null;
+        if (Validator.isValid(id)) {
+            Optional<MtMoodInfo> optionalMoodInfo = moodInfoRepo.findById(id);
+            if (optionalMoodInfo.isPresent()) {
+                mtMoodInfo = optionalMoodInfo.get();
+                mtMoodInfo.setIsActive(Boolean.FALSE);
+                mtMoodInfo.setIsDeleted(Boolean.TRUE);
+                moodInfoRepo.save(mtMoodInfo);
+                return "Mood info deleted successfully";
+            }
         }
-
-        return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_NOT_FOUND"));
+        return "This mood info id not present in database";
     }
 
     @Override
     public List<MtMoodInfo> getAllMoodInfo() {
-        List<MtMoodInfo> mtMoodInfos = moodInfoRepo.findAll();
-     return mtMoodInfos;
+        List<MtMoodInfo> mtMoodInfoList = moodInfoRepo.findAll();
+        if (!mtMoodInfoList.isEmpty()) {
+            return mtMoodInfoList.stream().filter(mtMoodInfo -> mtMoodInfo.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
 
     @Override
-    public MtMoodInfo moodInfoById(Long id) {
-        return moodInfoRepo.findById(id).orElse(null);
-    }
-
-    private MoodInfoDto setModelToDto(MtMoodInfo mtMoodInfo) {
-        MoodInfoDto moodInfoDto = new MoodInfoDto();
-        moodInfoDto.setId(mtMoodInfo.getId());
-        moodInfoDto.setMoodName(mtMoodInfo.getName());
-        moodInfoDto.setSequence(mtMoodInfo.getSequence());
-        moodInfoDto.setMoodType(mtMoodInfo.getMoodType().name());
-        moodInfoDto.setIntensityName(mtMoodInfo.getIntensityName());
-        return moodInfoDto;
+    public String updateMoodInfoById(MoodInfoDto request) {
+        MtMoodInfo mtMoodInfo = null;
+        if (Validator.isValid(request.getId())) {
+            Optional<MtMoodInfo> optionalMtMoodInfo = moodInfoRepo.findById(request.getId());
+            if (optionalMtMoodInfo.isPresent()) {
+                mtMoodInfo = optionalMtMoodInfo.get();
+                if (Validator.isValid(request.getMoodType())) {
+                    mtMoodInfo.setMoodType(MoodType.valueOf(request.getMoodType()));
+                }
+                if (Validator.isValid(request.getIntensityName())) {
+                    mtMoodInfo.setIntensityName(request.getIntensityName());
+                }
+                if (Validator.isValid(request.getSequence())) {
+                    mtMoodInfo.setSequence(request.getSequence());
+                }
+                if (Validator.isValid(request.getEmoji())) {
+                    mtMoodInfo.setEmoji(request.getEmoji());
+                }
+                moodInfoRepo.save(mtMoodInfo);
+                return "Mood info updated successfully";
+            }
+        }
+        return "This mood info id not present in database";
     }
 }
 

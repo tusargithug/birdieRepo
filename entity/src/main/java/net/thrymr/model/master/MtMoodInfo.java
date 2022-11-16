@@ -8,6 +8,7 @@ import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.RequiredArgsConstructor;
+import net.thrymr.model.AppUser;
 import net.thrymr.model.BaseEntity;
 import net.thrymr.enums.MoodType;
 
