@@ -17,22 +17,23 @@ public class ApiResponse {
     private String message;
     private Object responseData;
 
-    public ApiResponse (HttpStatus httpStatus,String message){
-        this.status=httpStatus;
-        this.statusCode=httpStatus.value();
-        this.message=message;
-    }
-    public ApiResponse (HttpStatus httpStatus,String message,Object response){
-        this.status=httpStatus;
-        this.statusCode=httpStatus.value();
-        this.message=message;
-        this.responseData=response;
+    public ApiResponse(HttpStatus httpStatus, String message) {
+        this.status = httpStatus;
+        this.statusCode = httpStatus.value();
+        this.message = message;
     }
 
-    public ApiResponse (HttpStatus httpStatus,Object response){
-        this.status=httpStatus;
-        this.statusCode=httpStatus.value();
-        this.responseData=response;
+    public ApiResponse(HttpStatus httpStatus, String message, Object response) {
+        this.status = httpStatus;
+        this.statusCode = httpStatus.value();
+        this.message = message;
+        this.responseData = response;
+    }
+
+    public ApiResponse(HttpStatus httpStatus, Object response) {
+        this.status = httpStatus;
+        this.statusCode = httpStatus.value();
+        this.responseData = response;
     }
 }
 /**
@@ -41,6 +42,5 @@ public class ApiResponse {
  * 403 - Authentication / accessibility failures
  * 400 - Bad Request // all exceptions related validations or input request related to be handled 403 by default
  * 500 - System error // All unexpected errors/ exceptions to be considered
- *
  */
 

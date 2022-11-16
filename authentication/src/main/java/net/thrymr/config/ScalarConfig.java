@@ -27,8 +27,7 @@ public class ScalarConfig {
 //
 
 
-
-//
+    //
 //
 //        @Bean
 //        public GraphQLScalarType dateScalar() {
@@ -163,7 +162,6 @@ public class ScalarConfig {
             throw new CoercingParseLiteralException();
         }
     }).build();
-
 
 
 }

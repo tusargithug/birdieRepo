@@ -1,4 +1,5 @@
 package net.thrymr.controller;
+
 import net.thrymr.dto.*;
 import net.thrymr.model.master.Category;
 import net.thrymr.model.master.Course;
@@ -26,7 +27,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/master")
 public class MasterController {
-    private final Logger logger=LoggerFactory.getLogger(MasterController.class);
+    private final Logger logger = LoggerFactory.getLogger(MasterController.class);
 
 
     private final RoleService roleService;
@@ -42,12 +43,11 @@ public class MasterController {
     private final LearningVideoService learningVideoService;
 
 
-
     private final CategoryService categoryService;
 
     private final CourseService courseService;
 
-    public MasterController(RoleService roleService, AppUserService appUserService, MoodInfoService moodInfoService, MoodIntensityService moodIntensityService, MoodSourceService moodSourceService, LearningVideoService learningVideoService,  CategoryService categoryService, CourseService courseService) {
+    public MasterController(RoleService roleService, AppUserService appUserService, MoodInfoService moodInfoService, MoodIntensityService moodIntensityService, MoodSourceService moodSourceService, LearningVideoService learningVideoService, CategoryService categoryService, CourseService courseService) {
         this.roleService = roleService;
         this.appUserService = appUserService;
         this.moodInfoService = moodInfoService;
@@ -62,127 +62,129 @@ public class MasterController {
 
 
     @GetMapping("/role/save")
-        public ResponseEntity<ApiResponse> saveRole() {
-            logger.info("save role service started");
-            ApiResponse apiResponse = roleService.saveRole();
-            logger.info("save role service completed");
-            return new ResponseEntity<>(apiResponse.getStatus());     //apiResponse.getStatus()
-        }
+    public ResponseEntity<ApiResponse> saveRole() {
+        logger.info("save role service started");
+        ApiResponse apiResponse = roleService.saveRole();
+        logger.info("save role service completed");
+        return new ResponseEntity<>(apiResponse.getStatus());     //apiResponse.getStatus()
+    }
 
-        @GetMapping("/role/get")
-        public ApiResponse getAllRoles() {
-            logger.info("get all roles service started");
-            ApiResponse apiResponse = roleService.getAllUserRoles();
-            logger.info("get all roles service completed");
-            return new ApiResponse(HttpStatus.OK, "All Roles",apiResponse);
-        }
+    @GetMapping("/role/get")
+    public ApiResponse getAllRoles() {
+        logger.info("get all roles service started");
+        ApiResponse apiResponse = roleService.getAllUserRoles();
+        logger.info("get all roles service completed");
+        return new ApiResponse(HttpStatus.OK, "All Roles", apiResponse);
+    }
 
-        @PostMapping("/user/save")
-        public ResponseEntity<ApiResponse> saveUser(@RequestBody AppUserDto request) {
-            logger.info("Save user service started");
-            ApiResponse apiResponse = appUserService.saveUser(request);
-            logger.info("Save user service completed");
-            return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
-        }
+    @PostMapping("/user/save")
+    public ResponseEntity<ApiResponse> saveUser(@RequestBody AppUserDto request) {
+        logger.info("Save user service started");
+        ApiResponse apiResponse = appUserService.saveUser(request);
+        logger.info("Save user service completed");
+        return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
+    }
 
-        @DeleteMapping("/user/delete/{id}")
-        public ResponseEntity<ApiResponse> deleteUserById(@PathVariable Long id) {
-            logger.info("Delete user service started");
-            ApiResponse apiResponse = appUserService.deleteUserById(id);
-            logger.info("Delete user service completed");
-            return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
-        }
+    @DeleteMapping("/user/delete/{id}")
+    public ResponseEntity<ApiResponse> deleteUserById(@PathVariable Long id) {
+        logger.info("Delete user service started");
+        ApiResponse apiResponse = appUserService.deleteUserById(id);
+        logger.info("Delete user service completed");
+        return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
+    }
 
-        @GetMapping("/user/get/{id}")
-        public ResponseEntity<ApiResponse> getUserById(@PathVariable Long id) {
-            logger.info("get user service started");
-            ApiResponse apiResponse = appUserService.getUserById(id);
-            logger.info("get user service completed");
-            return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
-        }
-        @GetMapping("/user/get/all")
-        public ResponseEntity<ApiResponse> getAllUsers() {
-            logger.info("get all user service started");
-            ApiResponse apiResponse = appUserService.getAllUsers();
-            logger.info("get all user service completed");
-            return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
-        }
+    @GetMapping("/user/get/{id}")
+    public ResponseEntity<ApiResponse> getUserById(@PathVariable Long id) {
+        logger.info("get user service started");
+        ApiResponse apiResponse = appUserService.getUserById(id);
+        logger.info("get user service completed");
+        return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
+    }
 
-        @PostMapping("/user/upload")
-        public ResponseEntity<ApiResponse> importUsersData(@RequestParam("file") MultipartFile file) {
-            logger.info("Import  Users  service started");
-            ApiResponse apiResponse = appUserService.addUsersByExcel(file);
-            logger.info("Import Users  service completed");
-            return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
-        }
-        // mood-info uploaded by excel sheet
-        @PostMapping("/mood-info/save")
-        public ResponseEntity<ApiResponse> importMoodInfo(@RequestParam("file") MultipartFile file) {
-            logger.info("Import  moodInfo  service started");
-            ApiResponse apiResponse = moodInfoService.saveMoodInfo(file);
-            logger.info("Import moodInfo  service completed");
-            return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
-        }
+    @GetMapping("/user/get/all")
+    public ResponseEntity<ApiResponse> getAllUsers() {
+        logger.info("get all user service started");
+        ApiResponse apiResponse = appUserService.getAllUsers();
+        logger.info("get all user service completed");
+        return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
+    }
 
-        // mood-intensity uploaded by excel sheet
-        @PostMapping("/mood-intensity/save")
-        public ResponseEntity<ApiResponse> importMoodIntensitiesInfo(@RequestParam("file") MultipartFile file) {
-            logger.info("Import  moodIntensity  service started");
-            ApiResponse apiResponse = moodIntensityService.saveintensity(file);
-            logger.info("Import moodIntensity  service completed");
-            return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
-        }
+    @PostMapping("/user/upload")
+    public ResponseEntity<ApiResponse> importUsersData(@RequestParam("file") MultipartFile file) {
+        logger.info("Import  Users  service started");
+        ApiResponse apiResponse = appUserService.addUsersByExcel(file);
+        logger.info("Import Users  service completed");
+        return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
+    }
+
+    // mood-info uploaded by excel sheet
+    @PostMapping("/mood-info/save")
+    public ResponseEntity<ApiResponse> importMoodInfo(@RequestParam("file") MultipartFile file) {
+        logger.info("Import  moodInfo  service started");
+        ApiResponse apiResponse = moodInfoService.saveMoodInfo(file);
+        logger.info("Import moodInfo  service completed");
+        return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
+    }
+
+    // mood-intensity uploaded by excel sheet
+    @PostMapping("/mood-intensity/save")
+    public ResponseEntity<ApiResponse> importMoodIntensitiesInfo(@RequestParam("file") MultipartFile file) {
+        logger.info("Import  moodIntensity  service started");
+        ApiResponse apiResponse = moodIntensityService.saveintensity(file);
+        logger.info("Import moodIntensity  service completed");
+        return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
+    }
 
 
+    @PostMapping("/mood-source/save")
+    public ResponseEntity<ApiResponse> importMoodSourceInfo(@RequestParam("file") MultipartFile file) {
+        logger.info("Import  Mood Source  service started");
+        ApiResponse apiResponse = moodSourceService.addMoodSourceByExcel(file);
+        logger.info("Import Mood Source  service completed");
+        return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
+    }
 
-        @PostMapping("/mood-source/save")
-        public ResponseEntity<ApiResponse> importMoodSourceInfo(@RequestParam("file") MultipartFile file) {
-            logger.info("Import  Mood Source  service started");
-            ApiResponse apiResponse = moodSourceService.addMoodSourceByExcel(file);
-            logger.info("Import Mood Source  service completed");
-            return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
-        }
-        // save Learning video
-        @PostMapping("/learning/video/save")
-        public ResponseEntity<ApiResponse> saveLearningVideo(@RequestBody LearningVideoDto request) {
-            logger.info("Save video service started");
-            ApiResponse apiResponse = learningVideoService.saveLearningVideo(request);
-            logger.info("Save video Service Completed");
-            return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
-        }
+    // save Learning video
+    @PostMapping("/learning/video/save")
+    public ResponseEntity<ApiResponse> saveLearningVideo(@RequestBody LearningVideoDto request) {
+        logger.info("Save video service started");
+        ApiResponse apiResponse = learningVideoService.saveLearningVideo(request);
+        logger.info("Save video Service Completed");
+        return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
+    }
 
-        @QueryMapping("getAllMtRoles")
-        public List<MtRoles> getAllMtRoles(){
-            return roleService. getAllMtRoles();
+    @QueryMapping("getAllMtRoles")
+    public List<MtRoles> getAllMtRoles() {
+        return roleService.getAllMtRoles();
 
-        }
+    }
 
-        @QueryMapping("mtRoleById")
-        public MtRoles mtRoleById(Long id){
-            return roleService. mtRoleById(id);
+    @QueryMapping("mtRoleById")
+    public MtRoles mtRoleById(Long id) {
+        return roleService.mtRoleById(id);
 
-        }
+    }
 
-        @QueryMapping
-        public List<Category> getAllCategory() {
-            logger.info("get all Category service started");
-            return categoryService.getAllCategory();
-        }
+    @QueryMapping
+    public List<Category> getAllCategory() {
+        logger.info("get all Category service started");
+        return categoryService.getAllCategory();
+    }
 
-        @MutationMapping(name = "createCategory")
-        public String createCategory(@Argument(name = "input")CategoryDto request) {
-         return categoryService.createCategory(request);
-        }
+    @MutationMapping(name = "createCategory")
+    public String createCategory(@Argument(name = "input") CategoryDto request) {
+        return categoryService.createCategory(request);
+    }
 
 
     @MutationMapping("updateCategory")
-    public String updateCategory( @Argument(name = "input") CategoryDto request){
+    public String updateCategory(@Argument(name = "input") CategoryDto request) {
         return categoryService.updateCategory(request);
 
     }
 
     @MutationMapping
-    public String deleteCategoryById(@Argument Long id){
+    public String deleteCategoryById(@Argument Long id) {
         return categoryService.deleteCategoryById(id);
 
     }
@@ -192,10 +194,10 @@ public class MasterController {
         return courseService.getAllCourse();
    }
 
-   @MutationMapping(name = "updateCourse")
-   public String updateCourse(@Argument(name = "input") CourseDto request){
+    @MutationMapping(name = "updateCourse")
+    public String updateCourse(@Argument(name = "input") CourseDto request) {
         return courseService.updateCourse(request);
-   }
+    }
 
 
     @MutationMapping(name = "createCourse")
@@ -210,23 +212,24 @@ public class MasterController {
 
 
     @MutationMapping
-    public String deleteCourseById(@Argument Long id){
+    public String deleteCourseById(@Argument Long id) {
 
         return categoryService.deleteCourseById(id);
 
     }
+
     @MutationMapping(name = "createRole")
-  public String createRole(@Argument(name = "input") RolesDto request){
+    public String createRole(@Argument(name = "input") RolesDto request) {
         return roleService.createRole(request);
-  }
+    }
 
     @MutationMapping(name = "updateRole")
-    public String updateRole(@Argument(name = "input") RolesDto request){
+    public String updateRole(@Argument(name = "input") RolesDto request) {
         return roleService.updateRole(request);
     }
 
     @MutationMapping
-    public String deleteRoleById(@Argument Long id){
+    public String deleteRoleById(@Argument Long id) {
 
         return roleService.deleteRoleById(id);
 

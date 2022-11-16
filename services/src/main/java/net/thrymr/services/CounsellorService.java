@@ -1,8 +1,7 @@
 package net.thrymr.services;
 
 import net.thrymr.dto.CounsellorDto;
-import net.thrymr.model.AppUser;
-import net.thrymr.model.Counsellor;
+import net.thrymr.model.master.MtCounsellor;
 
 import java.util.List;
 
@@ -13,7 +12,7 @@ public interface CounsellorService {
 
     String deleteCounsellorById(Long id);
 
-    List<Counsellor> getAllCounsellor(CounsellorDto response);
+    List<MtCounsellor> getAllCounsellor(CounsellorDto response);
 
     Counsellor getCounsellorById(Long id);
 }

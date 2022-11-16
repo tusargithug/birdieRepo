@@ -18,19 +18,19 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class PsychometricTest extends BaseEntity{
-	
-	private String name;
-	
-	@Column(columnDefinition = "TEXT")
-	private String description;
-	
-	@OneToMany(mappedBy = "psychometricTest", cascade = CascadeType.ALL , fetch = FetchType.LAZY)
-	private Set<MtQuestion> mtQuestions = new HashSet<>();
-	
-	@OneToMany(mappedBy = "psychometricTest", cascade = CascadeType.ALL , fetch = FetchType.LAZY)
-	private Set<PsychometricTestOption> options = new HashSet<>();
-	
-	@OneToMany(mappedBy = "psychometricTest", cascade = CascadeType.ALL , fetch = FetchType.LAZY)
-	private Set<RiskLevel> riskLevels = new HashSet<>();
+public class PsychometricTest extends BaseEntity {
+
+    private String name;
+
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    @OneToMany(mappedBy = "psychometricTest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<MtQuestion> mtQuestions = new HashSet<>();
+
+    @OneToMany(mappedBy = "psychometricTest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<PsychometricTestOption> options = new HashSet<>();
+
+    @OneToMany(mappedBy = "psychometricTest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<RiskLevel> riskLevels = new HashSet<>();
 }

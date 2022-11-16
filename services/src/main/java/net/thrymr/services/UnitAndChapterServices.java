@@ -21,10 +21,11 @@ public interface UnitAndChapterServices {
 
     String saveChapter(ChapterDto request);
 
-    String updateChaptersById(ChapterDto  dto);
+    String updateChaptersById(ChapterDto dto);
 
     List<Chapter> getAllChapters();
 
     String deleteChapterById(Long id);
+
     List<Chapter> getAllChapterPagination(ChapterDto chapterDto);
 }

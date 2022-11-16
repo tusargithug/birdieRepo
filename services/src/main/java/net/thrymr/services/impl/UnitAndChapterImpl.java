@@ -221,11 +221,12 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         return unit;
     }
 
+
     public UnitDto entityToDto(Unit unit) {
         UnitDto unitDto = new UnitDto();
         unitDto.setId(unit.getId());
         unitDto.setUnitName(unit.getUnitName());
-        unitDto.setIsActive(unit.getIsActive());
+        unitDto.setStatus(unit.getIsActive());
         Optional<Unit> optionalAddUnit = unitRpo.findById(unit.getId());
         if (optionalAddUnit.isPresent()) {
             unitDto.setChapterCount(optionalAddUnit.get().getChapters().size());
@@ -238,7 +239,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
     public UnitDto entityToDtoForGetAll(Unit unit) {
         UnitDto unitDto = new UnitDto();
         unitDto.setUnitName(unit.getUnitName());
-        unitDto.setIsActive(unit.getIsActive());
+        unitDto.setStatus(unit.getIsActive());
         Optional<Unit> optionalAddUnit = unitRpo.findById(unit.getId());
         unitDto.setChapterCount(optionalAddUnit.get().getChapters().size());
         unitDto.setAddOn(dateToString(unit.getCreatedOn()));

@@ -7,9 +7,7 @@ import net.thrymr.dto.response.UserAppointmentResponse;
 import net.thrymr.enums.Roles;
 import net.thrymr.enums.SlotStatus;
 import net.thrymr.model.*;
-import net.thrymr.model.master.Course;
-import net.thrymr.model.master.MtOptions;
-import net.thrymr.model.master.MtRoles;
+import net.thrymr.model.master.*;
 import net.thrymr.repository.*;
 import net.thrymr.services.AppUserService;
 
@@ -273,34 +271,28 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public String createAppUser(AppUserDto request) throws ParseException {
+    public String createAppUser(AppUserDto request) {
         AppUser user = new AppUser();
         user.setEmail(request.getEmail());
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
-        user.setUserName(request.getUserName());
+        user.setUserName(request.getFirstName() + " " + request.getLastName());
         user.setMobile(request.getMobile());
         user.setAlternateMobile(request.getAlternateMobile());
         user.setEmpId(request.getEmpId());
         user.setRoles(Roles.valueOf(request.getRoles()));
-        if (request.getDateOfJoining() != null) {
-            user.setDateOfJoining(DateUtils.toFormatStringToDate(String.valueOf(request.getDateOfJoining()), Constants.DATE_FORMAT));
-        }
-        if (request.getIsActive().equals(Boolean.TRUE)) {
-            user.setIsActive(request.getIsActive());
-        }
-        Optional<Site> optionalSite = siteRepo.findById(request.getSiteId());
+        Optional<MtSite> optionalSite = siteRepo.findById(request.getSiteId());
         if (optionalSite.isPresent()) {
-            user.setSite(optionalSite.get());
+            user.setMtSite(optionalSite.get());
         }
-        Optional<ShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(request.getShiftTimingsId());
+        Optional<MtShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(request.getShiftTimingsId());
         if (optionalShiftTimings.isPresent()) {
-            user.setShiftTimings(optionalShiftTimings.get());
+            user.setMtShiftTimings(optionalShiftTimings.get());
         }
         if (request.getTeamId() != null) {
-            Optional<Team> optionalTeamId = teamRepo.findById(request.getTeamId());
+            Optional<MtTeam> optionalTeamId = teamRepo.findById(request.getTeamId());
             if (optionalTeamId.isPresent()) {
-                user.setTeam(optionalTeamId.get());
+                user.setMtTeam(optionalTeamId.get());
             }
         }
         appUserRepo.save(user);
@@ -308,7 +300,7 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public String updateAppUser(AppUserDto request) throws ParseException {
+    public String updateAppUser(AppUserDto request) {
         Optional<AppUser> optionalAppUser = appUserRepo.findById(request.getId());
         if (optionalAppUser.isPresent()) {
             AppUser user = optionalAppUser.get();
@@ -329,12 +321,7 @@ public class AppUserServiceImpl implements AppUserService {
             if (request.getEmail() != null) {
                 user.setEmail(request.getEmail());
             }
-            if (request.getDateOfJoining() != null) {
-                user.setDateOfJoining(DateUtils.toFormatStringToDate(String.valueOf(request.getDateOfJoining()), Constants.DATE_FORMAT));
-            }
-            if (request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
-                user.setIsActive(request.getIsActive());
-            }
+
             if (request.getAlternateMobile() != null) {
                 user.setAlternateMobile(request.getAlternateMobile());
             }

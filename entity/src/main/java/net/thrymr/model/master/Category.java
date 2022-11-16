@@ -19,17 +19,17 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class Category extends BaseEntity{
-	
-	private String name;
-	
-	@Column(columnDefinition = "TEXT")
-	private String description;
-	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "category")
-	private Set<Course> courses = new HashSet<>();
-	
-	private int sequence;
-	
+public class Category extends BaseEntity {
+
+    private String name;
+
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "category")
+    private Set<Course> courses = new HashSet<>();
+
+    private int sequence;
+
 
 }

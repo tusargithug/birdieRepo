@@ -6,10 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.thrymr.enums.SlotShift;
 import net.thrymr.enums.SlotStatus;
+import net.thrymr.model.master.MtCounsellor;
 
 import javax.persistence.*;
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
 
@@ -22,7 +22,7 @@ public class CounsellorSlot extends BaseEntity {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Counsellor counsellor;
+    private MtCounsellor mtCounsellor;
 
     @Column(name = "start_time")
     private LocalTime startTime;
@@ -41,7 +41,7 @@ public class CounsellorSlot extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private SlotStatus slotStatus;
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private AppUser appUser;
 
 //    private final ObjectMapper objectMapper = new ObjectMapper()

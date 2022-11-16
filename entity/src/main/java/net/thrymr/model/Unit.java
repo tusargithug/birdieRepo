@@ -12,11 +12,11 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
-public class Unit extends  BaseEntity{
+public class Unit extends BaseEntity {
 
     @Column(name = "unit_name")
     private String unitName;
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "unit")
-    private List<Chapter> chapters =new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "unit")
+    private List<Chapter> chapters = new ArrayList<>();
 }

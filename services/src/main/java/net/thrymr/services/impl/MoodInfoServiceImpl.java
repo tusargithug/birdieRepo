@@ -120,7 +120,7 @@ public class MoodInfoServiceImpl implements MoodInfoService {
                     mtMoodInfoList = moodInfoRepo.saveAll(mtMoodInfoList);
 
                 } catch (Exception e) {
-                    logger.error("Exception{}; " , e);
+                    logger.error("Exception{}; ", e);
                     return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_IMPORT_FORMAT_FAILED"));
                 }
             }
@@ -139,23 +139,23 @@ public class MoodInfoServiceImpl implements MoodInfoService {
             return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_FOUND"), moodInfoDtos);
         }
 
-            return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_NOT_FOUND"), moodInfoDtos);
+        return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_NOT_FOUND"), moodInfoDtos);
 
     }
 
     @Override
     public ApiResponse getMoodInfoById(Long id) {
-        Optional<MtMoodInfo>optionalMoodInfo=moodInfoRepo.findById(id);
+        Optional<MtMoodInfo> optionalMoodInfo = moodInfoRepo.findById(id);
         return optionalMoodInfo.map(moodInfo -> new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_FOUND"), this.setModelToDto(moodInfo))).orElseGet(() -> new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_NOT_FOUND")));
 
     }
 
     @Override
     public ApiResponse deleteMoodInfoById(Long id) {
-        Optional<MtMoodInfo>optionalMoodInfo=moodInfoRepo.findById(id);
+        Optional<MtMoodInfo> optionalMoodInfo = moodInfoRepo.findById(id);
 
-        if(optionalMoodInfo.isPresent()){
-            MtMoodInfo mtMoodInfo =optionalMoodInfo.get();
+        if (optionalMoodInfo.isPresent()) {
+            MtMoodInfo mtMoodInfo = optionalMoodInfo.get();
             moodInfoRepo.delete(mtMoodInfo);
             return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_INFO_DELETE"));
         }
@@ -166,7 +166,7 @@ public class MoodInfoServiceImpl implements MoodInfoService {
     @Override
     public List<MtMoodInfo> getAllMoodInfo() {
         List<MtMoodInfo> mtMoodInfos = moodInfoRepo.findAll();
-     return mtMoodInfos;
+        return mtMoodInfos;
     }
 
     @Override

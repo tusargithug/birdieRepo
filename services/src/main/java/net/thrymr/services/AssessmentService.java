@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface AssessmentService {
     List<MtAssessment> getAllAssessment();
+
     String createAssessment(AssessmentDto request);
 
     String updateAssessmentById(AssessmentDto request);

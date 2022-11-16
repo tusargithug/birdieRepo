@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.List;
 
 
-
 public class DateUtils {
 
     public static List<LocalDate> getDatesBetweenTwoDates(LocalDate startDate, LocalDate endDate) {
@@ -76,6 +75,7 @@ public class DateUtils {
             return "";
         }
     }
+
     public static Date toFormatStringToDate(String ldt, String format) throws ParseException {
 
         return new SimpleDateFormat(format).parse(ldt);

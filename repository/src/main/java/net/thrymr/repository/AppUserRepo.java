@@ -11,7 +11,8 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface AppUserRepo extends JpaRepository<AppUser, Long> , JpaSpecificationExecutor<AppUser> {
-	Optional<AppUser> findByMobileAndIsActiveAndIsDeleted(String mobile, Boolean aTrue, Boolean aFalse);
-	Optional<AppUser> findByEmail(String email);
+public interface AppUserRepo extends JpaRepository<AppUser, Long>, JpaSpecificationExecutor<AppUser> {
+    Optional<AppUser> findByMobileAndIsActiveAndIsDeleted(String mobile, Boolean aTrue, Boolean aFalse);
+
+    Optional<AppUser> findByEmail(String email);
 }

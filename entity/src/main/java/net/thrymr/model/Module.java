@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "module")
-public class Module extends  BaseEntity {
+public class Module extends BaseEntity {
 
     private String name;
 

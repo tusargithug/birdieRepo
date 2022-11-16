@@ -12,8 +12,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "team")
-public class Team extends BaseEntity {
+@Table(name = "mt_team")
+public class MtTeam extends BaseEntity {
     @Column(name = "team_id")
     private String teamId;
     @Column(name = "team_name")
@@ -23,11 +23,11 @@ public class Team extends BaseEntity {
     private AppUser teamLeader;
     @OneToOne(cascade = CascadeType.ALL)
     private AppUser teamManager;
-    @ManyToOne(cascade = CascadeType.ALL,optional = false)
-    private Site site;
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private ShiftTimings shiftTimings;
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "team")
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    private MtSite mtSite;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private MtShiftTimings mtShiftTimings;
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "mt_team")
     private List<AppUser> appUserList;
     /*@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "team")
     private List<Counsellor> counsellorList;*/

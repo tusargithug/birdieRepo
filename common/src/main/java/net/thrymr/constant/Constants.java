@@ -7,11 +7,11 @@ import java.sql.Timestamp;
 
 public class Constants {
     @Value("${SMS.SENDER.ID}")
-    private static  String SMS_SENDER_ID;
+    private static String SMS_SENDER_ID;
     @Value("${SMS.USER.ID}")
-    public static String SMS_USER_ID ;
+    public static String SMS_USER_ID;
     @Value("${SMS.PASSWORD}")
-    public static  String SMS_PASSWORD ;
+    public static String SMS_PASSWORD;
 
 
     public static final String AUTH_HEADER_NAME = "Authorization";
@@ -29,7 +29,7 @@ public class Constants {
     public static final String TIME_FORMAT_24 = "H:mm a";
     public static final String DATE_TIME_FORMAT = "dd-MM-yyyy HH:mm:ss";
     public static final String CUSTOM_DATE_TIME_FORMAT = "dd MMM yyyy HH:mm a";
-    public static final String  DATE_FORMAT_3="dd-MMM-yyyy";
+    public static final String DATE_FORMAT_3 = "dd-MMM-yyyy";
     // Regex for acceptable logins
     public static final String LOGIN_REGEX = "^[_.@A-Za-z0-9-]*$";
 

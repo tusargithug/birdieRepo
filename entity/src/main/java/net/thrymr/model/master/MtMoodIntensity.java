@@ -17,24 +17,24 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @Table(name = "mt_mood_intensity")
-public class MtMoodIntensity extends BaseEntity{
-	
-	private String name;
-	
-	@Column(columnDefinition = "TEXT")
-	private String description;
+public class MtMoodIntensity extends BaseEntity {
 
-	@Column(name = "emoji")
-	private String emoji;
+    private String name;
 
-	@ManyToOne
-	private MtMoodInfo mtMoodInfo;
-	
-	private int sequence;
-	
-	private Float score;
-	
-	@ManyToMany(mappedBy = "intensities")
-	private List<UserMoodCheckIn> userMoodCheckIns = new ArrayList<>();
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    @Column(name = "emoji")
+    private String emoji;
+
+    @ManyToOne
+    private MtMoodInfo mtMoodInfo;
+
+    private int sequence;
+
+    private Float score;
+
+    @ManyToMany(mappedBy = "intensities")
+    private List<UserMoodCheckIn> userMoodCheckIns = new ArrayList<>();
 
 }

@@ -1,25 +1,27 @@
 package net.thrymr.services.impl;
-        import graphql.kickstart.tools.GraphQLQueryResolver;
-        import net.thrymr.dto.CounsellorDto;
-        import net.thrymr.dto.SiteDto;
-        import net.thrymr.dto.TeamDto;
-        import net.thrymr.dto.UnitDto;
-        import net.thrymr.dto.VendorDto;
-        import net.thrymr.dto.response.UserAppointmentResponse;
-        import net.thrymr.enums.Roles;
-        import net.thrymr.model.*;
-        import net.thrymr.model.master.*;
 
-        import net.thrymr.repository.CategoryRepo;
-        import net.thrymr.repository.CourseRepo;
-        import net.thrymr.services.*;
+import graphql.kickstart.tools.GraphQLQueryResolver;
+import net.thrymr.dto.CounsellorDto;
+import net.thrymr.dto.SiteDto;
+import net.thrymr.dto.TeamDto;
+import net.thrymr.dto.UnitDto;
+import net.thrymr.dto.VendorDto;
+import net.thrymr.dto.response.UserAppointmentResponse;
+import net.thrymr.enums.Roles;
+import net.thrymr.model.*;
+import net.thrymr.model.master.*;
 
-        import org.springframework.beans.factory.annotation.Autowired;
-        import org.springframework.graphql.data.method.annotation.Argument;
-        import org.springframework.graphql.data.method.annotation.QueryMapping;
-        import org.springframework.stereotype.Component;
-        import java.text.ParseException;
-        import java.util.List;
+import net.thrymr.repository.CategoryRepo;
+import net.thrymr.repository.CourseRepo;
+import net.thrymr.services.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Component;
+
+import java.text.ParseException;
+import java.util.List;
 
 @Component
 public class Query implements GraphQLQueryResolver {
@@ -143,13 +145,13 @@ public class Query implements GraphQLQueryResolver {
         return teamList;
     }*/
     @QueryMapping("getAllTeam")
-    public List<Team> getAllTeam() {
+    public List<MtTeam> getAllTeam() {
         //List<Team> teamList= siteTeamAndShiftTimingsService.getAllTeam();
         return siteTeamAndShiftTimingsService.getAllTeam();
     }
 
     @QueryMapping("getAllSite")
-    public List<Site> getAllSite() {
+    public List<MtSite> getAllSite() {
 
         return siteTeamAndShiftTimingsService.getAllSite();
     }
@@ -173,12 +175,12 @@ public class Query implements GraphQLQueryResolver {
     }
 
     @QueryMapping(name = "getAllTeamPagination")
-    public List<Team> getAllTeamPagination(TeamDto teamdto) {
+    public List<MtTeam> getAllTeamPagination(TeamDto teamdto) {
         return siteTeamAndShiftTimingsService.getAllTeamPagination(teamdto);
     }
 
     @QueryMapping(name = "getAllSitePagination")
-    public List<Site> getAllSitePagination(SiteDto siteDto) {
+    public List<MtSite> getAllSitePagination(SiteDto siteDto) {
         return siteTeamAndShiftTimingsService.getAllSitePagination(siteDto);
     }
 
@@ -187,17 +189,17 @@ public class Query implements GraphQLQueryResolver {
         return counsellorSlotService.getCounsellorSlot(empId);
     }*/
     @QueryMapping("getAllVendor")
-    public List<Vendor> getAllVendor() {
+    public List<MtVendor> getAllVendor() {
         return vendorService.getAllVendor();
     }
 
     @QueryMapping
-    public Vendor getVendorById(@Argument Long id) {
+    public MtVendor getVendorById(@Argument Long id) {
         return vendorService.getVendorById(id);
     }
 
     @QueryMapping(name = "getAllVendorPagination")
-    public List<Vendor> getAllVendorPagination(@Argument(name = "input") VendorDto request) {
+    public List<MtVendor> getAllVendorPagination(@Argument(name = "input") VendorDto request) {
         return vendorService.getAllVendorPagination(request);
     }
 
@@ -207,7 +209,7 @@ public class Query implements GraphQLQueryResolver {
     }
 
     @QueryMapping(name = "getAllShiftTimings")
-    public List<ShiftTimings> getAllShiftTimings() {
+    public List<MtShiftTimings> getAllShiftTimings() {
         return siteTeamAndShiftTimingsService.getAllShiftTimings();
     }
 
@@ -217,18 +219,22 @@ public class Query implements GraphQLQueryResolver {
     }
 
     @QueryMapping(name = "getAllCounsellor")
-    public List<Counsellor> getAllCounsellor(@Argument(name = "input") CounsellorDto response) {
+    public List<MtCounsellor> getAllCounsellor(@Argument(name = "input") CounsellorDto response) {
         return counsellorService.getAllCounsellor(response);
     }
 
     @QueryMapping("getAllAssessment")
     public List<MtAssessment> getAllAssessment() {
-        return  assessmentService.getAllAssessment();
+        return assessmentService.getAllAssessment();
     }
+
+
     @QueryMapping("getAssessmentById")
     public MtAssessment getAssessmentById(@Argument Long id) {
-        return  assessmentService.getAssessmentById(id);
+        return assessmentService.getAssessmentById(id);
     }
+
+
     @QueryMapping("getQuestionById")
     public MtQuestion getQuestionById(@Argument Long id) {
         return questionAndOptionsService.getQuestionById(id);
@@ -255,25 +261,27 @@ public class Query implements GraphQLQueryResolver {
     }
 
     @QueryMapping("getAppointmentById")
-    public UserAppointment getAppointmentById(@Argument Long id){
+    public UserAppointment getAppointmentById(@Argument Long id) {
         return appointmentService.getAppointmentById(id);
     }
 
-    @QueryMapping(name="getUserAppointmentCountById")
-    public UserAppointmentResponse getUserAppointmentCountById(@Argument Long id){
+    @QueryMapping(name = "getUserAppointmentCountById")
+    public UserAppointmentResponse getUserAppointmentCountById(@Argument Long id) {
         return appUserService.getUserAppointmentCountById(id);
     }
+
     @QueryMapping("getAllAppointment")
-    public List<UserAppointment> getAllAppointment(){
+    public List<UserAppointment> getAllAppointment() {
         return appointmentService.getAllAppointment();
     }
 
     @QueryMapping(name = "getCounsellorById")
-    public Counsellor getCounsellorById(@Argument Long id){
+    public Counsellor getCounsellorById(@Argument Long id) {
         return counsellorService.getCounsellorById(id);
     }
+
     @QueryMapping(name = "getAllEnumRoles")
-    public List<Roles> getAllEnumRoles(){
+    public List<Roles> getAllEnumRoles() {
         return appUserService.getAllEnumRoles();
     }
 }
