@@ -9,7 +9,7 @@ import net.thrymr.enums.FileType;
 @Setter
 @Getter
 @NoArgsConstructor
-public class FileEntityDto{
+public class FileEntityDto {
     private String fileId;
     private String contentType;
     private String name;

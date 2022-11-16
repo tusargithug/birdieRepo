@@ -1,4 +1,5 @@
 package net.thrymr.model;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,7 +17,7 @@ import java.util.Date;
 @Entity
 @Table(name = "user_appointment")
 @NoArgsConstructor
-public class UserAppointment extends BaseEntity{
+public class UserAppointment extends BaseEntity {
     @Column(name = "start_time")
     private LocalTime startTime;
 

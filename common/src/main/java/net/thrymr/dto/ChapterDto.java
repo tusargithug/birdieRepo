@@ -13,7 +13,7 @@ public class ChapterDto {
     private String chapterName;
     private String profilePicture;
     private String description;
-    private Boolean isActive=Boolean.FALSE;
+    private Boolean isActive = Boolean.FALSE;
     private String video;
     private Long unitId;
     private Integer pageNumber;

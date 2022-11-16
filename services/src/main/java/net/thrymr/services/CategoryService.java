@@ -16,5 +16,6 @@ public interface CategoryService {
     String updateCategory(CategoryDto request);
 
     List<Category> getAllCategory();
+
     Course getCourseById(Long id);
 }

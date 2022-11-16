@@ -188,11 +188,11 @@ public class MasterController {
         return categoryService.deleteCategoryById(id);
 
     }
-   
-   @QueryMapping(name = "getAllCourse")
-   public List<Course> getAllCourse() {
+
+    @QueryMapping(name = "getAllCourse")
+    public List<Course> getAllCourse() {
         return courseService.getAllCourse();
-   }
+    }
 
     @MutationMapping(name = "updateCourse")
     public String updateCourse(@Argument(name = "input") CourseDto request) {
@@ -205,8 +205,8 @@ public class MasterController {
         return courseService.createCourse(request);
     }
 
-    @QueryMapping(name="getCourseById")
-    public Course getCourseById(@Argument Long id){
+    @QueryMapping(name = "getCourseById")
+    public Course getCourseById(@Argument Long id) {
         return categoryService.getCourseById(id);
     }
 

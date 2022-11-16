@@ -25,5 +25,4 @@ public class SendMessageDto {
     private byte[] attachmentData;
 
 
-
 }

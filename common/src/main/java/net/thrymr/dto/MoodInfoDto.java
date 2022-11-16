@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class MoodInfoDto {
 
-    private  Long id;
+    private Long id;
 
     private String moodName;
 

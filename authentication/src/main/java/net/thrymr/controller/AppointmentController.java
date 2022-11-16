@@ -20,19 +20,22 @@ public class AppointmentController {
     AppointmentService appointmentService;
 
     @MutationMapping("createAppointment")
-    public String createAppointment(@Argument(name = "input") TimeSlotDto request){
+    public String createAppointment(@Argument(name = "input") TimeSlotDto request) {
         return appointmentService.createAppointment(request);
     }
+
     @MutationMapping("rescheduledUserAppointment")
     public String rescheduledUserAppointment(@Argument(name = "input") TimeSlotDto request) throws ParseException {
         return appointmentService.rescheduledUserAppointment(request);
     }
+
     @QueryMapping("getAppointmentById")
-    public UserAppointment getAppointmentById(@Argument Long id){
+    public UserAppointment getAppointmentById(@Argument Long id) {
         return appointmentService.getAppointmentById(id);
     }
+
     @QueryMapping("getAllAppointment")
-    public List<UserAppointment> getAllAppointment(){
+    public List<UserAppointment> getAllAppointment() {
         return appointmentService.getAllAppointment();
     }
 

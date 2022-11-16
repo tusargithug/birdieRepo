@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
-
 @Setter
 @Getter
 @NoArgsConstructor
@@ -19,13 +18,13 @@ public class AppUserDto {
     private String firstName;
 
     private String lastName;
-    
+
     private String email;
 
     private String userName;
 
     private String mobile;
-    
+
     private String alternateMobile;
 
     private String password;
@@ -34,13 +33,13 @@ public class AppUserDto {
 
     private Boolean isActive;
 
-      private RolesDto rolesDto;
+    private RolesDto rolesDto;
 
     private String empId;
-//
+    //
 //    private LocalTime date;
 //    private Date dates;
-   // private Roles roles= Roles.NONE;
+    // private Roles roles= Roles.NONE;
     private String roles;
     private String educationDetails;
     private String languages;

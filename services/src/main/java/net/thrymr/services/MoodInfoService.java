@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface MoodInfoService {
     ApiResponse saveMoodInfo(MultipartFile file);
+
     ApiResponse getAllMoods();
 
     ApiResponse getMoodInfoById(Long id);

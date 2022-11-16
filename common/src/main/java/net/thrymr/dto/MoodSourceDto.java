@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.thrymr.model.UserMoodCheckIn;
 import net.thrymr.model.master.FileEntity;
+
 import java.util.LinkedList;
 import java.util.List;
 

@@ -11,7 +11,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
 
-
 @Configuration
 public class ScalarConfig {
 //
