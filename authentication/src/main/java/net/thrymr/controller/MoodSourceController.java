@@ -64,6 +64,11 @@ public class MoodSourceController {
         return new ApiResponse(HttpStatus.OK, "", apiResponse);
     }
 
+    @MutationMapping("updateQuestionById")
+    public String updateQuestionById(@Argument(name = "input") MoodSourceDto request) {
+        return moodSourceService.updateMoodSourceById(request);
+    }
+
     @MutationMapping(name = "createUserMoodSourceCheckIn")
     public String createUserMoodSourceCheckIn(@Argument(name = "input") MoodSourceIntensityRequestDto request) {
         return moodSourceService.createUserMoodSourceCheckIn(request);

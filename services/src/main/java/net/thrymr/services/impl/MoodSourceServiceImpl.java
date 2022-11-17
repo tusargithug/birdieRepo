@@ -126,6 +126,16 @@ public class MoodSourceServiceImpl implements MoodSourceService {
         return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_SOURCE_UPDATED"));
     }
 
+    @Override
+    public String updateMoodSourceById(MoodSourceDto request) {
+
+        if (Validator.isValid(request.getId())) {
+
+        }
+
+        return null;
+    }
+
     private String getCellValue(XSSFCell cell) {
         String value;
         if (cell.getCellType().equals(CellType.NUMERIC)) {
