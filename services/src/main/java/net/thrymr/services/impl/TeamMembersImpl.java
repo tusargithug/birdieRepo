@@ -3,8 +3,8 @@ package net.thrymr.services.impl;
 import lombok.Setter;
 import net.thrymr.dto.TeamMembersDto;
 import net.thrymr.model.AppUser;
-import net.thrymr.model.Team;
 import net.thrymr.model.TeamMembers;
+import net.thrymr.model.master.MtTeam;
 import net.thrymr.repository.AppUserRepo;
 import net.thrymr.repository.TeamMembersRepo;
 import net.thrymr.repository.TeamRepo;
@@ -38,7 +38,7 @@ public class TeamMembersImpl implements TeamMembersService {
             }
         }
         if (Validator.isValid(request.getTeamId())) {
-            Optional<Team> optionalTeam = teamRepo.findById(request.getTeamId());
+            Optional<MtTeam> optionalTeam = teamRepo.findById(request.getTeamId());
             if (optionalTeam.isPresent()) {
                 teamMembers.setTeam(optionalTeam.get());
             }
@@ -61,7 +61,7 @@ public class TeamMembersImpl implements TeamMembersService {
                     }
                 }
                 if (Validator.isValid(request.getTeamId())) {
-                    Optional<Team> optionalTeam = teamRepo.findById(request.getTeamId());
+                    Optional<MtTeam> optionalTeam = teamRepo.findById(request.getTeamId());
                     if (optionalTeam.isPresent()) {
                         teamMembers.setTeam(optionalTeam.get());
                     }

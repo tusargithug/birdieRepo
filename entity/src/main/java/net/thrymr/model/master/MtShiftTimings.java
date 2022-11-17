@@ -6,9 +6,6 @@ import lombok.Setter;
 import net.thrymr.enums.SlotShift;
 import net.thrymr.model.AppUser;
 import net.thrymr.model.BaseEntity;
-import net.thrymr.model.master.MtCounsellor;
-import net.thrymr.model.master.MtSite;
-import net.thrymr.model.master.MtTeam;
 
 import javax.persistence.*;
 import java.time.LocalTime;

@@ -203,7 +203,7 @@ type FileEntity{
     employees:[Course]
 }
 
-type ShiftTimings{
+type MtShiftTimings{
     id: ID!
     shiftName:String
     mtSite:MtSite

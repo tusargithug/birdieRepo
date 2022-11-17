@@ -109,11 +109,6 @@ public class MutationResolver implements GraphQLMutationResolver {
         return moodSourceService.deleteUserMoodSourceCheckInById(id);
     }
 
-    @MutationMapping(name = "updateMoodSourceById")
-    public String updateMoodSource(@Argument(name = "input") MoodSourceDto request) {
-        return moodSourceService.updateMoodSourceById(request);
-    }
-
 
     @MutationMapping(name = "createUserCourse")
     public String createUserCourse(UserCourseDto request) throws ParseException {

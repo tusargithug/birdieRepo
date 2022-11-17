@@ -1,4 +1,4 @@
-package net.thrymr.model;
+package net.thrymr.model.master;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

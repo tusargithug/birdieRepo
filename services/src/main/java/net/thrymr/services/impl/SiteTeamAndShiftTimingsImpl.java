@@ -219,7 +219,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             }
 
             if (siteDto.getStatus() != null && siteDto.getStatus().equals(Boolean.TRUE) || siteDto.getStatus().equals(Boolean.FALSE)) {
-                site.setIsActive(siteDto.getStatus());
+                mtSite.setIsActive(siteDto.getStatus());
             }
             siteRepo.save(mtSite);
             return "site update successfully";
