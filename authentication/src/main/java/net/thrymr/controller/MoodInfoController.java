@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,18 +54,9 @@ public class MoodInfoController {
         return new ApiResponse(HttpStatus.OK, "All MoodInfo details",apiResponse);
     }
 
-    @DeleteMapping("/get/all")
-    public ApiResponse deleteMoodInfoById(@PathVariable Long id) {
-        logger.info("delete mood info service started");
-        ApiResponse apiResponse = moodInfoService.deleteMoodInfoById(id);
-        logger.info("delete mood info service completed");
-        return new ApiResponse(HttpStatus.OK, "Delete  mood info");
-    }
-
-    @QueryMapping
-    public MtMoodInfo moodInfoById(@Argument long id) {
-        return moodInfoService.moodInfoById(id);
-
+    @MutationMapping(name = "deleteMoodInfoById")
+    public String deleteMoodInfoById(@Argument Long id){
+        return moodInfoService.deleteMoodInfoById(id);
     }
 
     @QueryMapping

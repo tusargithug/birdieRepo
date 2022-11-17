@@ -74,9 +74,9 @@ public class Query implements GraphQLQueryResolver {
 
     }
 
-    @QueryMapping("getAllMoodIntensity")
-    public List<MtMoodIntensity> getAllMoodIntensity() {
-        return moodIntensityService.getAllMoodIntensity();
+    @QueryMapping("getAllMoodIntensities")
+    public List<MtMoodIntensity> getAllMoodIntensities() {
+        return moodIntensityService.getAllMoodIntensities();
     }
 
     //get user by id
@@ -281,5 +281,10 @@ public class Query implements GraphQLQueryResolver {
     @QueryMapping(name = "getAllAppUserPagination")
     public List<AppUser> getAllAppUserPagination(@Argument(name = "input") AppUserDto request) {
         return appUserService.getAllAppUserPagination(request);
+    }
+
+    @QueryMapping(name = "getAllMoodIntensitiesByMoodInfoId")
+    public List<MtMoodIntensity> getAllMoodIntensitiesByMoodInfoId(@Argument Long id) {
+        return moodIntensityService.getAllMoodIntensitiesByMoodInfoId(id);
     }
 }

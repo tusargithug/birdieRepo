@@ -54,6 +54,14 @@ public class MutationResolver implements GraphQLMutationResolver {
     AssessmentService assessmentService;
     @Autowired
     AppointmentService appointmentService;
+//
+//    @Autowired
+//    MiniSessionService miniSessionService;
+//
+//    @Autowired
+//    FileService fileService;
+    @Autowired
+    MoodInfoService moodInfoService;
 
     @MutationMapping(name = "createAppUser")
     public String createAppUser(AppUserDto request)throws  Exception{
@@ -401,6 +409,36 @@ public class MutationResolver implements GraphQLMutationResolver {
        return true;
    }
 
+//    @MutationMapping(name = "uploadFiles")
+//    public String uploadFiles(@Argument(name = "file") MultipartFile file) throws IOException {
+//        return fileService.addFile(file);
+//    }
+//
+//
+//    @MutationMapping("deleteFiles")
+//    public String deleteFiles(@Argument String id) {
+//        return fileService.deleteFile(id);
+//    }
+
+    @MutationMapping(name ="updateMoodInfoById")
+    public String updateMoodInfoById(@Argument(name = "input") MoodInfoDto request){
+        return moodInfoService.updateMoodInfoById(request);
+    }
+    @MutationMapping(name = "deleteMoodInfoById")
+    public String deleteMoodInfoById(@Argument Long id){
+        return moodInfoService.deleteMoodInfoById(id);
+    }
+@MutationMapping(name = "uploadFile")
+public String uploadFile(Part avatar, DataFetchingEnvironment environment) {
+    Part actualAvatar = environment.getArgument(environment.getLocalContext());
+    // TODO: Implement
+    return "Upload Success";
+}
+
+    @MutationMapping(name = "updateMoodIntensity")
+    public String updateMoodIntensity(@Argument(name = "input") MoodSourceIntensityRequestDto request) {
+        return moodIntensityService.updateMoodIntensity(request);
+    }
 }
 
 

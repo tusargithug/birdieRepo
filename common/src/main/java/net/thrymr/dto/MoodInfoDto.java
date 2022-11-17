@@ -26,4 +26,6 @@ public class MoodInfoDto {
     private String moodType;
 
     private String intensityName;
+
+    private String emoji;
 }

@@ -15,40 +15,27 @@ import javax.persistence.ManyToOne;
 
 
 import lombok.NoArgsConstructor;
+import net.thrymr.model.master.MtMoodInfo;
 import net.thrymr.model.master.MtMoodIntensity;
-import net.thrymr.model.master.MtMoodSource;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.thrymr.model.master.MtMoodSource;
 
 @Entity
 @Setter
 @Getter
 @NoArgsConstructor
 public class UserMoodCheckIn extends BaseEntity{
-	
-	@ManyToOne
+
+	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private AppUser appUser;
-
-
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "mood_check_in_intensity", joinColumns = { @JoinColumn(name = "mood_info_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "mood_intensity_id") })
-	private List<MtMoodIntensity> intensities = new ArrayList<>();
-	
-
-//	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//	@JoinTable(name = "mood_check_in_source", joinColumns = { @JoinColumn(name = "mood_info_id") }, inverseJoinColumns = {
-//			@JoinColumn(name = "mood_source_id") })
-//	private List<MtMoodSource> sources = new ArrayList<>();
-	
+	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	private MtMoodInfo mtMoodInfo;
+	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	private MtMoodSource mtMoodSource;
+	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	private MtMoodIntensity mtMoodIntensity;
 	@Column(name = "description",columnDefinition = "TEXT")
 	private String description;
-	
-
-	
-	
-	
-	
-
 }

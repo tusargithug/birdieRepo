@@ -16,6 +16,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -29,14 +30,14 @@ import java.util.Optional;
 
 @Service
 public class MoodInfoServiceImpl implements MoodInfoService {
-    private final Logger logger = LoggerFactory.getLogger(MoodInfoServiceImpl.class);
+    Logger logger = LoggerFactory.getLogger(MoodInfoServiceImpl.class);
 
-    private final Environment environment;
-
-    private final MoodInfoRepo moodInfoRepo;
-
-    private final MoodIntensityRepo moodIntensityRepo;
-
+    @Autowired
+    Environment environment;
+    @Autowired
+    MoodInfoRepo moodInfoRepo;
+    @Autowired
+    MoodIntensityRepo moodIntensityRepo;
 
     public MoodInfoServiceImpl(Environment environment, MoodInfoRepo moodInfoRepo, MoodIntensityRepo moodIntensityRepo) {
         this.environment = environment;
@@ -151,16 +152,19 @@ public class MoodInfoServiceImpl implements MoodInfoService {
     }
 
     @Override
-    public ApiResponse deleteMoodInfoById(Long id) {
-        Optional<MtMoodInfo>optionalMoodInfo=moodInfoRepo.findById(id);
-
-        if(optionalMoodInfo.isPresent()){
-            MtMoodInfo mtMoodInfo =optionalMoodInfo.get();
-            moodInfoRepo.delete(mtMoodInfo);
-            return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_INFO_DELETE"));
+    public String deleteMoodInfoById(Long id) {
+        MtMoodInfo mtMoodInfo = null;
+        if (Validator.isValid(id)) {
+            Optional<MtMoodInfo> optionalMoodInfo = moodInfoRepo.findById(id);
+            if (optionalMoodInfo.isPresent()) {
+                mtMoodInfo = optionalMoodInfo.get();
+                mtMoodInfo.setIsActive(Boolean.FALSE);
+                mtMoodInfo.setIsDeleted(Boolean.TRUE);
+                moodInfoRepo.save(mtMoodInfo);
+                return "Mood info deleted successfully";
+            }
         }
-
-        return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_NOT_FOUND"));
+        return "This mood info id not present in database";
     }
 
     @Override
@@ -172,6 +176,32 @@ public class MoodInfoServiceImpl implements MoodInfoService {
     @Override
     public MtMoodInfo moodInfoById(Long id) {
         return moodInfoRepo.findById(id).orElse(null);
+    }
+
+    @Override
+    public String updateMoodInfoById(MoodInfoDto request) {
+        MtMoodInfo mtMoodInfo = null;
+        if (Validator.isValid(request.getId())) {
+            Optional<MtMoodInfo> optionalMtMoodInfo = moodInfoRepo.findById(request.getId());
+            if (optionalMtMoodInfo.isPresent()) {
+                mtMoodInfo = optionalMtMoodInfo.get();
+                if (Validator.isValid(request.getMoodType())) {
+                    mtMoodInfo.setMoodType(MoodType.valueOf(request.getMoodType()));
+                }
+                if (Validator.isValid(request.getIntensityName())) {
+                    mtMoodInfo.setIntensityName(request.getIntensityName());
+                }
+                if (Validator.isValid(request.getSequence())) {
+                    mtMoodInfo.setSequence(request.getSequence());
+                }
+                if (Validator.isValid(request.getEmoji())) {
+                    mtMoodInfo.setEmoji(request.getEmoji());
+                }
+                moodInfoRepo.save(mtMoodInfo);
+                return "Mood info updated successfully";
+            }
+        }
+        return "This mood info id not present in database";
     }
 
     private MoodInfoDto setModelToDto(MtMoodInfo mtMoodInfo) {
