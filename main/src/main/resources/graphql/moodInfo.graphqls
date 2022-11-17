@@ -47,6 +47,7 @@ type Query {
     downloads(id:String):FileDocument
     getMoodInfoById(id:ID):MtMoodInfo
     getAllMoodCheckIn:[UserMoodCheckIn]
+    getAllMoodIntensitiesByMoodInfoId(id:ID):[MtMoodIntensity]
 }
 
 type Mutation {
@@ -123,6 +124,15 @@ type Mutation {
     deleteMoodInfoById(id:ID!):String!
 }
 scalar Upload
+type MtMoodInfo {
+    id: ID!
+    name: String
+    emoji:String
+    description:String!
+    intensities:[MtMoodIntensity]
+    isActive:Boolean
+    intensityName:String
+}
 
 type MtMoodIntensity{
     name:String
@@ -163,6 +173,10 @@ input AppUserDto{
     teamId:Int
     isActive:Boolean
     dateOfJoining:String
+    alerts:String
+    pageSize:Int
+   pageNumber:Int
+    counsellorId:Int
 }
 enum Roles{
     NONE
@@ -194,6 +208,7 @@ type AppUser{
     shiftTimings:ShiftTimings
     isActive:Boolean
     dateOfJoining:Date
+    alerts:String
 }
 
 type ShiftTimings{
@@ -260,6 +275,13 @@ enum  DayOfWeek{
     FRIDAY
     SATURDAY
     SUNDAY
+}
+
+enum Alerts{
+    RED_ALERT
+    ORANGE_ALERT
+    GREEN_ALERT
+    NONE
 }
 input CounsellorDto {
     id:Int
@@ -382,14 +404,6 @@ input MoodInfoDto{
     moodType:String
     intensityName:String
     emoji:String
-}
-type MtMoodInfo{
-    name:String
-    emoji:String
-    intensities:[MtMoodIntensity]
-    sequence:Int
-    moodType:MoodType
-    intensityName:String
 }
 enum MoodType{
     POSITIVE

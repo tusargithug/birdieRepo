@@ -1,4 +1,5 @@
 package net.thrymr.services;
+
 import net.thrymr.dto.AppUserDto;
 import net.thrymr.dto.UserCourseDto;
 import net.thrymr.dto.response.UserAppointmentResponse;
@@ -13,7 +14,9 @@ import java.util.List;
 
 public interface AppUserService {
     ApiResponse saveUser(AppUserDto appUser);
+
     ApiResponse addUsersByExcel(MultipartFile file);
+
     ApiResponse getAllRoles();
 
     ApiResponse deleteUserById(Long id);
@@ -33,6 +36,11 @@ public interface AppUserService {
     String createUserCourse(UserCourseDto request) throws ParseException;
 
     List<AppUser> getAllAppUsers() throws ParseException;
+
     List<Roles> getAllEnumRoles();
+
     UserAppointmentResponse getUserAppointmentCountById(Long id);
+
+    List<AppUser> getAllAppUserPagination(AppUserDto response);
+
 }

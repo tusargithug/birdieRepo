@@ -11,32 +11,25 @@ import javax.persistence.*;
 import lombok.NoArgsConstructor;
 import net.thrymr.model.master.MtMoodInfo;
 import net.thrymr.model.master.MtMoodIntensity;
-import net.thrymr.model.master.MtMoodSource;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.thrymr.model.master.MtMoodSource;
 
 @Entity
 @Setter
 @Getter
 @NoArgsConstructor
-public class UserMoodCheckIn extends BaseEntity{
+public class UserMoodCheckIn extends BaseEntity {
 
-	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-	private AppUser appUser;
-	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-	private MtMoodInfo mtMoodInfo;
-	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-	private MtMoodSource mtMoodSource;
-	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-	private MtMoodIntensity mtMoodIntensity;
-	@Column(name = "description",columnDefinition = "TEXT")
-	private String description;
-	
-
-	
-	
-	
-	
-
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private AppUser appUser;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private MtMoodInfo mtMoodInfo;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private MtMoodSource mtMoodSource;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private MtMoodIntensity mtMoodIntensity;
+    @Column(name = "description", columnDefinition = "TEXT")
+    private String description;
 }

@@ -1,20 +1,18 @@
 package net.thrymr.controller;
 
+import net.thrymr.dto.AppUserDto;
 import net.thrymr.dto.ShiftTimingsDto;
 import net.thrymr.dto.SiteDto;
 import net.thrymr.dto.TeamDto;
+import net.thrymr.model.AppUser;
 import net.thrymr.model.ShiftTimings;
 import net.thrymr.model.Site;
 import net.thrymr.model.Team;
 import net.thrymr.services.SiteTeamAndShiftTimingsService;
-import net.thrymr.utils.ApiResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -88,6 +86,11 @@ public class SiteTeamAndShiftTimingsController {
     @QueryMapping(name = "getAllShiftTimings")
     public List<ShiftTimings> getAllShiftTimings(){
         return siteTeamAndShiftTimingsService.getAllShiftTimings();
+    }
+
+    @QueryMapping(name="getAllAppUserByAlerts")
+    public List<AppUser> getAllAppUserByAlerts(@Argument(name = "input") AppUserDto request)  {
+        return siteTeamAndShiftTimingsService.getAllAppUserByAlerts(request);
     }
 
 }

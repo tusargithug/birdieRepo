@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -72,7 +73,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             optionalShiftTimings.ifPresent(team::setShiftTimings);
         }
         //team.setShiftTimings(dtoToShiftTimings(teamDto.getShiftTimings()));
-        if (teamDto.getStatus()!=null && teamDto.getStatus().equals(Boolean.TRUE)) {
+        if (teamDto.getStatus() != null && teamDto.getStatus().equals(Boolean.TRUE)) {
             team.setIsActive(teamDto.getStatus());
         }
         team.setSearchKey(getTeamSearchKey(team));
@@ -112,7 +113,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                 Optional<ShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(teamDto.getShiftTimingsId());
                 optionalShiftTimings.ifPresent(team::setShiftTimings);
             }
-            if (teamDto.getStatus() !=null && teamDto.getStatus().equals(Boolean.FALSE) || teamDto.getStatus().equals(Boolean.TRUE)) {
+            if (teamDto.getStatus() != null && teamDto.getStatus().equals(Boolean.FALSE) || teamDto.getStatus().equals(Boolean.TRUE)) {
                 team.setIsActive(teamDto.getStatus());
             }
             //team.setSearchKey(getTeamSearchKey(team));
@@ -175,7 +176,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             }
         }
         siteDto.setSearchKey(saveSiteSearchKey(site));
-        if (siteDto.getStatus()!=null && siteDto.getStatus().equals(Boolean.TRUE)) {
+        if (siteDto.getStatus() != null && siteDto.getStatus().equals(Boolean.TRUE)) {
             site.setIsActive(siteDto.getStatus());
         }
         siteRepo.save(site);
@@ -219,7 +220,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                 optionalAppUser.ifPresent(site::setSiteManager);
             }
 
-            if (siteDto.getStatus()!=null && siteDto.getStatus().equals(Boolean.TRUE) || siteDto.getStatus().equals(Boolean.FALSE)) {
+            if (siteDto.getStatus() != null && siteDto.getStatus().equals(Boolean.TRUE) || siteDto.getStatus().equals(Boolean.FALSE)) {
                 site.setIsActive(siteDto.getStatus());
             }
             siteRepo.save(site);
@@ -332,7 +333,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                 shiftTimings.setCounsellors(optionalCounsellorId.get());
             }
         }
-        if (shiftTimingsDto.getStatus()!= null && shiftTimingsDto.getStatus().equals(Boolean.TRUE)) {
+        if (shiftTimingsDto.getStatus() != null && shiftTimingsDto.getStatus().equals(Boolean.TRUE)) {
             shiftTimings.setIsActive(shiftTimingsDto.getStatus());
         }
         shiftTimingsRepo.save(shiftTimings);
@@ -350,16 +351,16 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                     System.out.println(shiftTimingsDto.getShiftName());
                     shiftTimings.setShiftName(shiftTimingsDto.getShiftName());
                 }
-                if (shiftTimingsDto.getShiftStatAt()!=null) {
+                if (shiftTimingsDto.getShiftStatAt() != null) {
                     shiftTimings.setShiftStatAt(shiftTimingsDto.getShiftStatAt());
                 }
-                if (shiftTimingsDto.getShiftEndAt()!=null) {
+                if (shiftTimingsDto.getShiftEndAt() != null) {
                     shiftTimings.setShiftEndAt(shiftTimingsDto.getShiftEndAt());
                 }
                 if (Validator.isValid(String.valueOf(shiftTimingsDto.getStatus()))) {
                     shiftTimings.setIsActive(shiftTimingsDto.getStatus());
                 }
-                if (shiftTimingsDto.getStatus()!= null && shiftTimingsDto.getStatus().equals(Boolean.TRUE) || shiftTimingsDto.getStatus().equals(Boolean.FALSE)) {
+                if (shiftTimingsDto.getStatus() != null && shiftTimingsDto.getStatus().equals(Boolean.TRUE) || shiftTimingsDto.getStatus().equals(Boolean.FALSE)) {
                     shiftTimings.setIsActive(shiftTimingsDto.getStatus());
                 }
                 shiftTimingsRepo.save(shiftTimings);
@@ -549,6 +550,16 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         }
 
         return searchKey;
+    }
+
+    @Override
+    public List<AppUser> getAllAppUserByAlerts(AppUserDto request) {
+        List<Roles> appUserList = Arrays.asList(Roles.TEAM_LEADER, Roles.TEAM_MANAGER);
+        if (Validator.isValid(request.getAlerts().name())) {
+            return appUserRepo.findAllByAlertsAndRolesIn(request.getAlerts(), appUserList);
+        }
+
+        return new ArrayList<>();
     }
 }
 

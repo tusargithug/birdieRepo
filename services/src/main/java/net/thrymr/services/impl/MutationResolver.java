@@ -459,6 +459,28 @@ public class MutationResolver implements GraphQLMutationResolver {
     public String deleteMoodInfoById(@Argument Long id) {
         return moodInfoService.deleteMoodInfoById(id);
     }
+//    @MutationMapping(name = "uploadFiles")
+//    public String uploadFiles(@Argument(name = "file") MultipartFile file) throws IOException {
+//        return fileService.addFile(file);
+//    }
+//
+//
+//    @MutationMapping("deleteFiles")
+//    public String deleteFiles(@Argument String id) {
+//        return fileService.deleteFile(id);
+//    }
+
+@MutationMapping(name = "uploadFile")
+public String uploadFile(Part avatar, DataFetchingEnvironment environment) {
+    Part actualAvatar = environment.getArgument(environment.getLocalContext());
+    // TODO: Implement
+    return "Upload Success";
+}
+
+    @MutationMapping(name = "updateMoodIntensity")
+    public String updateMoodIntensity(@Argument(name = "input") MoodSourceIntensityRequestDto request) {
+        return moodIntensityService.updateMoodIntensity(request);
+    }
 }
 
 

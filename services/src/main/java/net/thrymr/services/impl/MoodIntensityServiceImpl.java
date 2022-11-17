@@ -1,6 +1,5 @@
 package net.thrymr.services.impl;
 
-import net.thrymr.dto.MoodIntensityDto;
 import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
 import net.thrymr.model.AppUser;
 import net.thrymr.model.UserMoodCheckIn;
@@ -10,7 +9,6 @@ import net.thrymr.model.master.MtMoodSource;
 import net.thrymr.repository.*;
 import net.thrymr.services.MoodIntensityService;
 import net.thrymr.utils.ApiResponse;
-import net.thrymr.utils.CommonUtil;
 import net.thrymr.utils.Validator;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.util.NumberToTextConverter;
@@ -139,125 +137,102 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
         return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_INTENSITY_FOUND"));
     }
 
-    public ApiResponse getMoodIntensityByMoodInfoId(Long id) {
-        Optional<MtMoodInfo> moodInfoOptional = moodInfoRepo.findById(id);
-        List<MoodIntensityDto> moodIntensityDtos = new ArrayList<>();
-        if (moodInfoOptional.isPresent()) {
-            MtMoodInfo mtMoodInfo = moodInfoOptional.get();
-            List<MtMoodIntensity> mtMoodIntensityList = mtMoodInfo.getIntensities();
-            for (MtMoodIntensity mtMoodIntensity1 : mtMoodIntensityList) {
-                MoodIntensityDto moodIntensityDto = new MoodIntensityDto();
-                moodIntensityDto.setName(mtMoodIntensity1.getName());
-                moodIntensityDto.setScore(mtMoodIntensity1.getScore());
-                moodIntensityDto.setSequence(mtMoodIntensity1.getSequence());
-                moodIntensityDtos.add(moodIntensityDto);}}
-        return new ApiResponse(HttpStatus.OK,environment.getProperty("SUCCESS"),moodIntensityDtos);
-        }
-
     @Override
-    public ApiResponse moodIntensitySave(MoodIntensityDto request) {
-        MtMoodIntensity intensity=new MtMoodIntensity();
-        intensity.setName(request.getName());
-        intensity.setDescription(request.getDescription());
-        intensity.setScore(request.getScore());
-        intensity.setEmoji(request.getEmoji());
-        intensity.setSequence(request.getSequence());
-        // need to set mood info
-       // intensity.setMoodInfo(request.getMoodInfoDto());
-
-        moodIntensityRepo.save(intensity);
-
-        return new ApiResponse(HttpStatus.OK,environment.getProperty("MOOD_INTENSITY_SAVED"));
-    }
-
-    @Override
-    public ApiResponse getMoodIntensitiesById(Long id) {
-        Optional<MtMoodIntensity> optionalMoodIntensity=moodIntensityRepo.findById(id);
-        if(optionalMoodIntensity.isPresent()){
-            MoodIntensityDto dto=entityToDto(optionalMoodIntensity.get());
-            return new ApiResponse(HttpStatus.OK,environment.getProperty("SUCCESS"),dto);
-        }
-
-        return new ApiResponse(HttpStatus.OK,environment.getProperty("MOOD_INTENSITY_NOT_FOUND"));
-    }
-
-    @Override
-    public ApiResponse deleteMoodIntensitiesById(Long id) {
-        Optional<MtMoodIntensity> optionalMoodIntensity=moodIntensityRepo.findById(id);
-        if(optionalMoodIntensity.isPresent()){
-            moodIntensityRepo.delete(optionalMoodIntensity.get());
-            return new ApiResponse(HttpStatus.OK,environment.getProperty("MOOD_INTENSITY_DELETED"));
-        }
-
-        return new ApiResponse(HttpStatus.OK,environment.getProperty("MOOD_INTENSITY_NOT_FOUND"));
-    }
-
-    @Override
-    public ApiResponse getAllMoodIntensities() {
-        List<MtMoodIntensity> mtMoodIntensityList =moodIntensityRepo.findAll();
-
-        if(!mtMoodIntensityList.isEmpty()){
-          List<MoodIntensityDto>  moodIntensityDtoList =  mtMoodIntensityList.stream().map(this::entityToDto).toList();
-            return new ApiResponse(HttpStatus.OK,environment.getProperty("SUCCESS"),moodIntensityDtoList);
-        }
-
-
-        return new ApiResponse(HttpStatus.OK,environment.getProperty("MOOD_INTENSITY_NOT_FOUND"));
-    }
-
-    @Override
-    public ApiResponse getAllMoodIntensitiesByMoodInfoId(Long id) {
-        List<MtMoodIntensity> mtMoodIntensityList =moodIntensityRepo.findByMtMoodInfoId(id);
-        if(!mtMoodIntensityList.isEmpty()){
-            List<MoodIntensityDto>  moodIntensityDtoList =  mtMoodIntensityList.stream().map(this::entityToDto).toList();
-            return new ApiResponse(HttpStatus.OK,"",moodIntensityDtoList);
-        }
-        return new ApiResponse(HttpStatus.OK,environment.getProperty("MOOD_INTENSITY_NOT_FOUND"));
-    }
-
-    @Override
-    public ApiResponse updateMoodIntensity(MoodSourceIntensityRequestDto request) {
-
-        AppUser user= CommonUtil.getAppUser();
-        Optional<MtMoodIntensity>optionalMoodIntensity=moodIntensityRepo.findById(request.getIntensityId());
-        UserMoodCheckIn userMoodCheckIn=new UserMoodCheckIn();
-        userMoodCheckIn.setAppUser(user);
-        if(optionalMoodIntensity.isPresent()){
-            if(Validator.isValid(request.getIntensityDescription())){
-                optionalMoodIntensity.get().setDescription(request.getIntensityDescription());
+    public MtMoodIntensity getMoodIntensitiesById(Long id) {
+        MtMoodIntensity mtMoodIntensity;
+        if (Validator.isValid(id)) {
+            Optional<MtMoodIntensity> optionalMoodIntensity = moodIntensityRepo.findById(id);
+            if (optionalMoodIntensity.isPresent()) {
+                mtMoodIntensity = optionalMoodIntensity.get();
+                return mtMoodIntensity;
             }
-            //userMoodCheckIn.setIntensities(optionalMoodIntensity.stream().toList());
         }
-          if(Validator.isValid(request.getDescription())){
-              userMoodCheckIn.setDescription(request.getDescription());
-          }
-
-          userMoodCheckInRepo.save(userMoodCheckIn);
-
-        return new ApiResponse(HttpStatus.OK,environment.getProperty("USER_CHECKED_IN_SAVE"));
+        return new MtMoodIntensity();
     }
 
 
-    private MoodIntensityDto entityToDto(MtMoodIntensity request){
-        MoodIntensityDto dto=new MoodIntensityDto();
-        dto.setId(request.getId());
-        dto.setName(request.getName());
-        dto.setDescription(request.getDescription());
-        dto.setEmoji(request.getEmoji());
-      //  dto.setMoodInfoDto(request.getMoodInfo());
-       return dto;
+    @Override
+    public String deleteMoodIntensitiesById(Long id) {
+        MtMoodIntensity mtMoodIntensity;
+        if (Validator.isValid(id)) {
+            Optional<MtMoodIntensity> optionalMoodIntensity = moodIntensityRepo.findById(id);
+            if (optionalMoodIntensity.isPresent()) {
+                mtMoodIntensity = optionalMoodIntensity.get();
+                mtMoodIntensity.setIsDeleted(Boolean.FALSE);
+                mtMoodIntensity.setIsDeleted(Boolean.TRUE);
+                moodIntensityRepo.save(mtMoodIntensity);
+                return "Mood Intensity Deleted Successfully";
+            }
+        }
+        return "this id not present in database";
     }
 
     @Override
-    public List<MtMoodIntensity> getAllMoodIntensity() {
-        return moodIntensityRepo.findAll();
+    public List<MtMoodIntensity> getAllMoodIntensities() {
+        List<MtMoodIntensity> mtMoodIntensityList = moodIntensityRepo.findAll();
+        if (!mtMoodIntensityList.isEmpty()) {
+            return mtMoodIntensityList.stream().filter(o -> o.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
+    }
+    @Override
+    public List<MtMoodIntensity> getAllMoodIntensitiesByMoodInfoId(Long id) {
+        List<MtMoodIntensity> mtMoodIntensityList = moodIntensityRepo.findByMtMoodInfoId(id);
+        if (!mtMoodIntensityList.isEmpty()) {
+            mtMoodIntensityList = mtMoodIntensityList.stream().filter(o -> o.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+            return mtMoodIntensityList;
+        }
+        return new ArrayList<>();
     }
 
+    @Override
+    public String updateMoodIntensity(MoodSourceIntensityRequestDto request) {
+        UserMoodCheckIn userMoodCheckIn = null;
+        if (Validator.isValid(request.getId())) {
+            Optional<UserMoodCheckIn> optionalUserMoodCheckIn = userMoodCheckInRepo.findById(request.getId());
+            if (optionalUserMoodCheckIn.isPresent()) {
+                userMoodCheckIn = optionalUserMoodCheckIn.get();
+                if (Validator.isValid(request.getIntensityId())) {
+                    Optional<MtMoodIntensity> optionalMoodIntensity = moodIntensityRepo.findById(request.getIntensityId());
+                    if (optionalMoodIntensity.isPresent()) {
+                        userMoodCheckIn.setMtMoodIntensity(optionalMoodIntensity.get());
+                    }
+                }
+                if (Validator.isValid(request.getAppUserId())) {
+                    Optional<AppUser> optionalAppUser = appUserRepo.findById(request.getAppUserId());
+                    if (optionalAppUser.isPresent()) {
+                        userMoodCheckIn.setAppUser(optionalAppUser.get());
+                    }
+                }
+                if (Validator.isValid(request.getMoodInfoId())) {
+                    Optional<MtMoodInfo> optionalMtMoodInfo = moodInfoRepo.findById(request.getMoodInfoId());
+                    if (optionalMtMoodInfo.isPresent()) {
+                        userMoodCheckIn.setMtMoodInfo(optionalMtMoodInfo.get());
+                    }
+                }
+                if (Validator.isValid(request.getMoodSourceId())) {
+                    Optional<MtMoodSource> optionalMtMoodSource = moodSourceRepo.findById(request.getMoodSourceId());
+                    if (optionalMtMoodSource.isPresent()) {
+                        userMoodCheckIn.setMtMoodSource(optionalMtMoodSource.get());
+                    }
+                }
+                userMoodCheckIn.setDescription(request.getDescription());
+            }
+            userMoodCheckInRepo.save(userMoodCheckIn);
+            return "User mood updated successfully";
+        }
+        return "This id not present in database";
+    }
     @Override
     public String deleteUserMoodCheckInById(Long id) {
         Optional<MtMoodIntensity>optionalMtMoodIntensity=moodIntensityRepo.findById(id);
         optionalMtMoodIntensity.ifPresent(moodIntensityRepo::delete);
         return "User mood check in details deleted successfully";
+    }
+
+    @Override
+    public List<MtMoodIntensity> getAllMoodIntensity() {
+        return null;
     }
 
     @Override

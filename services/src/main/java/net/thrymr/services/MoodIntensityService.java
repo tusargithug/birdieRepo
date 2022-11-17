@@ -1,7 +1,4 @@
 package net.thrymr.services;
-
-
-import net.thrymr.dto.MoodIntensityDto;
 import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
 import net.thrymr.model.UserMoodCheckIn;
 import net.thrymr.model.master.MtMoodIntensity;
@@ -13,27 +10,21 @@ import java.util.List;
 
 public interface MoodIntensityService {
     ApiResponse saveintensity(MultipartFile file);
+    MtMoodIntensity getMoodIntensitiesById(Long id);
 
-    ApiResponse getMoodIntensityByMoodInfoId(Long id);
-
-    ApiResponse moodIntensitySave(MoodIntensityDto request);
-
-    ApiResponse getMoodIntensitiesById(Long id);
-
-    ApiResponse deleteMoodIntensitiesById(Long id);
+    String deleteMoodIntensitiesById(Long id);
 
 
-    ApiResponse getAllMoodIntensities();
+    List<MtMoodIntensity> getAllMoodIntensities();
 
-    ApiResponse getAllMoodIntensitiesByMoodInfoId(Long id);
+    List<MtMoodIntensity> getAllMoodIntensitiesByMoodInfoId(Long id);
 
-    ApiResponse updateMoodIntensity(MoodSourceIntensityRequestDto request);
+    String updateMoodIntensity(MoodSourceIntensityRequestDto request);
+
+    List<UserMoodCheckIn> getAllMoodCheckIn();
 
     String createUserMoodCheckIn(MoodSourceIntensityRequestDto request);
 
-    List<MtMoodIntensity> getAllMoodIntensity();
-
     String deleteUserMoodCheckInById(Long id);
 
-    List<UserMoodCheckIn> getAllMoodCheckIn();
 }

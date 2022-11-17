@@ -1,12 +1,13 @@
 package net.thrymr.services;
 
+import net.thrymr.dto.AppUserDto;
 import net.thrymr.dto.ShiftTimingsDto;
 import net.thrymr.dto.SiteDto;
 import net.thrymr.dto.TeamDto;
+import net.thrymr.model.AppUser;
 import net.thrymr.model.ShiftTimings;
 import net.thrymr.model.Site;
 import net.thrymr.model.Team;
-import net.thrymr.utils.ApiResponse;
 
 import java.util.List;
 
@@ -38,4 +39,6 @@ public interface SiteTeamAndShiftTimingsService {
     List<Site> getAllSitePagination(SiteDto siteDto);
 
     List<ShiftTimings> getAllShiftTimings();
+
+    List<AppUser> getAllAppUserByAlerts(AppUserDto request);
 }

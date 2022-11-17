@@ -4,6 +4,7 @@ package net.thrymr.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.thrymr.enums.Alerts;
 import net.thrymr.enums.Roles;
 import net.thrymr.model.master.MtRoles;
 
@@ -60,4 +61,9 @@ public class AppUser extends BaseEntity {
     private List<CounsellorSlot> counsellorSlotList = new ArrayList<>();
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private Team team;
+    @Enumerated(EnumType.STRING)
+    private Alerts alerts;
+    @Column(name = "assigned_counsellor_id")
+    private Long assignedCounsellorId;
+
 }

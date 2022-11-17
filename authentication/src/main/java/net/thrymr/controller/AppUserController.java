@@ -98,4 +98,9 @@ public class AppUserController {
     public UserAppointmentResponse getUserAppointmentCountById(@Argument Long id){
         return appUserService.getUserAppointmentCountById(id);
     }
+
+    @QueryMapping(name = "getAllAppUserPagination")
+    public List<AppUser> getAllAppUserPagination(@Argument(name = "input") AppUserDto request) {
+        return appUserService.getAllAppUserPagination(request);
+    }
 }
