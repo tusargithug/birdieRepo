@@ -132,13 +132,5 @@ public class CityCountyAndRegionController {
     public String uploadRegionData(@RequestParam MultipartFile file) {
         return cityCountyAndRegionService.uploadRegionData(file);
     }
-
-    @MutationMapping(name = "uploadFile")
-    public String uploadFile(Part avatar, DataFetchingEnvironment environment) {
-        Part actualAvatar = environment.getArgument(environment.getLocalContext());
-        // TODO: Implement
-        System.out.println("actual :"+actualAvatar);
-        return "Upload Success";
-    }
 }
 

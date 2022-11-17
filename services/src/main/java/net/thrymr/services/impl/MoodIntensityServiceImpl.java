@@ -257,7 +257,7 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
     public String deleteUserMoodCheckInById(Long id) {
         Optional<MtMoodIntensity>optionalMtMoodIntensity=moodIntensityRepo.findById(id);
         optionalMtMoodIntensity.ifPresent(moodIntensityRepo::delete);
-        return "Intensity deleted successfully";
+        return "User mood check in details deleted successfully";
     }
 
     @Override
@@ -273,26 +273,26 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
     public String createUserMoodCheckIn(MoodSourceIntensityRequestDto request) {
         UserMoodCheckIn userMoodCheckIn = new UserMoodCheckIn();
         if (Validator.isValid(request.getIntensityId())) {
-            Optional<MtMoodIntensity> optionalMoodIntensity = moodIntensityRepo.findById(request.getIntensityId());
-            if (optionalMoodIntensity.isPresent()) {
-                userMoodCheckIn.setMtMoodIntensity(optionalMoodIntensity.get());
+            Optional<MtMoodIntensity> optionalMtMoodIntensity = moodIntensityRepo.findByIdAndMtMoodInfoIdAndIsActiveAndIsDeleted(request.getIntensityId(), request.getMoodInfoId(), Boolean.TRUE, Boolean.FALSE);
+            if (optionalMtMoodIntensity.isPresent()) {
+                userMoodCheckIn.setMtMoodIntensity(optionalMtMoodIntensity.get());
             }
         }
-        if(Validator.isValid(request.getAppUserId())){
-            Optional<AppUser> optionalAppUser=appUserRepo.findById(request.getAppUserId());
-            if(optionalAppUser.isPresent()){
+        if (Validator.isValid(request.getAppUserId())) {
+            Optional<AppUser> optionalAppUser = appUserRepo.findById(request.getAppUserId());
+            if (optionalAppUser.isPresent()) {
                 userMoodCheckIn.setAppUser(optionalAppUser.get());
             }
         }
-        if(Validator.isValid(request.getMoodInfoId())){
-            Optional<MtMoodInfo> optionalMtMoodInfo=moodInfoRepo.findById(request.getMoodInfoId());
-            if(optionalMtMoodInfo.isPresent()){
+        if (Validator.isValid(request.getMoodInfoId())) {
+            Optional<MtMoodInfo> optionalMtMoodInfo = moodInfoRepo.findById(request.getMoodInfoId());
+            if (optionalMtMoodInfo.isPresent()) {
                 userMoodCheckIn.setMtMoodInfo(optionalMtMoodInfo.get());
             }
         }
-        if(Validator.isValid(request.getMoodSourceId())){
-            Optional<MtMoodSource> optionalMtMoodSource=moodSourceRepo.findById(request.getMoodSourceId());
-            if(optionalMtMoodSource.isPresent()){
+        if (Validator.isValid(request.getMoodSourceId())) {
+            Optional<MtMoodSource> optionalMtMoodSource = moodSourceRepo.findById(request.getMoodSourceId());
+            if (optionalMtMoodSource.isPresent()) {
                 userMoodCheckIn.setMtMoodSource(optionalMtMoodSource.get());
             }
         }

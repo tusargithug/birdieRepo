@@ -25,7 +25,6 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/v1/mood-info")
 public class MoodInfoController {
     @Autowired
     MoodInfoService moodInfoService;
