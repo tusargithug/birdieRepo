@@ -30,6 +30,8 @@ public class Query implements GraphQLQueryResolver {
 
 
     @Autowired
+    MoodSourceService moodSourceService;
+    @Autowired
     MoodInfoService moodInfoService;
 
     @Autowired
@@ -76,6 +78,17 @@ public class Query implements GraphQLQueryResolver {
     @Autowired
     MiniSessionService miniSessionService;
 
+
+    @QueryMapping(name = "getMoodSourceById")
+    public MtMoodSource getMoodSourceById(@Argument Long id) {
+        return moodSourceService.getMoodSourceById(id);
+    }
+
+    @QueryMapping(name = "getAllMoodSources")
+    public List<MtMoodSource> getAllMoodSources() {
+        return moodSourceService.getAllMoodSources();
+    }
+
     @QueryMapping(name = "getMoodInfoById")
     public MtMoodInfo getMoodInfoById(@Argument Long id) {
         return moodInfoService.getMoodInfoById(id);
@@ -85,10 +98,12 @@ public class Query implements GraphQLQueryResolver {
     public List<MtMoodInfo> getAllMoodInfo() {
         return moodInfoService.getAllMoodInfo();
     }
+
     @QueryMapping(name = "getAllMoodCheckIn")
-    public List<UserMoodCheckIn> getAllMoodCheckIn(){
+    public List<UserMoodCheckIn> getAllMoodCheckIn() {
         return moodIntensityService.getAllMoodCheckIn();
     }
+
     @QueryMapping("getAllMoodIntensity")
     public List<MtMoodIntensity> getAllMoodIntensity() {
         return moodIntensityService.getAllMoodIntensity();
@@ -238,12 +253,10 @@ public class Query implements GraphQLQueryResolver {
     }
 
 
-
     @QueryMapping("getAssessmentById")
     public MtAssessment getAssessmentById(@Argument Long id) {
         return assessmentService.getAssessmentById(id);
     }
-
 
 
     @QueryMapping("getQuestionById")
@@ -307,6 +320,7 @@ public class Query implements GraphQLQueryResolver {
     public List<MiniSession> getAllMiniSession() {
         return miniSessionService.getAllMiniSession();
     }
+
     @QueryMapping(name = "downloads")
     public FileDocument downloads(@Argument String id) throws IOException {
         FileDocument loadFile = fileService.downloadFile(id);

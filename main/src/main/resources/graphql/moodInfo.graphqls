@@ -47,6 +47,8 @@ type Query {
     downloads(id:String):FileDocument
     getMoodInfoById(id:ID):MtMoodInfo
     getAllMoodCheckIn:[UserMoodCheckIn]
+    getMoodSourceById(id:ID):MtMoodSource
+    getAllMoodSources:[MtMoodSource]
 }
 
 type Mutation {
@@ -121,6 +123,8 @@ type Mutation {
     deleteFiles(id:String):String
     updateMoodInfoById(input:MoodInfoDto):String!
     deleteMoodInfoById(id:ID!):String!
+    updateMoodSourceById(input:MoodSourceDto):String!
+    deleteMoodSourceById(id:ID!):String!
 }
 scalar Upload
 
@@ -380,8 +384,8 @@ type FileDocument{
 scalar Byte
 
 input MiniSessionDto {
-id:Int
-isActive:Boolean
+    id:Int
+    isActive:Boolean
 }
 input MoodInfoDto{
     id:Int
@@ -434,4 +438,13 @@ type UserMoodSourceCheckedIn{
     appUser:AppUser
     sources:[MtMoodSource]
     description:String
+}
+
+input MoodSourceDto{
+    id:Int
+    sequence:Int
+    name:String
+    description:String
+    emoji:String
+    category:String
 }

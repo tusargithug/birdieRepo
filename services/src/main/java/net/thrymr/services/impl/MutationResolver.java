@@ -470,6 +470,18 @@ public class MutationResolver implements GraphQLMutationResolver {
         System.out.println("actual :" + actualAvatar);
         return "Upload Success";
     }
+
+
+    @MutationMapping(name = "updateMoodSourceById")
+    public String updateMoodSourceById(@Argument(name = "input") MoodSourceDto request) {
+        return moodSourceService.updateMoodSourceById(request);
+    }
+
+
+    @MutationMapping(name = "deleteMoodSourceById")
+    public String deleteMoodSourceById(@Argument Long id) {
+        return moodSourceService.deleteMoodSourceById(id);
+    }
 }
 
 

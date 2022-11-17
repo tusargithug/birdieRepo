@@ -15,9 +15,13 @@ import java.util.List;
 @NoArgsConstructor
 public class MoodSourceDto {
 
+    private Long id;
+
     private String name;
 
     private String description;
+
+    private String emoji;
 
     private FileEntity icon;
 
