@@ -116,7 +116,7 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
                         slot.setCounsellor(optionalCounsellorId.get());
                     }
                 }
-                if (request.getIsActive().equals(Boolean.TRUE)) {
+                if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE)) {
                     slot.setIsActive(request.getIsActive());
                 }
                 counsellorSlots.add(slot);
@@ -241,7 +241,7 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
                                 counsellorSlot.setCounsellor(optionalCounsellorId.get());
                             }
                         }
-                        if (request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
+                        if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
                             counsellorSlot.setIsActive(request.getIsActive());
                         }
                         counsellorSlots.add(counsellorSlot);

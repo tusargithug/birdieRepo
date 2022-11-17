@@ -13,6 +13,7 @@ import net.thrymr.utils.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.graphql.data.GraphQlRepository;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -20,10 +21,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -125,26 +128,17 @@ public class CityCountyAndRegionController {
        return cityCountyAndRegionService.uploadCountryData(file);
     }*/
 
-    @MutationMapping(name = "upload-excel-region-data")
-    public String uploadRegionData(@Argument(name = "file") MultipartFile file) {
+    @MutationMapping(name = "uploadRegionData")
+    public String uploadRegionData(@RequestParam MultipartFile file) {
         return cityCountyAndRegionService.uploadRegionData(file);
     }
 
-    @MutationMapping(name = "testMultiFilesUpload")
-    public Boolean testMultiFilesUpload(List<Part> parts, DataFetchingEnvironment env) {
-        // get file parts from DataFetchingEnvironment, the parts parameter is not use
-        List<Part> attachmentParts = env.getArgument("files");
-        int i = 1;
-        for (Part part : attachmentParts) {
-            String uploadName = "copy" + i;
-            try {
-                part.write("your path:" + uploadName);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            i++;
-        }
-        return true;
+    @MutationMapping(name = "uploadFile")
+    public String uploadFile(Part avatar, DataFetchingEnvironment environment) {
+        Part actualAvatar = environment.getArgument(environment.getLocalContext());
+        // TODO: Implement
+        System.out.println("actual :"+actualAvatar);
+        return "Upload Success";
     }
 }
 

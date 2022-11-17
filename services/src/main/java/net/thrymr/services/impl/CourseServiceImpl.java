@@ -44,7 +44,7 @@ public class CourseServiceImpl implements CourseService {
                 if (Validator.isValid(request.getName())) {
                     course.setName(request.getName());
                 }
-                if (request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
+                if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
                     course.setIsActive(request.getIsActive());
                 }
                 courseRepo.save(course);
@@ -68,7 +68,7 @@ public class CourseServiceImpl implements CourseService {
                 course.setCategory(optionalCategory.get());
             }
         }
-        if (request.getIsActive().equals(Boolean.TRUE)) {
+        if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE)) {
             course.setIsActive(request.getIsActive());
         }
         courseRepo.save(course);

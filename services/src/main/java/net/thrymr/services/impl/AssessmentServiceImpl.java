@@ -80,7 +80,7 @@ public class AssessmentServiceImpl implements AssessmentService {
                 if (Validator.isValid(request.getLow())) {
                     assessment.setLow(request.getLow());
                 }
-                if (request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
+                if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
                     assessment.setIsActive(request.getIsActive());
                 }
                 assessmentRepo.save(assessment);

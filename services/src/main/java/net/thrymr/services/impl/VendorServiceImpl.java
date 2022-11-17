@@ -60,7 +60,7 @@ public class VendorServiceImpl implements VendorService {
                 user.setSite(optionalSite.get());
             }
         }
-        if (request.getIsActive().equals(Boolean.TRUE)) {
+        if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE)) {
             user.setIsActive(request.getIsActive());
         }
         appUserRepo.save(user);
@@ -143,7 +143,7 @@ public class VendorServiceImpl implements VendorService {
                 if (Validator.isValid(request.getPOC())) {
                     vendor.setPOC(request.getPOC());
                 }
-                if (request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
+                if (request.getIsActive() != request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
                     user.setIsActive(request.getIsActive());
                 }
                 vendorRepo.save(vendor);
