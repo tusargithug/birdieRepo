@@ -6,6 +6,7 @@ import net.thrymr.model.AppUser;
 import net.thrymr.model.UserMoodCheckIn;
 import net.thrymr.model.master.MtMoodInfo;
 import net.thrymr.model.master.MtMoodIntensity;
+import net.thrymr.model.master.MtMoodSource;
 import net.thrymr.repository.*;
 import net.thrymr.services.MoodIntensityService;
 import net.thrymr.utils.ApiResponse;
@@ -28,6 +29,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -226,7 +228,7 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
             if (Validator.isValid(request.getIntensityDescription())) {
                 optionalMoodIntensity.get().setDescription(request.getIntensityDescription());
             }
-            userMoodCheckIn.setIntensities(optionalMoodIntensity.stream().toList());
+            //userMoodCheckIn.setIntensities(optionalMoodIntensity.stream().toList());
         }
         if (Validator.isValid(request.getDescription())) {
             userMoodCheckIn.setDescription(request.getDescription());
@@ -261,28 +263,44 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
     }
 
     @Override
+    public List<UserMoodCheckIn> getAllMoodCheckIn() {
+        List<UserMoodCheckIn> userMoodCheckInList=userMoodCheckInRepo.findAll();
+        if(!userMoodCheckInList.isEmpty()){
+            return userMoodCheckInList.stream().filter(userMoodCheckIn ->userMoodCheckIn.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
     public String createUserMoodCheckIn(MoodSourceIntensityRequestDto request) {
         UserMoodCheckIn userMoodCheckIn = new UserMoodCheckIn();
         if (Validator.isValid(request.getIntensityId())) {
-            List<MtMoodIntensity> optionalMoodIntensity = moodIntensityRepo.findAll();
-            if (!optionalMoodIntensity.isEmpty()) {
-                userMoodCheckIn.setIntensities(optionalMoodIntensity);
+            Optional<MtMoodIntensity> optionalMoodIntensity = moodIntensityRepo.findById(request.getIntensityId());
+            if (optionalMoodIntensity.isPresent()) {
+                userMoodCheckIn.setMtMoodIntensity(optionalMoodIntensity.get());
             }
-            userMoodCheckIn.setDescription(request.getIntensityDescription());
-            userMoodCheckIn.setIntensities(optionalMoodIntensity.stream().toList());
         }
-        if (Validator.isValid(request.getDescription())) {
-            userMoodCheckIn.setDescription(request.getDescription());
-        }
-        if (Validator.isValid(request.getAppUserId())) {
-            Optional<AppUser> optionalAppUser = appUserRepo.findById(request.getAppUserId());
-            if (optionalAppUser.isPresent()) {
+        if(Validator.isValid(request.getAppUserId())){
+            Optional<AppUser> optionalAppUser=appUserRepo.findById(request.getAppUserId());
+            if(optionalAppUser.isPresent()){
                 userMoodCheckIn.setAppUser(optionalAppUser.get());
             }
         }
+        if(Validator.isValid(request.getMoodInfoId())){
+            Optional<MtMoodInfo> optionalMtMoodInfo=moodInfoRepo.findById(request.getMoodInfoId());
+            if(optionalMtMoodInfo.isPresent()){
+                userMoodCheckIn.setMtMoodInfo(optionalMtMoodInfo.get());
+            }
+        }
+        if(Validator.isValid(request.getMoodSourceId())){
+            Optional<MtMoodSource> optionalMtMoodSource=moodSourceRepo.findById(request.getMoodSourceId());
+            if(optionalMtMoodSource.isPresent()){
+                userMoodCheckIn.setMtMoodSource(optionalMtMoodSource.get());
+            }
+        }
+        userMoodCheckIn.setDescription(request.getDescription());
         userMoodCheckInRepo.save(userMoodCheckIn);
-
-        return environment.getProperty("USER_CHECKED_IN_SAVE");
+        return "create mood checking details";
     }
 }
 

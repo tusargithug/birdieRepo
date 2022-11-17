@@ -1,6 +1,7 @@
 package net.thrymr.services.impl;
 
 import graphql.kickstart.tools.GraphQLQueryResolver;
+import net.thrymr.FileDocument;
 import net.thrymr.dto.CounsellorDto;
 import net.thrymr.dto.SiteDto;
 import net.thrymr.dto.TeamDto;
@@ -20,6 +21,7 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 
@@ -68,18 +70,25 @@ public class Query implements GraphQLQueryResolver {
     @Autowired
     CourseService courseService;
 
-    @QueryMapping
-    public MtMoodInfo moodInfoById(Long id) {
-        return moodInfoService.moodInfoById(id);
+    @Autowired
+    FileService fileService;
 
+    @Autowired
+    MiniSessionService miniSessionService;
+
+    @QueryMapping(name = "getMoodInfoById")
+    public MtMoodInfo getMoodInfoById(@Argument Long id) {
+        return moodInfoService.getMoodInfoById(id);
     }
 
-    @QueryMapping
+    @QueryMapping(name = "getAllMoodInfo")
     public List<MtMoodInfo> getAllMoodInfo() {
         return moodInfoService.getAllMoodInfo();
-
     }
-
+    @QueryMapping(name = "getAllMoodCheckIn")
+    public List<UserMoodCheckIn> getAllMoodCheckIn(){
+        return moodIntensityService.getAllMoodCheckIn();
+    }
     @QueryMapping("getAllMoodIntensity")
     public List<MtMoodIntensity> getAllMoodIntensity() {
         return moodIntensityService.getAllMoodIntensity();
@@ -229,10 +238,12 @@ public class Query implements GraphQLQueryResolver {
     }
 
 
+
     @QueryMapping("getAssessmentById")
     public MtAssessment getAssessmentById(@Argument Long id) {
         return assessmentService.getAssessmentById(id);
     }
+
 
 
     @QueryMapping("getQuestionById")
@@ -270,6 +281,7 @@ public class Query implements GraphQLQueryResolver {
         return appUserService.getUserAppointmentCountById(id);
     }
 
+
     @QueryMapping("getAllAppointment")
     public List<UserAppointment> getAllAppointment() {
         return appointmentService.getAllAppointment();
@@ -280,8 +292,24 @@ public class Query implements GraphQLQueryResolver {
         return counsellorService.getCounsellorById(id);
     }
 
+
     @QueryMapping(name = "getAllEnumRoles")
     public List<Roles> getAllEnumRoles() {
         return appUserService.getAllEnumRoles();
+    }
+
+    @QueryMapping(name = "getMiniSessionById")
+    public MiniSession getMiniSessionById(@Argument Long id) {
+        return miniSessionService.getMiniSessionById(id);
+    }
+
+    @QueryMapping(name = "getAllMiniSession")
+    public List<MiniSession> getAllMiniSession() {
+        return miniSessionService.getAllMiniSession();
+    }
+    @QueryMapping(name = "downloads")
+    public FileDocument downloads(@Argument String id) throws IOException {
+        FileDocument loadFile = fileService.downloadFile(id);
+        return loadFile;
     }
 }

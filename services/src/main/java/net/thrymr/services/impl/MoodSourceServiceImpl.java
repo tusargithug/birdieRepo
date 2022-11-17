@@ -114,15 +114,15 @@ public class MoodSourceServiceImpl implements MoodSourceService {
     public ApiResponse updateMoodSource(MoodSourceIntensityRequestDto request) {
 
 
-        List<MtMoodSource> mtMoodSourceList = moodSourceRepo.findAllByIdIn(request.getSourceIds());
-        UserMoodSourceCheckedIn checkedIn = new UserMoodSourceCheckedIn();
-        if (!mtMoodSourceList.isEmpty()) {
-            checkedIn.setSources(mtMoodSourceList);
-        }
-        if (Validator.isValid(request.getDescription())) {
-            checkedIn.setDescription(request.getDescription());
-        }
-        userMoodSourceCheckInRepo.save(checkedIn);
+//       // List<MtMoodSource> mtMoodSourceList =moodSourceRepo.findAllByIdIn(request.getSourceIds());
+//        UserMoodSourceCheckedIn checkedIn=new UserMoodSourceCheckedIn();
+//          if(!mtMoodSourceList.isEmpty()){
+//              checkedIn.setSources(mtMoodSourceList);
+//         }
+//          if(Validator.isValid(request.getDescription())){
+//              checkedIn.setDescription(request.getDescription());
+//          }
+//        userMoodSourceCheckInRepo.save(checkedIn);
         return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_SOURCE_UPDATED"));
     }
 

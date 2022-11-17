@@ -42,6 +42,11 @@ type Query {
     getAllAppointment:[UserAppointment]
     getCounsellorById(id:ID):MtCounsellor
     getAllEnumRoles:[Roles]
+    getMiniSessionById(id:ID!):MiniSession
+    getAllMiniSession:[MiniSession]
+    downloads(id:String):FileDocument
+    getMoodInfoById(id:ID):MtMoodInfo
+    getAllMoodCheckIn:[UserMoodCheckIn]
 }
 
 type Mutation {
@@ -109,24 +114,24 @@ type Mutation {
     deleteAssessmentId(id:ID):String!
     createAppointment(input:TimeSlotDto):String!
     rescheduledUserAppointment(input:TimeSlotDto):String!
-    testMultiFilesUpload(files: [Upload!]!): Boolean
+    saveMiniSession(input:MiniSessionDto):String!
+    updateMiniSession(input:MiniSessionDto):String!
+    deleteMiniSessionById(id:ID!):String!
+    createGroup(input:GroupsDto):String!
+    deleteFiles(id:String):String
+    updateMoodInfoById(input:MoodInfoDto):String!
+    deleteMoodInfoById(id:ID!):String!
 }
 scalar Upload
-type MtMoodInfo {
-    id: ID!
-    name: String
-    emoji:String
-    description:String!
-    intensities:[MtMoodIntensity]
-    isActive:Boolean
-
-}
 
 type MtMoodIntensity{
-    id: ID!
-    name: String
+    name:String
+    description:String
     emoji:String
-    isActive:Boolean
+    mtMoodInfo:MtMoodInfo
+    sequence:Int
+    score:Float
+    userMoodCheckIns:[UserMoodCheckIn]
 }
 
 type MtRoles{
@@ -198,7 +203,7 @@ type FileEntity{
     employees:[Course]
 }
 
-type MtShiftTimings{
+type ShiftTimings{
     id: ID!
     shiftName:String
     mtSite:MtSite
@@ -323,4 +328,110 @@ type UserAppointment {
     counsellor:MtCounsellor
     isCurrentAppointment:Boolean
     isActive:Boolean
+}
+
+type Groups{
+    id:ID
+    isActive:Boolean
+    groupName:String
+    text:String
+    miniSession:MiniSession
+    fileDetails:[FileDetails]
+}
+type MiniSession{
+    id:ID
+    isActive:Boolean
+    groupsList:[Groups]
+}
+type FileDetails{
+    id:ID
+    isActive:Boolean
+    fileId:String
+    fileName:String
+    fileType:String
+    fileSize:Int
+    fileContentType:String
+}
+input GroupsDto{
+    miniSessionId:Int
+    groupName:String
+    text:String
+    tags:[String]
+    isActive:Boolean
+}
+input FileDetailsDto{
+    id:Int
+    fileId:String
+    fileName:String
+    fileType:String
+    fileSize:Int
+    contentType:String
+}
+
+type FileDocument{
+    fileId:String
+    fileName:String
+    fileContentType:String
+    fileSizeInBytes:String
+    fileType:String
+    publicUrl:String
+    file:Byte
+}
+scalar Byte
+
+input MiniSessionDto {
+id:Int
+isActive:Boolean
+}
+input MoodInfoDto{
+    id:Int
+    sequence:Int
+    moodType:String
+    intensityName:String
+    emoji:String
+}
+type MtMoodInfo{
+    name:String
+    emoji:String
+    intensities:[MtMoodIntensity]
+    sequence:Int
+    moodType:MoodType
+    intensityName:String
+}
+enum MoodType{
+    POSITIVE
+    NEGATIVE
+    NEUTRAL
+    NONE
+}
+
+type UserMoodCheckIn{
+    appUser:AppUser
+
+    mtMoodInfo:MtMoodInfo
+
+    mtMoodSource:MtMoodSource
+
+    mtMoodIntensity:MtMoodIntensity
+
+    description:String
+}
+type MtMoodSource{
+    name:String
+    description:String
+    emoji:String
+    sequence:Int
+    category:CategoryType
+    userMoodSourceCheckedIns:[UserMoodSourceCheckedIn]
+}
+enum CategoryType{
+    WORK
+    SELF
+    NONE
+    WORK_SELF
+}
+type UserMoodSourceCheckedIn{
+    appUser:AppUser
+    sources:[MtMoodSource]
+    description:String
 }

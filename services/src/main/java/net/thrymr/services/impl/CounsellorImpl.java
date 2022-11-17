@@ -3,10 +3,6 @@ package net.thrymr.services.impl;
 import net.thrymr.dto.CounsellorDto;
 import net.thrymr.enums.Roles;
 import net.thrymr.model.*;
-import net.thrymr.model.master.MtCounsellor;
-import net.thrymr.model.master.MtShiftTimings;
-import net.thrymr.model.master.MtSite;
-import net.thrymr.model.master.MtTeam;
 import net.thrymr.repository.*;
 import net.thrymr.services.CounsellorService;
 import net.thrymr.utils.Validator;
@@ -18,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
@@ -161,6 +158,9 @@ public class CounsellorImpl implements CounsellorService {
             }
             if (Validator.isObjectValid(user)) {
                 mtCounsellor.setAppUser(user);
+            }
+            if (request.getIsActive() != null && request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
+                counsellor.setIsActive(request.getIsActive());
             }
             counsellorRepo.save(mtCounsellor);
             return "counsellor update successfully";

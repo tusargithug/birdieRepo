@@ -1,4 +1,4 @@
-package net.thrymr.model.master;
+package net.thrymr.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +25,7 @@ public class MtTeam extends BaseEntity {
     private AppUser teamLeader;
     @OneToOne(cascade = CascadeType.ALL)
     private AppUser teamManager;
-    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private MtSite mtSite;
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private MtShiftTimings mtShiftTimings;

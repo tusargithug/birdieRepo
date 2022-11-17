@@ -70,7 +70,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             optionalShiftTimings.ifPresent(mtTeam::setMtShiftTimings);
         }
         //team.setShiftTimings(dtoToShiftTimings(teamDto.getShiftTimings()));
-        if (teamDto.getStatus().equals(Boolean.TRUE)) {
+        if (teamDto.getStatus() != null && teamDto.getStatus().equals(Boolean.TRUE)) {
             mtTeam.setIsActive(teamDto.getStatus());
         }
         mtTeam.setSearchKey(getTeamSearchKey(mtTeam));
@@ -110,7 +110,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                 Optional<MtShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(teamDto.getShiftTimingsId());
                 optionalShiftTimings.ifPresent(mtTeam::setMtShiftTimings);
             }
-            if (teamDto.getStatus().equals(Boolean.FALSE) || teamDto.getStatus().equals(Boolean.TRUE)) {
+            if (teamDto.getStatus() != null && teamDto.getStatus().equals(Boolean.FALSE) || teamDto.getStatus().equals(Boolean.TRUE)) {
                 mtTeam.setIsActive(teamDto.getStatus());
             }
             //team.setSearchKey(getTeamSearchKey(team));
@@ -174,7 +174,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             }
         }
         siteDto.setSearchKey(saveSiteSearchKey(mtSite));
-        if (siteDto.getStatus().equals(Boolean.TRUE)) {
+        if (siteDto.getStatus() != null && siteDto.getStatus().equals(Boolean.TRUE)) {
             mtSite.setIsActive(siteDto.getStatus());
         }
         siteRepo.save(mtSite);
@@ -218,6 +218,9 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                 optionalAppUser.ifPresent(mtSite::setSiteManager);
             }
 
+            if (siteDto.getStatus() != null && siteDto.getStatus().equals(Boolean.TRUE) || siteDto.getStatus().equals(Boolean.FALSE)) {
+                site.setIsActive(siteDto.getStatus());
+            }
             siteRepo.save(mtSite);
             return "site update successfully";
         }
@@ -334,7 +337,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                 mtShiftTimings.setCounsellors(optionalCounsellorId.get());
             }
         }
-        if (shiftTimingsDto.getStatus().equals(Boolean.TRUE)) {
+        if (shiftTimingsDto.getStatus() != null && shiftTimingsDto.getStatus().equals(Boolean.TRUE)) {
             mtShiftTimings.setIsActive(shiftTimingsDto.getStatus());
         }
         shiftTimingsRepo.save(mtShiftTimings);
@@ -357,7 +360,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                 if (Validator.isValid(String.valueOf(shiftTimingsDto.getStatus()))) {
                     mtShiftTimings.setIsActive(shiftTimingsDto.getStatus());
                 }
-                if (shiftTimingsDto.getStatus().equals(Boolean.TRUE) || shiftTimingsDto.getStatus().equals(Boolean.FALSE)) {
+                if (shiftTimingsDto.getStatus() != null && shiftTimingsDto.getStatus().equals(Boolean.TRUE) || shiftTimingsDto.getStatus().equals(Boolean.FALSE)) {
                     mtShiftTimings.setIsActive(shiftTimingsDto.getStatus());
                 }
                 shiftTimingsRepo.save(mtShiftTimings);

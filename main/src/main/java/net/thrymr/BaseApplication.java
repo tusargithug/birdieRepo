@@ -19,16 +19,20 @@ import org.springframework.boot.actuate.endpoint.web.annotation.ServletEndpoints
 import org.springframework.boot.actuate.endpoint.web.servlet.WebMvcEndpointHandlerMapping;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.graphql.execution.RuntimeWiringConfigurer;
 import org.springframework.util.StringUtils;
+import org.springframework.util.unit.DataSize;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.Part;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -116,6 +120,10 @@ public class BaseApplication {
     public RuntimeWiringConfigurer runtimeWiringConfigurObject() {
         return wiringBuilder -> wiringBuilder.scalar(ExtendedScalars.Object);
     }
+    @Bean
+    public RuntimeWiringConfigurer runtimeWiringConfigurByte() {
+        return wiringBuilder -> wiringBuilder.scalar(ExtendedScalars.GraphQLByte);
+    }
 
     @Bean
     public GraphQLScalarType date() {
@@ -138,8 +146,21 @@ public class BaseApplication {
     }
 
     @Bean
+    public GraphQLScalarType byteType() {
+        return ExtendedScalars.GraphQLByte;
+    }
+
+    @Bean
     public GraphQLScalarType uploadScalarDefine() {
         return ApolloScalars.Upload;
+    }
+
+    @Bean
+    public MultipartConfigElement multipartConfigElement() {
+        MultipartConfigFactory factory = new MultipartConfigFactory();
+        factory.setMaxFileSize(DataSize.parse("124MB"));
+        factory.setMaxRequestSize(DataSize.parse("124MB"));
+        return factory.createMultipartConfig();
     }
 
 }

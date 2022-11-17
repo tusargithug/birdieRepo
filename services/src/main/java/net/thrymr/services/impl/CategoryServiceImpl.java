@@ -66,7 +66,7 @@ public class CategoryServiceImpl implements CategoryService {
                 .setDescription(request.getDescription());
         category.get()
                 .setSequence(request.getSequence());
-        if (request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
+        if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
             category.get().setIsActive(request.getIsActive());
         }
         categoryRepo.save(category.get());
