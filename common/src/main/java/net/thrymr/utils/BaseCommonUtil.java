@@ -59,18 +59,16 @@ public class BaseCommonUtil {
     }
 
 
-
     public static String getStringFromObject(Object object) {
         if (object != null) {
             try {
-                return new ObjectMapper().writeValueAsString( object );
+                return new ObjectMapper().writeValueAsString(object);
             } catch (JsonProcessingException e) {
                 return "";
             }
         }
         return "";
     }
-
 
 
     /**
@@ -91,17 +89,17 @@ public class BaseCommonUtil {
 
 
     public static boolean isLongNotNullOrEmpty(Long value) {
-        return value != null && value !=0;
+        return value != null && value != 0;
     }
 
 
-    public static Pageable getPageable(GetDataRequestDto request){
+    public static Pageable getPageable(GetDataRequestDto request) {
         Pageable pageable = PageRequest.of(request.getPageNumber(), request.getPageSize(), Sort.Direction.DESC, "updatedOn");
 
         if (Validator.isValid(request.getOrder()) && Validator.isValid(request.getField())) {
             Optional<Sort.Direction> direction = Sort.Direction.fromOptionalString(request.getOrder());
             if (!direction.isPresent()) {
-                throw  new CustomException(HttpStatus.BAD_REQUEST, "Invalid sorting order.");
+                throw new CustomException(HttpStatus.BAD_REQUEST, "Invalid sorting order.");
             }
             pageable = PageRequest.of(request.getPageNumber(), request.getPageSize(), direction.get(), request.getField());
         }
@@ -110,15 +108,14 @@ public class BaseCommonUtil {
     }
 
 
-
     public static String generateOTP(int len) {
         String numbers = "0123456789";
         Random randomMethod = new Random();
         char[] otp = new char[len];
         for (int i = 0; i < len; i++) {
-            otp[i] = numbers.charAt( randomMethod.nextInt( numbers.length() ) );
+            otp[i] = numbers.charAt(randomMethod.nextInt(numbers.length()));
         }
-        return new String( otp );
+        return new String(otp);
     }
 }
 

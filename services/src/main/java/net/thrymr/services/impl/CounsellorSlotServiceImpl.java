@@ -1,13 +1,13 @@
 package net.thrymr.services.impl;
 
 import net.thrymr.constant.Constants;
-import net.thrymr.dto.response.UserAppointmentResponse;
+import net.thrymr.dto.CounsellorSlotResponseDto;
 import net.thrymr.dto.slotRequest.SlotDetailsDto;
 import net.thrymr.dto.slotRequest.TimeSlotDto;
 import net.thrymr.enums.SlotShift;
 import net.thrymr.enums.SlotStatus;
 import net.thrymr.model.AppUser;
-import net.thrymr.model.Counsellor;
+import net.thrymr.model.master.MtCounsellor;
 import net.thrymr.model.CounsellorSlot;
 import net.thrymr.repository.AppUserRepo;
 import net.thrymr.repository.AppointmentRepo;
@@ -19,13 +19,19 @@ import net.thrymr.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.time.temporal.ChronoUnit.HOURS;
+import static java.time.temporal.ChronoUnit.MINUTES;
 
 @Service
 public class CounsellorSlotServiceImpl implements CounsellorSlotService {
@@ -47,9 +53,9 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
     public String createCounsellorSlot(TimeSlotDto request) throws ParseException {
         CounsellorSlot slot = new CounsellorSlot();
         if (Validator.isValid(request.getCounsellorId())) {
-            Optional<Counsellor> optionalCounsellor = counsellorRepo.findById(request.getCounsellorId());
+            Optional<MtCounsellor> optionalCounsellor = counsellorRepo.findById(request.getCounsellorId());
             if (optionalCounsellor.isPresent()) {
-                slot.setCounsellor(optionalCounsellor.get());
+                slot.setMtCounsellor(optionalCounsellor.get());
             }
 
         } else {
@@ -112,12 +118,12 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
                     }
                 }
                 if (detailsDto.getCounsellorId() != null) {
-                    Optional<Counsellor> optionalCounsellorId = counsellorRepo.findById(detailsDto.getCounsellorId());
+                    Optional<MtCounsellor> optionalCounsellorId = counsellorRepo.findById(detailsDto.getCounsellorId());
                     if (optionalCounsellorId.isPresent()) {
-                        slot.setCounsellor(optionalCounsellorId.get());
+                        slot.setMtCounsellor(optionalCounsellorId.get());
                     }
                 }
-                if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE)) {
+                if (request.getIsActive() != null && request.getIsActive().equals(Boolean.TRUE)) {
                     slot.setIsActive(request.getIsActive());
                 }
                 counsellorSlots.add(slot);
@@ -237,12 +243,12 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
                             }
                         }
                         if (detailsDto.getCounsellorId() != null) {
-                            Optional<Counsellor> optionalCounsellorId = counsellorRepo.findById(detailsDto.getCounsellorId());
+                            Optional<MtCounsellor> optionalCounsellorId = counsellorRepo.findById(detailsDto.getCounsellorId());
                             if (optionalCounsellorId.isPresent()) {
-                                counsellorSlot.setCounsellor(optionalCounsellorId.get());
+                                counsellorSlot.setMtCounsellor(optionalCounsellorId.get());
                             }
                         }
-                        if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
+                        if (request.getIsActive() != null && request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
                             counsellorSlot.setIsActive(request.getIsActive());
                         }
                         counsellorSlots.add(counsellorSlot);

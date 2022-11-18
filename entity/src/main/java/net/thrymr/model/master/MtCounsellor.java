@@ -1,9 +1,11 @@
-package net.thrymr.model;
+package net.thrymr.model.master;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.thrymr.model.master.MtShiftTimings;
+import net.thrymr.model.AppUser;
+import net.thrymr.model.BaseEntity;
+import net.thrymr.model.CounsellorSlot;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -13,7 +15,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Entity
-public class Counsellor extends BaseEntity {
+public class MtCounsellor extends BaseEntity {
     @OneToOne
     private AppUser appUser;
     @OneToOne
@@ -22,7 +24,7 @@ public class Counsellor extends BaseEntity {
     private List<CounsellorSlot> counsellorSlots = new ArrayList<>();
     @Column(name = "shift_timings")
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "counsellors")
-    private List<MtShiftTimings> shiftTimings;
+    private List<MtShiftTimings> mtShiftTimings;
     @Column(name = "educational_details")
     @ElementCollection(targetClass = String.class)
     private List<String> educationalDetails = new ArrayList<>();

@@ -37,12 +37,12 @@ public class QuestionAndOptionsController {
 
     @MutationMapping("deleteQuestionById")
     public String deleteQuestionById(@Argument Long id) {
-        return  questionAndOptionsService.deleteQuestionById(id);
+        return questionAndOptionsService.deleteQuestionById(id);
     }
 
     @QueryMapping("getAnswersByQuestionId")
     public List<MtOptions> getAnswersByQuestionId(@Argument Long id) {
-       return  questionAndOptionsService.getAnswersByQuestionId(id);
+        return questionAndOptionsService.getAnswersByQuestionId(id);
     }
 
     @QueryMapping("getAllQuestions")
@@ -51,27 +51,27 @@ public class QuestionAndOptionsController {
     }
 
     @MutationMapping("createOptions")
-    public String createOptions(@Argument(name="input") OptionsDto request){
+    public String createOptions(@Argument(name = "input") OptionsDto request) {
         return questionAndOptionsService.createOptions(request);
     }
 
     @MutationMapping("updateOptionById")
-    public String updateOptionById(@Argument(name="input") OptionsDto request){
+    public String updateOptionById(@Argument(name = "input") OptionsDto request) {
         return questionAndOptionsService.updateOptionById(request);
     }
 
     @QueryMapping("getOptionById")
-    public MtOptions getOptionById(@Argument Long id){
+    public MtOptions getOptionById(@Argument Long id) {
         return questionAndOptionsService.getOptionById(id);
     }
 
     @QueryMapping("getAllOption")
-    public List<MtOptions> getAllOption(){
+    public List<MtOptions> getAllOption() {
         return questionAndOptionsService.getAllOption();
     }
 
     @MutationMapping("deleteOptionById")
-    public String deleteOptionById(@Argument Long id){
+    public String deleteOptionById(@Argument Long id) {
         return questionAndOptionsService.deleteOptionById(id);
     }
 

@@ -14,13 +14,13 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserCourseDto  {
+public class UserCourseDto {
 
-    private  Long courseId;
+    private Long courseId;
 
     private Long appUserId;
 
-    private List<Long> mtOptionsIds=new ArrayList<>();
+    private List<Long> mtOptionsIds = new ArrayList<>();
 
     private String startedDate;
 

@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Service
 public class RoleServiceImpl implements RoleService {
 
-    private  final Logger logger = LoggerFactory.getLogger(RoleServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(RoleServiceImpl.class);
 
     private final RoleRepo roleRepo;
 
@@ -69,11 +69,11 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public String createRole(RolesDto request) {
-        Optional<MtRoles>optionalMtRoles=roleRepo.findByName(request.getName());
-        if(optionalMtRoles.isEmpty()){
+        Optional<MtRoles> optionalMtRoles = roleRepo.findByName(request.getName());
+        if (optionalMtRoles.isEmpty()) {
             return "Role already existed";
-        }else {
-            MtRoles mtRoles=new MtRoles();
+        } else {
+            MtRoles mtRoles = new MtRoles();
             mtRoles.setName(request.getName());
             return "Role saved successfully";
         }
@@ -82,9 +82,9 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public String updateRole(RolesDto request) {
-        Optional<MtRoles>optionalMtRoles=roleRepo.findById(request.getId());
-        if(optionalMtRoles.isPresent()){
-            MtRoles mtRoles=optionalMtRoles.get();
+        Optional<MtRoles> optionalMtRoles = roleRepo.findById(request.getId());
+        if (optionalMtRoles.isPresent()) {
+            MtRoles mtRoles = optionalMtRoles.get();
             mtRoles.setName(request.getName());
 
         }
@@ -93,7 +93,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public String deleteRoleById(Long id) {
-        Optional<MtRoles>optionalMtRoles=roleRepo.findById(id);
+        Optional<MtRoles> optionalMtRoles = roleRepo.findById(id);
         optionalMtRoles.ifPresent(roleRepo::delete);
         return "Role deleted successfully";
     }

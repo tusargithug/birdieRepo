@@ -13,18 +13,18 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class RiskLevel extends BaseEntity{
-	
-	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-	private PsychometricTest psychometricTest;
+public class RiskLevel extends BaseEntity {
 
-	@Column(name = "range_from")
-	private Float rangeFrom;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private PsychometricTest psychometricTest;
 
-	@Column(name = "range_to")
-	private Float rangeTo;
-	
-	@Enumerated
-	private Risk risk;
+    @Column(name = "range_from")
+    private Float rangeFrom;
+
+    @Column(name = "range_to")
+    private Float rangeTo;
+
+    @Enumerated
+    private Risk risk;
 
 }

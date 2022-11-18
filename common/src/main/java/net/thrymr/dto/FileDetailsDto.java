@@ -11,7 +11,7 @@ import javax.persistence.Column;
 @Setter
 @Getter
 @NoArgsConstructor
-public class FileDetailsDto{
+public class FileDetailsDto {
     private Long id;
     private String fileId;
     private String fileName;

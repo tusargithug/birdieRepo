@@ -22,5 +22,4 @@ public class MoodIntensityDto {
     private MoodInfoDto moodInfoDto;
 
 
-
 }

@@ -26,7 +26,6 @@ public class JwtUtil {
     int jwtExpirationMs;
 
 
-
     public String generateJwtToken(Authentication authentication) {
 
         LoggedInUser userPrincipal = (LoggedInUser) authentication.getPrincipal();
@@ -35,11 +34,11 @@ public class JwtUtil {
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .claim("auth", userPrincipal.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-                .signWith(getSigningKey(),SignatureAlgorithm.HS256)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    private Key getSigningKey(){
+    private Key getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
         return Keys.hmacShaKeyFor(keyBytes);
     }

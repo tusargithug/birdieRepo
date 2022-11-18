@@ -14,21 +14,21 @@ import lombok.Setter;
 @Entity
 @Setter
 @Getter
-public class FileEntity extends BaseEntity{
+public class FileEntity extends BaseEntity {
 
-	@Column(name = "file_id")
-	private String fileId;
+    @Column(name = "file_id")
+    private String fileId;
 
-	@Column(name = "content_type")
-	private String contentType;
-	
-	private String name;
-	
-	@Enumerated
-	private FileType fileType = FileType.NONE;
-	
-	@ManyToMany(mappedBy = "content", fetch = FetchType.LAZY)
+    @Column(name = "content_type")
+    private String contentType;
+
+    private String name;
+
+    @Enumerated
+    private FileType fileType = FileType.NONE;
+
+    @ManyToMany(mappedBy = "content", fetch = FetchType.LAZY)
     private Set<Course> employees = new HashSet<>();
-	
+
 
 }

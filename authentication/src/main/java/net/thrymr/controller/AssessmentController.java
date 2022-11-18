@@ -18,25 +18,26 @@ public class AssessmentController {
 
     @QueryMapping("getAllAssessment")
     public List<MtAssessment> getAllAssessment() {
-        return  assessmentService.getAllAssessment();
+        return assessmentService.getAllAssessment();
     }
+
     @QueryMapping("getAssessmentById")
     public MtAssessment getAssessmentById(@Argument Long id) {
-        return  assessmentService.getAssessmentById(id);
+        return assessmentService.getAssessmentById(id);
     }
 
     @MutationMapping("createAssessment")
-    public String createAssessment(@Argument(name = "input") AssessmentDto request){
+    public String createAssessment(@Argument(name = "input") AssessmentDto request) {
         return assessmentService.createAssessment(request);
     }
 
     @MutationMapping("updateAssessmentById")
-    public String updateAssessmentById(@Argument(name = "input") AssessmentDto request){
+    public String updateAssessmentById(@Argument(name = "input") AssessmentDto request) {
         return assessmentService.updateAssessmentById(request);
     }
 
     @MutationMapping("deleteAssessmentId")
-    public String deleteAssessmentId(@Argument Long id){
+    public String deleteAssessmentId(@Argument Long id) {
         return assessmentService.deleteAssessmentId(id);
     }
 

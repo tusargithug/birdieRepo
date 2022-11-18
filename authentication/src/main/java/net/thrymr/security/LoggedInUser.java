@@ -9,6 +9,7 @@ import net.thrymr.model.master.MtRoles;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
@@ -38,16 +39,17 @@ public class LoggedInUser implements UserDetails {
     private String password;
 
     public static LoggedInUser builds(Optional<AppUser> loginData) {
-        LoggedInUser loggedInUser=new LoggedInUser();
+        LoggedInUser loggedInUser = new LoggedInUser();
         loggedInUser.setId((loginData.get().getId()));
         loggedInUser.setContactNumber(loginData.get().getMobile());
         loggedInUser.setFirstName(loginData.get().getFirstName());
-       loggedInUser.setLastName(loginData.get().getLastName());
-       loggedInUser.setEmail(loginData.get().getEmail());
+        loggedInUser.setLastName(loginData.get().getLastName());
+        loggedInUser.setEmail(loginData.get().getEmail());
         loggedInUser.setPassword(loginData.get().getPassword());
         loggedInUser.setRole(loginData.get().getMtRoles());
         return loggedInUser;
     }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.emptyList();

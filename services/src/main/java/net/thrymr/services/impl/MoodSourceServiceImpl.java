@@ -3,6 +3,7 @@ package net.thrymr.services.impl;
 import net.thrymr.dto.MoodSourceDto;
 import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
 import net.thrymr.enums.Category;
+import net.thrymr.enums.MoodType;
 import net.thrymr.model.AppUser;
 import net.thrymr.model.UserMoodSourceCheckedIn;
 import net.thrymr.model.master.MtMoodSource;
@@ -30,6 +31,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -77,7 +79,7 @@ public class MoodSourceServiceImpl implements MoodSourceService {
                     mtMoodSourceList.add(mtMoodSource);
                     mtMoodSourceList = moodSourceRepo.saveAll(mtMoodSourceList);
                 } catch (Exception e) {
-                    logger.error("Exception{} ", e);
+                    logger.error("Exception{} " , e);
                     return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_SOURCE_IMPORT_FORMAT_FAILED"));
                 }
             }
@@ -86,15 +88,27 @@ public class MoodSourceServiceImpl implements MoodSourceService {
     }
 
     @Override
-    public ApiResponse getAllMoodSources() {
+    public List<MtMoodSource> getAllMoodSources() {
         List<MtMoodSource> mtMoodSourceList = moodSourceRepo.findAll();
-        List<MoodSourceDto> moodSourceDtoList = new ArrayList<>();
         if (!mtMoodSourceList.isEmpty()) {
-            mtMoodSourceList.forEach(mtMoodSource -> moodSourceDtoList.add(setModelToDto(mtMoodSource)));
-            return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_SOURCE_FOUND"), moodSourceDtoList);
-        } else {
-            return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_SOURCE_NOT_FOUND"), moodSourceDtoList);
+            return mtMoodSourceList.stream().filter(mtMoodSource -> mtMoodSource.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
         }
+        return new ArrayList<>();
+    }
+
+    @Override
+    public MtMoodSource getMoodSourceById(Long id) {
+
+        MtMoodSource mtMoodSource = null;
+        if (Validator.isValid(id)) {
+            Optional<MtMoodSource> optionalMtMoodSource = moodSourceRepo.findById(id);
+            if (optionalMtMoodSource.isPresent() && optionalMtMoodSource.get().getIsActive().equals(Boolean.TRUE)) {
+                mtMoodSource = optionalMtMoodSource.get();
+                return mtMoodSource;
+            }
+
+        }
+        return new MtMoodSource();
     }
 
     @Override
@@ -105,6 +119,57 @@ public class MoodSourceServiceImpl implements MoodSourceService {
     }
 
     @Override
+    public String updateMoodSourceById(MoodSourceDto request) {
+
+        MtMoodSource mtMoodSource = null;
+
+        if (Validator.isValid(request.getId())) {
+
+            Optional<MtMoodSource> optionalMtMoodSource = moodSourceRepo.findById(request.getId());
+
+            if (optionalMtMoodSource.isPresent()) {
+                mtMoodSource = optionalMtMoodSource.get();
+                if (Validator.isValid(request.getName())) {
+                    mtMoodSource.setName(request.getName());
+                }
+                if (Validator.isValid(request.getDescription())) {
+                    mtMoodSource.setDescription(request.getDescription());
+                }
+                if (Validator.isValid(request.getSequence())) {
+                    mtMoodSource.setSequence(request.getSequence());
+                }
+                if (Validator.isValid(request.getEmoji())) {
+                    mtMoodSource.setEmoji(request.getEmoji());
+                }
+                if (Validator.isValid(request.getCategory())) {
+                    mtMoodSource.setCategory(Category.valueOf(request.getCategory()));
+                }
+                moodSourceRepo.save(mtMoodSource);
+                return "Mood source updated successfully";
+            }
+        }
+        return "This mood source id not present in database";
+    }
+
+    @Override
+    public String deleteMoodSourceById(Long id) {
+
+        MtMoodSource mtMoodSource = null;
+        if (Validator.isValid(id)) {
+            Optional<MtMoodSource> optionalMtMoodSource = moodSourceRepo.findById(id);
+            if (optionalMtMoodSource.isPresent()) {
+                mtMoodSource = optionalMtMoodSource.get();
+                mtMoodSource.setIsActive(Boolean.FALSE);
+                mtMoodSource.setIsDeleted(Boolean.TRUE);
+                moodSourceRepo.save(mtMoodSource);
+                return "Mood source deleted successfully";
+            }
+        }
+
+        return "This mood source id not present in database";
+    }
+
+/*    @Override
     public ApiResponse updateMoodSource(MoodSourceIntensityRequestDto request) {
 
 
@@ -118,7 +183,7 @@ public class MoodSourceServiceImpl implements MoodSourceService {
 //          }
 //        userMoodSourceCheckInRepo.save(checkedIn);
         return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_SOURCE_UPDATED"));
-    }
+    }*/
 
     private String getCellValue(XSSFCell cell) {
         String value;
@@ -149,6 +214,7 @@ public class MoodSourceServiceImpl implements MoodSourceService {
     public String createUserMoodSourceCheckIn(MoodSourceIntensityRequestDto request) {
         List<MtMoodSource> mtMoodSourceList = moodSourceRepo.findAllByIdIn(request.getMoodSourceIdList());
         UserMoodSourceCheckedIn checkedIn = new UserMoodSourceCheckedIn();
+        // checkedIn.setAppUser(user);
         if (!mtMoodSourceList.isEmpty()) {
             checkedIn.setMtMoodSourceList(mtMoodSourceList);
         }

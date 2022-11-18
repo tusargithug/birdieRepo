@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UnitRpo extends JpaRepository<Unit,Long>, JpaSpecificationExecutor<Unit> {
+public interface UnitRpo extends JpaRepository<Unit, Long>, JpaSpecificationExecutor<Unit> {
 
     // Optional<Object> findByIdAndChapters(Long id, List<Chapter> chapters);
 }

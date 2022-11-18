@@ -26,8 +26,10 @@ import java.util.List;
 
 @RestController
 public class MoodInfoController {
+
     @Autowired
     MoodInfoService moodInfoService;
+
     @QueryMapping(name = "getMoodInfoById")
     public MtMoodInfo getMoodInfoById(@Argument Long id) {
         return moodInfoService.getMoodInfoById(id);

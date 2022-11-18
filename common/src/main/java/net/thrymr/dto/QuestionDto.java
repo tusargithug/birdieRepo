@@ -18,7 +18,7 @@ public class QuestionDto {
     private Integer Sequence;
     private Boolean isActive;
     //TODO questionType
-   // one month
-     //       6 month
+    // one month
+    //       6 month
     //appoinment
 }

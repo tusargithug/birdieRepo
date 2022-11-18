@@ -22,28 +22,28 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class UserPsychometricTest extends BaseEntity{
-	
-	@ManyToOne
-	private AppUser appUser;
-	//TODO already relation in RiskLevel need to remove
-	@ManyToOne
-	private PsychometricTest psychometricTest;
-	
-	@Embedded
-	private Map<MtQuestion, PsychometricTestOption> selectedOptions = new HashMap<>();
+public class UserPsychometricTest extends BaseEntity {
 
-	@Column(name = "submitted_on")
-	private Date submittedOn;
+    @ManyToOne
+    private AppUser appUser;
+    //TODO already relation in RiskLevel need to remove
+    @ManyToOne
+    private PsychometricTest psychometricTest;
 
-	@Column(name = "total_score")
-	private Long totalScore;
-	
-	@Enumerated
-	private Risk riskIdentified;
-	
-	@ManyToOne
-	private RiskLevel riskLevel;
-	
+    @Embedded
+    private Map<MtQuestion, PsychometricTestOption> selectedOptions = new HashMap<>();
+
+    @Column(name = "submitted_on")
+    private Date submittedOn;
+
+    @Column(name = "total_score")
+    private Long totalScore;
+
+    @Enumerated
+    private Risk riskIdentified;
+
+    @ManyToOne
+    private RiskLevel riskLevel;
+
 
 }

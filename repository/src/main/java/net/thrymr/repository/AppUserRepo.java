@@ -14,8 +14,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface AppUserRepo extends JpaRepository<AppUser, Long> , JpaSpecificationExecutor<AppUser> {
-	Optional<AppUser> findByMobileAndIsActiveAndIsDeleted(String mobile, Boolean aTrue, Boolean aFalse);
-	Optional<AppUser> findByEmail(String email);
-	List<AppUser> findAllByAlertsAndRolesIn(Alerts alert, List<Roles> appUserList);
+public interface AppUserRepo extends JpaRepository<AppUser, Long>, JpaSpecificationExecutor<AppUser> {
+    Optional<AppUser> findByMobileAndIsActiveAndIsDeleted(String mobile, Boolean aTrue, Boolean aFalse);
+
+    Optional<AppUser> findByEmail(String email);
+
+    List<AppUser> findAllByAlertsAndRolesIn(Alerts alert, List<Roles> appUserList);
 }

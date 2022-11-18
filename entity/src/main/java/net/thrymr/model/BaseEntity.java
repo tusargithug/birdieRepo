@@ -15,14 +15,11 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 
-
-
-
 @Setter
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class BaseEntity  {
+public abstract class BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,11 +36,11 @@ public abstract class BaseEntity  {
     @Column(updatable = false)
     @JsonIgnore
     @CreationTimestamp
-    private Timestamp createdOn = new Timestamp( new Date().getTime() );
+    private Timestamp createdOn = new Timestamp(new Date().getTime());
 
     @UpdateTimestamp
     @JsonIgnore
-    private Timestamp updatedOn = new Timestamp( new Date().getTime() );
+    private Timestamp updatedOn = new Timestamp(new Date().getTime());
 
     private Boolean isDeleted = Boolean.FALSE;
 

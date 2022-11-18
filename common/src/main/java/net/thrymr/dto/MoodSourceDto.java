@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.thrymr.model.UserMoodCheckIn;
 import net.thrymr.model.master.FileEntity;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,9 +15,13 @@ import java.util.List;
 @NoArgsConstructor
 public class MoodSourceDto {
 
+    private Long id;
+
     private String name;
 
     private String description;
+
+    private String emoji;
 
     private FileEntity icon;
 

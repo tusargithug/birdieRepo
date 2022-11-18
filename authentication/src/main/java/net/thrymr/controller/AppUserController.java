@@ -1,7 +1,6 @@
 package net.thrymr.controller;
 
 
-
 import net.thrymr.dto.AppUserDto;
 
 import net.thrymr.dto.UserCourseDto;
@@ -13,7 +12,6 @@ import net.thrymr.services.AppUserService;
 import net.thrymr.services.AssessmentService;
 import net.thrymr.services.RoleService;
 import net.thrymr.utils.ApiResponse;
-
 
 
 import org.slf4j.Logger;
@@ -30,7 +28,6 @@ import java.text.ParseException;
 import java.util.List;
 
 
-
 @RestController
 //@RequestMapping("/api/v1/user")
 public class AppUserController {
@@ -39,6 +36,7 @@ public class AppUserController {
     private final RoleService roleService;
     private final AssessmentService assessmentService;
     private final AppUserService appUserService;
+
     public AppUserController(RoleService roleService, AssessmentService assessmentService, AppUserService appUserService) {
         this.roleService = roleService;
         this.assessmentService = assessmentService;
@@ -57,14 +55,14 @@ public class AppUserController {
     // get user by id
     @QueryMapping
     public AppUser getAppUserById(@Argument Long id) {
-        return appUserService. getAppUserById(id);
+        return appUserService.getAppUserById(id);
 
     }
 
     // get all Users
     @QueryMapping("getAllAppUsers")
     public List<AppUser> getAllAppUsers() throws ParseException {
-        return appUserService. getAllAppUsers();
+        return appUserService.getAllAppUsers();
     }
 
     @MutationMapping(name = "createAppUser")
@@ -90,12 +88,12 @@ public class AppUserController {
     }
 
     @QueryMapping(name = "getAllEnumRoles")
-    public List<Roles> getAllEnumRoles(){
+    public List<Roles> getAllEnumRoles() {
         return appUserService.getAllEnumRoles();
     }
 
-    @QueryMapping(name="getUserAppointmentCountById")
-    public UserAppointmentResponse getUserAppointmentCountById(@Argument Long id){
+    @QueryMapping(name = "getUserAppointmentCountById")
+    public UserAppointmentResponse getUserAppointmentCountById(@Argument Long id) {
         return appUserService.getUserAppointmentCountById(id);
     }
 

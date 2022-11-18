@@ -7,9 +7,7 @@ import net.thrymr.dto.response.UserAppointmentResponse;
 import net.thrymr.enums.Roles;
 import net.thrymr.enums.SlotStatus;
 import net.thrymr.model.*;
-import net.thrymr.model.master.Course;
-import net.thrymr.model.master.MtOptions;
-import net.thrymr.model.master.MtRoles;
+import net.thrymr.model.master.*;
 import net.thrymr.repository.*;
 import net.thrymr.services.AppUserService;
 
@@ -278,7 +276,7 @@ public class AppUserServiceImpl implements AppUserService {
         user.setEmail(request.getEmail());
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
-        user.setUserName(request.getFirstName()+" "+request.getLastName());
+        user.setUserName(request.getFirstName() + " " + request.getLastName());
         user.setMobile(request.getMobile());
         user.setAlternateMobile(request.getAlternateMobile());
         user.setEmpId(request.getEmpId());
@@ -286,25 +284,26 @@ public class AppUserServiceImpl implements AppUserService {
         if (request.getDateOfJoining() != null) {
             user.setDateOfJoining(DateUtils.toFormatStringToDate(String.valueOf(request.getDateOfJoining()), Constants.DATE_FORMAT));
         }
-        if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE)) {
+        if (request.getIsActive() != null && request.getIsActive().equals(Boolean.TRUE)) {
             user.setIsActive(request.getIsActive());
         }
-        if(Validator.isValid(request.getSiteId())) {
-            Optional<Site> optionalSite = siteRepo.findById(request.getSiteId());
+        if (Validator.isValid(request.getSiteId())) {
+            Optional<MtSite> optionalSite = siteRepo.findById(request.getSiteId());
             if (optionalSite.isPresent()) {
-                user.setSite(optionalSite.get());
+                user.setMtSite(optionalSite.get());
             }
         }
-        if(Validator.isValid(request.getShiftTimingsId())) {
-            Optional<ShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(request.getShiftTimingsId());
+        if (Validator.isValid(request.getShiftTimingsId())) {
+            Optional<MtShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(request.getShiftTimingsId());
             if (optionalShiftTimings.isPresent()) {
-                user.setShiftTimings(optionalShiftTimings.get());
+                user.setMtShiftTimings(optionalShiftTimings.get());
             }
         }
+
         if (Validator.isValid(request.getTeamId())) {
-            Optional<Team> optionalTeamId = teamRepo.findById(request.getTeamId());
+            Optional<MtTeam> optionalTeamId = teamRepo.findById(request.getTeamId());
             if (optionalTeamId.isPresent()) {
-                user.setTeam(optionalTeamId.get());
+                user.setMtTeam(optionalTeamId.get());
             }
         }
         appUserRepo.save(user);
@@ -313,7 +312,7 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public String updateAppUser(AppUserDto request) throws ParseException {
-        if(Validator.isValid(request.getId())) {
+        if (Validator.isValid(request.getId())) {
             Optional<AppUser> optionalAppUser = appUserRepo.findById(request.getId());
             if (optionalAppUser.isPresent()) {
                 AppUser user = optionalAppUser.get();
@@ -323,46 +322,45 @@ public class AppUserServiceImpl implements AppUserService {
                 if (Validator.isValid(request.getMobile())) {
                     user.setMobile(request.getMobile());
                 }
-                if(Validator.isValid(request.getAlternateMobile())){
+                if (Validator.isValid(request.getAlternateMobile())) {
                     user.setAlternateMobile(request.getAlternateMobile());
                 }
+
+                // user.setPassword(request.getPassword());
                 if (Validator.isValid(request.getLastName())) {
                     user.setLastName(request.getLastName());
                 }
-                if (request.getFirstName() != null) {
+                if (Validator.isValid(request.getFirstName())) {
                     user.setFirstName(request.getFirstName());
-                }
-                if (Validator.isValid(request.getFirstName()) && Validator.isValid(request.getLastName())) {
-                    user.setUserName(request.getFirstName()+" "+request.getLastName());
                 }
                 if (Validator.isValid(request.getEmail())) {
                     user.setEmail(request.getEmail());
                 }
-                if(Validator.isValid(request.getRoles())){
+                if (Validator.isValid(request.getRoles())) {
                     user.setRoles(Roles.valueOf(request.getRoles()));
                 }
                 if (Validator.isValid(request.getDateOfJoining())) {
                     user.setDateOfJoining(DateUtils.toFormatStringToDate(String.valueOf(request.getDateOfJoining()), Constants.DATE_FORMAT));
                 }
-                if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
+                if (request.getIsActive() != null && request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
                     user.setIsActive(request.getIsActive());
                 }
                 if (Validator.isValid(request.getSiteId())) {
-                    Optional<Site> optionalSite = siteRepo.findById(request.getSiteId());
+                    Optional<MtSite> optionalSite = siteRepo.findById(request.getSiteId());
                     if (optionalSite.isPresent()) {
-                        user.setSite(optionalSite.get());
+                        user.setMtSite(optionalSite.get());
                     }
                 }
                 if (Validator.isValid(request.getShiftTimingsId())) {
-                    Optional<ShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(request.getShiftTimingsId());
+                    Optional<MtShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(request.getShiftTimingsId());
                     if (optionalShiftTimings.isPresent()) {
-                        user.setShiftTimings(optionalShiftTimings.get());
+                        user.setMtShiftTimings(optionalShiftTimings.get());
                     }
                 }
                 if (Validator.isValid(request.getTeamId())) {
-                    Optional<Team> optionalTeamId = teamRepo.findById(request.getTeamId());
+                    Optional<MtTeam> optionalTeamId = teamRepo.findById(request.getTeamId());
                     if (optionalTeamId.isPresent()) {
-                        user.setTeam(optionalTeamId.get());
+                        user.setMtTeam(optionalTeamId.get());
                     }
                 }
                 appUserRepo.save(user);
@@ -449,7 +447,7 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public List<Roles> getAllEnumRoles() {
         List<Roles> rolesList = Arrays.asList(Roles.ADMIN, Roles.COUNSELLOR, Roles.DIRECTOR, Roles.EMPLOYEE, Roles.NONE, Roles.OP_STREAM, Roles.TEAM_LEADER, Roles.TEAM_MANAGER, Roles.VENDOR
-                , Roles.WELL_BEING_MANGER,Roles.SITE_MANAGER);
+                , Roles.WELL_BEING_MANGER, Roles.SITE_MANAGER);
         return rolesList;
     }
 

@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ChapterRepo extends JpaRepository<Chapter,Long>, JpaSpecificationExecutor<Chapter> {
+public interface ChapterRepo extends JpaRepository<Chapter, Long>, JpaSpecificationExecutor<Chapter> {
 }

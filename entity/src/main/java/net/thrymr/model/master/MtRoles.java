@@ -23,19 +23,19 @@ import net.thrymr.model.RoleModuleInfo;
 @Table(name = "mt_roles")
 public class MtRoles extends BaseEntity {
 
-	private String name;
+    private String name;
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "mtRoles",cascade = CascadeType.ALL)
-	private List<AppUser> users = new ArrayList<>();
+    @JsonIgnore
+    @OneToMany(mappedBy = "mtRoles", cascade = CascadeType.ALL)
+    private List<AppUser> users = new ArrayList<>();
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "mtRoles", cascade = CascadeType.ALL)
-	private List<RoleModuleInfo> roleModuleInfoList = new ArrayList<>();
+    @JsonIgnore
+    @OneToMany(mappedBy = "mtRoles", cascade = CascadeType.ALL)
+    private List<RoleModuleInfo> roleModuleInfoList = new ArrayList<>();
 
-	public MtRoles(String  name){
-		this.name=name;
-	}
+    public MtRoles(String name) {
+        this.name = name;
+    }
 
 
 }

@@ -1,30 +1,29 @@
 package net.thrymr.services.impl;
+        import graphql.kickstart.servlet.context.DefaultGraphQLServletContext;
+        import graphql.kickstart.tools.GraphQLMutationResolver;
+        import graphql.schema.DataFetchingEnvironment;
+        import lombok.extern.slf4j.Slf4j;
+        import net.thrymr.FileDocument;
+        import net.thrymr.dto.*;
+        import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
+        import net.thrymr.dto.slotRequest.TimeSlotDto;
+        import net.thrymr.model.MiniSession;
+        import net.thrymr.model.master.Category;
+        import net.thrymr.model.master.Course;
+        import net.thrymr.services.*;
+        import org.springframework.beans.factory.annotation.Autowired;
+        import org.springframework.graphql.data.method.annotation.Argument;
+        import org.springframework.graphql.data.method.annotation.MutationMapping;
+        import org.springframework.graphql.data.method.annotation.QueryMapping;
+        import org.springframework.stereotype.Component;
+        import org.springframework.web.bind.annotation.RequestParam;
+        import org.springframework.web.multipart.MultipartFile;
 
-import graphql.kickstart.servlet.context.DefaultGraphQLServletContext;
-import graphql.kickstart.tools.GraphQLMutationResolver;
-import graphql.schema.DataFetchingEnvironment;
-import lombok.extern.slf4j.Slf4j;
-import net.thrymr.FileDocument;
-import net.thrymr.dto.*;
-import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
-import net.thrymr.dto.slotRequest.TimeSlotDto;
-import net.thrymr.model.MiniSession;
-import net.thrymr.model.master.Category;
-import net.thrymr.model.master.Course;
-import net.thrymr.services.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.graphql.data.method.annotation.Argument;
-import org.springframework.graphql.data.method.annotation.MutationMapping;
-import org.springframework.graphql.data.method.annotation.QueryMapping;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.Part;
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.List;
-import java.util.UUID;
+        import javax.servlet.http.Part;
+        import java.io.IOException;
+        import java.text.ParseException;
+        import java.util.List;
+        import java.util.UUID;
 
 @Slf4j
 @Component
@@ -108,6 +107,7 @@ public class MutationResolver implements GraphQLMutationResolver {
     public String deleteUserMoodSourceCheckInById(Long id) {
         return moodSourceService.deleteUserMoodSourceCheckInById(id);
     }
+
 
     @MutationMapping(name = "createUserCourse")
     public String createUserCourse(UserCourseDto request) throws ParseException {
@@ -306,9 +306,10 @@ public class MutationResolver implements GraphQLMutationResolver {
     }
 
     @MutationMapping(name = "uploadRegionData")
-    public String uploadRegionData(@Argument MultipartFile file) {
+    public String uploadRegionData(@RequestParam MultipartFile file) {
         return cityCountyAndRegionService.uploadRegionData(file);
     }
+
     /*@MutationMapping(name="upload-excel-city-data")
     public String uploadCityData(@Argument MultipartFile file) {
         return cityCountyAndRegionService.uploadCityData(file);
@@ -425,11 +426,6 @@ public class MutationResolver implements GraphQLMutationResolver {
         return miniSessionService.createGroup(request);
     }
 
-    @MutationMapping(name = "updateGroupById")
-    public String updateGroupById(@Argument(name = "input") GroupsDto request) {
-        return miniSessionService.updateGroupById(request);
-    }
-
     @MutationMapping(name = "saveMiniSession")
     public String saveMiniSession(@Argument(name = "input") MiniSessionDto request) {
         return miniSessionService.saveMiniSession(request);
@@ -465,27 +461,25 @@ public class MutationResolver implements GraphQLMutationResolver {
     public String deleteMoodInfoById(@Argument Long id) {
         return moodInfoService.deleteMoodInfoById(id);
     }
-//    @MutationMapping(name = "uploadFiles")
-//    public String uploadFiles(@Argument(name = "file") MultipartFile file) throws IOException {
-//        return fileService.addFile(file);
-//    }
-//
-//
-//    @MutationMapping("deleteFiles")
-//    public String deleteFiles(@Argument String id) {
-//        return fileService.deleteFile(id);
-//    }
 
     @MutationMapping(name = "uploadFile")
     public String uploadFile(Part avatar, DataFetchingEnvironment environment) {
         Part actualAvatar = environment.getArgument(environment.getLocalContext());
         // TODO: Implement
+        System.out.println("actual :" + actualAvatar);
         return "Upload Success";
     }
 
-    @MutationMapping(name = "updateMoodIntensity")
-    public String updateMoodIntensity(@Argument(name = "input") MoodSourceIntensityRequestDto request) {
-        return moodIntensityService.updateMoodIntensity(request);
+
+    @MutationMapping(name = "updateMoodSourceById")
+    public String updateMoodSourceById(@Argument(name = "input") MoodSourceDto request) {
+        return moodSourceService.updateMoodSourceById(request);
+    }
+
+
+    @MutationMapping(name = "deleteMoodSourceById")
+    public String deleteMoodSourceById(@Argument Long id) {
+        return moodSourceService.deleteMoodSourceById(id);
     }
 }
 

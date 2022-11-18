@@ -6,6 +6,6 @@ import net.thrymr.model.master.FileEntity;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface FileEntityRepo extends JpaRepository<FileEntity,Long> {
+public interface FileEntityRepo extends JpaRepository<FileEntity, Long> {
 
 }

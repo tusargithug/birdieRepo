@@ -17,21 +17,21 @@ import net.thrymr.model.UserMoodSourceCheckedIn;
 @Getter
 @NoArgsConstructor
 @Table(name = "mt_mood_source")
-public class MtMoodSource extends BaseEntity{
+public class MtMoodSource extends BaseEntity {
 
-	private String name;
-	
-	@Column(columnDefinition = "TEXT")
-	private String description;
+    private String name;
 
-	@Column(name = "emoji")
-	private String emoji;
-	
-	private int sequence;
+    @Column(columnDefinition = "TEXT")
+    private String description;
 
-	@Enumerated(EnumType.STRING)
-	private Category category;
-	
+    @Column(name = "emoji")
+    private String emoji;
+
+    private int sequence;
+
+    @Enumerated(EnumType.STRING)
+    private Category category;
+
 /*	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private UserMoodSourceCheckedIn userMoodCheckedIn;*/
 }

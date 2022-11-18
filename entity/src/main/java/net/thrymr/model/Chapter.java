@@ -12,15 +12,15 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @Entity
-public class Chapter extends  BaseEntity {
+public class Chapter extends BaseEntity {
 
-    @Column(name ="chapter_name" )
+    @Column(name = "chapter_name")
     private String chapterName;
     private String profilePicture;
-    @Column(name = "description",columnDefinition = "TEXT")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
     private String video;//tutorial
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private Unit unit;
-    }
+}

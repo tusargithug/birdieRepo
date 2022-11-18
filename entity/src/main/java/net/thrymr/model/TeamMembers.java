@@ -3,6 +3,7 @@ package net.thrymr.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.thrymr.model.master.MtTeam;
 
 import javax.persistence.*;
 
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @Entity
 public class TeamMembers extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    private Team team;
+    private MtTeam team;
 
     @OneToOne
     private AppUser appUser;

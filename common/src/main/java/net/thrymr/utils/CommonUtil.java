@@ -30,8 +30,9 @@ public class CommonUtil {
         }
         return new String(otp);
     }
-    public static String getStringFromObject(Object object){
-        if(object!=null){
+
+    public static String getStringFromObject(Object object) {
+        if (object != null) {
             try {
                 return objectMapper.writeValueAsString(object);
             } catch (JsonProcessingException e) {
@@ -44,7 +45,7 @@ public class CommonUtil {
     public static AppUser getAppUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
-             new ApiResponse(HttpStatus.BAD_REQUEST,"user not found");
+            new ApiResponse(HttpStatus.BAD_REQUEST, "user not found");
         }
         return (AppUser) authentication.getPrincipal();
     }

@@ -11,7 +11,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
 
-
 @Configuration
 public class ScalarConfig {
 //
@@ -27,8 +26,7 @@ public class ScalarConfig {
 //
 
 
-
-//
+    //
 //
 //        @Bean
 //        public GraphQLScalarType dateScalar() {
@@ -163,7 +161,6 @@ public class ScalarConfig {
             throw new CoercingParseLiteralException();
         }
     }).build();
-
 
 
 }

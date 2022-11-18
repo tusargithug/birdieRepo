@@ -1,9 +1,12 @@
 package net.thrymr.model;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.thrymr.enums.SlotShift;
 import net.thrymr.enums.SlotStatus;
+import net.thrymr.model.master.MtCounsellor;
+
 import javax.persistence.*;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
@@ -14,7 +17,7 @@ import java.util.Date;
 @Entity
 @Table(name = "user_appointment")
 @NoArgsConstructor
-public class UserAppointment extends BaseEntity{
+public class UserAppointment extends BaseEntity {
     @Column(name = "start_time")
     private LocalTime startTime;
 
@@ -36,7 +39,7 @@ public class UserAppointment extends BaseEntity{
     private AppUser appUser;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Counsellor counsellor;
+    private MtCounsellor counsellor;
 
     @Column(name = "is_current_appointment", columnDefinition = "boolean default false")
     private Boolean isCurrentAppointment = Boolean.FALSE;

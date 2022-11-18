@@ -8,27 +8,27 @@ public class Validator {
 
 //    private static String dateFormat = Constants.DATE_FORMAT;
 
-    public static Boolean isObjectValid(Object object){
+    public static Boolean isObjectValid(Object object) {
         if (object != null)
             return Boolean.TRUE;
         return Boolean.FALSE;
     }
 
-    public static Boolean isValid(Long id){
+    public static Boolean isValid(Long id) {
         if (id != null && id > 0)
             return Boolean.TRUE;
 
         return Boolean.FALSE;
     }
 
-    public static Boolean isValid(Integer id){
+    public static Boolean isValid(Integer id) {
         if (id != null && id > 0)
             return Boolean.TRUE;
 
         return Boolean.FALSE;
     }
 
-    public static Boolean isValid(String value){
+    public static Boolean isValid(String value) {
         if ((value != null) && !value.trim().isEmpty() && !value.equals("null")) {
             return Boolean.TRUE;
         }
@@ -36,7 +36,7 @@ public class Validator {
         return Boolean.FALSE;
     }
 
-    public static Boolean isValid(List<?> objList){
+    public static Boolean isValid(List<?> objList) {
         if ((objList != null) && !objList.isEmpty()) {
             return Boolean.TRUE;
         }
@@ -44,7 +44,7 @@ public class Validator {
         return Boolean.FALSE;
     }
 
-    public static Boolean isValid(Set<?> objList){
+    public static Boolean isValid(Set<?> objList) {
         if ((objList != null) && !objList.isEmpty()) {
             return Boolean.TRUE;
         }
@@ -52,7 +52,7 @@ public class Validator {
         return Boolean.FALSE;
     }
 
-    public static Boolean isValid(Map<?,?> objMap){
+    public static Boolean isValid(Map<?, ?> objMap) {
         if ((objMap != null) && !objMap.isEmpty()) {
             return Boolean.TRUE;
         }

@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.thrymr.model.BaseEntity;
-import net.thrymr.model.Site;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -20,16 +19,16 @@ import java.util.List;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "region")
+@Table(name = "mt_region")
 public class MtRegion extends BaseEntity {
 
     @Column(name = "region_name")
     private String regionName;
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "region")
-    private List<MtCountry> mtCountry =new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "region")
+    private List<MtCountry> mtCountry = new ArrayList<>();
 
     @ManyToOne
-    private Site site;
+    private MtSite mtSite;
 
 }

@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.thrymr.enums.SlotShift;
-import net.thrymr.model.Site;
 
 import java.time.LocalTime;
 

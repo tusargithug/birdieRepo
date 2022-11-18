@@ -20,7 +20,7 @@ import net.thrymr.utils.ApiResponse;
 @RequestMapping("/api/v1")
 
 public class LoginController {
-    private final Logger logger = LoggerFactory.getLogger( LoginController.class );
+    private final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
 
     private final LoginService loginService;
@@ -30,50 +30,50 @@ public class LoginController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<ApiResponse> signUpUser(@RequestBody AppUserDto appUserDto){
-        logger.info( "Signup Service Started" );
+    public ResponseEntity<ApiResponse> signUpUser(@RequestBody AppUserDto appUserDto) {
+        logger.info("Signup Service Started");
         ApiResponse apiResponse = loginService.signUpUser(appUserDto);
-        logger.info( "Signup Service Completed" );
-        return new ResponseEntity<>( apiResponse, apiResponse.getStatus() );
+        logger.info("Signup Service Completed");
+        return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse> loginUser(@RequestBody LoginDto loginDto){
-        logger.info( "Login Service Started" );
-        ApiResponse apiResponse=loginService.loginUser(loginDto);
-        logger.info( "Login Service Completed" );
-        return new ResponseEntity<>( apiResponse, apiResponse.getStatus());
+    public ResponseEntity<ApiResponse> loginUser(@RequestBody LoginDto loginDto) {
+        logger.info("Login Service Started");
+        ApiResponse apiResponse = loginService.loginUser(loginDto);
+        logger.info("Login Service Completed");
+        return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
 
     }
 
     @PostMapping("/change-password")
-    public ResponseEntity<ApiResponse> changePassword(@RequestBody ChangePasswordDto changePasswordDto ){
-        logger.info( "Change Password Service Started" );
+    public ResponseEntity<ApiResponse> changePassword(@RequestBody ChangePasswordDto changePasswordDto) {
+        logger.info("Change Password Service Started");
         ApiResponse apiResponse = loginService.changePassword(changePasswordDto);
-        logger.info( "Change Password Service Completed" );
-        return new ResponseEntity<>( apiResponse, apiResponse.getStatus());
+        logger.info("Change Password Service Completed");
+        return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
     }
 
     @PostMapping("/get-otp")
     public ResponseEntity<ApiResponse> getOtp(@RequestBody LoginDto request) {
-        logger.info( "Get Otp Service Started" );
-        ApiResponse apiResponse = loginService.getOtp( request );
-        logger.info( "Get Otp Service Completed" );
-        return new ResponseEntity<>( apiResponse, apiResponse.getStatus() );
+        logger.info("Get Otp Service Started");
+        ApiResponse apiResponse = loginService.getOtp(request);
+        logger.info("Get Otp Service Completed");
+        return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
     }
 
     @GetMapping("/logout")
-    public ApiResponse logoutUser(){
+    public ApiResponse logoutUser() {
         return loginService.logoutUser();
     }
 
     @GetMapping("/logged-in-user")
-    public ApiResponse getLoggedInUser(){
+    public ApiResponse getLoggedInUser() {
         return loginService.getLoggedInUser();
     }
 
     @PostMapping("/update-user")
-    public ApiResponse updateUser(@RequestBody AppUserDto appUserDto){
+    public ApiResponse updateUser(@RequestBody AppUserDto appUserDto) {
         return loginService.updateUser(appUserDto);
     }
 }

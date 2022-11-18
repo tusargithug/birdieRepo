@@ -17,6 +17,6 @@ import javax.persistence.Table;
 @Table(name = "mt_learning_videos")
 public class MtLearningVideos extends BaseEntity {
 
-    @Column(name = "video_reference",columnDefinition = "TEXT")
+    @Column(name = "video_reference", columnDefinition = "TEXT")
     private String videoReference;
 }

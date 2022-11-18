@@ -22,45 +22,51 @@ public class UnitAndChapterController {
     @Autowired
     private UnitAndChapterServices unitAndChapterServices;
 
-    @MutationMapping(name="saveUnit")
+    @MutationMapping(name = "saveUnit")
     public String saveUnit(@Argument(name = "input") UnitDto request) {
         return unitAndChapterServices.saveUnit(request);
     }
 
     @MutationMapping(name = "saveChapter")
-    public String  saveChapter(@Argument(name = "input") ChapterDto request) {
+    public String saveChapter(@Argument(name = "input") ChapterDto request) {
         return unitAndChapterServices.saveChapter(request);
     }
 
-    @MutationMapping(name="updateUnitById")
+    @MutationMapping(name = "updateUnitById")
     public String updateUnitById(@Argument(name = "input") UnitDto unitDto) {
         return unitAndChapterServices.updateUnitById(unitDto);
     }
-    @MutationMapping(name="updateChaptersById")
+
+    @MutationMapping(name = "updateChaptersById")
     public String updateChaptersById(@Argument(name = "input") ChapterDto dto) {
         return unitAndChapterServices.updateChaptersById(dto);
     }
-    @MutationMapping(name="deleteUnitById")
-    public String deleteUnitById(@Argument Long id){
+
+    @MutationMapping(name = "deleteUnitById")
+    public String deleteUnitById(@Argument Long id) {
         return unitAndChapterServices.deleteUnitById(id);
 
     }
-    @MutationMapping(name="deleteChapterById")
-    public String deleteChapterById(@Argument Long id){
+
+    @MutationMapping(name = "deleteChapterById")
+    public String deleteChapterById(@Argument Long id) {
         return unitAndChapterServices.deleteChapterById(id);
     }
+
     @QueryMapping("getAllUnit")
-    public List<Unit> getAllUnit(){
+    public List<Unit> getAllUnit() {
         List<Unit> unitList = unitAndChapterServices.getAllUnit();
         return unitList;
     }
+
     @QueryMapping("getAllChapters")
-    public List<Chapter> getAllChapters(){
+    public List<Chapter> getAllChapters() {
         List<Chapter> chapterList = unitAndChapterServices.getAllChapters();
         return chapterList;
     }
+
     @QueryMapping(name = "getLearnPath")
-    public List<Unit> getLearnPath(@Argument(name = "input")UnitDto unitDto){
+    public List<Unit> getLearnPath(@Argument(name = "input") UnitDto unitDto) {
         List<Unit> unitList = unitAndChapterServices.getLearnPath(unitDto);
         return unitList;
     }

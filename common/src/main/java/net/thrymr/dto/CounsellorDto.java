@@ -23,7 +23,7 @@ public class CounsellorDto {
     private String contactNumber;
     private Long appUserId;
     private Integer pageNumber;
-    private Integer  pageSize;
+    private Integer pageSize;
     private String addedOn;
     private ShiftTimingsDto shiftTimings;
     private SiteDto site;

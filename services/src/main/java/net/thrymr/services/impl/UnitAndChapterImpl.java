@@ -4,7 +4,6 @@ import net.thrymr.dto.ChapterDto;
 import net.thrymr.dto.UnitDto;
 import net.thrymr.model.Chapter;
 import net.thrymr.model.Unit;
-import net.thrymr.model.master.FileEntity;
 import net.thrymr.repository.ChapterRepo;
 import net.thrymr.repository.UnitRpo;
 import net.thrymr.services.UnitAndChapterServices;
@@ -219,6 +218,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         }
         return unit;
     }
+
 
     public UnitDto entityToDto(Unit unit) {
         UnitDto unitDto = new UnitDto();
