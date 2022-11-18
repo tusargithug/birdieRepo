@@ -49,6 +49,8 @@ type Query {
     getAllMoodCheckIn:[UserMoodCheckIn]
     getMoodSourceById(id:ID):MtMoodSource
     getAllMoodSources:[MtMoodSource]
+    getAllGroupDetails:[GroupDetails]
+    getGroupById(id:ID):Groups
 }
 
 type Mutation {
@@ -116,7 +118,7 @@ type Mutation {
     deleteAssessmentId(id:ID):String!
     createAppointment(input:TimeSlotDto):String!
     rescheduledUserAppointment(input:TimeSlotDto):String!
-    saveMiniSession(input:MiniSessionDto):String!
+    createMiniSession(input:MiniSessionDto):String!
     updateMiniSession(input:MiniSessionDto):String!
     deleteMiniSessionById(id:ID!):String!
     createGroup(input:GroupsDto):String!
@@ -126,6 +128,7 @@ type Mutation {
     updateMoodSourceById(input:MoodSourceDto):String!
     deleteMoodSourceById(id:ID!):String!
     updateGroupById(input:GroupsDto):String!
+    saveGroupDetails(input:GroupsDto):String!
 }
 scalar Upload
 
@@ -315,7 +318,7 @@ input VendorDto{
     pageSize:Int
     addedOn:String
     sortBy:String
-    sideId:Int
+    siteId:Int
     email:String
     userName:String
     mobile:String
@@ -341,15 +344,14 @@ type UserAppointment {
 
 type Groups{
     id:ID
-    isActive:Boolean
     groupName:String
-    text:String
     miniSession:MiniSession
     fileDetails:[FileDetails]
 }
 type MiniSession{
     id:ID
-    isActive:Boolean
+    miniSessionName:String
+    tags:[String]
     groupsList:[Groups]
 }
 type FileDetails{
@@ -361,12 +363,32 @@ type FileDetails{
     fileSize:Int
     fileContentType:String
 }
+type GroupDetails{
+    fileId:String
+    Text:String
+    isImage:Boolean
+    isZif:Boolean
+    isPdf:Boolean
+    isVideo:Boolean
+    isAudio:Boolean
+    isEmoji:Boolean
+    isText:Boolean
+    groups:Groups
+}
 input GroupsDto{
     miniSessionId:Int
     groupName:String
+    groupId:ID
     text:String
     tags:[String]
-    isActive:Boolean
+    fileId:String
+    isImage:Boolean
+    isPdf:Boolean
+    isVideo:Boolean
+    isAudio:Boolean
+    isZif:Boolean
+    isText:Boolean
+    isEmoji:Boolean
 }
 input FileDetailsDto{
     id:Int
@@ -390,7 +412,8 @@ scalar Byte
 
 input MiniSessionDto {
     id:Int
-    isActive:Boolean
+    miniSessionName:String
+    tags:[String]
 }
 input MoodInfoDto{
     id:Int

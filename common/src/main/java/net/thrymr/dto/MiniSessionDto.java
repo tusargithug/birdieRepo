@@ -11,5 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 public class MiniSessionDto {
     private Long id;
-    private Boolean isActive;
+    private String miniSessionName;
+    private List<String> tags;
 }

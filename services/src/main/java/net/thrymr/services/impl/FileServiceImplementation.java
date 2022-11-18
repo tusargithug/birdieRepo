@@ -45,8 +45,8 @@ public class FileServiceImplementation implements FileService {
     public String addFile(MultipartFile upload) throws IOException {
         DBObject metadata = new BasicDBObject();
         FileDetails fileEntity = new FileDetails();
-        Groups groups=new Groups();
-        List<FileDetails>  imageList = new ArrayList<>();
+        Groups groups = new Groups();
+        List<FileDetails> imageList = new ArrayList<>();
 
 
         if (upload.getSize() <= 12000000) {
@@ -60,20 +60,19 @@ public class FileServiceImplementation implements FileService {
             FileDocument fileDocument = new FileDocument();
             fileDocument.setFileEntity(fileEntity);
             fileDocumentRepo.save(fileDocument);
-            System.out.println(upload.getContentType());
-            if (Validator.isValid(upload.getContentType()) && Objects.equals(upload.getContentType(), "image/png")|| Objects.equals(upload.getContentType(), "image/jpeg" )) {
+            if (Validator.isValid(upload.getContentType()) && upload.getContentType().contains("image")) {
                 Optional<Groups> optionalGroups = groupRepo.findById(1l);
                 if (optionalGroups.isPresent()) {
                     fileEntity.setGroups(optionalGroups.get());
                 }
             }
-            if (Validator.isValid(upload.getContentType()) && Objects.equals(upload.getContentType(), "application/pdf")) {
+            if (Validator.isValid(upload.getContentType()) && upload.getContentType().contains("pdf") || upload.getContentType().contains("zip")) {
                 Optional<Groups> optionalGroups = groupRepo.findById(2l);
                 if (optionalGroups.isPresent()) {
                     fileEntity.setGroups(optionalGroups.get());
                 }
             }
-            if (Validator.isValid(upload.getContentType()) && Objects.equals(upload.getContentType(), "application/zip")) {
+            if (Validator.isValid(upload.getContentType()) && upload.getContentType().contains("video") || upload.getContentType().contains("audio")) {
                 Optional<Groups> optionalGroups = groupRepo.findById(3l);
                 if (optionalGroups.isPresent()) {
                     fileEntity.setGroups(optionalGroups.get());
@@ -103,7 +102,7 @@ public class FileServiceImplementation implements FileService {
     @Override
     public String deleteFile(String id) {
         FileDocument fileDocument = null;
-        FileDetails fileDetails=null;
+        FileDetails fileDetails = null;
         if (id != null) {
             Optional<FileDocument> optionalFileDocument = fileDocumentRepo.findByFileId(id);
             if (optionalFileDocument.isPresent()) {

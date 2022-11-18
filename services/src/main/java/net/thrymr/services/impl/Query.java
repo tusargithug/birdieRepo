@@ -338,4 +338,14 @@ public class Query implements GraphQLQueryResolver {
         FileDocument loadFile = fileService.downloadFile(id);
         return loadFile;
     }
+
+    @QueryMapping(name = "getAllGroupDetails")
+    public List<GroupDetails> getAllGroupDetails() {
+        return miniSessionService.getAllGroupDetails();
+    }
+
+    @QueryMapping(name="getGroupById")
+    public Groups getGroupById(@Argument Long id) {
+        return miniSessionService.getGroupById(id);
+    }
 }

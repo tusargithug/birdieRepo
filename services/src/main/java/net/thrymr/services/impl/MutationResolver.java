@@ -1,20 +1,14 @@
 package net.thrymr.services.impl;
-        import graphql.kickstart.servlet.context.DefaultGraphQLServletContext;
         import graphql.kickstart.tools.GraphQLMutationResolver;
         import graphql.schema.DataFetchingEnvironment;
         import lombok.extern.slf4j.Slf4j;
-        import net.thrymr.FileDocument;
         import net.thrymr.dto.*;
         import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
         import net.thrymr.dto.slotRequest.TimeSlotDto;
-        import net.thrymr.model.MiniSession;
-        import net.thrymr.model.master.Category;
-        import net.thrymr.model.master.Course;
         import net.thrymr.services.*;
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.graphql.data.method.annotation.Argument;
         import org.springframework.graphql.data.method.annotation.MutationMapping;
-        import org.springframework.graphql.data.method.annotation.QueryMapping;
         import org.springframework.stereotype.Component;
         import org.springframework.web.bind.annotation.RequestParam;
         import org.springframework.web.multipart.MultipartFile;
@@ -22,8 +16,6 @@ package net.thrymr.services.impl;
         import javax.servlet.http.Part;
         import java.io.IOException;
         import java.text.ParseException;
-        import java.util.List;
-        import java.util.UUID;
 
 @Slf4j
 @Component
@@ -425,15 +417,19 @@ public class MutationResolver implements GraphQLMutationResolver {
     public String createGroup(@Argument(name = "input") GroupsDto request) {
         return miniSessionService.createGroup(request);
     }
+    @MutationMapping(name = "saveGroupDetails")
+    public String saveGroupDetails(@Argument(name = "input") GroupsDto request) {
+        return miniSessionService.saveGroupDetails(request);
+    }
 
     @MutationMapping(name = "updateGroupById")
     public String updateGroupById(@Argument(name = "input") GroupsDto request) {
         return miniSessionService.updateGroupById(request);
     }
 
-    @MutationMapping(name = "saveMiniSession")
-    public String saveMiniSession(@Argument(name = "input") MiniSessionDto request) {
-        return miniSessionService.saveMiniSession(request);
+    @MutationMapping(name = "createMiniSession")
+    public String createMiniSession(@Argument(name = "input") MiniSessionDto request) {
+        return miniSessionService.createMiniSession(request);
     }
 
     @MutationMapping(name = "updateMiniSession")
