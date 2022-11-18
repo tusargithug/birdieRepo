@@ -10,8 +10,8 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "file_details")
-public class FileDetails extends BaseEntity {
+@Table(name = "file_entity")
+public class FileEntity extends BaseEntity {
     @Column(name = "file_id")
     private String fileId;
 
@@ -25,8 +25,5 @@ public class FileDetails extends BaseEntity {
 
     @Column(name = "file_content_type")
     private String fileContentType;
-
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private Groups groups;
 
 }

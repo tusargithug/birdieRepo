@@ -1,5 +1,6 @@
 package net.thrymr.services;
 
+import net.thrymr.dto.FileDetailsDto;
 import net.thrymr.dto.GroupsDto;
 import net.thrymr.dto.MiniSessionDto;
 import net.thrymr.model.GroupDetails;
@@ -28,4 +29,6 @@ public interface MiniSessionService {
     List<GroupDetails> getAllGroupDetails();
 
     Groups getGroupById(Long id);
+
+    String saveFileDetails(FileDetailsDto request);
 }

@@ -1,30 +1,21 @@
 package net.thrymr.services.impl;
 
-import net.thrymr.FileDocument;
 import net.thrymr.FileDocumentRepo;
-import net.thrymr.dto.FileDetailsDto;
 
+import net.thrymr.dto.FileDetailsDto;
 import net.thrymr.dto.GroupsDto;
 import net.thrymr.dto.MiniSessionDto;
+
+
 import net.thrymr.enums.FileType;
-
-
-import net.thrymr.model.FileDetails;
-import net.thrymr.model.GroupDetails;
-import net.thrymr.model.Groups;
-import net.thrymr.model.MiniSession;
-import net.thrymr.repository.FileRepo;
-import net.thrymr.repository.GroupDetailsRepo;
-import net.thrymr.repository.GroupRepo;
-import net.thrymr.repository.MiniSessionRepo;
+import net.thrymr.model.*;
+import net.thrymr.repository.*;
 import net.thrymr.services.MiniSessionService;
 import net.thrymr.utils.Validator;
-import org.apache.poi.sl.draw.geom.GuideIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,6 +32,9 @@ public class MiniSessionImpl implements MiniSessionService {
     FileRepo fileRepo;
     @Autowired
     GroupDetailsRepo groupDetailsRepo;
+
+    @Autowired
+    FileDetailsRepo fileDetailsRepo;
     @Override
     public String createMiniSession(MiniSessionDto request) {
         MiniSession miniSession = new MiniSession();
@@ -148,7 +142,7 @@ public class MiniSessionImpl implements MiniSessionService {
             }
         }
         if (Validator.isValid(request.getFileId())) {
-            Optional<FileDetails> optionalFileDetails = fileRepo.findByFileId(request.getFileId());
+            Optional<FileDetails> optionalFileDetails = fileDetailsRepo.findByFileId(request.getFileId());
             if (optionalFileDetails.isPresent()) {
                 groupDetails.setFileId(request.getFileId());
             }
@@ -197,5 +191,35 @@ public class MiniSessionImpl implements MiniSessionService {
             }
         }
         return new Groups();
+    }
+
+    @Override
+    public String saveFileDetails(FileDetailsDto request) {
+        FileDetails fileDetails=new FileDetails();
+        if (Validator.isValid(request.getContentType()) && request.getContentType().equals("IMAGE") || request.getContentType().equals("EMOJI") ) {
+            Optional<Groups> optionalGroups = groupRepo.findById(1l);
+            saveFileDetails(request, fileDetails, optionalGroups);
+        }
+        if (Validator.isValid(request.getContentType()) && request.getContentType().equals("PDF") || request.getContentType().equals("ZIP") || request.getContentType().equals("DOCUMENT")) {
+            Optional<Groups> optionalGroups = groupRepo.findById(2l);
+            saveFileDetails(request, fileDetails, optionalGroups);
+        }
+        if (Validator.isValid(request.getContentType()) && request.getContentType().equals("VIDEO") || request.getContentType().equals("AUDIO")) {
+            Optional<Groups> optionalGroups = groupRepo.findById(3l);
+            saveFileDetails(request, fileDetails, optionalGroups);
+        }
+
+        return "File details saved successfully";
+    }
+
+    private FileDetails saveFileDetails(FileDetailsDto request, FileDetails fileDetails, Optional<Groups> optionalGroups) {
+        if (optionalGroups.isPresent()) {
+            fileDetails.setGroups(optionalGroups.get());
+            fileDetails.setFileId(request.getFileId());
+            fileDetails.setFileName(request.getFileName());
+            fileDetails.setFileContentType(FileType.valueOf(request.getContentType()));
+            fileDetailsRepo.save(fileDetails);
+        }
+        return fileDetails;
     }
 }

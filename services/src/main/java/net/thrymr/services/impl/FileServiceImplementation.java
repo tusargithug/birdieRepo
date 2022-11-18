@@ -5,7 +5,7 @@ import com.mongodb.DBObject;
 import com.mongodb.client.gridfs.model.GridFSFile;
 import net.thrymr.FileDocument;
 import net.thrymr.FileDocumentRepo;
-import net.thrymr.model.FileDetails;
+import net.thrymr.model.FileEntity;
 import net.thrymr.model.Groups;
 import net.thrymr.repository.FileRepo;
 import net.thrymr.repository.GroupRepo;
@@ -17,13 +17,10 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 
 @Service
@@ -44,9 +41,9 @@ public class FileServiceImplementation implements FileService {
     @Override
     public String addFile(MultipartFile upload) throws IOException {
         DBObject metadata = new BasicDBObject();
-        FileDetails fileEntity = new FileDetails();
+        FileEntity fileEntity = new FileEntity();
         Groups groups = new Groups();
-        List<FileDetails> imageList = new ArrayList<>();
+        List<FileEntity> imageList = new ArrayList<>();
 
 
         if (upload.getSize() <= 12000000) {
@@ -60,24 +57,6 @@ public class FileServiceImplementation implements FileService {
             FileDocument fileDocument = new FileDocument();
             fileDocument.setFileEntity(fileEntity);
             fileDocumentRepo.save(fileDocument);
-            if (Validator.isValid(upload.getContentType()) && upload.getContentType().contains("image")) {
-                Optional<Groups> optionalGroups = groupRepo.findById(1l);
-                if (optionalGroups.isPresent()) {
-                    fileEntity.setGroups(optionalGroups.get());
-                }
-            }
-            if (Validator.isValid(upload.getContentType()) && upload.getContentType().contains("pdf") || upload.getContentType().contains("zip")) {
-                Optional<Groups> optionalGroups = groupRepo.findById(2l);
-                if (optionalGroups.isPresent()) {
-                    fileEntity.setGroups(optionalGroups.get());
-                }
-            }
-            if (Validator.isValid(upload.getContentType()) && upload.getContentType().contains("video") || upload.getContentType().contains("audio")) {
-                Optional<Groups> optionalGroups = groupRepo.findById(3l);
-                if (optionalGroups.isPresent()) {
-                    fileEntity.setGroups(optionalGroups.get());
-                }
-            }
             fileRepo.save(fileEntity);
             return "file uploaded successfully file token is: " + fileID.toString();
         }
@@ -102,7 +81,7 @@ public class FileServiceImplementation implements FileService {
     @Override
     public String deleteFile(String id) {
         FileDocument fileDocument = null;
-        FileDetails fileDetails = null;
+        FileEntity fileDetails = null;
         if (id != null) {
             Optional<FileDocument> optionalFileDocument = fileDocumentRepo.findByFileId(id);
             if (optionalFileDocument.isPresent()) {
@@ -111,7 +90,7 @@ public class FileServiceImplementation implements FileService {
                 fileDocument.setIsDeleted(Boolean.TRUE);
                 fileDocumentRepo.save(fileDocument);
             }
-            Optional<FileDetails> optionalFileDetails = fileRepo.findByFileId(id);
+            Optional<FileEntity> optionalFileDetails = fileRepo.findByFileId(id);
             if (optionalFileDocument.isPresent()) {
                 fileDetails = optionalFileDetails.get();
                 fileDetails.setIsActive(Boolean.FALSE);

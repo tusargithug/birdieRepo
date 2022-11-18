@@ -15,7 +15,5 @@ public class FileDetailsDto {
     private Long id;
     private String fileId;
     private String fileName;
-    private String fileType;
-    private Long fileSize;
     private String contentType;
 }
