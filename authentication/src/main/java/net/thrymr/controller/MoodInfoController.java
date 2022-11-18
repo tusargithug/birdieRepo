@@ -1,11 +1,9 @@
 package net.thrymr.controller;
 
 
-import net.thrymr.dto.MoodInfoDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.http.HttpStatus;
@@ -27,23 +25,43 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/mood-info")
 public class MoodInfoController {
-    @Autowired
-    MoodInfoService moodInfoService;
-    @QueryMapping(name = "getMoodInfoById")
-    public MtMoodInfo getMoodInfoById(@Argument Long id) {
-        return moodInfoService.getMoodInfoById(id);
+    private final Logger logger = LoggerFactory.getLogger(MoodInfoController.class);
+
+
+
+
+    private final MoodInfoService moodInfoService;
+
+
+    public MoodInfoController(MoodInfoService moodInfoService) {
+        this.moodInfoService = moodInfoService;
     }
 
-    @MutationMapping(name ="updateMoodInfoById")
-    public String updateMoodInfoById(@Argument(name = "input") MoodInfoDto request){
-        return moodInfoService.updateMoodInfoById(request);
+    // get mood info by id
+    @GetMapping("/get/{id}")
+    public ApiResponse getMoodInfoById(@PathVariable Long id) {
+        logger.info("get  mood info service started");
+        ApiResponse apiResponse=   moodInfoService.getMoodInfoById(id);
+        logger.info("get  mood info completed");
+        return new ApiResponse(HttpStatus.OK,"", apiResponse);
     }
+    // get all mood info
+    @GetMapping("/get/all")
+    public ApiResponse getAllMoodNames() {
+        logger.info("get all mood info service started");
+        ApiResponse apiResponse = moodInfoService.getAllMoods();
+        logger.info("get all mood info service completed");
+        return new ApiResponse(HttpStatus.OK, "All MoodInfo details",apiResponse);
+    }
+
     @MutationMapping(name = "deleteMoodInfoById")
     public String deleteMoodInfoById(@Argument Long id){
         return moodInfoService.deleteMoodInfoById(id);
     }
-    @QueryMapping(name = "getAllMoodInfo")
+
+    @QueryMapping
     public List<MtMoodInfo> getAllMoodInfo() {
+        logger.info("get all mood info service started");
         return moodInfoService.getAllMoodInfo();
     }
 }

@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -487,8 +488,8 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         appUser.setUserName(appUserDto.getUserName());
         appUser.setEmail(appUserDto.getEmail());
         appUser.setEmpId(appUserDto.getEmpId());
-        appUser.setFirstName(appUserDto.getFirstName());
-        appUser.setLastName(appUserDto.getLastName());
+//        appUser.setFirstName(appUserDto.getFirstName());
+//        appUser.setLastName(appUserDto.getLastName());
         appUser.setMobile(appUserDto.getMobile());
         appUser.setRoles(Roles.valueOf(appUserDto.getRoles()));
         appUser.setPassword(appUser.getPassword());
@@ -501,8 +502,8 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         appUserDto.setUserName(appUser.getUserName());
         appUserDto.setEmail(appUser.getEmail());
         appUserDto.setEmpId(appUser.getEmpId());
-        appUserDto.setFirstName(appUser.getFirstName());
-        appUserDto.setLastName(appUser.getLastName());
+//        appUserDto.setFirstName(appUser.getFirstName());
+//        appUserDto.setLastName(appUser.getLastName());
         appUserDto.setRoles(String.valueOf(appUser.getRoles()));
         return appUserDto;
     }
@@ -549,6 +550,16 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         }
 
         return searchKey;
+    }
+
+    @Override
+    public List<AppUser> getAllAppUserByAlerts(AppUserDto request) {
+        List<Roles> appUserList = Arrays.asList(Roles.TEAM_LEADER, Roles.TEAM_MANAGER);
+        if (Validator.isValid(request.getAlerts().name())){
+            return appUserRepo.findAllByAlertsAndRolesIn(request.getAlerts(),appUserList);
+        }
+
+        return new ArrayList<>();
     }
 }
 

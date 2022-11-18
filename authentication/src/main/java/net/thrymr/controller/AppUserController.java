@@ -12,7 +12,6 @@ import net.thrymr.model.AppUser;
 import net.thrymr.services.AppUserService;
 import net.thrymr.services.AssessmentService;
 import net.thrymr.services.RoleService;
-import net.thrymr.utils.ApiResponse;
 
 
 
@@ -20,8 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.graphql.data.method.annotation.*;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
@@ -45,17 +42,8 @@ public class AppUserController {
         this.appUserService = appUserService;
     }
 
-    @GetMapping("/roles")
-    public ApiResponse getAllRoles() {
-        logger.info("get all roles service started");
-        ApiResponse apiResponse = roleService.getAllUserRoles();
-        logger.info("get all roles service completed");
-        return new ApiResponse(HttpStatus.OK, "All Roles", apiResponse);
-    }
-
-
     // get user by id
-    @QueryMapping
+    @QueryMapping("getAppUserById")
     public AppUser getAppUserById(@Argument Long id) {
         return appUserService. getAppUserById(id);
 
@@ -97,5 +85,10 @@ public class AppUserController {
     @QueryMapping(name="getUserAppointmentCountById")
     public UserAppointmentResponse getUserAppointmentCountById(@Argument Long id){
         return appUserService.getUserAppointmentCountById(id);
+    }
+
+    @QueryMapping(name = "getAllAppUserPagination")
+    public List<AppUser> getAllAppUserPagination(@Argument(name = "input") AppUserDto request) {
+        return appUserService.getAllAppUserPagination(request);
     }
 }

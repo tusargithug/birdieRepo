@@ -1,26 +1,17 @@
 package net.thrymr.services.impl;
         import graphql.kickstart.tools.GraphQLQueryResolver;
-        import net.thrymr.FileDocument;
-        import net.thrymr.dto.CounsellorDto;
-        import net.thrymr.dto.SiteDto;
-        import net.thrymr.dto.TeamDto;
-        import net.thrymr.dto.UnitDto;
-        import net.thrymr.dto.VendorDto;
+        import net.thrymr.dto.*;
         import net.thrymr.dto.response.UserAppointmentResponse;
         import net.thrymr.enums.Roles;
         import net.thrymr.model.*;
         import net.thrymr.model.master.*;
-
         import net.thrymr.repository.CategoryRepo;
         import net.thrymr.repository.CourseRepo;
         import net.thrymr.services.*;
-
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.graphql.data.method.annotation.Argument;
         import org.springframework.graphql.data.method.annotation.QueryMapping;
         import org.springframework.stereotype.Component;
-
-        import java.io.IOException;
         import java.text.ParseException;
         import java.util.List;
 
@@ -69,28 +60,21 @@ public class Query implements GraphQLQueryResolver {
     @Autowired
     CourseService courseService;
 
-    @Autowired
-    FileService fileService;
+    @QueryMapping
+    public MtMoodInfo moodInfoById(Long id) {
+        return moodInfoService.moodInfoById(id);
 
-    @Autowired
-    MiniSessionService miniSessionService;
-
-    @QueryMapping(name = "getMoodInfoById")
-    public MtMoodInfo getMoodInfoById(@Argument Long id) {
-        return moodInfoService.getMoodInfoById(id);
     }
 
-    @QueryMapping(name = "getAllMoodInfo")
+    @QueryMapping
     public List<MtMoodInfo> getAllMoodInfo() {
         return moodInfoService.getAllMoodInfo();
+
     }
-    @QueryMapping(name = "getAllMoodCheckIn")
-    public List<UserMoodCheckIn> getAllMoodCheckIn(){
-        return moodIntensityService.getAllMoodCheckIn();
-    }
-    @QueryMapping("getAllMoodIntensity")
-    public List<MtMoodIntensity> getAllMoodIntensity() {
-        return moodIntensityService.getAllMoodIntensity();
+
+    @QueryMapping("getAllMoodIntensities")
+    public List<MtMoodIntensity> getAllMoodIntensities() {
+        return moodIntensityService.getAllMoodIntensities();
     }
 
     //get user by id
@@ -287,18 +271,18 @@ public class Query implements GraphQLQueryResolver {
         return appUserService.getAllEnumRoles();
     }
 
-    @QueryMapping(name = "getMiniSessionById")
-    public MiniSession getMiniSessionById(@Argument Long id) {
-        return miniSessionService.getMiniSessionById(id);
+    @QueryMapping(name="getAllAppUserByAlerts")
+    public List<AppUser> getAllAppUserByAlerts(@Argument(name = "input") AppUserDto request)  {
+        return siteTeamAndShiftTimingsService.getAllAppUserByAlerts(request);
     }
 
-    @QueryMapping(name = "getAllMiniSession")
-    public List<MiniSession> getAllMiniSession() {
-        return miniSessionService.getAllMiniSession();
+    @QueryMapping(name = "getAllAppUserPagination")
+    public List<AppUser> getAllAppUserPagination(@Argument(name = "input") AppUserDto request) {
+        return appUserService.getAllAppUserPagination(request);
     }
-    @QueryMapping(name = "downloads")
-    public FileDocument downloads(@Argument String id) throws IOException {
-        FileDocument loadFile = fileService.downloadFile(id);
-        return loadFile;
+
+    @QueryMapping(name = "getAllMoodIntensitiesByMoodInfoId")
+    public List<MtMoodIntensity> getAllMoodIntensitiesByMoodInfoId(@Argument Long id) {
+        return moodIntensityService.getAllMoodIntensitiesByMoodInfoId(id);
     }
 }

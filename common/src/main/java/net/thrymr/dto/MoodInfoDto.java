@@ -16,6 +16,11 @@ public class MoodInfoDto {
 
     private  Long id;
 
+    private String moodName;
+
+    //TODO dought
+    private List<MoodIntensityDto> intensitiesDto = new ArrayList<>();
+
     private int sequence;
 
     private String moodType;

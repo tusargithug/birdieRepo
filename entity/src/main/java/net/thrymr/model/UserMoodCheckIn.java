@@ -11,10 +11,10 @@ import javax.persistence.*;
 import lombok.NoArgsConstructor;
 import net.thrymr.model.master.MtMoodInfo;
 import net.thrymr.model.master.MtMoodIntensity;
-import net.thrymr.model.master.MtMoodSource;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.thrymr.model.master.MtMoodSource;
 
 @Entity
 @Setter
@@ -32,11 +32,4 @@ public class UserMoodCheckIn extends BaseEntity{
 	private MtMoodIntensity mtMoodIntensity;
 	@Column(name = "description",columnDefinition = "TEXT")
 	private String description;
-	
-
-	
-	
-	
-	
-
 }

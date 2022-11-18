@@ -1,7 +1,6 @@
 package net.thrymr.services.impl;
 
 import net.thrymr.constant.Constants;
-import net.thrymr.dto.response.UserAppointmentResponse;
 import net.thrymr.dto.slotRequest.SlotDetailsDto;
 import net.thrymr.dto.slotRequest.TimeSlotDto;
 import net.thrymr.enums.SlotShift;

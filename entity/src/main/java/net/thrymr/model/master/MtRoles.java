@@ -11,7 +11,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.thrymr.model.AppUser;
 import net.thrymr.model.BaseEntity;
 import net.thrymr.model.RoleModuleInfo;
 
@@ -24,10 +23,6 @@ import net.thrymr.model.RoleModuleInfo;
 public class MtRoles extends BaseEntity {
 
 	private String name;
-
-	@JsonIgnore
-	@OneToMany(mappedBy = "mtRoles",cascade = CascadeType.ALL)
-	private List<AppUser> users = new ArrayList<>();
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "mtRoles", cascade = CascadeType.ALL)

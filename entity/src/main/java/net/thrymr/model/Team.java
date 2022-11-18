@@ -27,8 +27,6 @@ public class Team extends BaseEntity {
     private Site site;
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private ShiftTimings shiftTimings;
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "team")
-    private List<AppUser> appUserList;
     /*@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "team")
     private List<Counsellor> counsellorList;*/
 }

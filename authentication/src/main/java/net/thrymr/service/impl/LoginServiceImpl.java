@@ -64,17 +64,16 @@ public class LoginServiceImpl implements LoginService {
         if (request.getId() != null && request.getId() > 0) {
             appUser = appUserRepo.findById(request.getId()).orElse(new AppUser());
         }
-        appUser.setFirstName(request.getFirstName());
-        appUser.setLastName(request.getLastName());
+//        appUser.setFirstName(request.getFirstName());
+//        appUser.setLastName(request.getLastName());
         appUser.setMobile(request.getMobile());
         appUser.setEmail(request.getEmail());
         appUser.setUserName(request.getUserName());
         appUser.setPassword(new BCryptPasswordEncoder().encode(request.getPassword()));
-        appUser.setAlternateMobile(request.getAlternateMobile());
-        if(request.getRolesDto()!=null){
-            Optional<MtRoles>optionalRoles=rolesRepo.findById(request.getRolesDto().getId());
-            appUser.setMtRoles(optionalRoles.get());
-        }
+//        if(request.getRolesDto()!=null){
+//            Optional<MtRoles>optionalRoles=rolesRepo.findById(request.getRolesDto().getId());
+//            appUser.setMtRoles(optionalRoles.get());
+//        }
 
 
 
