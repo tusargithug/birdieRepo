@@ -1,7 +1,9 @@
 package net.thrymr.services.impl;
+
 import net.thrymr.constant.Constants;
 import net.thrymr.dto.*;
 import net.thrymr.dto.response.UserAppointmentResponse;
+import net.thrymr.enums.Alerts;
 import net.thrymr.enums.Roles;
 import net.thrymr.enums.SlotStatus;
 import net.thrymr.model.*;
@@ -13,6 +15,7 @@ import net.thrymr.utils.ApiResponse;
 import net.thrymr.utils.DateUtils;
 import net.thrymr.utils.Validator;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -32,6 +35,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.persistence.criteria.Predicate;
 import java.io.IOException;
 import java.text.ParseException;
@@ -95,13 +99,14 @@ public class AppUserServiceImpl implements AppUserService {
             if (worksheet.getLastRowNum() < 1) {
                 return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("USERS_IMPORT_FORMAT_INVALID_DATA"));
             }
+            XSSFRow row;
             for (int index = 1; index <= worksheet.getLastRowNum(); index++) {
                 if (index > 0) {
                     try {
-                        XSSFRow row = worksheet.getRow(index);
+                        row = worksheet.getRow(index);
                         AppUser appUser = new AppUser();
                         if (row.getCell(1) != null) {
-                            appUser.setEmail(getCellValue(row.getCell(1)));
+                            appUser.setEmpId(getCellValue(row.getCell(1)));
                         }
                         if (row.getCell(2) != null) {
                             appUser.setUserName(getCellValue(row.getCell(2)));
@@ -110,15 +115,21 @@ public class AppUserServiceImpl implements AppUserService {
                             appUser.setMobile(getCellValue(row.getCell(3)));
                         }
                         if (row.getCell(4) != null) {
-                            appUser.setPassword(getCellValue(row.getCell(4)));
-
+                            appUser.setEmail(getCellValue(row.getCell(4)));
                         }
-//                        if (row.getCell(5) != null) {
-//                            Optional<MtRoles> optionalRoles = roleRepo.findById(Long.valueOf(getCellValue(row.getCell(5))));
-//                            optionalRoles.ifPresent(role -> appUser.setMtRoles(role));
-//                        }
+                        if (row.getCell(5) != null) {
+                            appUser.setDateOfJoining(DateUtils.toFormatStringToDate(getCellValue(row.getCell(5)), Constants.DATE_FORMAT));
+                        }
+
                         if (row.getCell(6) != null) {
-                            appUser.setEmpId(getCellValue(row.getCell(6)));
+                            Optional<Site> optionalSite = siteRepo.findById(Long.valueOf(getCellValue(row.getCell(6))));
+                            optionalSite.ifPresent(appUser::setSite);
+                        }
+                        if (row.getCell(7) != null) {
+                            appUser.setAlerts(Alerts.valueOf(getCellValue(row.getCell(7))));
+                        }
+                        if (row.getCell(8) != null) {
+                            appUser.setRoles(Roles.valueOf(getCellValue(row.getCell(8))));
                         }
                         setUserSearchKey(appUser);
                         appUsers.add(appUser);
@@ -129,7 +140,7 @@ public class AppUserServiceImpl implements AppUserService {
                 }
             }
             if (Validator.isObjectValid(appUsers)) {
-                appUsers = appUserRepo.saveAll(appUsers);
+                appUserRepo.saveAll(appUsers);
                 return new ApiResponse(HttpStatus.OK, environment.getProperty("USER_IMPORT_SUCCESS"), apiResponse);
             }
         } catch (Exception e) {
