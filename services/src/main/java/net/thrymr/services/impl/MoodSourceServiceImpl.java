@@ -20,6 +20,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -33,21 +34,14 @@ import java.util.Optional;
 
 @Service
 public class MoodSourceServiceImpl implements MoodSourceService {
-    private final Logger logger = LoggerFactory.getLogger(MoodSourceServiceImpl.class);
+    Logger logger = LoggerFactory.getLogger(MoodSourceServiceImpl.class);
 
-   private final Environment environment;
-
-    private final MoodSourceRepo moodSourceRepo;
-
-    private final UserMoodSourceCheckInRepo userMoodSourceCheckInRepo;
-
-    public MoodSourceServiceImpl(Environment environment, MoodSourceRepo moodSourceRepo, UserMoodSourceCheckInRepo userMoodSourceCheckInRepo) {
-        this.environment = environment;
-        this.moodSourceRepo = moodSourceRepo;
-        this.userMoodSourceCheckInRepo = userMoodSourceCheckInRepo;
-
-    }
-
+    @Autowired
+    Environment environment;
+    @Autowired
+    MoodSourceRepo moodSourceRepo;
+    @Autowired
+    UserMoodSourceCheckInRepo userMoodSourceCheckInRepo;
 
     @Override
     public ApiResponse addMoodSourceByExcel(MultipartFile file) {
@@ -83,7 +77,7 @@ public class MoodSourceServiceImpl implements MoodSourceService {
                     mtMoodSourceList.add(mtMoodSource);
                     mtMoodSourceList = moodSourceRepo.saveAll(mtMoodSourceList);
                 } catch (Exception e) {
-                    logger.error("Exception{} " , e);
+                    logger.error("Exception{} ", e);
                     return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_SOURCE_IMPORT_FORMAT_FAILED"));
                 }
             }
@@ -94,14 +88,13 @@ public class MoodSourceServiceImpl implements MoodSourceService {
     @Override
     public ApiResponse getAllMoodSources() {
         List<MtMoodSource> mtMoodSourceList = moodSourceRepo.findAll();
-       List<MoodSourceDto> moodSourceDtoList = new ArrayList<>();
-       if (!mtMoodSourceList.isEmpty()) {
-    mtMoodSourceList.forEach(mtMoodSource -> moodSourceDtoList.add(setModelToDto(mtMoodSource)));
-           return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_SOURCE_FOUND"), moodSourceDtoList);
-       }
-       else {
-           return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_SOURCE_NOT_FOUND"), moodSourceDtoList);
-       }
+        List<MoodSourceDto> moodSourceDtoList = new ArrayList<>();
+        if (!mtMoodSourceList.isEmpty()) {
+            mtMoodSourceList.forEach(mtMoodSource -> moodSourceDtoList.add(setModelToDto(mtMoodSource)));
+            return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_SOURCE_FOUND"), moodSourceDtoList);
+        } else {
+            return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_SOURCE_NOT_FOUND"), moodSourceDtoList);
+        }
     }
 
     @Override
@@ -151,26 +144,24 @@ public class MoodSourceServiceImpl implements MoodSourceService {
         moodSourceDto.setSequence(mtMoodSource.getSequence());
         return moodSourceDto;
     }
+
     @Override
     public String createUserMoodSourceCheckIn(MoodSourceIntensityRequestDto request) {
-        //AppUser user= CommonUtil.getAppUser();
-
-        List<MtMoodSource> mtMoodSourceList = moodSourceRepo.findAllByIdIn(request.getSourceIds());
+        List<MtMoodSource> mtMoodSourceList = moodSourceRepo.findAllByIdIn(request.getMoodSourceIdList());
         UserMoodSourceCheckedIn checkedIn = new UserMoodSourceCheckedIn();
-       // checkedIn.setAppUser(user);
         if (!mtMoodSourceList.isEmpty()) {
-            checkedIn.setSources(mtMoodSourceList);
+            checkedIn.setMtMoodSourceList(mtMoodSourceList);
         }
         if (Validator.isValid(request.getDescription())) {
             checkedIn.setDescription(request.getDescription());
         }
         userMoodSourceCheckInRepo.save(checkedIn);
-        return environment.getProperty("MOOD_SOURCE_UPDATED");
+        return "Mood source update successfully";
     }
 
     @Override
     public String deleteUserMoodSourceCheckInById(Long id) {
-        Optional<MtMoodSource> optionalMtMoodSource=moodSourceRepo.findById(id);
+        Optional<MtMoodSource> optionalMtMoodSource = moodSourceRepo.findById(id);
         optionalMtMoodSource.ifPresent(moodSourceRepo::delete);
         return "Source deleted successfully";
     }

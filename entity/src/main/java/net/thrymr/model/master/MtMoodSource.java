@@ -32,6 +32,6 @@ public class MtMoodSource extends BaseEntity{
 	@Enumerated(EnumType.STRING)
 	private Category category;
 	
-	@ManyToMany(mappedBy = "sources")
-	private List<UserMoodSourceCheckedIn> userMoodSourceCheckedIns = new ArrayList<>();
+/*	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	private UserMoodSourceCheckedIn userMoodCheckedIn;*/
 }

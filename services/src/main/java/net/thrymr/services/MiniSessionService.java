@@ -20,4 +20,6 @@ public interface MiniSessionService {
     String createGroup(GroupsDto request);
 
     String updateGroupById(GroupsDto request);
+
+    String saveGroupDetails(GroupsDto request);
 }

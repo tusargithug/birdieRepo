@@ -125,7 +125,9 @@ public class MiniSessionImpl implements MiniSessionService {
             Optional<Groups> optionalGroups=groupRepo.findById(request.getId());
             if(optionalGroups.isPresent()){
                 groups=optionalGroups.get();
-                groups.setGroupName(request.getGroupName());
+                if(Validator.isValid(request.getGroupName())) {
+                    groups.setGroupName(request.getGroupName());
+                }
                 if(request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
                     groups.setIsActive(request.getIsActive());
                 }
@@ -140,6 +142,11 @@ public class MiniSessionImpl implements MiniSessionService {
             }
         }
         return "This id not present in database";
+    }
+
+    @Override
+    public String saveGroupDetails(GroupsDto request) {
+        return null;
     }
 
 

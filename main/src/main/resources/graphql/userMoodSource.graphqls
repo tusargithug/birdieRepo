@@ -2,7 +2,8 @@ input MoodSourceIntensityRequestDto{
  appUserId:Int
  intensityId:Int
  sourceIds:Int
- moodSourceId:Int
+ userSourceCheckedInId:Int
+ moodSourceIdList:[Int]
  moodInfoId:Int
  Description:String
 }

@@ -17,8 +17,6 @@ public interface MoodIntensityService {
 
     List<MtMoodIntensity> getAllMoodIntensities();
 
-    List<MtMoodIntensity> getAllMoodIntensitiesByMoodInfoId(Long id);
-
     String updateMoodIntensity(MoodSourceIntensityRequestDto request);
 
     List<UserMoodCheckIn> getAllMoodCheckIn();

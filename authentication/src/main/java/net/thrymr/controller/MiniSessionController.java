@@ -47,6 +47,11 @@ public class MiniSessionController {
         return miniSessionService.createGroup(request);
     }
 
+    @MutationMapping(name = "saveGroupDetails")
+    public String saveGroupDetails(@Argument(name = "input") GroupsDto request) {
+        return miniSessionService.saveGroupDetails(request);
+    }
+
     @MutationMapping(name = "updateGroupById")
     public String updateGroupById(@Argument(name = "input") GroupsDto request) {
         return miniSessionService.updateGroupById(request);

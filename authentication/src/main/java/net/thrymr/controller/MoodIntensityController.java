@@ -55,10 +55,4 @@ public class MoodIntensityController {
     public String deleteUserMoodCheckInById(@Argument Long id){
         return moodIntensityService.deleteUserMoodCheckInById(id);
     }
-
-    @QueryMapping(name = "getAllMoodIntensitiesByMoodInfoId")
-    public List<MtMoodIntensity> getAllMoodIntensitiesByMoodInfoId(@Argument Long id) {
-        return moodIntensityService.getAllMoodIntensitiesByMoodInfoId(id);
-    }
-
 }

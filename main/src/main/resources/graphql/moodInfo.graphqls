@@ -6,7 +6,7 @@ schema {
 type Query {
     moodInfoById(id: ID): MtMoodInfo
     getAllMoodInfo:[MtMoodInfo]
-    getAllMoodIntensity:[MtMoodIntensity]
+    getAllMoodIntensities:[MtMoodIntensity]
     getAppUserById(id:ID):AppUser
     getAllAppUsers:[AppUser]
     mtRoleById(id:ID):MtRoles
@@ -47,7 +47,6 @@ type Query {
     downloads(id:String):FileDocument
     getMoodInfoById(id:ID):MtMoodInfo
     getAllMoodCheckIn:[UserMoodCheckIn]
-    getAllMoodIntensitiesByMoodInfoId(id:ID):[MtMoodIntensity]
 }
 
 type Mutation {
@@ -122,6 +121,7 @@ type Mutation {
     deleteFiles(id:String):String
     updateMoodInfoById(input:MoodInfoDto):String!
     deleteMoodInfoById(id:ID!):String!
+    updateGroupById(input:GroupsDto):String!
 }
 scalar Upload
 type MtMoodInfo {
@@ -352,6 +352,12 @@ type Groups{
     text:String
     miniSession:MiniSession
     fileDetails:[FileDetails]
+    addFileId:[String]
+    isImage:Boolean
+    isPdf:Boolean
+    isVideo:Boolean
+    isAudio:Boolean
+    isZif:Boolean
 }
 type MiniSession{
     id:ID
@@ -368,11 +374,18 @@ type FileDetails{
     fileContentType:String
 }
 input GroupsDto{
+    id:Int
     miniSessionId:Int
     groupName:String
     text:String
     tags:[String]
     isActive:Boolean
+    addFileId:String
+    isImage:Boolean
+    isPdf:Boolean
+    isVideo:Boolean
+    isAudio:Boolean
+    isZif:Boolean
 }
 input FileDetailsDto{
     id:Int
@@ -417,7 +430,7 @@ type UserMoodCheckIn{
 
     mtMoodInfo:MtMoodInfo
 
-    mtMoodSource:MtMoodSource
+    userMoodSourceCheckedIn:UserMoodSourceCheckedIn
 
     mtMoodIntensity:MtMoodIntensity
 
@@ -429,7 +442,6 @@ type MtMoodSource{
     emoji:String
     sequence:Int
     category:CategoryType
-    userMoodSourceCheckedIns:[UserMoodSourceCheckedIn]
 }
 enum CategoryType{
     WORK
@@ -439,6 +451,6 @@ enum CategoryType{
 }
 type UserMoodSourceCheckedIn{
     appUser:AppUser
-    sources:[MtMoodSource]
+    mtMoodSourceList:[MtMoodSource ]
     description:String
 }
