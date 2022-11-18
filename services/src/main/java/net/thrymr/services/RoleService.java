@@ -9,9 +9,7 @@ import java.util.List;
 
 public interface RoleService {
 
-ApiResponse saveRole();
- ApiResponse getAllUserRoles();
-
+   ApiResponse saveRole();
 
     MtRoles mtRoleById(Long id);
 

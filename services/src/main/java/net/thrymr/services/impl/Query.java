@@ -5,11 +5,9 @@ package net.thrymr.services.impl;
         import net.thrymr.enums.Roles;
         import net.thrymr.model.*;
         import net.thrymr.model.master.*;
-
         import net.thrymr.repository.CategoryRepo;
         import net.thrymr.repository.CourseRepo;
         import net.thrymr.services.*;
-
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.graphql.data.method.annotation.Argument;
         import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -88,7 +86,7 @@ public class Query implements GraphQLQueryResolver {
 
     // get all Users
     @QueryMapping("getAllAppUsers")
-    public List<AppUser> getAllAppUsers() {
+    public List<AppUser> getAllAppUsers() throws ParseException {
         return appUserService.getAllAppUsers();
 
     }

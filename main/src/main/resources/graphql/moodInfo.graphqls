@@ -159,22 +159,18 @@ type UserAppointmentResponse{
 
 input AppUserDto{
     id:Int
-    firstName:String
-    lastName:String
     userName:String
     email:String
     mobile:String
-    alternateMobile:String
     empId:String
     roles:String
     siteId:Int
-    shiftTimingsId:Int
     teamId:Int
     isActive:Boolean
     dateOfJoining:String
     alerts:String
     pageSize:Int
-   pageNumber:Int
+    pageNumber:Int
     counsellorId:Int
 }
 enum Roles{
@@ -193,20 +189,14 @@ enum Roles{
 
 type AppUser{
     id:ID!
-    firstName:String
-    lastName:String
     email:String
     userName:String
     mobile:String
-    alternateMobile:String
     empId:String
     roles:Roles
     site:Site
-    team:Team
-    shiftTimings:ShiftTimings
-    isActive:Boolean
     dateOfJoining:Date
-    alerts:String
+    alerts:Alerts
 }
 
 type FileEntity{
@@ -223,7 +213,7 @@ type ShiftTimings{
     site:Site
     shiftStatAt:LocalTime
     shiftEndAt:LocalTime
-    team:Team
+    team:[Team]
     isActive:Boolean
 }
 input ShiftTimingsDto{
@@ -259,7 +249,6 @@ type Counsellor{
 }
 scalar LocalTime
 scalar Date
-
 
 enum SlotShift{
     MORNING

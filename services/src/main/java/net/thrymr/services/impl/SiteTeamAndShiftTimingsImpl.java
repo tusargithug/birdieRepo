@@ -488,8 +488,8 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         appUser.setUserName(appUserDto.getUserName());
         appUser.setEmail(appUserDto.getEmail());
         appUser.setEmpId(appUserDto.getEmpId());
-        appUser.setFirstName(appUserDto.getFirstName());
-        appUser.setLastName(appUserDto.getLastName());
+//        appUser.setFirstName(appUserDto.getFirstName());
+//        appUser.setLastName(appUserDto.getLastName());
         appUser.setMobile(appUserDto.getMobile());
         appUser.setRoles(Roles.valueOf(appUserDto.getRoles()));
         appUser.setPassword(appUser.getPassword());
@@ -502,8 +502,8 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         appUserDto.setUserName(appUser.getUserName());
         appUserDto.setEmail(appUser.getEmail());
         appUserDto.setEmpId(appUser.getEmpId());
-        appUserDto.setFirstName(appUser.getFirstName());
-        appUserDto.setLastName(appUser.getLastName());
+//        appUserDto.setFirstName(appUser.getFirstName());
+//        appUserDto.setLastName(appUser.getLastName());
         appUserDto.setRoles(String.valueOf(appUser.getRoles()));
         return appUserDto;
     }

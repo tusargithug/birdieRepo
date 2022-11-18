@@ -24,8 +24,6 @@ public class ShiftTimings extends BaseEntity {
     private LocalTime shiftEndAt;
     @OneToMany(cascade=CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "shiftTimings")
     private List<Team> team;
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "shiftTimings")
-    private List<AppUser> appUser=new ArrayList<>();
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private Counsellor counsellors;
 }

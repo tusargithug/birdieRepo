@@ -56,13 +56,6 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public ApiResponse getAllUserRoles() {
-        List<MtRoles> mtRolesList = roleRepo.findAll();
-        List<String> rolesString = mtRolesList.stream().map(MtRoles::getName).collect(Collectors.toList());
-        return new ApiResponse(HttpStatus.OK, environment.getProperty("ROLES_FOUND"), rolesString);
-    }
-
-    @Override
     public List<MtRoles> getAllMtRoles() {
         return roleRepo.findAll();
     }

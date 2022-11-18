@@ -55,24 +55,24 @@ public class CounsellorImpl implements CounsellorService {
         if (Validator.isValid(request.getEmailId())) {
             user.setEmail(request.getEmailId());
         }
-        if (Validator.isValid(request.getTeamId())) {
-            Optional<Team> optionalTeam = teamRepo.findById(request.getTeamId());
-            if (optionalTeam.isPresent()) {
-                user.setTeam(optionalTeam.get());
-            }
-        }
+//        if (Validator.isValid(request.getTeamId())) {
+//            Optional<Team> optionalTeam = teamRepo.findById(request.getTeamId());
+//            if (optionalTeam.isPresent()) {
+//                user.setTeam(optionalTeam.get());
+//            }
+//        }
         if (Validator.isValid(request.getSiteId())) {
             Optional<Site> optionalSite = siteRepo.findById(request.getSiteId());
             if (optionalSite.isPresent()) {
                 user.setSite(optionalSite.get());
             }
         }
-        if (Validator.isValid(request.getShiftTimingsId())) {
-            Optional<ShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(request.getShiftTimingsId());
-            if (optionalShiftTimings.isPresent()) {
-                user.setShiftTimings(optionalShiftTimings.get());
-            }
-        }
+//        if (Validator.isValid(request.getShiftTimingsId())) {
+//            Optional<ShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(request.getShiftTimingsId());
+//            if (optionalShiftTimings.isPresent()) {
+//                user.setShiftTimings(optionalShiftTimings.get());
+//            }
+//        }
         counsellor.setAppUser(user);
 
         //Team_Manager
@@ -139,24 +139,24 @@ public class CounsellorImpl implements CounsellorService {
                     if (Validator.isValid(request.getEmailId())) {
                         user.setEmail(request.getEmailId());
                     }
-                    if (Validator.isValid(request.getTeamId())) {
-                        Optional<Team> optionalTeam = teamRepo.findById(request.getTeamId());
-                        if (optionalTeam.isPresent()) {
-                            user.setTeam(optionalTeam.get());
-                        }
-                    }
+//                    if (Validator.isValid(request.getTeamId())) {
+//                        Optional<Team> optionalTeam = teamRepo.findById(request.getTeamId());
+//                        if (optionalTeam.isPresent()) {
+//                            user.setTeam(optionalTeam.get());
+//                        }
+//                    }
                     if (Validator.isValid(request.getSiteId())) {
                         Optional<Site> optionalSite = siteRepo.findById(request.getSiteId());
                         if (optionalSite.isPresent()) {
                             user.setSite(optionalSite.get());
                         }
                     }
-                    if (Validator.isValid(request.getShiftTimingsId())) {
-                        Optional<ShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(request.getShiftTimingsId());
-                        if (optionalShiftTimings.isPresent()) {
-                            user.setShiftTimings(optionalShiftTimings.get());
-                        }
-                    }
+//                    if (Validator.isValid(request.getShiftTimingsId())) {
+//                        Optional<ShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(request.getShiftTimingsId());
+//                        if (optionalShiftTimings.isPresent()) {
+//                            user.setShiftTimings(optionalShiftTimings.get());
+//                        }
+//                    }
                 }
             }
             if (Validator.isObjectValid(user)) {
@@ -184,7 +184,7 @@ public class CounsellorImpl implements CounsellorService {
     @Override
     public String deleteCounsellorById(Long id) {
         Optional<Counsellor> optionalCounsellor = counsellorRepo.findById(id);
-        Counsellor counsellor = null;
+        Counsellor counsellor;
         if (optionalCounsellor.isPresent()) {
             counsellor = optionalCounsellor.get();
             counsellor.setIsDeleted(Boolean.TRUE);
