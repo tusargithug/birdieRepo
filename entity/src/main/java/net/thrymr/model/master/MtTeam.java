@@ -29,7 +29,7 @@ public class MtTeam extends BaseEntity {
     private MtSite mtSite;
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private MtShiftTimings mtShiftTimings;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,mappedBy = "mtTeam")
     private List<AppUser> appUserList;
     /*@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "team")
     private List<Counsellor> counsellorList;*/

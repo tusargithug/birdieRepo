@@ -426,6 +426,11 @@ public class MutationResolver implements GraphQLMutationResolver {
         return miniSessionService.createGroup(request);
     }
 
+    @MutationMapping(name = "updateGroupById")
+    public String updateGroupById(@Argument(name = "input") GroupsDto request) {
+        return miniSessionService.updateGroupById(request);
+    }
+
     @MutationMapping(name = "saveMiniSession")
     public String saveMiniSession(@Argument(name = "input") MiniSessionDto request) {
         return miniSessionService.saveMiniSession(request);

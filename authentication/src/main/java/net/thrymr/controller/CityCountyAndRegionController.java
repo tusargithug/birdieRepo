@@ -1,33 +1,20 @@
 package net.thrymr.controller;
 
-import graphql.kickstart.servlet.context.DefaultGraphQLServletContext;
-import graphql.schema.DataFetchingEnvironment;
 import net.thrymr.dto.*;
-import net.thrymr.model.Chapter;
-import net.thrymr.model.Unit;
 import net.thrymr.model.master.MtCity;
 import net.thrymr.model.master.MtCountry;
 import net.thrymr.model.master.MtRegion;
 import net.thrymr.services.CityCountyAndRegionService;
-import net.thrymr.utils.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.graphql.data.GraphQlRepository;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Part;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1")

@@ -173,13 +173,13 @@ type MtCity{
     mtSites:[MtSite]
     isActive:Boolean
 }
-type Chapter{
+type MtChapter{
     id:ID!
     chapterName:String
     profilePicture:String
     description:String
     video:String
-    unit:Unit
+    mtUnit:MtUnit
     isActive:Boolean
 }
 type MtOptions{
@@ -253,10 +253,10 @@ type PsychometricTestOption{
     isActive:Boolean
 }
 
-type Unit{
+type MtUnit{
     id:ID!
     unitName:String
-    chapters:[Chapter]
+    mtChapters:[MtChapter]
     isActive:Boolean
 }
 

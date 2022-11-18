@@ -19,6 +19,7 @@ import net.thrymr.services.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Component;
 
@@ -182,20 +183,20 @@ public class Query implements GraphQLQueryResolver {
     }
 
     @QueryMapping("getAllUnit")
-    public List<Unit> getAllUnit() {
-        List<Unit> unitList = unitAndChapterServices.getAllUnit();
+    public List<MtUnit> getAllUnit() {
+        List<MtUnit> unitList = unitAndChapterServices.getAllUnit();
         return unitList;
     }
 
     @QueryMapping("getAllChapters")
-    public List<Chapter> getAllChapters() {
-        List<Chapter> chapterList = unitAndChapterServices.getAllChapters();
-        return chapterList;
+    public List<MtChapter> getAllChapters() {
+        List<MtChapter> mtChapterList = unitAndChapterServices.getAllChapters();
+        return mtChapterList;
     }
 
     @QueryMapping("getLearnPath")
-    public List<Unit> getLearnPath(UnitDto unitDto) {
-        List<Unit> unitList = unitAndChapterServices.getLearnPath(unitDto);
+    public List<MtUnit> getLearnPath(UnitDto unitDto) {
+        List<MtUnit> unitList = unitAndChapterServices.getLearnPath(unitDto);
         return unitList;
     }
 

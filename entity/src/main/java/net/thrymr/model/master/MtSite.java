@@ -27,7 +27,7 @@ public class MtSite extends BaseEntity {
     private MtRegion region;
     @OneToOne(cascade = CascadeType.ALL)
     private AppUser siteManager;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,mappedBy = "mtSite")
     private List<MtTeam> mtTeams = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "mtSite")
     private List<AppUser> appUser;

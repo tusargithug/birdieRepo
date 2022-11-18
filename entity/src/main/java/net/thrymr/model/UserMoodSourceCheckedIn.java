@@ -16,7 +16,6 @@ import java.util.List;
 @Table(name = "user_mood_source_checked_in")
 public class UserMoodSourceCheckedIn extends BaseEntity {
 
-
     @ManyToOne
     private AppUser appUser;
 

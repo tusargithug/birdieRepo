@@ -1,17 +1,15 @@
 package net.thrymr.controller;
 
 import net.thrymr.dto.*;
-import net.thrymr.model.Chapter;
-import net.thrymr.model.Unit;
+import net.thrymr.model.master.MtChapter;
+import net.thrymr.model.master.MtUnit;
 import net.thrymr.services.UnitAndChapterServices;
-import net.thrymr.utils.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -54,20 +52,20 @@ public class UnitAndChapterController {
     }
 
     @QueryMapping("getAllUnit")
-    public List<Unit> getAllUnit() {
-        List<Unit> unitList = unitAndChapterServices.getAllUnit();
+    public List<MtUnit> getAllUnit() {
+        List<MtUnit> unitList = unitAndChapterServices.getAllUnit();
         return unitList;
     }
 
     @QueryMapping("getAllChapters")
-    public List<Chapter> getAllChapters() {
-        List<Chapter> chapterList = unitAndChapterServices.getAllChapters();
-        return chapterList;
+    public List<MtChapter> getAllChapters() {
+        List<MtChapter> mtChapterList = unitAndChapterServices.getAllChapters();
+        return mtChapterList;
     }
 
     @QueryMapping(name = "getLearnPath")
-    public List<Unit> getLearnPath(@Argument(name = "input") UnitDto unitDto) {
-        List<Unit> unitList = unitAndChapterServices.getLearnPath(unitDto);
+    public List<MtUnit> getLearnPath(@Argument(name = "input") UnitDto unitDto) {
+        List<MtUnit> unitList = unitAndChapterServices.getLearnPath(unitDto);
         return unitList;
     }
 }

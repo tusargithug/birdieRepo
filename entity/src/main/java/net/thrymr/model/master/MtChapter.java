@@ -1,10 +1,10 @@
-package net.thrymr.model;
+package net.thrymr.model.master;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.thrymr.model.master.FileEntity;
+import net.thrymr.model.BaseEntity;
 
 import javax.persistence.*;
 
@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @Entity
-public class Chapter extends BaseEntity {
+public class MtChapter extends BaseEntity {
 
     @Column(name = "chapter_name")
     private String chapterName;
@@ -22,5 +22,5 @@ public class Chapter extends BaseEntity {
     private String video;//tutorial
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    private Unit unit;
+    private MtUnit mtUnit;
 }

@@ -13,9 +13,9 @@ type Query {
     getAllMtRoles:[MtRoles]
     getAllCategory:[Category]
     getAllCourse:[Course]
-    getAllUnit:[Unit]
-    getAllChapters:[Chapter]
-    getLearnPath(input:UnitDto):[Unit]
+    getAllUnit:[MtUnit]
+    getAllChapters:[MtChapter]
+    getLearnPath(input:UnitDto):[MtUnit]
     getAllSitePagination(input:SiteDto):[MtSite]
     getAllTeamPagination(input:TeamDto):[MtTeam]
     getAllSite:[MtSite]
@@ -27,9 +27,9 @@ type Query {
     getAllShiftTimings:[MtShiftTimings]
     getCounsellorSlotById(id:ID!):CounsellorSlot
     getAllCounsellor(input:CounsellorDto):[MtCounsellor]
-    getAllVendor:[Vendor]
-    getVendorById(id:ID):Vendor
-    getAllVendorPagination(input:VendorDto):[Vendor]
+    getAllVendor:[MtVendor]
+    getVendorById(id:ID):MtVendor
+    getAllVendorPagination(input:VendorDto):[MtVendor]
     getAllAssessment:[MtAssessment]
     getAssessmentById(id:ID!):MtAssessment
     getQuestionById(id:ID!):MtQuestion
@@ -128,15 +128,6 @@ type Mutation {
     updateGroupById(input:GroupsDto):String!
 }
 scalar Upload
-type MtMoodInfo {
-    id: ID!
-    name: String
-    emoji:String
-    description:String!
-    intensities:[MtMoodIntensity]
-    isActive:Boolean
-    intensityName:String
-}
 
 type MtMoodIntensity{
     name:String
@@ -145,7 +136,6 @@ type MtMoodIntensity{
     mtMoodInfo:MtMoodInfo
     sequence:Int
     score:Float
-    userMoodCheckIns:[UserMoodCheckIn]
 }
 
 type MtRoles{
@@ -311,7 +301,7 @@ input CounsellorDto {
     isActive:Boolean
 }
 
-type Vendor{
+type MtVendor{
     id:ID!
     POC:String
     appUser:AppUser
@@ -441,7 +431,6 @@ type MtMoodSource{
     emoji:String
     sequence:Int
     category:CategoryType
-    userMoodSourceCheckedIns:[UserMoodSourceCheckedIn]
 }
 enum CategoryType{
     WORK
@@ -451,7 +440,7 @@ enum CategoryType{
 }
 type UserMoodSourceCheckedIn{
     appUser:AppUser
-    sources:[MtMoodSource]
+    mtMoodSourceList:[MtMoodSource]
     description:String
 }
 

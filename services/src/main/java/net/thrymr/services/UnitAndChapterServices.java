@@ -2,8 +2,8 @@ package net.thrymr.services;
 
 import net.thrymr.dto.ChapterDto;
 import net.thrymr.dto.UnitDto;
-import net.thrymr.model.Chapter;
-import net.thrymr.model.Unit;
+import net.thrymr.model.master.MtChapter;
+import net.thrymr.model.master.MtUnit;
 
 import java.util.List;
 
@@ -12,10 +12,10 @@ public interface UnitAndChapterServices {
 
     String updateUnitById(UnitDto unitDto);
 
-    List<Unit> getAllUnit();
+    List<MtUnit> getAllUnit();
 
 
-    List<Unit> getLearnPath(UnitDto unitDto);
+    List<MtUnit> getLearnPath(UnitDto unitDto);
 
     String deleteUnitById(Long id);
 
@@ -23,9 +23,9 @@ public interface UnitAndChapterServices {
 
     String updateChaptersById(ChapterDto dto);
 
-    List<Chapter> getAllChapters();
+    List<MtChapter> getAllChapters();
 
     String deleteChapterById(Long id);
 
-    List<Chapter> getAllChapterPagination(ChapterDto chapterDto);
+    List<MtChapter> getAllChapterPagination(ChapterDto chapterDto);
 }

@@ -32,6 +32,4 @@ public class MtMoodSource extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Category category;
 
-/*	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-	private UserMoodSourceCheckedIn userMoodCheckedIn;*/
 }
