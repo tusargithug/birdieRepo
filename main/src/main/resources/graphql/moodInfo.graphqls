@@ -316,7 +316,7 @@ input VendorDto{
     pageSize:Int
     addedOn:String
     sortBy:String
-    sideId:Int
+    siteId:Int
     email:String
     userName:String
     mobile:String
