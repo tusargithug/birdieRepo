@@ -46,6 +46,9 @@ public class FileServiceImplementation implements FileService {
     public String addFile(MultipartFile upload) throws IOException {
         DBObject metadata = new BasicDBObject();
         FileEntity fileEntity = new FileEntity();
+        Groups groups = new Groups();
+        List<FileEntity> imageList = new ArrayList<>();
+
 
         if (upload.getSize() <= 12000000) {
             metadata.put("fileSize", upload.getSize());
@@ -57,7 +60,6 @@ public class FileServiceImplementation implements FileService {
             FileDocument fileDocument = new FileDocument();
             fileDocument.setFileEntity(fileEntity);
             fileDocumentRepo.save(fileDocument);
-            System.out.println(upload.getContentType());
             fileRepo.save(fileEntity);
             return "file uploaded successfully file token is: " + fileID.toString();
         }
@@ -82,7 +84,7 @@ public class FileServiceImplementation implements FileService {
     @Override
     public String deleteFile(String id) {
         FileDocument fileDocument = null;
-        FileDetails fileDetails=null;
+        FileEntity fileDetails=null;
         if (id != null) {
             Optional<FileDocument> optionalFileDocument = fileDocumentRepo.findByFileId(id);
             if (optionalFileDocument.isPresent()) {
@@ -91,7 +93,7 @@ public class FileServiceImplementation implements FileService {
                 fileDocument.setIsDeleted(Boolean.TRUE);
                 fileDocumentRepo.save(fileDocument);
             }
-            Optional<FileDetails> optionalFileDetails = fileRepo.findByFileId(id);
+            Optional<FileEntity> optionalFileDetails = fileRepo.findByFileId(id);
             if (optionalFileDocument.isPresent()) {
                 fileDetails = optionalFileDetails.get();
                 fileDetails.setIsActive(Boolean.FALSE);

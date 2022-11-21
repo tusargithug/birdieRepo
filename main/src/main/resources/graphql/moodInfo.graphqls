@@ -3,7 +3,6 @@ schema {
     mutation: Mutation
 }
 
-
 type Query {
     moodInfoById(id: ID): MtMoodInfo
     getAllMoodInfo:[MtMoodInfo]
@@ -25,12 +24,12 @@ type Query {
     getAllCities:[MtCity]
     getAllRegions:[MtRegion]
     getCounsellorSlot:[CounsellorSlot]
-    getAllShiftTimings:[MtShiftTimings]
+    getAllShiftTimings:[ShiftTimings]
     getCounsellorSlotById(id:ID!):CounsellorSlot
-    getAllCounsellor(input:CounsellorDto):[MtCounsellor]
-    getAllVendor:[MtVendor]
-    getVendorById(id:ID):MtVendor
-    getAllVendorPagination(input:VendorDto):[MtVendor]
+    getAllCounsellor(input:CounsellorDto):[Counsellor]
+    getAllVendor:[Vendor]
+    getVendorById(id:ID):Vendor
+    getAllVendorPagination(input:VendorDto):[Vendor]
     getAllAssessment:[MtAssessment]
     getAssessmentById(id:ID!):MtAssessment
     getQuestionById(id:ID!):MtQuestion
@@ -41,7 +40,7 @@ type Query {
     getAppointmentById(id:ID):UserAppointment
     getUserAppointmentCountById(id:ID):UserAppointmentResponse
     getAllAppointment:[UserAppointment]
-    getCounsellorById(id:ID):MtCounsellor
+    getCounsellorById(id:ID):Counsellor
     getAllEnumRoles:[Roles]
     getMiniSessionById(id:ID!):MiniSession
     getAllMiniSession:[MiniSession]
@@ -134,8 +133,16 @@ type Mutation {
     uploadFile(file: Upload): String!
 }
 
-
 scalar Upload
+type MtMoodInfo {
+    id: ID!
+    name: String
+    emoji:String
+    description:String!
+    intensities:[MtMoodIntensity]
+    isActive:Boolean
+    intensityName:String
+}
 
 type MtMoodIntensity{
     name:String
@@ -162,16 +169,12 @@ type UserAppointmentResponse{
 
 input AppUserDto{
     id:Int
-    firstName:String
-    lastName:String
     userName:String
     email:String
     mobile:String
-    alternateMobile:String
     empId:String
     roles:String
     siteId:Int
-    shiftTimingsId:Int
     teamId:Int
     isActive:Boolean
     dateOfJoining:String
@@ -179,6 +182,7 @@ input AppUserDto{
     pageSize:Int
     pageNumber:Int
     counsellorId:Int
+    fromAtoZ:Boolean
 }
 enum Roles{
     NONE
@@ -197,29 +201,31 @@ enum Roles{
 
 type AppUser{
     id:ID!
-    firstName:String
-    lastName:String
     email:String
     userName:String
     mobile:String
-    alternateMobile:String
     empId:String
     roles:Roles
-    mtSite:Site
-    mtTeam:Team
-    mtShiftTimings:MtShiftTimings
-    isActive:Boolean
-    dateOfJoining:Date
-    alerts:String
+    site:Site
+    dateOfJoining:String
+    alerts:Alerts
 }
 
-type MtShiftTimings{
+type FileEntity{
+    fileId:ID!
+    contentType:String!
+    name:String!
+    fileType:String!
+    employees:[Course]
+}
+
+type ShiftTimings{
     id: ID!
     shiftName:String
-    mtSite:Site
+    site:Site
     shiftStatAt:LocalTime
     shiftEndAt:LocalTime
-    mtTeam:Team
+    team:[Team]
     isActive:Boolean
 }
 input ShiftTimingsDto{
@@ -234,7 +240,7 @@ input ShiftTimingsDto{
 }
 type CounsellorSlot{
     id: ID!
-    mtCounsellor:MtCounsellor
+    counsellor:Counsellor
     startTime:LocalTime
     endTime:LocalTime
     slotDt:Date
@@ -243,11 +249,11 @@ type CounsellorSlot{
     slotStatus:SlotStatus
     isActive:Boolean
 }
-type MtCounsellor{
+type Counsellor{
     id:Int
     appUser:AppUser
     counsellorSlots:[CounsellorSlot]
-    mtShiftTimings:[MtShiftTimings]
+    shiftTimings:[ShiftTimings]
     educationalDetails:[String]
     languages:[String]
     bio:String
@@ -255,7 +261,6 @@ type MtCounsellor{
 }
 scalar LocalTime
 scalar Date
-
 
 enum SlotShift{
     MORNING
@@ -303,13 +308,13 @@ input CounsellorDto {
     pageNumber:Int
     pageSize:Int
     addedOn:String
-    mtShiftTimings: ShiftTimingsDto
-    mtSite:SiteDto
-    mtTeam:TeamDto
+    shiftTimings: ShiftTimingsDto
+    site:SiteDto
+    team:TeamDto
     isActive:Boolean
 }
 
-type MtVendor{
+type Vendor{
     id:ID!
     POC:String
     appUser:AppUser
@@ -342,7 +347,7 @@ type UserAppointment {
     days:DayOfWeek
     slotStatus:SlotStatus
     appUser:AppUser
-    counsellor:MtCounsellor
+    counsellor:Counsellor
     isCurrentAppointment:Boolean
     isActive:Boolean
 }
@@ -350,16 +355,14 @@ type UserAppointment {
 type Groups{
     id:ID
     groupName:String
+    groupDetailsList:[GroupDetails]
     miniSession:MiniSession
     fileDetails:[FileDetails]
 }
 type MiniSession{
     id:ID
-    miniSessionName:String
-    tags:[String]
-    groupsList:[Groups]
-    createdOn:String
     isActive:Boolean
+    groupsList:[Groups]
 }
 type FileDetails{
     id:ID
@@ -368,55 +371,25 @@ type FileDetails{
     fileName:String
     fileContentType:String
 }
-type GroupDetails{
-    fileId:String
-    Text:String
-    isImage:Boolean
-    isZif:Boolean
-    isPdf:Boolean
-    isVideo:Boolean
-    isAudio:Boolean
-    isEmoji:Boolean
-    isText:Boolean
-    groups:Groups
-}
 input GroupsDto{
     miniSessionId:Int
     groupName:String
-    groupId:ID
     text:String
     tags:[String]
-    fileId:String
-    isImage:Boolean
-    isPdf:Boolean
-    isVideo:Boolean
-    isAudio:Boolean
-    isZif:Boolean
-    isText:Boolean
-    isEmoji:Boolean
+    isActive:Boolean
 }
 input FileDetailsDto{
     id:Int
     fileId:String
     fileName:String
+    fileType:String
+    fileSize:Int
     contentType:String
 }
 
-type FileDocument{
-    fileId:String
-    fileName:String
-    fileContentType:String
-    fileSizeInBytes:String
-    fileType:String
-    publicUrl:String
-    file:Byte
-}
-scalar Byte
-
 input MiniSessionDto {
     id:Int
-    miniSessionName:String
-    tags:[String]
+    isActive:Boolean
 }
 input MoodInfoDto{
     id:Int
@@ -425,14 +398,7 @@ input MoodInfoDto{
     intensityName:String
     emoji:String
 }
-type MtMoodInfo{
-    name:String
-    emoji:String
-    intensities:[MtMoodIntensity]
-    sequence:Int
-    moodType:MoodType
-    intensityName:String
-}
+
 enum MoodType{
     POSITIVE
     NEGATIVE
@@ -442,13 +408,9 @@ enum MoodType{
 
 type UserMoodCheckIn{
     appUser:AppUser
-
     mtMoodInfo:MtMoodInfo
-
     userMoodSourceCheckedIn:UserMoodSourceCheckedIn
-
     mtMoodIntensity:MtMoodIntensity
-
     description:String
 }
 type MtMoodSource{
@@ -469,7 +431,6 @@ type UserMoodSourceCheckedIn{
     mtMoodSourceList:[MtMoodSource]
     description:String
 }
-
 input MoodSourceDto{
     id:Int
     sequence:Int
@@ -477,4 +438,28 @@ input MoodSourceDto{
     description:String
     emoji:String
     category:String
+}
+
+type FileDocument{
+    fileId:String
+    fileName:String
+    fileContentType:String
+    fileSizeInBytes:String
+    fileType:String
+    publicUrl:String
+    file:Byte
+}
+scalar  Byte
+
+type GroupDetails{
+    fileId:String
+    Text:String
+    isImage:Boolean
+    isZif:Boolean
+    isPdf:Boolean
+    isVideo:Boolean
+    isAudio:Boolean
+    isEmoji:Boolean
+    isText:Boolean
+    groups:Groups
 }

@@ -2,6 +2,7 @@ package net.thrymr;
 
 import lombok.*;
 import net.thrymr.model.FileDetails;
+import net.thrymr.model.FileEntity;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
@@ -24,5 +25,5 @@ public class FileDocument extends BaseDocument {
 
     private byte[] file;
 
-    private FileDetails fileEntity;
+    private FileEntity fileEntity;
 }
