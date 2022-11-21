@@ -20,16 +20,15 @@ import net.thrymr.model.master.MtMoodSource;
 @Setter
 @Getter
 @NoArgsConstructor
-public class UserMoodCheckIn extends BaseEntity{
-
-	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+public class UserMoodCheckIn extends BaseEntity {
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private AppUser appUser;
-	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private MtMoodInfo mtMoodInfo;
-	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-	private MtMoodSource mtMoodSource;
-	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private UserMoodSourceCheckedIn userMoodSourceCheckedIn;
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private MtMoodIntensity mtMoodIntensity;
-	@Column(name = "description",columnDefinition = "TEXT")
+	@Column(name = "description", columnDefinition = "TEXT")
 	private String description;
 }

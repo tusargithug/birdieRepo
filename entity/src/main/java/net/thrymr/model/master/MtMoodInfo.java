@@ -21,9 +21,9 @@ import lombok.Setter;
 @RequiredArgsConstructor
 @Table(name = "mt_mood_info")
 public class MtMoodInfo extends BaseEntity {
-	
+
 	private String name;
-	
+
 	@Column(columnDefinition = "TEXT")
 	private String description;
 
@@ -31,9 +31,9 @@ public class MtMoodInfo extends BaseEntity {
 	private String emoji;
 
 	@JsonIgnore
-	@OneToMany(cascade = CascadeType.ALL,mappedBy = "mtMoodInfo")
-	private List<MtMoodIntensity> intensities=new ArrayList<>();
-	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "mtMoodInfo")
+	private List<MtMoodIntensity> intensities = new ArrayList<>();
+
 	private int sequence;
 
 	@Enumerated(EnumType.STRING)
@@ -41,4 +41,5 @@ public class MtMoodInfo extends BaseEntity {
 
 	@Column(name = "intensity_name")
 	private String intensityName;
+
 }
