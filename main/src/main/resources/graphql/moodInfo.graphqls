@@ -51,6 +51,8 @@ type Query {
     getAllMoodSources:[MtMoodSource]
     getAllWorksheet:[MtWorksheet]
     getWorksheetById(id:ID!):MtWorksheet
+    getAllPsychoEducation:[MtPsychoEducation]
+    getPsychoEducationById(id:ID!):MtPsychoEducation
 }
 
 type Mutation {
@@ -127,7 +129,11 @@ type Mutation {
     deleteMoodInfoById(id:ID!):String!
     updateMoodSourceById(input:MoodSourceDto):String!
     deleteWorksheetById(id:ID!):String!
-    createWorksheet(input:MtWorksheetDto):String!
+    createWorksheet(input:WorksheetDto):String!
+    updateWorksheetById(input:WorksheetDto):String!
+    createPsychoEducation(input:PsychoEducationDto):String!
+    updatePsychoEducationById(input:PsychoEducationDto):String!
+    deletePsychoEducationById(id:ID!):String!
 }
 scalar Upload
 
@@ -458,7 +464,20 @@ type MtWorksheet{
     isActive:Boolean
 }
 
-input MtWorksheetDto{
+input WorksheetDto{
+    id:Int
+    name:String
+    description:String
+    isActive:Boolean
+}
+
+type MtPsychoEducation{
+    name:String
+    description:String
+    isActive:Boolean
+}
+
+input PsychoEducationDto{
     id:Int
     name:String
     description:String

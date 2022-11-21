@@ -81,6 +81,9 @@ public class Query implements GraphQLQueryResolver {
     @Autowired
     WorksheetService worksheetService;
 
+    @Autowired
+    PsychoEducationService psychoEducationService;
+
 
     @QueryMapping(name = "getMoodSourceById")
     public MtMoodSource getMoodSourceById(@Argument Long id) {
@@ -337,6 +340,16 @@ public class Query implements GraphQLQueryResolver {
     @QueryMapping("getWorksheetById")
     public MtWorksheet getWorksheetById(@Argument Long id) {
         return worksheetService.getWorksheetById(id);
+    }
+
+
+    @QueryMapping("getAllPsychoEducation")
+    public List<MtPsychoEducation> getAllPsychoEducation() {
+        return psychoEducationService.getAllPsychoEducation();
+    }
+    @QueryMapping("getPsychoEducationById")
+    public MtPsychoEducation getPsychoEducationById(@Argument Long id) {
+        return psychoEducationService.getPsychoEducationById(id);
     }
 
 }

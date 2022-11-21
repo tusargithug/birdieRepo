@@ -71,6 +71,9 @@ public class MutationResolver implements GraphQLMutationResolver {
     @Autowired
     WorksheetService worksheetService;
 
+    @Autowired
+    PsychoEducationService psychoEducationService;
+
     @MutationMapping(name = "createAppUser")
     public String createAppUser(AppUserDto request) throws Exception {
         return appUserService.createAppUser(request);
@@ -499,6 +502,22 @@ public class MutationResolver implements GraphQLMutationResolver {
     @MutationMapping("deleteWorksheetById")
     public String deleteWorksheetById(@Argument Long id) {
         return worksheetService.deleteWorksheetById(id);
+    }
+
+
+    @MutationMapping("createPsychoEducation")
+    public String createPsychoEducation(@Argument(name = "input") PsychoEducationDto request) {
+        return psychoEducationService.createPsychoEducation(request);
+    }
+
+    @MutationMapping("updatePsychoEducationById")
+    public String updatePsychoEducationById(@Argument(name = "input") PsychoEducationDto request) {
+        return psychoEducationService.updatePsychoEducationById(request);
+    }
+
+    @MutationMapping("deletePsychoEducationById")
+    public String deletePsychoEducationById(@Argument Long id) {
+        return psychoEducationService.deletePsychoEducationById(id);
     }
 }
 
