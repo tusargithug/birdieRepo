@@ -51,7 +51,6 @@ public class FileServiceImplementation implements FileService {
             Object fileID = template.store(upload.getInputStream(), upload.getOriginalFilename(), upload.getContentType(), metadata);
             fileEntity.setFileId(fileID.toString());
             fileEntity.setFileName(upload.getOriginalFilename());
-            fileEntity.setFileType(upload.getContentType());
             fileEntity.setFileSize(upload.getSize());
             fileEntity.setFileContentType(upload.getContentType());
             FileDocument fileDocument = new FileDocument();

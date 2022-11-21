@@ -1,21 +1,24 @@
 package net.thrymr.services.impl;
-        import graphql.kickstart.tools.GraphQLMutationResolver;
-        import graphql.schema.DataFetchingEnvironment;
-        import lombok.extern.slf4j.Slf4j;
-        import net.thrymr.dto.*;
-        import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
-        import net.thrymr.dto.slotRequest.TimeSlotDto;
-        import net.thrymr.services.*;
-        import org.springframework.beans.factory.annotation.Autowired;
-        import org.springframework.graphql.data.method.annotation.Argument;
-        import org.springframework.graphql.data.method.annotation.MutationMapping;
-        import org.springframework.stereotype.Component;
-        import org.springframework.web.bind.annotation.RequestParam;
-        import org.springframework.web.multipart.MultipartFile;
 
-        import javax.servlet.http.Part;
-        import java.io.IOException;
-        import java.text.ParseException;
+import graphql.kickstart.tools.GraphQLMutationResolver;
+import graphql.schema.DataFetchingEnvironment;
+import lombok.extern.slf4j.Slf4j;
+import net.thrymr.dto.*;
+import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
+import net.thrymr.dto.slotRequest.TimeSlotDto;
+import net.thrymr.services.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.Part;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -417,9 +420,15 @@ public class MutationResolver implements GraphQLMutationResolver {
     public String createGroup(@Argument(name = "input") GroupsDto request) {
         return miniSessionService.createGroup(request);
     }
+
     @MutationMapping(name = "saveGroupDetails")
     public String saveGroupDetails(@Argument(name = "input") GroupsDto request) {
         return miniSessionService.saveGroupDetails(request);
+    }
+
+    @MutationMapping(name = "saveFileDetails")
+    public String saveFileDetails(@Argument(name = "input") FileDetailsDto request) {
+        return miniSessionService.saveFileDetails(request);
     }
 
     @MutationMapping(name = "updateGroupById")
@@ -442,11 +451,6 @@ public class MutationResolver implements GraphQLMutationResolver {
         return miniSessionService.deleteMiniSessionById(id);
     }
 
-    @MutationMapping(name = "uploadFiles")
-    public String uploadFiles(@Argument(name = "file") MultipartFile file) throws IOException {
-        return fileService.addFile(file);
-    }
-
 
     @MutationMapping("deleteFiles")
     public String deleteFiles(@Argument String id) {
@@ -463,13 +467,10 @@ public class MutationResolver implements GraphQLMutationResolver {
         return moodInfoService.deleteMoodInfoById(id);
     }
 
-    @MutationMapping(name = "uploadFile")
-    public String uploadFile(Part avatar, DataFetchingEnvironment environment) {
-        Part actualAvatar = environment.getArgument(environment.getLocalContext());
-        // TODO: Implement
-        System.out.println("actual :" + actualAvatar);
-        return "Upload Success";
-    }
+//    @MutationMapping("uploadFile")
+//    public String uploadFile(@Argument("file") MultipartFile file) throws IOException {
+//        return fileService.addFile(file);
+//    }
 
 
     @MutationMapping(name = "updateMoodSourceById")
@@ -482,6 +483,12 @@ public class MutationResolver implements GraphQLMutationResolver {
     public String deleteMoodSourceById(@Argument Long id) {
         return moodSourceService.deleteMoodSourceById(id);
     }
+
+    public String uploadFile(Part file, DataFetchingEnvironment env) {
+        Part actualFile = env.getArgument("file");
+        return actualFile.getSubmittedFileName();
+    }
+
 }
 
 

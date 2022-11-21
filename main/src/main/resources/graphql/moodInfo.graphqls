@@ -3,6 +3,7 @@ schema {
     mutation: Mutation
 }
 
+
 type Query {
     moodInfoById(id: ID): MtMoodInfo
     getAllMoodInfo:[MtMoodInfo]
@@ -129,7 +130,14 @@ type Mutation {
     deleteMoodSourceById(id:ID!):String!
     updateGroupById(input:GroupsDto):String!
     saveGroupDetails(input:GroupsDto):String!
+    saveFileDetails(input:FileDetailsDto):String!
+    uploadFile(file: Upload): String!
 }
+
+#mutation($file: Upload) {
+#    uploadFile(file: $file)
+#}
+
 scalar Upload
 
 type MtMoodIntensity{
@@ -353,14 +361,14 @@ type MiniSession{
     miniSessionName:String
     tags:[String]
     groupsList:[Groups]
+    createdOn:String
+    isActive:Boolean
 }
 type FileDetails{
     id:ID
     isActive:Boolean
     fileId:String
     fileName:String
-    fileType:String
-    fileSize:Int
     fileContentType:String
 }
 type GroupDetails{
@@ -394,8 +402,6 @@ input FileDetailsDto{
     id:Int
     fileId:String
     fileName:String
-    fileType:String
-    fileSize:Int
     contentType:String
 }
 

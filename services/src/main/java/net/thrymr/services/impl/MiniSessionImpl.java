@@ -35,6 +35,7 @@ public class MiniSessionImpl implements MiniSessionService {
 
     @Autowired
     FileDetailsRepo fileDetailsRepo;
+
     @Override
     public String createMiniSession(MiniSessionDto request) {
         MiniSession miniSession = new MiniSession();
@@ -51,6 +52,13 @@ public class MiniSessionImpl implements MiniSessionService {
             Optional<MiniSession> optionalMiniSession = miniSessionRepo.findById(request.getId());
             if (optionalMiniSession.isPresent()) {
                 miniSession = optionalMiniSession.get();
+                if(Validator.isValid(request.getMiniSessionName())) {
+                    miniSession.setMiniSessionName(request.getMiniSessionName());
+                }else if(Validator.isValid(request.getTags())) {
+                    miniSession.setTags(request.getTags());
+                }else {
+                    return "invalid request";
+                }
                 miniSessionRepo.save(miniSession);
                 return "Mini session updated successfully";
             }
@@ -141,12 +149,13 @@ public class MiniSessionImpl implements MiniSessionService {
                 groupDetails.setGroups(optionalGroups.get());
             }
         }
-        if (Validator.isValid(request.getFileId())) {
             Optional<FileDetails> optionalFileDetails = fileDetailsRepo.findByFileId(request.getFileId());
             if (optionalFileDetails.isPresent()) {
                 groupDetails.setFileId(request.getFileId());
+            }else {
+                return "please add file_id";
             }
-        }
+
         if (request.getIsImage() != null && request.getIsImage().equals(Boolean.TRUE)) {
             groupDetails.setIsImage(request.getIsImage());
         }
@@ -175,8 +184,8 @@ public class MiniSessionImpl implements MiniSessionService {
 
     @Override
     public List<GroupDetails> getAllGroupDetails() {
-        List<GroupDetails> groupDetailsList=groupDetailsRepo.findAll();
-        if(!groupDetailsList.isEmpty()){
+        List<GroupDetails> groupDetailsList = groupDetailsRepo.findAll();
+        if (!groupDetailsList.isEmpty()) {
             return groupDetailsList.stream().filter(groupDetails -> groupDetails.getIsActive().equals(Boolean.FALSE)).collect(Collectors.toList());
         }
         return new ArrayList<>();
@@ -184,10 +193,10 @@ public class MiniSessionImpl implements MiniSessionService {
 
     @Override
     public Groups getGroupById(Long id) {
-        if(Validator.isValid(id)){
-            Optional<Groups> optionalGroups=groupRepo.findById(id);
-            if(optionalGroups.isPresent()){
-               return optionalGroups.get();
+        if (Validator.isValid(id)) {
+            Optional<Groups> optionalGroups = groupRepo.findById(id);
+            if (optionalGroups.isPresent()) {
+                return optionalGroups.get();
             }
         }
         return new Groups();
@@ -195,8 +204,8 @@ public class MiniSessionImpl implements MiniSessionService {
 
     @Override
     public String saveFileDetails(FileDetailsDto request) {
-        FileDetails fileDetails=new FileDetails();
-        if (Validator.isValid(request.getContentType()) && request.getContentType().equals("IMAGE") || request.getContentType().equals("EMOJI") ) {
+        FileDetails fileDetails = new FileDetails();
+        if (Validator.isValid(request.getContentType()) && request.getContentType().equals("IMAGE") || request.getContentType().equals("EMOJI")) {
             Optional<Groups> optionalGroups = groupRepo.findById(1l);
             saveFileDetails(request, fileDetails, optionalGroups);
         }
@@ -208,7 +217,6 @@ public class MiniSessionImpl implements MiniSessionService {
             Optional<Groups> optionalGroups = groupRepo.findById(3l);
             saveFileDetails(request, fileDetails, optionalGroups);
         }
-
         return "File details saved successfully";
     }
 

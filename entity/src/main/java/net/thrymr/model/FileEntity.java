@@ -3,6 +3,7 @@ package net.thrymr.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.thrymr.enums.FileType;
 
 import javax.persistence.*;
 
@@ -18,7 +19,7 @@ public class FileEntity extends BaseEntity {
     @Column(name = "file_name")
     private String fileName;
 
-    private String fileType;
+    private FileType fileType;
 
     @Column(name = "file_size")
     private Long fileSize;

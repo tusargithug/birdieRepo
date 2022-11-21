@@ -1,8 +1,8 @@
 package net.thrymr.repository;
 
+import net.thrymr.model.FileEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import net.thrymr.model.master.FileEntity;
 import org.springframework.stereotype.Repository;
 
 @Repository

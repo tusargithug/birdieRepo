@@ -1,5 +1,6 @@
 package net.thrymr.controller;
 
+import graphql.schema.DataFetchingEnvironment;
 import net.thrymr.dto.*;
 import net.thrymr.model.master.MtCity;
 import net.thrymr.model.master.MtCountry;
@@ -14,7 +15,9 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.Part;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -118,6 +121,11 @@ public class CityCountyAndRegionController {
     @MutationMapping(name = "uploadRegionData")
     public String uploadRegionData(@RequestParam MultipartFile file) {
         return cityCountyAndRegionService.uploadRegionData(file);
+    }
+
+    public String uploadFile(Part file, DataFetchingEnvironment env) {
+        Part actualFile = env.getArgument("file");
+        return actualFile.getSubmittedFileName();
     }
 }
 

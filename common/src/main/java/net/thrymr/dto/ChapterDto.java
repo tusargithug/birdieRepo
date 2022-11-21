@@ -3,7 +3,6 @@ package net.thrymr.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.thrymr.model.master.FileEntity;
 
 @Getter
 @Setter
