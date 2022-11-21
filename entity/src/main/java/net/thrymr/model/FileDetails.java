@@ -3,6 +3,9 @@ package net.thrymr.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.thrymr.enums.FileType;
+import net.thrymr.model.BaseEntity;
+import net.thrymr.model.Groups;
 
 import javax.persistence.*;
 
@@ -10,23 +13,15 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "file_details")
 public class FileDetails extends BaseEntity {
-    @Column(name = "file_id")
     private String fileId;
 
     @Column(name = "file_name")
     private String fileName;
 
-    private String fileType;
-
-    @Column(name = "file_size")
-    private Long fileSize;
-
-    @Column(name = "file_content_type")
-    private String fileContentType;
+    @Enumerated(EnumType.STRING)
+    private FileType fileContentType;
 
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private Groups groups;
-
 }
