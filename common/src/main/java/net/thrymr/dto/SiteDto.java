@@ -23,4 +23,5 @@ public class SiteDto {
     private Integer pageSize;
     private Integer PageNumber;
     private String searchKey;
+    private Boolean isCreatedOn;
 }

@@ -382,16 +382,11 @@ public class AppUserServiceImpl implements AppUserService {
                 Predicate alerts = criteriaBuilder.and(root.get("alerts").in(response.getAlerts()));
                 addVendorPredicate.add(alerts);
             }
-            if (response.getShiftTimingsId() != null) {
-                Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(response.getShiftTimingsId()));
-                addVendorPredicate.add(shiftTimings);
-            }
             if (response.getTeamId() != null) {
                 Predicate teamId = criteriaBuilder.and(root.get("team").in(response.getTeamId()));
                 addVendorPredicate.add(teamId);
             }
 
-//            List<Counsellor> counsellorList = counsellorRepo.findAll();
             if (response.getRoles() != null && response.getRoles().equalsIgnoreCase(Roles.COUNSELLOR.toString())) {
                 Predicate roles = criteriaBuilder.and(root.get("userName").in(response.getCounsellorId()));
                 addVendorPredicate.add(roles);

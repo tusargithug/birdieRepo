@@ -1,13 +1,11 @@
 package net.thrymr.model;
 
-import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.thrymr.model.master.MtCity;
 import net.thrymr.model.master.MtCountry;
 import net.thrymr.model.master.MtRegion;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +25,6 @@ public class Site extends BaseEntity {
     private MtCountry country;
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private MtRegion region;
-    @OneToOne(cascade = CascadeType.ALL)
-    private AppUser siteManager;
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Team> teams =new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "site")

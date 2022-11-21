@@ -196,7 +196,7 @@ type AppUser{
     empId:String
     roles:Roles
     site:Site
-    dateOfJoining:Date
+    dateOfJoining:String
     alerts:Alerts
 }
 
