@@ -25,7 +25,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.graphql.execution.RuntimeWiringConfigurer;
 import org.springframework.util.StringUtils;
 import org.springframework.util.unit.DataSize;
@@ -33,7 +32,6 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.servlet.MultipartConfigElement;
-import javax.servlet.http.Part;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

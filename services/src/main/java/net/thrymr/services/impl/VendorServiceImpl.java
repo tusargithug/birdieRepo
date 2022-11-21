@@ -11,7 +11,6 @@ import net.thrymr.repository.VendorRepo;
 import net.thrymr.services.VendorService;
 import net.thrymr.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -60,9 +59,6 @@ public class VendorServiceImpl implements VendorService {
                 user.setSite(optionalSite.get());
             }
         }
-        if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE)) {
-            user.setIsActive(request.getIsActive());
-        }
         appUserRepo.save(user);
         if (Validator.isValid(request.getPOC())) {
             vendor.setPOC(request.getPOC());
@@ -110,12 +106,12 @@ public class VendorServiceImpl implements VendorService {
     @Override
 
     public String updateVendor(VendorDto request) {
-        Vendor vendor;
         AppUser user = null;
-        if (Validator.isValid(request.getId())) {
-            Optional<Vendor> optionalVendor = vendorRepo.findById(request.getId());
-            if (optionalVendor.isPresent()) {
-                vendor = optionalVendor.get();
+        if (Validator.isValid(request.getAppUserId())) {
+            Optional<AppUser> optionalAppUser = appUserRepo.findById(request.getAppUserId());
+            if (optionalAppUser.isPresent()) {
+                user = optionalAppUser.get();
+
                 if (Validator.isValid(request.getName())) {
                     user.setUserName(request.getName());
                 }
@@ -137,17 +133,21 @@ public class VendorServiceImpl implements VendorService {
                         user.setSite(optionalSite.get());
                     }
                 }
-                if (Validator.isObjectValid(user)) {
-                    vendor.setAppUser(user);
+            }
+            Vendor vendor;
+            if (Validator.isValid(request.getId())) {
+                Optional<Vendor> optionalVendor = vendorRepo.findById(request.getId());
+                if (optionalVendor.isPresent()) {
+                    vendor = optionalVendor.get();
+                    if (Validator.isObjectValid(user)) {
+                        vendor.setAppUser(user);
+                    }
+                    if (Validator.isValid(request.getPOC())) {
+                        vendor.setPOC(request.getPOC());
+                    }
+                    vendorRepo.save(vendor);
+                    return "Vendor updated successfully";
                 }
-                if (Validator.isValid(request.getPOC())) {
-                    vendor.setPOC(request.getPOC());
-                }
-                if (request.getIsActive() != request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
-                    user.setIsActive(request.getIsActive());
-                }
-                vendorRepo.save(vendor);
-                return "Vendor updated successfully";
             }
         }
         return "No data found";

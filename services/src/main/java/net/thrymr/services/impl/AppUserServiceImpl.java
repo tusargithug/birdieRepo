@@ -1,10 +1,11 @@
 package net.thrymr.services.impl;
 
+
 import net.thrymr.constant.Constants;
 import net.thrymr.dto.*;
 import net.thrymr.dto.response.UserAppointmentResponse;
-import net.thrymr.enums.Alerts;
 import net.thrymr.enums.Roles;
+import net.thrymr.enums.Alerts;
 import net.thrymr.enums.SlotStatus;
 import net.thrymr.model.*;
 import net.thrymr.model.master.Course;
@@ -15,7 +16,6 @@ import net.thrymr.utils.ApiResponse;
 import net.thrymr.utils.DateUtils;
 import net.thrymr.utils.Validator;
 import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -201,7 +201,7 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public String updateAppUser(AppUserDto request) throws ParseException {
-        if (Validator.isValid(request.getId())) {
+        if(Validator.isValid(request.getId())) {
             Optional<AppUser> optionalAppUser = appUserRepo.findById(request.getId());
             if (optionalAppUser.isPresent()) {
                 AppUser user = optionalAppUser.get();

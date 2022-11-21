@@ -13,8 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
@@ -86,9 +84,6 @@ public class CounsellorImpl implements CounsellorService {
         counsellor.setLanguages(request.getLanguages());
         counsellor.setEducationalDetails(request.getEducationalDetails());
         counsellor.setBio(request.getBio());
-        if (request.getIsActive() != null && request.getIsActive().equals(Boolean.TRUE)) {
-            counsellor.setIsActive(request.getIsActive());
-        }
         counsellorRepo.save(counsellor);
 
         return "counsellor create successfully";
@@ -171,9 +166,6 @@ public class CounsellorImpl implements CounsellorService {
             }
             if (Validator.isValid(request.getBio())) {
                 counsellor.setBio(request.getBio());
-            }
-            if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
-                counsellor.setIsActive(request.getIsActive());
             }
             counsellorRepo.save(counsellor);
             return "counsellor update successfully";

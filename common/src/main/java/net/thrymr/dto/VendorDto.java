@@ -26,4 +26,5 @@ public class VendorDto {
     private String empId;
     private Boolean isActive;
     private String searchKey;
+    private Long appUserId;
 }

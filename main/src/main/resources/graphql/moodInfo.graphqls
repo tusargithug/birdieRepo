@@ -246,7 +246,6 @@ type Counsellor{
     educationalDetails:[String]
     languages:[String]
     bio:String
-    isActive:Boolean
 }
 scalar LocalTime
 scalar Date
@@ -300,7 +299,6 @@ input CounsellorDto {
     shiftTimings: ShiftTimingsDto
     site:SiteDto
     team:TeamDto
-    isActive:Boolean
 }
 
 type Vendor{
@@ -324,8 +322,8 @@ input VendorDto{
     searchKey:String
     role:String
     empId:String
-    isActive:Boolean
-}
+    appUserId:ID
+  }
 
 type UserAppointment {
     id:Int
