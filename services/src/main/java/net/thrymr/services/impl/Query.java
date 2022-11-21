@@ -78,6 +78,9 @@ public class Query implements GraphQLQueryResolver {
     @Autowired
     MiniSessionService miniSessionService;
 
+    @Autowired
+    WorksheetService worksheetService;
+
 
     @QueryMapping(name = "getMoodSourceById")
     public MtMoodSource getMoodSourceById(@Argument Long id) {
@@ -326,4 +329,14 @@ public class Query implements GraphQLQueryResolver {
         FileDocument loadFile = fileService.downloadFile(id);
         return loadFile;
     }
+
+    @QueryMapping("getAllWorksheet")
+    public List<MtWorksheet> getAllWorksheet() {
+        return worksheetService.getAllWorksheet();
+    }
+    @QueryMapping("getWorksheetById")
+    public MtWorksheet getWorksheetById(@Argument Long id) {
+        return worksheetService.getWorksheetById(id);
+    }
+
 }

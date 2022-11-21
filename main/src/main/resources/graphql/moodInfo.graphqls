@@ -49,6 +49,8 @@ type Query {
     getAllMoodCheckIn:[UserMoodCheckIn]
     getMoodSourceById(id:ID):MtMoodSource
     getAllMoodSources:[MtMoodSource]
+    getAllWorksheet:[MtWorksheet]
+    getWorksheetById(id:ID!):MtWorksheet
 }
 
 type Mutation {
@@ -124,7 +126,8 @@ type Mutation {
     updateMoodInfoById(input:MoodInfoDto):String!
     deleteMoodInfoById(id:ID!):String!
     updateMoodSourceById(input:MoodSourceDto):String!
-    deleteMoodSourceById(id:ID!):String!
+    deleteWorksheetById(id:ID!):String!
+    createWorksheet(input:MtWorksheetDto):String!
 }
 scalar Upload
 
@@ -447,4 +450,17 @@ input MoodSourceDto{
     description:String
     emoji:String
     category:String
+}
+
+type MtWorksheet{
+    name:String
+    description:String
+    isActive:Boolean
+}
+
+input MtWorksheetDto{
+    id:Int
+    name:String
+    description:String
+    isActive:Boolean
 }
