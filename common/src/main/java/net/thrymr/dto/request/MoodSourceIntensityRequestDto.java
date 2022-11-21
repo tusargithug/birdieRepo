@@ -16,7 +16,7 @@ public class MoodSourceIntensityRequestDto {
     private Long appUserId;
     private Long intensityId;
     private Long moodInfoId;
-    private Long moodSourceId;
+    private List<Long> moodSourceIdList;
     private List<Long> sourceIds=new ArrayList<>();
 
     private String intensityDescription;

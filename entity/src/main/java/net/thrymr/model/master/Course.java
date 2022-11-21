@@ -17,6 +17,7 @@ import net.thrymr.model.BaseEntity;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.thrymr.model.FileEntity;
 
 @Entity
 @Setter
