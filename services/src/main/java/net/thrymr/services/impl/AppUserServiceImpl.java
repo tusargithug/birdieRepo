@@ -23,6 +23,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
@@ -44,34 +45,29 @@ import java.util.stream.Collectors;
 
 @Service
 public class AppUserServiceImpl implements AppUserService {
+
     private final Logger logger = LoggerFactory.getLogger(AppUserServiceImpl.class);
 
-    private final AppUserRepo appUserRepo;
-
-    private final Environment environment;
-
-    private final UserCourseRepo userCourseRepo;
-
-    private final CourseRepo courseRepo;
-
-    private final OptionsRepo optionsRepo;
-
-    private final SiteRepo siteRepo;
-
-    private final AppointmentRepo appointmentRepo;
-
-    private final CounsellorRepo counsellorRepo;
-
-    public AppUserServiceImpl(AppUserRepo appUserRepo, Environment environment, UserCourseRepo userCourseRepo, CourseRepo courseRepo, OptionsRepo optionsRepo, SiteRepo siteRepo, CounsellorSlotRepo counsellorSlotRepo, AppointmentRepo appointmentRepo, CounsellorRepo counsellorRepo) {
-        this.appUserRepo = appUserRepo;
-        this.environment = environment;
-        this.userCourseRepo = userCourseRepo;
-        this.courseRepo = courseRepo;
-        this.optionsRepo = optionsRepo;
-        this.siteRepo = siteRepo;
-        this.appointmentRepo = appointmentRepo;
-        this.counsellorRepo = counsellorRepo;
-    }
+    @Autowired
+    AppUserRepo appUserRepo;
+    @Autowired
+    Environment environment;
+    @Autowired
+    RoleRepo roleRepo;
+    @Autowired
+    UserCourseRepo userCourseRepo;
+    @Autowired
+    CourseRepo courseRepo;
+    @Autowired
+    OptionsRepo optionsRepo;
+    @Autowired
+    SiteRepo siteRepo;
+    @Autowired
+    ShiftTimingsRepo shiftTimingsRepo;
+    @Autowired
+    TeamRepo teamRepo;
+    @Autowired
+    AppointmentRepo appointmentRepo;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
