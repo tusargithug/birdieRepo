@@ -20,6 +20,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -29,25 +30,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
 public class MoodSourceServiceImpl implements MoodSourceService {
-    private final Logger logger = LoggerFactory.getLogger(MoodSourceServiceImpl.class);
+    Logger logger = LoggerFactory.getLogger(MoodSourceServiceImpl.class);
 
-   private final Environment environment;
-
-    private final MoodSourceRepo moodSourceRepo;
-
-    private final UserMoodSourceCheckInRepo userMoodSourceCheckInRepo;
-
-    public MoodSourceServiceImpl(Environment environment, MoodSourceRepo moodSourceRepo, UserMoodSourceCheckInRepo userMoodSourceCheckInRepo) {
-        this.environment = environment;
-        this.moodSourceRepo = moodSourceRepo;
-        this.userMoodSourceCheckInRepo = userMoodSourceCheckInRepo;
-
-    }
-
+    @Autowired
+    Environment environment;
+    @Autowired
+    MoodSourceRepo moodSourceRepo;
+    @Autowired
+    UserMoodSourceCheckInRepo userMoodSourceCheckInRepo;
 
     @Override
     public ApiResponse addMoodSourceByExcel(MultipartFile file) {
@@ -92,16 +87,27 @@ public class MoodSourceServiceImpl implements MoodSourceService {
     }
 
     @Override
-    public ApiResponse getAllMoodSources() {
+    public List<MtMoodSource> getAllMoodSources() {
         List<MtMoodSource> mtMoodSourceList = moodSourceRepo.findAll();
-       List<MoodSourceDto> moodSourceDtoList = new ArrayList<>();
-       if (!mtMoodSourceList.isEmpty()) {
-    mtMoodSourceList.forEach(mtMoodSource -> moodSourceDtoList.add(setModelToDto(mtMoodSource)));
-           return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_SOURCE_FOUND"), moodSourceDtoList);
-       }
-       else {
-           return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_SOURCE_NOT_FOUND"), moodSourceDtoList);
-       }
+        if (!mtMoodSourceList.isEmpty()) {
+            return mtMoodSourceList.stream().filter(mtMoodSource -> mtMoodSource.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
+    public MtMoodSource getMoodSourceById(Long id) {
+
+        MtMoodSource mtMoodSource = null;
+        if (Validator.isValid(id)) {
+            Optional<MtMoodSource> optionalMtMoodSource = moodSourceRepo.findById(id);
+            if (optionalMtMoodSource.isPresent() && optionalMtMoodSource.get().getIsActive().equals(Boolean.TRUE)) {
+                mtMoodSource = optionalMtMoodSource.get();
+                return mtMoodSource;
+            }
+
+        }
+        return new MtMoodSource();
     }
 
     @Override
@@ -112,6 +118,57 @@ public class MoodSourceServiceImpl implements MoodSourceService {
     }
 
     @Override
+    public String updateMoodSourceById(MoodSourceDto request) {
+
+        MtMoodSource mtMoodSource = null;
+
+        if (Validator.isValid(request.getId())) {
+
+            Optional<MtMoodSource> optionalMtMoodSource = moodSourceRepo.findById(request.getId());
+
+            if (optionalMtMoodSource.isPresent()) {
+                mtMoodSource = optionalMtMoodSource.get();
+                if (Validator.isValid(request.getName())) {
+                    mtMoodSource.setName(request.getName());
+                }
+                if (Validator.isValid(request.getDescription())) {
+                    mtMoodSource.setDescription(request.getDescription());
+                }
+                if (Validator.isValid(request.getSequence())) {
+                    mtMoodSource.setSequence(request.getSequence());
+                }
+                if (Validator.isValid(request.getEmoji())) {
+                    mtMoodSource.setEmoji(request.getEmoji());
+                }
+                if (Validator.isValid(request.getCategory())) {
+                    mtMoodSource.setCategory(Category.valueOf(request.getCategory()));
+                }
+                moodSourceRepo.save(mtMoodSource);
+                return "Mood source updated successfully";
+            }
+        }
+        return "This mood source id not present in database";
+    }
+
+    @Override
+    public String deleteMoodSourceById(Long id) {
+
+        MtMoodSource mtMoodSource = null;
+        if (Validator.isValid(id)) {
+            Optional<MtMoodSource> optionalMtMoodSource = moodSourceRepo.findById(id);
+            if (optionalMtMoodSource.isPresent()) {
+                mtMoodSource = optionalMtMoodSource.get();
+                mtMoodSource.setIsActive(Boolean.FALSE);
+                mtMoodSource.setIsDeleted(Boolean.TRUE);
+                moodSourceRepo.save(mtMoodSource);
+                return "Mood source deleted successfully";
+            }
+        }
+
+        return "This mood source id not present in database";
+    }
+
+/*    @Override
     public ApiResponse updateMoodSource(MoodSourceIntensityRequestDto request) {
 
 
@@ -125,7 +182,7 @@ public class MoodSourceServiceImpl implements MoodSourceService {
 //          }
 //        userMoodSourceCheckInRepo.save(checkedIn);
         return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_SOURCE_UPDATED"));
-    }
+    }*/
 
     private String getCellValue(XSSFCell cell) {
         String value;
@@ -151,26 +208,25 @@ public class MoodSourceServiceImpl implements MoodSourceService {
         moodSourceDto.setSequence(mtMoodSource.getSequence());
         return moodSourceDto;
     }
+
     @Override
     public String createUserMoodSourceCheckIn(MoodSourceIntensityRequestDto request) {
-        //AppUser user= CommonUtil.getAppUser();
-
-        List<MtMoodSource> mtMoodSourceList = moodSourceRepo.findAllByIdIn(request.getSourceIds());
+        List<MtMoodSource> mtMoodSourceList = moodSourceRepo.findAllByIdIn(request.getMoodSourceIdList());
         UserMoodSourceCheckedIn checkedIn = new UserMoodSourceCheckedIn();
-       // checkedIn.setAppUser(user);
+        // checkedIn.setAppUser(user);
         if (!mtMoodSourceList.isEmpty()) {
-            checkedIn.setSources(mtMoodSourceList);
+            checkedIn.setMtMoodSourceList(mtMoodSourceList);
         }
         if (Validator.isValid(request.getDescription())) {
             checkedIn.setDescription(request.getDescription());
         }
         userMoodSourceCheckInRepo.save(checkedIn);
-        return environment.getProperty("MOOD_SOURCE_UPDATED");
+        return "Mood source update successfully";
     }
 
     @Override
     public String deleteUserMoodSourceCheckInById(Long id) {
-        Optional<MtMoodSource> optionalMtMoodSource=moodSourceRepo.findById(id);
+        Optional<MtMoodSource> optionalMtMoodSource = moodSourceRepo.findById(id);
         optionalMtMoodSource.ifPresent(moodSourceRepo::delete);
         return "Source deleted successfully";
     }

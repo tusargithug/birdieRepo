@@ -9,15 +9,12 @@ import java.util.List;
 
 public interface MoodInfoService {
     ApiResponse saveMoodInfo(MultipartFile file);
-    ApiResponse getAllMoods();
-
-    ApiResponse getMoodInfoById(Long id);
-
-    String deleteMoodInfoById(Long id);
 
     List<MtMoodInfo> getAllMoodInfo();
 
-    MtMoodInfo moodInfoById(Long id);
+    MtMoodInfo getMoodInfoById(Long id);
 
     String updateMoodInfoById(MoodInfoDto request);
+
+    String deleteMoodInfoById(Long id);
 }
