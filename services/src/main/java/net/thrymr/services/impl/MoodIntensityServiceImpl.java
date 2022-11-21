@@ -210,12 +210,6 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
                         userMoodCheckIn.setMtMoodInfo(optionalMtMoodInfo.get());
                     }
                 }
-                if (Validator.isValid(request.getMoodSourceId())) {
-                    Optional<MtMoodSource> optionalMtMoodSource = moodSourceRepo.findById(request.getMoodSourceId());
-                    if (optionalMtMoodSource.isPresent()) {
-                        userMoodCheckIn.setMtMoodSource(optionalMtMoodSource.get());
-                    }
-                }
                 userMoodCheckIn.setDescription(request.getDescription());
             }
             userMoodCheckInRepo.save(userMoodCheckIn);
@@ -258,12 +252,6 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
             Optional<MtMoodInfo> optionalMtMoodInfo=moodInfoRepo.findById(request.getMoodInfoId());
             if(optionalMtMoodInfo.isPresent()){
                 userMoodCheckIn.setMtMoodInfo(optionalMtMoodInfo.get());
-            }
-        }
-        if(Validator.isValid(request.getMoodSourceId())){
-            Optional<MtMoodSource> optionalMtMoodSource=moodSourceRepo.findById(request.getMoodSourceId());
-            if(optionalMtMoodSource.isPresent()){
-                userMoodCheckIn.setMtMoodSource(optionalMtMoodSource.get());
             }
         }
         userMoodCheckIn.setDescription(request.getDescription());

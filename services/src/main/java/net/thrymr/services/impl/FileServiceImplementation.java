@@ -6,6 +6,7 @@ import com.mongodb.client.gridfs.model.GridFSFile;
 import net.thrymr.FileDocument;
 import net.thrymr.FileDocumentRepo;
 import net.thrymr.model.FileDetails;
+import net.thrymr.model.FileEntity;
 import net.thrymr.model.Groups;
 import net.thrymr.repository.FileRepo;
 import net.thrymr.repository.GroupRepo;
@@ -44,41 +45,19 @@ public class FileServiceImplementation implements FileService {
     @Override
     public String addFile(MultipartFile upload) throws IOException {
         DBObject metadata = new BasicDBObject();
-        FileDetails fileEntity = new FileDetails();
-        Groups groups=new Groups();
-        List<FileDetails>  imageList = new ArrayList<>();
-
+        FileEntity fileEntity = new FileEntity();
 
         if (upload.getSize() <= 12000000) {
             metadata.put("fileSize", upload.getSize());
             Object fileID = template.store(upload.getInputStream(), upload.getOriginalFilename(), upload.getContentType(), metadata);
             fileEntity.setFileId(fileID.toString());
             fileEntity.setFileName(upload.getOriginalFilename());
-            fileEntity.setFileType(upload.getContentType());
             fileEntity.setFileSize(upload.getSize());
             fileEntity.setFileContentType(upload.getContentType());
             FileDocument fileDocument = new FileDocument();
             fileDocument.setFileEntity(fileEntity);
             fileDocumentRepo.save(fileDocument);
             System.out.println(upload.getContentType());
-            if (Validator.isValid(upload.getContentType()) && Objects.equals(upload.getContentType(), "image/png")|| Objects.equals(upload.getContentType(), "image/jpeg" )) {
-                Optional<Groups> optionalGroups = groupRepo.findById(1l);
-                if (optionalGroups.isPresent()) {
-                    fileEntity.setGroups(optionalGroups.get());
-                }
-            }
-            if (Validator.isValid(upload.getContentType()) && Objects.equals(upload.getContentType(), "application/pdf")) {
-                Optional<Groups> optionalGroups = groupRepo.findById(2l);
-                if (optionalGroups.isPresent()) {
-                    fileEntity.setGroups(optionalGroups.get());
-                }
-            }
-            if (Validator.isValid(upload.getContentType()) && Objects.equals(upload.getContentType(), "application/zip")) {
-                Optional<Groups> optionalGroups = groupRepo.findById(3l);
-                if (optionalGroups.isPresent()) {
-                    fileEntity.setGroups(optionalGroups.get());
-                }
-            }
             fileRepo.save(fileEntity);
             return "file uploaded successfully file token is: " + fileID.toString();
         }

@@ -1,5 +1,6 @@
 package net.thrymr.services.impl;
         import graphql.kickstart.tools.GraphQLQueryResolver;
+        import net.thrymr.FileDocument;
         import net.thrymr.dto.*;
         import net.thrymr.dto.response.UserAppointmentResponse;
         import net.thrymr.enums.Roles;
@@ -12,6 +13,8 @@ package net.thrymr.services.impl;
         import org.springframework.graphql.data.method.annotation.Argument;
         import org.springframework.graphql.data.method.annotation.QueryMapping;
         import org.springframework.stereotype.Component;
+
+        import java.io.IOException;
         import java.text.ParseException;
         import java.util.List;
 
@@ -19,6 +22,8 @@ package net.thrymr.services.impl;
 public class Query implements GraphQLQueryResolver {
 
 
+    @Autowired
+    MoodSourceService moodSourceService;
     @Autowired
     MoodInfoService moodInfoService;
 
@@ -60,16 +65,36 @@ public class Query implements GraphQLQueryResolver {
     @Autowired
     CourseService courseService;
 
-    @QueryMapping
-    public MtMoodInfo moodInfoById(Long id) {
-        return moodInfoService.moodInfoById(id);
+    @Autowired
+    FileService fileService;
 
+    @Autowired
+    MiniSessionService miniSessionService;
+
+
+    @QueryMapping(name = "getMoodSourceById")
+    public MtMoodSource getMoodSourceById(@Argument Long id) {
+        return moodSourceService.getMoodSourceById(id);
     }
 
-    @QueryMapping
+    @QueryMapping(name = "getAllMoodSources")
+    public List<MtMoodSource> getAllMoodSources() {
+        return moodSourceService.getAllMoodSources();
+    }
+
+    @QueryMapping(name = "getMoodInfoById")
+    public MtMoodInfo getMoodInfoById(@Argument Long id) {
+        return moodInfoService.getMoodInfoById(id);
+    }
+
+    @QueryMapping(name = "getAllMoodInfo")
     public List<MtMoodInfo> getAllMoodInfo() {
         return moodInfoService.getAllMoodInfo();
+    }
 
+    @QueryMapping(name = "getAllMoodCheckIn")
+    public List<UserMoodCheckIn> getAllMoodCheckIn() {
+        return moodIntensityService.getAllMoodCheckIn();
     }
 
     @QueryMapping("getAllMoodIntensities")
@@ -144,7 +169,6 @@ public class Query implements GraphQLQueryResolver {
 
     @QueryMapping("getAllSite")
     public List<Site> getAllSite() {
-
         return siteTeamAndShiftTimingsService.getAllSite();
     }
 
@@ -156,8 +180,8 @@ public class Query implements GraphQLQueryResolver {
 
     @QueryMapping("getAllChapters")
     public List<Chapter> getAllChapters() {
-        List<Chapter> chapterList = unitAndChapterServices.getAllChapters();
-        return chapterList;
+        List<Chapter> mtChapterList = unitAndChapterServices.getAllChapters();
+        return mtChapterList;
     }
 
     @QueryMapping("getLearnPath")
@@ -217,12 +241,16 @@ public class Query implements GraphQLQueryResolver {
 
     @QueryMapping("getAllAssessment")
     public List<MtAssessment> getAllAssessment() {
-        return  assessmentService.getAllAssessment();
+        return assessmentService.getAllAssessment();
     }
+
+
     @QueryMapping("getAssessmentById")
     public MtAssessment getAssessmentById(@Argument Long id) {
-        return  assessmentService.getAssessmentById(id);
+        return assessmentService.getAssessmentById(id);
     }
+
+
     @QueryMapping("getQuestionById")
     public MtQuestion getQuestionById(@Argument Long id) {
         return questionAndOptionsService.getQuestionById(id);
@@ -249,30 +277,34 @@ public class Query implements GraphQLQueryResolver {
     }
 
     @QueryMapping("getAppointmentById")
-    public UserAppointment getAppointmentById(@Argument Long id){
+    public UserAppointment getAppointmentById(@Argument Long id) {
         return appointmentService.getAppointmentById(id);
     }
 
-    @QueryMapping(name="getUserAppointmentCountById")
-    public UserAppointmentResponse getUserAppointmentCountById(@Argument Long id){
+    @QueryMapping(name = "getUserAppointmentCountById")
+    public UserAppointmentResponse getUserAppointmentCountById(@Argument Long id) {
         return appUserService.getUserAppointmentCountById(id);
     }
+
+
     @QueryMapping("getAllAppointment")
-    public List<UserAppointment> getAllAppointment(){
+    public List<UserAppointment> getAllAppointment() {
         return appointmentService.getAllAppointment();
     }
 
     @QueryMapping(name = "getCounsellorById")
-    public Counsellor getCounsellorById(@Argument Long id){
+    public Counsellor getCounsellorById(@Argument Long id) {
         return counsellorService.getCounsellorById(id);
     }
+
+
     @QueryMapping(name = "getAllEnumRoles")
-    public List<Roles> getAllEnumRoles(){
+    public List<Roles> getAllEnumRoles() {
         return appUserService.getAllEnumRoles();
     }
 
-    @QueryMapping(name="getAllAppUserByAlerts")
-    public List<AppUser> getAllAppUserByAlerts(@Argument(name = "input") AppUserDto request)  {
+    @QueryMapping(name = "getAllAppUserByAlerts")
+    public List<AppUser> getAllAppUserByAlerts(@Argument(name = "input") AppUserDto request) {
         return siteTeamAndShiftTimingsService.getAllAppUserByAlerts(request);
     }
 
@@ -281,8 +313,29 @@ public class Query implements GraphQLQueryResolver {
         return appUserService.getAllAppUserPagination(request);
     }
 
-    @QueryMapping(name = "getAllMoodIntensitiesByMoodInfoId")
-    public List<MtMoodIntensity> getAllMoodIntensitiesByMoodInfoId(@Argument Long id) {
-        return moodIntensityService.getAllMoodIntensitiesByMoodInfoId(id);
+    @QueryMapping(name = "getMiniSessionById")
+    public MiniSession getMiniSessionById(@Argument Long id) {
+        return miniSessionService.getMiniSessionById(id);
+    }
+
+    @QueryMapping(name = "getAllMiniSession")
+    public List<MiniSession> getAllMiniSession() {
+        return miniSessionService.getAllMiniSession();
+    }
+
+    @QueryMapping(name = "downloads")
+    public FileDocument downloads(@Argument String id) throws IOException {
+        FileDocument loadFile = fileService.downloadFile(id);
+        return loadFile;
+    }
+
+    @QueryMapping(name = "getAllGroupDetails")
+    public List<GroupDetails> getAllGroupDetails() {
+        return miniSessionService.getAllGroupDetails();
+    }
+
+    @QueryMapping(name="getGroupById")
+    public Groups getGroupById(@Argument Long id) {
+        return miniSessionService.getGroupById(id);
     }
 }
