@@ -24,4 +24,5 @@ public class SiteDto {
     private Integer PageNumber;
     private String searchKey;
     private Boolean isCreatedOn;
+    private Boolean sortSiteName;
 }

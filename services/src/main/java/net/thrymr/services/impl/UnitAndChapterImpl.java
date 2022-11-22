@@ -2,6 +2,7 @@ package net.thrymr.services.impl;
 
 import net.thrymr.dto.ChapterDto;
 import net.thrymr.dto.UnitDto;
+
 import net.thrymr.model.Chapter;
 import net.thrymr.model.Unit;
 import net.thrymr.repository.ChapterRepo;
@@ -56,7 +57,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                 unit.setUnitName(dto.getUnitName());
             }
         }
-        if (dto.getIsActive()!=null && dto.getIsActive().equals(Boolean.TRUE) || dto.getIsActive().equals(Boolean.FALSE)) {
+        if (dto.getIsActive() != null && dto.getIsActive().equals(Boolean.TRUE) || dto.getIsActive().equals(Boolean.FALSE)) {
             unit.setIsActive(dto.getIsActive());
         }
         return unit;
@@ -78,8 +79,10 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         if (unitDto.getPageSize() != null) {
             pageable = PageRequest.of(unitDto.getPageNumber(), unitDto.getPageSize());
         }
-        if (unitDto.getAddOn() != null) {
-            pageable = PageRequest.of(unitDto.getPageNumber(), unitDto.getPageSize(), Sort.Direction.DESC, "createdOn");
+        if (unitDto.getSortUserName() != null && unitDto.getSortUserName().equals(Boolean.TRUE)) {
+            pageable = PageRequest.of(unitDto.getPageNumber(), unitDto.getPageSize(), Sort.Direction.ASC, "unitName");
+        } else if(unitDto.getSortUserName() != null && unitDto.getSortUserName().equals(Boolean.FALSE)){
+            pageable = PageRequest.of(unitDto.getPageNumber(), unitDto.getPageSize(), Sort.Direction.DESC, "unitName");
         }
         //filters
         Specification<Unit> addUnitSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
@@ -88,22 +91,24 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                 Predicate id = criteriaBuilder.and(root.get("id").in(unitDto.getId()));
                 addUnitPredicate.add(id);
             }
+            if (unitDto.getIsActive() != null && unitDto.getIsActive().equals(Boolean.TRUE)) {
+                Predicate status = criteriaBuilder.and(root.get("isActive").in(unitDto.getIsActive()));
+                addUnitPredicate.add(status);
+            } else if (unitDto.getIsActive() != null && unitDto.getIsActive().equals(Boolean.FALSE)) {
+                Predicate status = criteriaBuilder.and(root.get("isActive").in(unitDto.getIsActive()));
+                addUnitPredicate.add(status);
+            }
             if (unitDto.getUnitName() != null && !unitDto.getUnitName().isEmpty()) {
                 Predicate unitName = criteriaBuilder.and(root.get("unitName").in(unitDto.getUnitName()));
                 addUnitPredicate.add(unitName);
             }
-            if (unitDto.getAddOn() != null) {
-                Predicate createdOn = criteriaBuilder.and(root.get("createdOn").in(unitDto.getAddOn()));
-                addUnitPredicate.add(createdOn);
-            }
             return criteriaBuilder.and(addUnitPredicate.toArray(new Predicate[0]));
         });
         Page<Unit> unitObjectives = unitRpo.findAll(addUnitSpecification, pageable);
-        List<Unit> unitList = null;
         if (unitObjectives.getContent() != null) {
-            unitList = unitObjectives.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+            return unitObjectives.stream().collect(Collectors.toList());
         }
-        return unitList;
+        return new ArrayList<>();
     }
 
     @Override
@@ -143,7 +148,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                 if (Validator.isValid(String.valueOf(dto.getVideo()))) {
                     chapter.setVideo(dto.getVideo());
                 }
-                if (dto.getIsActive()!=null && dto.getIsActive().equals(Boolean.TRUE) || dto.getIsActive().equals(Boolean.FALSE)) {
+                if (dto.getIsActive() != null && dto.getIsActive().equals(Boolean.TRUE) || dto.getIsActive().equals(Boolean.FALSE)) {
                     chapter.setIsActive(dto.getIsActive());
                 }
                 chapterRepo.save(chapter);
@@ -211,36 +216,11 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
     public Unit dtoToEntity(UnitDto dto) {
         Unit unit = new Unit();
         unit.setUnitName(dto.getUnitName());
-        if (dto.getIsActive()!=null && dto.getIsActive().equals(Boolean.TRUE)) {
+        if (dto.getIsActive() != null && dto.getIsActive().equals(Boolean.TRUE)) {
             unit.setIsActive(dto.getIsActive());
         }
         return unit;
     }
-
-    public UnitDto entityToDto(Unit unit) {
-        UnitDto unitDto = new UnitDto();
-        unitDto.setId(unit.getId());
-        unitDto.setUnitName(unit.getUnitName());
-        unitDto.setIsActive(unit.getIsActive());
-        Optional<Unit> optionalAddUnit = unitRpo.findById(unit.getId());
-        if (optionalAddUnit.isPresent()) {
-            unitDto.setChapterCount(optionalAddUnit.get().getChapters().size());
-        }
-        unitDto.setAddOn(dateToString(unit.getCreatedOn()));
-        unitDto.setSearchKey(getUnitSearchKey(unit));
-        return unitDto;
-    }
-
-    public UnitDto entityToDtoForGetAll(Unit unit) {
-        UnitDto unitDto = new UnitDto();
-        unitDto.setUnitName(unit.getUnitName());
-        unitDto.setIsActive(unit.getIsActive());
-        Optional<Unit> optionalAddUnit = unitRpo.findById(unit.getId());
-        unitDto.setChapterCount(optionalAddUnit.get().getChapters().size());
-        unitDto.setAddOn(dateToString(unit.getCreatedOn()));
-        return unitDto;
-    }
-
 
     private String getUnitSearchKey(Unit unit) {
         String searchKey = "";

@@ -7,9 +7,7 @@ import net.thrymr.enums.FrequencyType;
 import net.thrymr.model.master.MtOptions;
 import net.thrymr.model.master.MtQuestion;
 
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +26,7 @@ public class AssessmentDto {
 
     private String instructions;
 
-    private FrequencyType frequencyType;
+    private String frequencyType;
 
     private String high;
 
@@ -37,4 +35,6 @@ public class AssessmentDto {
     private String low;
 
     private Boolean isActive;
+
+    private String dateOfPublishing;
 }

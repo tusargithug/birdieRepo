@@ -9,21 +9,22 @@ import net.thrymr.dto.MiniSessionDto;
 import net.thrymr.enums.FileType;
 
 
-import net.thrymr.model.FileDetails;
-import net.thrymr.model.GroupDetails;
-import net.thrymr.model.Groups;
-import net.thrymr.model.MiniSession;
+import net.thrymr.enums.TagType;
+import net.thrymr.model.*;
 import net.thrymr.repository.*;
 import net.thrymr.services.MiniSessionService;
 import net.thrymr.utils.Validator;
 import org.apache.poi.sl.draw.geom.GuideIf;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import javax.persistence.criteria.Predicate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,6 +51,8 @@ public class MiniSessionImpl implements MiniSessionService {
         miniSessionRepo.save(miniSession);
         return "Mini session save successfully";
     }
+
+
 
     @Override
     public String updateMiniSession(MiniSessionDto request) {
@@ -224,6 +227,51 @@ public class MiniSessionImpl implements MiniSessionService {
             saveFileDetails(request, fileDetails, optionalGroups);
         }
         return "File details saved successfully";
+    }
+
+    @Override
+    public List<MiniSession> getAllMiniSessionPagination(MiniSessionDto request) {
+        Pageable pageable = null;
+        if (request.getPageSize() != null) {
+            pageable = PageRequest.of(request.getPageNumber(), request.getPageSize());
+        }
+        if (request.getSortMiniSessionName() != null && request.getSortMiniSessionName().equals(Boolean.TRUE)) {
+            pageable = PageRequest.of(request.getPageNumber(), request.getPageSize(), Sort.Direction.ASC, "miniSessionName");
+        } else if (request.getSortMiniSessionName() != null && request.getSortMiniSessionName().equals(Boolean.FALSE)) {
+            pageable = PageRequest.of(request.getPageNumber(), request.getPageSize(), Sort.Direction.DESC, "miniSessionName");
+        }
+        //filters
+        Specification<MiniSession> miniSessionSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
+            List<Predicate> addMiniSessionSpecification = new ArrayList<>();
+            if (request.getMiniSessionName() != null && !request.getMiniSessionName().isEmpty()) {
+                Predicate teamName = criteriaBuilder.and(root.get("miniSessionName").in(request.getMiniSessionName()));
+                addMiniSessionSpecification.add(teamName);
+            }
+            if (request.getIsActive() != null && !request.getIsActive().equals(Boolean.TRUE)) {
+                Predicate isActive = criteriaBuilder.and(root.get("isActive").in(request.getIsActive()));
+                addMiniSessionSpecification.add(isActive);
+            } else if (request.getIsActive() != null && !request.getIsActive().equals(Boolean.FALSE)) {
+                Predicate isActive = criteriaBuilder.and(root.get("isActive").in(request.getIsActive()));
+                addMiniSessionSpecification.add(isActive);
+            }
+            if (Validator.isValid(request.getTags())) {
+                Predicate shiftTimings = criteriaBuilder.and(root.get("tags").in(request.getTags()));
+                addMiniSessionSpecification.add(shiftTimings);
+            }
+            return criteriaBuilder.and(addMiniSessionSpecification.toArray(new Predicate[0]));
+        });
+
+        Page<MiniSession> miniSessionsObjective = miniSessionRepo.findAll(miniSessionSpecification, pageable);
+        if (miniSessionsObjective.getContent() != null) {
+            return miniSessionsObjective.stream().collect(Collectors.toList());
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<TagType> getAllEnumTags() {
+        List<TagType> tagList= Arrays.asList(TagType.NONE,TagType.ANXIETY,TagType.BURNOUT,TagType.VT,TagType.DEPRESSION,TagType.STRESS,TagType.PTSD);
+        return tagList;
     }
 
     private FileDetails saveFileDetails(FileDetailsDto request, FileDetails fileDetails, Optional<Groups> optionalGroups) {

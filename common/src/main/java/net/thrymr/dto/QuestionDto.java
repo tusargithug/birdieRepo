@@ -16,7 +16,6 @@ public class QuestionDto {
     private Long psychometricTestId;
     private String questionCalType;
     private Integer Sequence;
-    private Boolean isActive;
     //TODO questionType
    // one month
      //       6 month

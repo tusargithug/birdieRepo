@@ -3,6 +3,7 @@ package net.thrymr.controller;
 import net.thrymr.dto.FileDetailsDto;
 import net.thrymr.dto.GroupsDto;
 import net.thrymr.dto.MiniSessionDto;
+import net.thrymr.enums.TagType;
 import net.thrymr.model.GroupDetails;
 import net.thrymr.model.Groups;
 import net.thrymr.model.MiniSession;
@@ -73,5 +74,15 @@ public class MiniSessionController {
     @MutationMapping(name = "saveFileDetails")
     public String saveFileDetails(@Argument(name = "input") FileDetailsDto request){
         return miniSessionService.saveFileDetails(request);
+    }
+
+    @QueryMapping(name = "getAllMiniSessionPagination")
+    public List<MiniSession> getAllMiniSessionPagination(@Argument(name = "input") MiniSessionDto request) {
+        return miniSessionService.getAllMiniSessionPagination(request);
+    }
+
+    @QueryMapping(name = "getAllEnumTags")
+    public List<TagType> getAllEnumTags(){
+        return miniSessionService.getAllEnumTags();
     }
 }

@@ -393,12 +393,12 @@ public class MutationResolver implements GraphQLMutationResolver {
     }
 
     @MutationMapping("createAssessment")
-    public String createAssessment(@Argument(name = "input") AssessmentDto request) {
+    public String createAssessment(@Argument(name = "input") AssessmentDto request) throws ParseException {
         return assessmentService.createAssessment(request);
     }
 
     @MutationMapping("updateAssessmentId")
-    public String updateAssessmentById(@Argument(name = "input") AssessmentDto request) {
+    public String updateAssessmentById(@Argument(name = "input") AssessmentDto request) throws ParseException {
         return assessmentService.updateAssessmentById(request);
     }
 

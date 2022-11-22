@@ -1,14 +1,18 @@
 package net.thrymr.services.impl;
 
+import net.thrymr.constant.Constants;
 import net.thrymr.dto.AssessmentDto;
+import net.thrymr.enums.FrequencyType;
 import net.thrymr.model.master.MtAssessment;
 import net.thrymr.repository.AssessmentRepo;
 import net.thrymr.services.AssessmentService;
+import net.thrymr.utils.DateUtils;
 import net.thrymr.utils.Validator;
 import org.apache.poi.sl.draw.geom.GuideIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,21 +35,26 @@ public class AssessmentServiceImpl implements AssessmentService {
     }
 
     @Override
-    public String createAssessment(AssessmentDto request) {
+    public String createAssessment(AssessmentDto request) throws ParseException {
         MtAssessment mtAssessment = dtoToAssessmentEntity(request);
         assessmentRepo.save(dtoToAssessmentEntity(request));
         return "create Assessment successfully";
     }
 
-    private MtAssessment dtoToAssessmentEntity(AssessmentDto request) {
+    private MtAssessment dtoToAssessmentEntity(AssessmentDto request) throws ParseException {
         MtAssessment assessment = new MtAssessment();
         assessment.setName(request.getName());
         assessment.setDescription(request.getDescription());
         assessment.setInstructions(request.getInstructions());
-        assessment.setFrequencyType(request.getFrequencyType());
-        assessment.setHigh(request.getHigh());
-        assessment.setModerate(request.getModerate());
-        assessment.setLow(request.getLow());
+        assessment.setFrequencyType(FrequencyType.valueOf(request.getFrequencyType()));
+        if(Validator.isValid(request.getHigh())) {
+            assessment.setHigh(request.getHigh());
+        }else if(Validator.isValid(request.getModerate())) {
+            assessment.setModerate(request.getModerate());
+        }else {
+            assessment.setLow(request.getLow());
+        }
+        assessment.setDateOfPublishing(DateUtils.toFormatStringToDate(request.getDateOfPublishing(), Constants.DATE_FORMAT));
         if (request.getIsActive() != null && request.getIsActive().equals(Boolean.TRUE)) {
             assessment.setIsActive(request.getIsActive());
         }
@@ -53,7 +62,7 @@ public class AssessmentServiceImpl implements AssessmentService {
     }
 
     @Override
-    public String updateAssessmentById(AssessmentDto request) {
+    public String updateAssessmentById(AssessmentDto request) throws ParseException {
         MtAssessment assessment = null;
         if (Validator.isValid(request.getId())) {
             Optional<MtAssessment> optionalAssessment = assessmentRepo.findById(request.getId());
@@ -69,7 +78,7 @@ public class AssessmentServiceImpl implements AssessmentService {
                     assessment.setInstructions(request.getInstructions());
                 }
                 if (Validator.isValid(String.valueOf(request.getFrequencyType()))) {
-                    assessment.setFrequencyType(request.getFrequencyType());
+                    assessment.setFrequencyType(FrequencyType.valueOf(request.getFrequencyType()));
                 }
                 if (Validator.isValid(request.getHigh())) {
                     assessment.setHigh(request.getHigh());
@@ -79,6 +88,9 @@ public class AssessmentServiceImpl implements AssessmentService {
                 }
                 if (Validator.isValid(request.getLow())) {
                     assessment.setLow(request.getLow());
+                }
+                if(Validator.isValid(request.getDateOfPublishing())){
+                    assessment.setDateOfPublishing(DateUtils.toFormatStringToDate(request.getDateOfPublishing(), Constants.DATE_FORMAT));
                 }
                 if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
                     assessment.setIsActive(request.getIsActive());

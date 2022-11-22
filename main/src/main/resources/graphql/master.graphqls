@@ -94,7 +94,8 @@ input SiteDto{
     pageNumber:Int
     searchKey:String
     siteId:String
-     isCreatedOn:Boolean
+    isCreatedOn:Boolean
+    sortSiteName:Boolean
 
 }
 
@@ -102,10 +103,6 @@ input TeamDto {
     id:Int
     teamId:String
     teamName:String
-    # teamLeader:AppUserDto
-    # teamManager:AppUserDto
-    # shiftTimings:ShiftTimingsDto
-    # site:SiteDto
     status:Boolean
     pageNumber:Int
     PageSize:Int
@@ -114,18 +111,20 @@ input TeamDto {
     teamManagerId:Int
     siteId:Int
     shiftTimingsId:Int
+    sortTeamName:Boolean
 }
 
 input UnitDto {
     id:Int
     unitName:String
-    addOn:String
+    sortCreatedOn:Boolean
     chapterCount:Int
     isActive:Boolean
     addChapters:[ChapterDto]
     searchKey:String
     pageNumber :Int
     pageSize:Int
+    sortUserName:Boolean
 }
 type MtCountry {
     id:ID!
@@ -161,8 +160,6 @@ type Team{
     id:ID!
     teamId:String
     teamName:String
-    teamLeader:AppUser
-    teamManager:AppUser
     site:Site
     shiftTimings:ShiftTimings
     isActive:Boolean
@@ -187,7 +184,6 @@ type MtOptions{
     textAnswer:String
     question:MtQuestion
     userCourse:UserCourse
-    isActive:Boolean
 }
 type UserCourse{
     user:AppUser
@@ -205,7 +201,6 @@ type MtQuestion{
     questionCalType:QuestionCalType
     sequence:Int
     assessment:MtAssessment
-    isActive:Boolean
 }
 enum QuestionCalType{
     FORWARD
@@ -224,6 +219,7 @@ type MtAssessment{
     low:String
     questionList:[MtQuestion]
     isActive:Boolean
+    dateOfPublishing:String
 }
 type PsychometricTest{
     name:String
@@ -259,6 +255,7 @@ type Unit{
     unitName:String
     chapters:[Chapter]
     isActive:Boolean
+    createdOn:String
 }
 
 input AssessmentDto{
@@ -267,10 +264,12 @@ input AssessmentDto{
     name:String
     duration:String
     instructions:String
-    frequencyType:FrequencyType
+    frequencyType:String
     high: String
     moderate:String
     low:String
+    isActive:Boolean
+    dateOfPublishing:String
 }
 enum FrequencyType{
     NONE
@@ -293,7 +292,6 @@ input OptionsDto{
     textAnswer:String
     questionId:Int
     userCourseId:Int
-    isActive:Boolean
 }
 input TimeSlotDto{
     appUserId:Int

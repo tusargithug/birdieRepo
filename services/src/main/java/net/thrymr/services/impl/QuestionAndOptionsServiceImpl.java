@@ -53,9 +53,6 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
                 question.setAssessment(optionalAssessment.get());
             }
         }
-        if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE)) {
-            question.setIsActive(request.getIsActive());
-        }
         questionRepo.save(question);
         return "create question successfully";
     }
@@ -135,9 +132,6 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
                         question.setAssessment(optionalAssessment.get());
                     }
                 }
-                if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
-                    question.setIsActive(request.getIsActive());
-                }
                 questionRepo.save(question);
                 return "update question successfully";
             }
@@ -160,9 +154,6 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
             if (optionalUserCourse.isPresent()) {
                 options.setUserCourse(optionalUserCourse.get());
             }
-        }
-        if (request.getIsActive().equals(Boolean.TRUE)) {
-            options.setIsActive(request.getIsActive());
         }
         optionsRepo.save(options);
         return "created option successfully";
@@ -190,9 +181,6 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
                     if (optionalUserCourse.isPresent()) {
                         options.setUserCourse(optionalUserCourse.get());
                     }
-                }
-                if (request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
-                    options.setIsActive(request.getIsActive());
                 }
                 optionsRepo.save(options);
             }

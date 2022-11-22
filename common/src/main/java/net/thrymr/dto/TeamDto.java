@@ -15,7 +15,7 @@ public class TeamDto {
     private AppUserDto teamManager;
     private ShiftTimingsDto shiftTimings;
     private SiteDto site;
-    private Boolean status=Boolean.FALSE;
+    private Boolean status;
     private Integer pageNumber;
     private Integer PageSize;
     private String searchKey;
@@ -23,4 +23,5 @@ public class TeamDto {
     private Long teamManagerId;
     private Long siteId;
     private Long shiftTimingsId;
+    private Boolean sortTeamName;
 }

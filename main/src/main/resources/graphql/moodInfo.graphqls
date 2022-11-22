@@ -51,6 +51,8 @@ type Query {
     getAllMoodSources:[MtMoodSource]
     getAllGroupDetails:[GroupDetails]
     getGroupById(id:ID):Groups
+    getAllMiniSessionPagination(input:MiniSessionDto):[MiniSession]
+    getAllEnumTags:[TagType]
 }
 
 type Mutation {
@@ -372,11 +374,21 @@ type FileDetails{
     fileContentType:String
 }
 input GroupsDto{
-    miniSessionId:Int
+    id:Int
+    groupId:Int
     groupName:String
     text:String
-    tags:[String]
+    miniSessionId:Int
     isActive:Boolean
+    tags:[String]
+    fileId:String
+    isImage:Boolean
+    isPdf:Boolean
+    isVideo:Boolean
+    isAudio:Boolean
+    isZif:Boolean
+    isText:Boolean
+    isEmoji:Boolean
 }
 input FileDetailsDto{
     id:Int
@@ -385,11 +397,17 @@ input FileDetailsDto{
     fileType:String
     fileSize:Int
     contentType:String
+    groupId:Int
 }
 
 input MiniSessionDto {
     id:Int
+    tags:[String]
+    miniSessionName:String
     isActive:Boolean
+    pageNumber:Int
+    pageSize:Int
+    sortMiniSessionName:Boolean
 }
 input MoodInfoDto{
     id:Int
@@ -462,4 +480,13 @@ type GroupDetails{
     isEmoji:Boolean
     isText:Boolean
     groups:Groups
+}
+enum TagType{
+    NONE
+    PTSD
+    STRESS
+    ANXIETY
+    VT
+    BURNOUT
+    DEPRESSION
 }

@@ -37,8 +37,8 @@ public class MoodIntensityController {
     }
 
     @MutationMapping(name = "updateMoodIntensity")
-    public String updateMoodIntensity(@Argument(name = "input") MoodSourceIntensityRequestDto request) {
-        return moodIntensityService.updateMoodIntensity(request);
+    public String UpdateUserMoodCheckIn(@Argument(name = "input") MoodSourceIntensityRequestDto request) {
+        return moodIntensityService.UpdateUserMoodCheckIn(request);
     }
 
 

@@ -4,6 +4,7 @@ package net.thrymr.services.impl;
         import net.thrymr.dto.*;
         import net.thrymr.dto.response.UserAppointmentResponse;
         import net.thrymr.enums.Roles;
+        import net.thrymr.enums.TagType;
         import net.thrymr.model.*;
         import net.thrymr.model.master.*;
         import net.thrymr.repository.CategoryRepo;
@@ -321,6 +322,15 @@ public class Query implements GraphQLQueryResolver {
     @QueryMapping(name = "getAllMiniSession")
     public List<MiniSession> getAllMiniSession() {
         return miniSessionService.getAllMiniSession();
+    }
+
+    @QueryMapping(name = "getAllEnumTags")
+    public List<TagType> getAllEnumTags(){
+        return miniSessionService.getAllEnumTags();
+    }
+    @QueryMapping(name = "getAllMiniSessionPagination")
+    public List<MiniSession> getAllMiniSessionPagination(@Argument(name = "input") MiniSessionDto request) {
+        return miniSessionService.getAllMiniSessionPagination(request);
     }
 
     @QueryMapping(name = "downloads")

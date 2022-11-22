@@ -13,11 +13,12 @@ import java.util.List;
 public class UnitDto {
     private Long id;
     private String unitName;
-    private String addOn;
+    private Boolean sortCreatedOn;
     private Integer chapterCount;
     private Boolean isActive;
     private List<ChapterDto> addChapters=new ArrayList<>();
     private String searchKey;
     private Integer pageNumber;
     private Integer pageSize;
+    private Boolean sortUserName;
 }

@@ -9,6 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class FileDetailsDto {
     private Long id;
+    private Long groupId;
     private String fileId;
     private String fileName;
     private String contentType;
