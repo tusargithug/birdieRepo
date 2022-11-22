@@ -84,6 +84,9 @@ public class Query implements GraphQLQueryResolver {
     @Autowired
     PsychoEducationService psychoEducationService;
 
+    @Autowired
+    MeditationService meditationService;
+
 
     @QueryMapping(name = "getMoodSourceById")
     public MtMoodSource getMoodSourceById(@Argument Long id) {
@@ -347,9 +350,20 @@ public class Query implements GraphQLQueryResolver {
     public List<MtPsychoEducation> getAllPsychoEducation() {
         return psychoEducationService.getAllPsychoEducation();
     }
+
     @QueryMapping("getPsychoEducationById")
     public MtPsychoEducation getPsychoEducationById(@Argument Long id) {
         return psychoEducationService.getPsychoEducationById(id);
+    }
+
+    @QueryMapping("getAllMeditation")
+    public List<MtMeditation> getAllMeditation() {
+        return meditationService.getAllMeditation();
+    }
+
+    @QueryMapping("getMeditationById")
+    public MtMeditation getMeditationById(@Argument Long id) {
+        return meditationService.getMeditationById(id);
     }
 
 }

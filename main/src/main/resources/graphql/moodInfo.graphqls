@@ -53,6 +53,8 @@ type Query {
     getWorksheetById(id:ID!):MtWorksheet
     getAllPsychoEducation:[MtPsychoEducation]
     getPsychoEducationById(id:ID!):MtPsychoEducation
+    getAllMeditation:[MtMeditation]
+    getMeditationById(id:ID!):MtMeditation
 }
 
 type Mutation {
@@ -134,6 +136,9 @@ type Mutation {
     createPsychoEducation(input:PsychoEducationDto):String!
     updatePsychoEducationById(input:PsychoEducationDto):String!
     deletePsychoEducationById(id:ID!):String!
+    createMeditation(input:MeditationDto):String!
+    updateMeditationById(input:MeditationDto):String!
+    deleteMeditationById(id:ID!):String!
 }
 scalar Upload
 
@@ -481,5 +486,18 @@ input PsychoEducationDto{
     id:Int
     name:String
     description:String
+    isActive:Boolean
+}
+
+type MtMeditation{
+    name:String
+    meditationVideoLink:String
+    isActive:Boolean
+}
+
+input MeditationDto{
+    id:Int
+    name:String
+    meditationVideoLink:String
     isActive:Boolean
 }

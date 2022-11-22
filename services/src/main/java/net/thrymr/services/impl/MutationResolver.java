@@ -74,6 +74,9 @@ public class MutationResolver implements GraphQLMutationResolver {
     @Autowired
     PsychoEducationService psychoEducationService;
 
+    @Autowired
+    MeditationService meditationService;
+
     @MutationMapping(name = "createAppUser")
     public String createAppUser(AppUserDto request) throws Exception {
         return appUserService.createAppUser(request);
@@ -518,6 +521,22 @@ public class MutationResolver implements GraphQLMutationResolver {
     @MutationMapping("deletePsychoEducationById")
     public String deletePsychoEducationById(@Argument Long id) {
         return psychoEducationService.deletePsychoEducationById(id);
+    }
+
+
+    @MutationMapping("createMeditation")
+    public String createMeditation(@Argument(name = "input") MeditationDto request) {
+        return meditationService.createMeditation(request);
+    }
+
+    @MutationMapping("updateMeditationById")
+    public String updateMeditationById(@Argument(name = "input") MeditationDto request) {
+        return meditationService.updateMeditationById(request);
+    }
+
+    @MutationMapping("deleteMeditationById")
+    public String deleteMeditationById(@Argument Long id) {
+        return meditationService.deleteMeditationById(id);
     }
 }
 
