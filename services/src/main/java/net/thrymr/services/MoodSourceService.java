@@ -17,8 +17,6 @@ public interface MoodSourceService {
 
     MtMoodSource getMoodSourceById(Long id);
 
-    ApiResponse moodSourceSave(MoodSourceDto request);
-
     String updateMoodSourceById(MoodSourceDto request);
 
     String deleteMoodSourceById(Long id);

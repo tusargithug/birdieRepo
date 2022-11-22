@@ -36,14 +36,6 @@ public class MoodSourceController {
 
     }
 
-    // save mood sources
-    @PostMapping("/save")
-    public ApiResponse moodSourceSave(@RequestBody MoodSourceDto request) {
-        logger.info("save mood source service started");
-        ApiResponse apiResponse = moodSourceService.moodSourceSave(request);
-        logger.info("save mood source service completed");
-        return new ApiResponse(HttpStatus.OK, "", apiResponse);
-    }
 
     // get all mood sources
     @QueryMapping(name = "getAllMoodSources")

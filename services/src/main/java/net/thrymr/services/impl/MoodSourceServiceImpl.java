@@ -111,13 +111,6 @@ public class MoodSourceServiceImpl implements MoodSourceService {
     }
 
     @Override
-    public ApiResponse moodSourceSave(MoodSourceDto request) {
-
-
-        return null;
-    }
-
-    @Override
     public String updateMoodSourceById(MoodSourceDto request) {
 
         MtMoodSource mtMoodSource = null;
@@ -168,22 +161,6 @@ public class MoodSourceServiceImpl implements MoodSourceService {
         return "This mood source id not present in database";
     }
 
-/*    @Override
-    public ApiResponse updateMoodSource(MoodSourceIntensityRequestDto request) {
-
-
-//       // List<MtMoodSource> mtMoodSourceList =moodSourceRepo.findAllByIdIn(request.getSourceIds());
-//        UserMoodSourceCheckedIn checkedIn=new UserMoodSourceCheckedIn();
-//          if(!mtMoodSourceList.isEmpty()){
-//              checkedIn.setSources(mtMoodSourceList);
-//         }
-//          if(Validator.isValid(request.getDescription())){
-//              checkedIn.setDescription(request.getDescription());
-//          }
-//        userMoodSourceCheckInRepo.save(checkedIn);
-        return new ApiResponse(HttpStatus.OK, environment.getProperty("MOOD_SOURCE_UPDATED"));
-    }*/
-
     private String getCellValue(XSSFCell cell) {
         String value;
         if (cell.getCellType().equals(CellType.NUMERIC)) {
@@ -198,15 +175,6 @@ public class MoodSourceServiceImpl implements MoodSourceService {
             value = cell.getRawValue();
         }
         return value;
-    }
-
-    private MoodSourceDto setModelToDto(MtMoodSource mtMoodSource) {
-        MoodSourceDto moodSourceDto = new MoodSourceDto();
-        moodSourceDto.setName(mtMoodSource.getName());
-        moodSourceDto.setCategory(mtMoodSource.getCategory().name());
-        moodSourceDto.setDescription(mtMoodSource.getDescription());
-        moodSourceDto.setSequence(mtMoodSource.getSequence());
-        return moodSourceDto;
     }
 
     @Override
