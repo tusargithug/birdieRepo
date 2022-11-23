@@ -56,6 +56,10 @@ public class MiniSessionController {
         return miniSessionService.getGroupById(id);
     }
 
+    @QueryMapping(name="getAllGroups")
+    public List<Groups> getAllGroups(){
+        return miniSessionService.getAllGroups();
+    }
     @MutationMapping(name = "saveGroupDetails")
     public String saveGroupDetails(@Argument(name = "input") GroupsDto request) {
         return miniSessionService.saveGroupDetails(request);

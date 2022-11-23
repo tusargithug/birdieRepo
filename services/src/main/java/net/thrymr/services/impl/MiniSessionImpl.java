@@ -274,6 +274,15 @@ public class MiniSessionImpl implements MiniSessionService {
         return tagList;
     }
 
+    @Override
+    public List<Groups> getAllGroups() {
+        List<Groups> groupsList = groupRepo.findAll();
+        if(!groupsList.isEmpty()){
+            return groupsList.stream().filter(groups -> groups.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
+    }
+
     private FileDetails saveFileDetails(FileDetailsDto request, FileDetails fileDetails, Optional<Groups> optionalGroups) {
         if (optionalGroups.isPresent()) {
             fileDetails.setGroups(optionalGroups.get());

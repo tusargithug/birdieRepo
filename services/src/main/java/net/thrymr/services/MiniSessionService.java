@@ -36,4 +36,6 @@ public interface MiniSessionService {
     List<MiniSession> getAllMiniSessionPagination(MiniSessionDto request);
 
     List<TagType> getAllEnumTags();
+
+    List<Groups> getAllGroups();
 }

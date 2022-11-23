@@ -53,6 +53,7 @@ type Query {
     getGroupById(id:ID):Groups
     getAllMiniSessionPagination(input:MiniSessionDto):[MiniSession]
     getAllEnumTags:[TagType]
+    getAllGroups:[Groups]
 }
 
 type Mutation {
@@ -364,7 +365,10 @@ type Groups{
 type MiniSession{
     id:ID
     isActive:Boolean
+    tags:[String]
     groupsList:[Groups]
+    miniSessionName:String
+    createdOn:String
 }
 type FileDetails{
     id:ID

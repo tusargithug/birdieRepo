@@ -328,6 +328,10 @@ public class Query implements GraphQLQueryResolver {
     public List<TagType> getAllEnumTags(){
         return miniSessionService.getAllEnumTags();
     }
+    @QueryMapping(name="getAllGroups")
+    public List<Groups> getAllGroups(){
+        return miniSessionService.getAllGroups();
+    }
     @QueryMapping(name = "getAllMiniSessionPagination")
     public List<MiniSession> getAllMiniSessionPagination(@Argument(name = "input") MiniSessionDto request) {
         return miniSessionService.getAllMiniSessionPagination(request);
