@@ -195,8 +195,6 @@ input AppUserDto{
      isActive:Boolean
      empId:String
      roles:String
-     educationDetails:String
-     languages:String
      siteId:Int
      dateOfJoining:String
      alerts:Alerts
@@ -326,8 +324,8 @@ enum Alerts{
 }
 input CounsellorDto {
      id:Int
-     educationalDetails:String
-     languages:String
+     educationalDetails:[String]
+     languages:[String]
      siteId:Int
      designation:String
      bio:String
@@ -360,7 +358,7 @@ type Vendor{
 }
 input VendorDto{
     id:Int
-    siteId:Int
+    siteIdList:[ID]
     POC:String
     vendorName:String
     sortVendorName:Boolean

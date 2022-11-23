@@ -25,4 +25,5 @@ public class SiteDto {
     private String searchKey;
     private Boolean isCreatedOn;
     private Boolean sortSiteName;
+    private Long vendorId;
 }

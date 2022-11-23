@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 
 @Setter
 @Getter
@@ -12,7 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class VendorDto {
     private Long id;
-    private Long siteId;
+    private List<Long> siteIdList;
     private String POC;
     private String vendorName;
     private Boolean sortVendorName;

@@ -46,7 +46,7 @@ public class CounsellorImpl implements CounsellorService {
         counsellor.setBio(request.getBio());
         counsellor.setShiftStartAt(request.getShiftStartAt());
         counsellor.setShiftEndAt(request.getShiftEndAt());
-        counsellor.setShiftTimings(request.getShiftEndAt()+"-"+request.getShiftEndAt());
+        counsellor.setShiftTimings(request.getShiftStartAt()+"-"+request.getShiftEndAt());
         if (Validator.isValid(request.getDesignation()) && request.getDesignation().equals("COUNSELLOR")) {
             counsellor.setDesignation(Roles.valueOf(request.getDesignation()));
         }
@@ -104,7 +104,7 @@ public class CounsellorImpl implements CounsellorService {
                     counsellor.setShiftEndAt(request.getShiftEndAt());
                 }
                 if(request.getShiftStartAt() != null && request.getShiftEndAt() != null){
-                    counsellor.setShiftTimings(request.getShiftEndAt()+"-"+request.getShiftEndAt());
+                    counsellor.setShiftTimings(request.getShiftStartAt()+"-"+request.getShiftEndAt());
                 }
                 if(Validator.isValid(request.getGender())){
                     counsellor.setGender(Gender.valueOf(request.getGender()));

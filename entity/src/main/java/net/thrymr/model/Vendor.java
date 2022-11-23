@@ -24,6 +24,6 @@ public class    Vendor extends BaseEntity{
 
     private String mobileNumber;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,mappedBy = "vendor")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Site> site;
 }

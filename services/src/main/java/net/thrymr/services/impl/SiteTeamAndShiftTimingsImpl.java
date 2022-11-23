@@ -144,7 +144,11 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             Optional<MtCity> optionalCity = cityRepo.findById(siteDto.getCityId());
             optionalCity.ifPresent(site::setCity);
         }
-
+        //vendor
+        if(siteDto.getVendorId() != null && vendorRepo.existsById(siteDto.getVendorId())) {
+            Optional<Vendor> optionalVendor=vendorRepo.findById(siteDto.getVendorId());
+            optionalVendor.ifPresent(site::setVendor);
+        }
         //siteManager
         siteDto.setSearchKey(saveSiteSearchKey(site));
         if (siteDto.getStatus() != null && siteDto.getStatus().equals(Boolean.TRUE) && siteDto.getStatus().equals(Boolean.FALSE)) {

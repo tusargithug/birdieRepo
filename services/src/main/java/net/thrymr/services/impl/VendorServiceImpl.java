@@ -43,6 +43,12 @@ public class VendorServiceImpl implements VendorService {
         vendor.setCountryCode(request.getCountryCode());
         vendor.setMobileNumber(request.getMobileNumber());
         vendor.setPOC(request.getPOC());
+        if(request.getSiteIdList() != null){
+            List<Site> siteList=siteRepo.findAllById(request.getSiteIdList());
+            if(!siteList.isEmpty()){
+                vendor.setSite(siteList);
+            }
+        }
         vendorRepo.save(vendor);
         return "vendor creation success";
     }
@@ -104,6 +110,12 @@ public class VendorServiceImpl implements VendorService {
                 if (Validator.isValid(request.getPOC())) {
                     vendor.setPOC(request.getPOC());
                 }
+                if(request.getSiteIdList() != null){
+                    List<Site> siteList=siteRepo.findAllById(request.getSiteIdList());
+                    if(!siteList.isEmpty()){
+                        vendor.setSite(siteList);
+                    }
+                }
                 vendorRepo.save(vendor);
                 return "Vendor updated successfully";
             }
@@ -134,8 +146,8 @@ public class VendorServiceImpl implements VendorService {
                 Predicate poc = criteriaBuilder.and(root.get("POC").in(response.getPOC()));
                 addVendorPredicate.add(poc);
             }
-            if (response.getSiteId() != null) {
-                Predicate site = criteriaBuilder.and(root.get("site").in(response.getSiteId()));
+            if (!response.getSiteIdList().isEmpty()) {
+                Predicate site = criteriaBuilder.and(root.get("site").in(response.getSiteIdList()));
                 addVendorPredicate.add(site);
             }
 
