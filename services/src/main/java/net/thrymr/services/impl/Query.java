@@ -1,23 +1,24 @@
 package net.thrymr.services.impl;
-        import graphql.kickstart.tools.GraphQLQueryResolver;
-        import net.thrymr.FileDocument;
-        import net.thrymr.dto.*;
-        import net.thrymr.dto.response.UserAppointmentResponse;
-        import net.thrymr.enums.Roles;
-        import net.thrymr.enums.TagType;
-        import net.thrymr.model.*;
-        import net.thrymr.model.master.*;
-        import net.thrymr.repository.CategoryRepo;
-        import net.thrymr.repository.CourseRepo;
-        import net.thrymr.services.*;
-        import org.springframework.beans.factory.annotation.Autowired;
-        import org.springframework.graphql.data.method.annotation.Argument;
-        import org.springframework.graphql.data.method.annotation.QueryMapping;
-        import org.springframework.stereotype.Component;
 
-        import java.io.IOException;
-        import java.text.ParseException;
-        import java.util.List;
+import graphql.kickstart.tools.GraphQLQueryResolver;
+import net.thrymr.FileDocument;
+import net.thrymr.dto.*;
+import net.thrymr.dto.response.UserAppointmentResponse;
+import net.thrymr.enums.Roles;
+import net.thrymr.enums.TagType;
+import net.thrymr.model.*;
+import net.thrymr.model.master.*;
+import net.thrymr.repository.CategoryRepo;
+import net.thrymr.repository.CourseRepo;
+import net.thrymr.services.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.List;
 
 @Component
 public class Query implements GraphQLQueryResolver {
@@ -71,6 +72,15 @@ public class Query implements GraphQLQueryResolver {
 
     @Autowired
     MiniSessionService miniSessionService;
+
+    @Autowired
+    WorksheetService worksheetService;
+
+    @Autowired
+    PsychoEducationService psychoEducationService;
+
+    @Autowired
+    MeditationService meditationService;
 
 
     @QueryMapping(name = "getMoodSourceById")
@@ -325,13 +335,15 @@ public class Query implements GraphQLQueryResolver {
     }
 
     @QueryMapping(name = "getAllEnumTags")
-    public List<TagType> getAllEnumTags(){
+    public List<TagType> getAllEnumTags() {
         return miniSessionService.getAllEnumTags();
     }
-    @QueryMapping(name="getAllGroups")
-    public List<Groups> getAllGroups(){
+
+    @QueryMapping(name = "getAllGroups")
+    public List<Groups> getAllGroups() {
         return miniSessionService.getAllGroups();
     }
+
     @QueryMapping(name = "getAllMiniSessionPagination")
     public List<MiniSession> getAllMiniSessionPagination(@Argument(name = "input") MiniSessionDto request) {
         return miniSessionService.getAllMiniSessionPagination(request);
@@ -348,8 +360,38 @@ public class Query implements GraphQLQueryResolver {
         return miniSessionService.getAllGroupDetails();
     }
 
-    @QueryMapping(name="getGroupById")
+    @QueryMapping(name = "getGroupById")
     public Groups getGroupById(@Argument Long id) {
         return miniSessionService.getGroupById(id);
+    }
+
+    @QueryMapping("getAllWorksheet")
+    public List<MtWorksheet> getAllWorksheet() {
+        return worksheetService.getAllWorksheet();
+    }
+
+    @QueryMapping("getWorksheetById")
+    public MtWorksheet getWorksheetById(@Argument Long id) {
+        return worksheetService.getWorksheetById(id);
+    }
+
+    @QueryMapping("getAllPsychoEducation")
+    public List<MtPsychoEducation> getAllPsychoEducation() {
+        return psychoEducationService.getAllPsychoEducation();
+    }
+
+    @QueryMapping("getPsychoEducationById")
+    public MtPsychoEducation getPsychoEducationById(@Argument Long id) {
+        return psychoEducationService.getPsychoEducationById(id);
+    }
+
+    @QueryMapping("getAllMeditation")
+    public List<MtMeditation> getAllMeditation() {
+        return meditationService.getAllMeditation();
+    }
+
+    @QueryMapping("getMeditationById")
+    public MtMeditation getMeditationById(@Argument Long id) {
+        return meditationService.getMeditationById(id);
     }
 }

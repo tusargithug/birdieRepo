@@ -1,18 +1,26 @@
 package net.thrymr.services.impl;
-        import graphql.kickstart.tools.GraphQLMutationResolver;
-        import graphql.schema.DataFetchingEnvironment;
-        import lombok.extern.slf4j.Slf4j;
-        import net.thrymr.dto.*;
-        import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
-        import net.thrymr.dto.slotRequest.TimeSlotDto;
-        import net.thrymr.services.*;
-        import org.springframework.beans.factory.annotation.Autowired;
-        import org.springframework.graphql.data.method.annotation.Argument;
-        import org.springframework.graphql.data.method.annotation.MutationMapping;
-        import org.springframework.stereotype.Component;
 
-        import javax.servlet.http.Part;
-        import java.text.ParseException;
+import graphql.kickstart.servlet.context.DefaultGraphQLServletContext;
+import graphql.kickstart.tools.GraphQLMutationResolver;
+import graphql.schema.DataFetchingEnvironment;
+import lombok.extern.slf4j.Slf4j;
+import net.thrymr.dto.*;
+import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
+import net.thrymr.dto.slotRequest.TimeSlotDto;
+import net.thrymr.model.master.Category;
+import net.thrymr.model.master.Course;
+import net.thrymr.services.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.Part;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -55,6 +63,15 @@ public class MutationResolver implements GraphQLMutationResolver {
     FileService fileService;
     @Autowired
     MoodInfoService moodInfoService;
+
+    @Autowired
+    WorksheetService worksheetService;
+
+    @Autowired
+    PsychoEducationService psychoEducationService;
+
+    @Autowired
+    MeditationService meditationService;
 
     @MutationMapping(name = "createAppUser")
     public String createAppUser(AppUserDto request) throws Exception {
@@ -481,6 +498,53 @@ public class MutationResolver implements GraphQLMutationResolver {
     public String uploadFile(Part file, DataFetchingEnvironment env) {
         Part actualFile = env.getArgument("file");
         return actualFile.getSubmittedFileName();
+    }
+
+    @MutationMapping("createWorksheet")
+    public String createWorksheet(@Argument(name = "input") WorksheetDto request) {
+        return worksheetService.createWorksheet(request);
+    }
+
+    @MutationMapping("updateWorksheetById")
+    public String updateWorksheetById(@Argument(name = "input") WorksheetDto request) {
+        return worksheetService.updateWorksheetById(request);
+    }
+
+    @MutationMapping("deleteWorksheetById")
+    public String deleteWorksheetById(@Argument Long id) {
+        return worksheetService.deleteWorksheetById(id);
+    }
+
+
+    @MutationMapping("createPsychoEducation")
+    public String createPsychoEducation(@Argument(name = "input") PsychoEducationDto request) {
+        return psychoEducationService.createPsychoEducation(request);
+    }
+
+    @MutationMapping("updatePsychoEducationById")
+    public String updatePsychoEducationById(@Argument(name = "input") PsychoEducationDto request) {
+        return psychoEducationService.updatePsychoEducationById(request);
+    }
+
+    @MutationMapping("deletePsychoEducationById")
+    public String deletePsychoEducationById(@Argument Long id) {
+        return psychoEducationService.deletePsychoEducationById(id);
+    }
+
+
+    @MutationMapping("createMeditation")
+    public String createMeditation(@Argument(name = "input") MeditationDto request) {
+        return meditationService.createMeditation(request);
+    }
+
+    @MutationMapping("updateMeditationById")
+    public String updateMeditationById(@Argument(name = "input") MeditationDto request) {
+        return meditationService.updateMeditationById(request);
+    }
+
+    @MutationMapping("deleteMeditationById")
+    public String deleteMeditationById(@Argument Long id) {
+        return meditationService.deleteMeditationById(id);
     }
 
 }
