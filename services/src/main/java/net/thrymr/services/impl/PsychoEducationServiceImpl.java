@@ -1,0 +1,107 @@
+package net.thrymr.services.impl;
+
+import net.thrymr.dto.PsychoEducationDto;
+import net.thrymr.model.master.MtPsychoEducation;
+import net.thrymr.repository.PsychoEducationRepo;
+import net.thrymr.services.PsychoEducationService;
+import net.thrymr.utils.Validator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Service
+public class PsychoEducationServiceImpl implements PsychoEducationService {
+
+    @Autowired
+    private PsychoEducationRepo psychoEducationRepo;
+
+
+    @Override
+    public List<MtPsychoEducation> getAllPsychoEducation() {
+
+        List<MtPsychoEducation> psychoEducationList = psychoEducationRepo.findAll();
+
+        if (!psychoEducationList.isEmpty()) {
+            return psychoEducationList.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+        }
+
+        return new ArrayList<>();
+    }
+
+    @Override
+    public MtPsychoEducation getPsychoEducationById(Long id) {
+
+        if (Validator.isValid(id)) {
+            Optional<MtPsychoEducation> optionalMtPsychoEducation = psychoEducationRepo.findById(id);
+            if (optionalMtPsychoEducation.isPresent() && optionalMtPsychoEducation.get().getIsActive().equals(Boolean.TRUE)) {
+                return optionalMtPsychoEducation.get();
+            }
+        }
+
+        return new MtPsychoEducation();
+    }
+
+    @Override
+    public String createPsychoEducation(PsychoEducationDto request) {
+
+        psychoEducationRepo.save(dtoToPsychoEducation(request));
+
+        return "created psycho education successfully";
+    }
+
+    @Override
+    public String updatePsychoEducationById(PsychoEducationDto request) {
+
+        MtPsychoEducation mtPsychoEducation = null;
+
+        if (Validator.isValid(request.getId())) {
+
+            Optional<MtPsychoEducation> optionalMtPsychoEducation = psychoEducationRepo.findById(request.getId());
+            if (optionalMtPsychoEducation.isPresent()) {
+                mtPsychoEducation = optionalMtPsychoEducation.get();
+                if (Validator.isValid(request.getName())) {
+                    mtPsychoEducation.setName(request.getName());
+                }
+                if (Validator.isValid(request.getDescription())) {
+                    mtPsychoEducation.setDescription(request.getDescription());
+                }
+                if (request.getIsActive() != null) {
+                    mtPsychoEducation.setIsActive(request.getIsActive());
+                }
+                psychoEducationRepo.save(mtPsychoEducation);
+                return "Psycho Education updated successfully";
+            }
+        }
+        return "Psycho education id not found";
+    }
+
+    @Override
+    public String deletePsychoEducationById(Long id) {
+
+        MtPsychoEducation mtPsychoEducation = null;
+        if (Validator.isValid(id)) {
+            Optional<MtPsychoEducation> optionalMtPsychoEducation = psychoEducationRepo.findById(id);
+            if (optionalMtPsychoEducation.isPresent()) {
+                mtPsychoEducation = optionalMtPsychoEducation.get();
+                mtPsychoEducation.setIsActive(Boolean.FALSE);
+                mtPsychoEducation.setIsDeleted(Boolean.TRUE);
+                psychoEducationRepo.save(mtPsychoEducation);
+                return "Psycho education deleted successfully";
+            }
+        }
+        return "Psycho education id not found";
+    }
+
+    private MtPsychoEducation dtoToPsychoEducation(PsychoEducationDto request) {
+        MtPsychoEducation mtPsychoEducation = new MtPsychoEducation();
+        mtPsychoEducation.setName(request.getName());
+        mtPsychoEducation.setDescription(request.getDescription());
+        mtPsychoEducation.setIsActive(request.getIsActive());
+
+        return mtPsychoEducation;
+    }
+}

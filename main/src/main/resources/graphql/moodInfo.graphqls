@@ -54,6 +54,12 @@ type Query {
     getAllMiniSessionPagination(input:MiniSessionDto):[MiniSession]
     getAllEnumTags:[TagType]
     getAllGroups:[Groups]
+    getAllWorksheet:[MtWorksheet]
+    getWorksheetById(id:ID!):MtWorksheet
+    getAllPsychoEducation:[MtPsychoEducation]
+    getPsychoEducationById(id:ID!):MtPsychoEducation
+    getAllMeditation:[MtMeditation]
+    getMeditationById(id:ID!):MtMeditation
 }
 
 type Mutation {
@@ -134,6 +140,15 @@ type Mutation {
     saveGroupDetails(input:GroupsDto):String!
     saveFileDetails(input:FileDetailsDto):String!
     uploadFile(file: Upload): String!
+    createWorksheet(input:WorksheetDto):String!
+    updateWorksheetById(input:WorksheetDto):String!
+    deleteWorksheetById(id:ID!):String!
+    createPsychoEducation(input:PsychoEducationDto):String!
+    updatePsychoEducationById(input:PsychoEducationDto):String!
+    deletePsychoEducationById(id:ID!):String!
+    createMeditation(input:MeditationDto):String!
+    updateMeditationById(input:MeditationDto):String!
+    deleteMeditationById(id:ID!):String!
 }
 
 scalar Upload
@@ -493,4 +508,43 @@ enum TagType{
     VT
     BURNOUT
     DEPRESSION
+}
+
+type MtWorksheet{
+    name:String
+    description:String
+    isActive:Boolean
+}
+
+input WorksheetDto{
+    id:Int
+    name:String
+    description:String
+    isActive:Boolean
+}
+
+type MtPsychoEducation{
+    name:String
+    description:String
+    isActive:Boolean
+}
+
+input PsychoEducationDto{
+    id:Int
+    name:String
+    description:String
+    isActive:Boolean
+}
+
+type MtMeditation{
+    name:String
+    meditationVideoLink:String
+    isActive:Boolean
+}
+
+input MeditationDto{
+    id:Int
+    name:String
+    meditationVideoLink:String
+    isActive:Boolean
 }
