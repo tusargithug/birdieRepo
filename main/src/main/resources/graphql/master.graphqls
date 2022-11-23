@@ -110,8 +110,6 @@ input TeamDto {
     pageNumber:Int
     PageSize:Int
     searchKey:String
-    teamLeaderId:Int
-    teamManagerId:Int
     siteId:Int
     shiftTimingsId:Int
 }
@@ -161,8 +159,6 @@ type Team{
     id:ID!
     teamId:String
     teamName:String
-    teamLeader:AppUser
-    teamManager:AppUser
     site:Site
     shiftTimings:ShiftTimings
     isActive:Boolean

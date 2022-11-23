@@ -1,5 +1,4 @@
 package net.thrymr.services.impl;
-
 import net.thrymr.dto.*;
 import net.thrymr.enums.Roles;
 import net.thrymr.enums.SlotShift;
@@ -17,12 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import javax.persistence.criteria.Predicate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,21 +42,11 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     @Override
     public String createTeam(TeamDto teamDto) {
         Team team = new Team();
-        team.setTeamId(teamDto.getTeamId());
-        team.setTeamName(teamDto.getTeamName());
-        //Team_leader
-        if (teamDto.getTeamLeaderId() != null && appUserRepo.existsById(teamDto.getTeamLeaderId())) {
-            Optional<AppUser> optionalAppUser = appUserRepo.findById(teamDto.getTeamLeaderId());
-            if (optionalAppUser.get().getRoles().equals(Roles.TEAM_LEADER)) {
-                optionalAppUser.ifPresent(team::setTeamLeader);
-            }
+        if (Validator.isValid(teamDto.getTeamId())) {
+            team.setTeamId(teamDto.getTeamId());
         }
-        //Team_manager
-        if (teamDto.getTeamManagerId() != null && appUserRepo.existsById(teamDto.getTeamManagerId())) {
-            Optional<AppUser> optionalAppUser = appUserRepo.findById(teamDto.getTeamManagerId());
-            if (optionalAppUser.get().getRoles().equals(Roles.TEAM_MANAGER)) {
-                optionalAppUser.ifPresent(team::setTeamManager);
-            }
+        if (Validator.isValid(teamDto.getTeamName())) {
+            team.setTeamName(teamDto.getTeamName());
         }
         //Site
         if (teamDto.getSiteId() != null && siteRepo.existsById(teamDto.getSiteId())) {
@@ -72,7 +57,6 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             Optional<ShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(teamDto.getShiftTimingsId());
             optionalShiftTimings.ifPresent(team::setShiftTimings);
         }
-        //team.setShiftTimings(dtoToShiftTimings(teamDto.getShiftTimings()));
         if (teamDto.getStatus() != null && teamDto.getStatus().equals(Boolean.TRUE)) {
             team.setIsActive(teamDto.getStatus());
         }
@@ -88,21 +72,11 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         Team team;
         if (teamId.isPresent()) {
             team = teamId.get();
+            if (Validator.isValid(teamDto.getTeamId())) {
+                team.setTeamId(teamDto.getTeamId());
+            }
             if (Validator.isValid(teamDto.getTeamName())) {
                 team.setTeamName(teamDto.getTeamName());
-            }
-            if (teamDto.getTeamLeaderId() != null && appUserRepo.existsById(teamDto.getTeamLeaderId())) {
-                Optional<AppUser> optionalAppUser = appUserRepo.findById(teamDto.getTeamLeaderId());
-                if (optionalAppUser.get().getRoles().equals(Roles.TEAM_LEADER)) {
-                    optionalAppUser.ifPresent(team::setTeamLeader);
-                }
-            }
-            //Team_manager
-            if (teamDto.getTeamManagerId() != null && appUserRepo.existsById(teamDto.getTeamManagerId())) {
-                Optional<AppUser> optionalAppUser = appUserRepo.findById(teamDto.getTeamManagerId());
-                if (optionalAppUser.get().getRoles().equals(Roles.TEAM_MANAGER)) {
-                    optionalAppUser.ifPresent(team::setTeamManager);
-                }
             }
             //Site
             if (teamDto.getSiteId() != null && siteRepo.existsById(teamDto.getSiteId())) {
@@ -385,7 +359,6 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         if (teamDto.getTeamId() != null) {
             pageable = PageRequest.of(teamDto.getPageNumber(), teamDto.getPageSize(), Sort.Direction.ASC, "teamId");
         }
-        Team team = new Team();
         //filters
         Specification<Team> teamSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> addTeamSpecification = new ArrayList<>();
@@ -421,84 +394,6 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     }
 
 
-    private SiteDto entityToSiteDtoForGetAll(Site site) {
-        SiteDto siteDto = new SiteDto();
-        siteDto.setSiteName(site.getSiteName());
-        siteDto.setSiteId(site.getSiteId());
-        siteDto.setCity(entityToCityDto(site.getCity()));
-        siteDto.setCountry(entityToCountryDtoForGetAll(site.getCountry()));
-        siteDto.setRegion(entityToRegionDtoForGetAll(site.getRegion()));
-//        siteDto.setSiteManager(entityToAppUserDto(site.getSiteManager()));
-        siteDto.setStatus(site.getIsActive());
-        return siteDto;
-    }
-
-    private RegionDto entityToRegionDtoForGetAll(MtRegion region) {
-        RegionDto regionDto = new RegionDto();
-        regionDto.setRegionName(regionDto.getRegionName());
-        return regionDto;
-    }
-
-    private CountryDto entityToCountryDtoForGetAll(MtCountry country) {
-        CountryDto countryDto = new CountryDto();
-        countryDto.setCountryName(country.getCountryName());
-        return countryDto;
-    }
-
-    private CityDto entityToCityDto(MtCity mtCity) {
-        CityDto cityDto = new CityDto();
-        cityDto.setCityName(mtCity.getCityName());
-        return cityDto;
-    }
-
-    public TeamDto entityToDtoForGetAll(Team team) {
-        TeamDto teamDto = new TeamDto();
-        teamDto.setTeamName(team.getTeamName());
-        teamDto.setTeamId(team.getTeamId());
-        if (team.getTeamLeader() != null) {
-            teamDto.setTeamLeader(entityToAppUserDto(team.getTeamLeader()));
-        }
-        if (team.getTeamManager() != null) {
-            teamDto.setTeamLeader(entityToAppUserDto(team.getTeamManager()));
-        }
-        teamDto.setSite(entityToSiteDto(team.getSite()));
-        teamDto.setShiftTimings(teamDto.getShiftTimings());
-        teamDto.setStatus(team.getIsActive());
-        return teamDto;
-    }
-
-    private SiteDto entityToSiteDto(Site site) {
-        SiteDto siteDto = new SiteDto();
-        siteDto.setSiteName(site.getSiteName());
-        return siteDto;
-    }
-
-
-    public AppUser dtoToAppUserEntity(AppUserDto appUserDto) {
-        AppUser appUser = new AppUser();
-        appUser.setUserName(appUserDto.getUserName());
-        appUser.setEmail(appUserDto.getEmail());
-        appUser.setEmpId(appUserDto.getEmpId());
-//        appUser.setFirstName(appUserDto.getFirstName());
-//        appUser.setLastName(appUserDto.getLastName());
-        appUser.setMobile(appUserDto.getMobile());
-        appUser.setRoles(Roles.valueOf(appUserDto.getRoles()));
-        appUser.setPassword(appUser.getPassword());
-        return appUser;
-    }
-
-
-    public AppUserDto entityToAppUserDto(AppUser appUser) {
-        AppUserDto appUserDto = new AppUserDto();
-        appUserDto.setUserName(appUser.getUserName());
-        appUserDto.setEmail(appUser.getEmail());
-        appUserDto.setEmpId(appUser.getEmpId());
-//        appUserDto.setFirstName(appUser.getFirstName());
-//        appUserDto.setLastName(appUser.getLastName());
-        appUserDto.setRoles(String.valueOf(appUser.getRoles()));
-        return appUserDto;
-    }
-
     public String getTeamSearchKey(Team team) {
         String searchKey = "";
         if (team.getSite() != null) {
@@ -509,12 +404,6 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         }
         if (team.getTeamName() != null) {
             searchKey = searchKey + " " + team.getTeamName();
-        }
-        if (team.getTeamLeader() != null) {
-            searchKey = searchKey + " " + team.getTeamLeader();
-        }
-        if (team.getTeamManager() != null) {
-            searchKey = searchKey + " " + team.getTeamManager();
         }
         if (team.getShiftTimings() != null) {
             searchKey = searchKey + " " + team.getShiftTimings();
@@ -536,9 +425,6 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         if (site.getCity() != null) {
             searchKey = searchKey + " " + site.getCity();
         }
-//        if (site.getSiteManager() != null) {
-//            searchKey = searchKey + " " + site.getSiteManager();
-//        }
 
         return searchKey;
     }

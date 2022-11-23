@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
 
 
 @Getter
@@ -19,10 +18,6 @@ public class Team extends BaseEntity {
     @Column(name = "team_name")
     private String teamName;
     //TODO doubt
-    @OneToOne(cascade = CascadeType.ALL)
-    private AppUser teamLeader;
-    @OneToOne(cascade = CascadeType.ALL)
-    private AppUser teamManager;
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private Site site;
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
