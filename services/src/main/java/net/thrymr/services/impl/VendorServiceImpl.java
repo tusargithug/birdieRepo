@@ -18,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
@@ -138,6 +139,7 @@ public class VendorServiceImpl implements VendorService {
         //filters
         Specification<Vendor> addVendorSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> addVendorPredicate = new ArrayList<>();
+                Join<Vendor, Site> siteJoin = root.join("site");
             if (response.getVendorName() != null) {
                 Predicate name = criteriaBuilder.and(root.get("userName").in(response.getVendorName()));
                 addVendorPredicate.add(name);
@@ -146,11 +148,10 @@ public class VendorServiceImpl implements VendorService {
                 Predicate poc = criteriaBuilder.and(root.get("POC").in(response.getPOC()));
                 addVendorPredicate.add(poc);
             }
-            if (!response.getSiteIdList().isEmpty()) {
-                Predicate site = criteriaBuilder.and(root.get("site").in(response.getSiteIdList()));
+            if (response.getSiteIdList()!=null && !response.getSiteIdList().isEmpty()) {
+                Predicate site = criteriaBuilder.and(siteJoin.get("id").in(response.getSiteIdList()));
                 addVendorPredicate.add(site);
             }
-
             return criteriaBuilder.and(addVendorPredicate.toArray(new Predicate[0]));
         });
         Page<Vendor> vendorObjectives = vendorRepo.findAll(addVendorSpecification, pageable);
