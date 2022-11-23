@@ -1,6 +1,7 @@
 package net.thrymr.services.impl;
 
 import net.thrymr.dto.CounsellorDto;
+import net.thrymr.enums.Gender;
 import net.thrymr.enums.Roles;
 import net.thrymr.model.*;
 import net.thrymr.repository.*;
@@ -36,56 +37,29 @@ public class CounsellorImpl implements CounsellorService {
 
     @Override
     public String createCounsellor(CounsellorDto request) {
-        AppUser user = new AppUser();
         Counsellor counsellor = new Counsellor();
-        if (Validator.isValid(request.getAppUserName())) {
-            user.setUserName(request.getAppUserName());
+        counsellor.setEmpId(request.getEmpId());
+        counsellor.setCounsellorName(request.getCounsellorName());
+        counsellor.setEducationalDetails(request.getEducationalDetails());
+        counsellor.setEmailId(request.getEmailId());
+        counsellor.setLanguages(request.getLanguages());
+        counsellor.setBio(request.getBio());
+        counsellor.setShiftStartAt(request.getShiftStartAt());
+        counsellor.setShiftEndAt(request.getShiftEndAt());
+        counsellor.setShiftTimings(request.getShiftEndAt()+"-"+request.getShiftEndAt());
+        if (Validator.isValid(request.getDesignation()) && request.getDesignation().equals("COUNSELLOR")) {
+            counsellor.setDesignation(Roles.valueOf(request.getDesignation()));
         }
-        if (Validator.isValid(request.getEmployeeId())) {
-            user.setEmpId(request.getEmployeeId());
-        }
-        if (Validator.isValid(request.getDesignation())) {
-            user.setRoles(Roles.COUNSELLOR);
-        }
-        if (Validator.isValid(request.getContactNumber())) {
-            user.setMobile(request.getContactNumber());
-        }
-        if (Validator.isValid(request.getEmailId())) {
-            user.setEmail(request.getEmailId());
-        }
-//        if (Validator.isValid(request.getTeamId())) {
-//            Optional<Team> optionalTeam = teamRepo.findById(request.getTeamId());
-//            if (optionalTeam.isPresent()) {
-//                user.setTeam(optionalTeam.get());
-//            }
-//        }
+        counsellor.setCountryCode(request.getCountryCode());
+        counsellor.setMobileNumber(request.getMobileNumber());
+        counsellor.setGender(Gender.valueOf(request.getGender()));
         if (Validator.isValid(request.getSiteId())) {
             Optional<Site> optionalSite = siteRepo.findById(request.getSiteId());
             if (optionalSite.isPresent()) {
-                user.setSite(optionalSite.get());
+                counsellor.setSite(optionalSite.get());
             }
         }
-//        if (Validator.isValid(request.getShiftTimingsId())) {
-//            Optional<ShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(request.getShiftTimingsId());
-//            if (optionalShiftTimings.isPresent()) {
-//                user.setShiftTimings(optionalShiftTimings.get());
-//            }
-//        }
-        counsellor.setAppUser(user);
-
-        //Team_Manager
-        if (request.getTeamManagerId() != null && appUserRepo.existsById(request.getTeamManagerId())) {
-            Optional<AppUser> optionalAppUser = appUserRepo.findById(request.getTeamManagerId());
-            if (optionalAppUser.isPresent() && optionalAppUser.get().getRoles().equals(Roles.TEAM_MANAGER)) {
-                optionalAppUser.ifPresent(counsellor::setTeamManager);
-            }
-        }
-        appUserRepo.save(user);
-        counsellor.setLanguages(request.getLanguages());
-        counsellor.setEducationalDetails(request.getEducationalDetails());
-        counsellor.setBio(request.getBio());
         counsellorRepo.save(counsellor);
-
         return "counsellor create successfully";
     }
 
@@ -94,81 +68,56 @@ public class CounsellorImpl implements CounsellorService {
         if (Validator.isValid(request.getId())) {
             Optional<Counsellor> optionalCounsellor = counsellorRepo.findById(request.getId());
             Counsellor counsellor = null;
-            AppUser user = null;
             if (optionalCounsellor.isPresent()) {
                 counsellor = optionalCounsellor.get();
-
-                //Team_Manager
-                if (request.getTeamManagerId() != null && appUserRepo.existsById(request.getTeamManagerId())) {
-                    Optional<AppUser> optionalAppUser = appUserRepo.findById(request.getTeamManagerId());
-                    if (optionalAppUser.isPresent() && optionalAppUser.get().getRoles().equals(Roles.TEAM_MANAGER)) {
-                        optionalAppUser.ifPresent(counsellor::setTeamManager);
-                    }
+                if (Validator.isValid(request.getEmpId())) {
+                    counsellor.setEmpId(request.getEmpId());
                 }
-                if (Validator.isValid(request.getLanguages())) {
-                    counsellor.setLanguages(request.getLanguages());
+                if (Validator.isValid(request.getCounsellorName())) {
+                    counsellor.setCounsellorName(request.getCounsellorName());
                 }
                 if (Validator.isValid(request.getEducationalDetails())) {
                     counsellor.setEducationalDetails(request.getEducationalDetails());
                 }
+                if (Validator.isValid(request.getEmailId())) {
+                    counsellor.setEmailId(request.getEmailId());
+                }
+                if (Validator.isValid(request.getLanguages())) {
+                    counsellor.setLanguages(request.getLanguages());
+                }
                 if (Validator.isValid(request.getBio())) {
                     counsellor.setBio(request.getBio());
                 }
-            }
-            if (Validator.isValid(request.getAppUserId())) {
-                Optional<AppUser> optionalAppUser = appUserRepo.findById(request.getAppUserId());
-                if (optionalAppUser.isPresent()) {
-                    user = optionalAppUser.get();
-                    if (Validator.isValid(request.getAppUserName())) {
-                        user.setUserName(request.getAppUserName());
-                    }
-                    if (Validator.isValid(request.getEmployeeId())) {
-                        user.setEmpId(request.getEmployeeId());
-                    }
-                    if (Validator.isValid(request.getDesignation())) {
-                        user.setRoles(Roles.COUNSELLOR);
-                    }
-                    if (Validator.isValid(request.getContactNumber())) {
-                        user.setMobile(request.getContactNumber());
-                    }
-                    if (Validator.isValid(request.getEmailId())) {
-                        user.setEmail(request.getEmailId());
-                    }
-//                    if (Validator.isValid(request.getTeamId())) {
-//                        Optional<Team> optionalTeam = teamRepo.findById(request.getTeamId());
-//                        if (optionalTeam.isPresent()) {
-//                            user.setTeam(optionalTeam.get());
-//                        }
-//                    }
-                    if (Validator.isValid(request.getSiteId())) {
-                        Optional<Site> optionalSite = siteRepo.findById(request.getSiteId());
-                        if (optionalSite.isPresent()) {
-                            user.setSite(optionalSite.get());
-                        }
-                    }
-//                    if (Validator.isValid(request.getShiftTimingsId())) {
-//                        Optional<ShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(request.getShiftTimingsId());
-//                        if (optionalShiftTimings.isPresent()) {
-//                            user.setShiftTimings(optionalShiftTimings.get());
-//                        }
-//                    }
+                if (Validator.isValid(request.getDesignation()) && request.getDesignation().equals("COUNSELLOR")) {
+                    counsellor.setDesignation(Roles.valueOf(request.getDesignation()));
                 }
+                if(Validator.isValid(request.getCountryCode())){
+                    counsellor.setCountryCode(request.getCountryCode());
+                }
+                if (Validator.isValid(request.getMobileNumber())) {
+                    counsellor.setMobileNumber(request.getMobileNumber());
+                }
+                if(request.getShiftStartAt() != null) {
+                    counsellor.setShiftStartAt(request.getShiftStartAt());
+                }
+                if(request.getShiftEndAt() != null) {
+                    counsellor.setShiftEndAt(request.getShiftEndAt());
+                }
+                if(request.getShiftStartAt() != null && request.getShiftEndAt() != null){
+                    counsellor.setShiftTimings(request.getShiftEndAt()+"-"+request.getShiftEndAt());
+                }
+                if(Validator.isValid(request.getGender())){
+                    counsellor.setGender(Gender.valueOf(request.getGender()));
+                }
+                if (Validator.isValid(request.getSiteId())) {
+                    Optional<Site> optionalSite = siteRepo.findById(request.getSiteId());
+                    if (optionalSite.isPresent()) {
+                        counsellor.setSite(optionalSite.get());
+                    }
+                }
+                counsellorRepo.save(counsellor);
+                return "counsellor update successfully";
             }
-            if (Validator.isObjectValid(user)) {
-                counsellor.setAppUser(user);
-            }
-            appUserRepo.save(user);
-            if (request.getLanguages() != null && !request.getLanguages().isEmpty()) {
-                counsellor.setLanguages(request.getLanguages());
-            }
-            if (request.getEducationalDetails() != null && !request.getEducationalDetails().isEmpty()) {
-                counsellor.setEducationalDetails(request.getEducationalDetails());
-            }
-            if (Validator.isValid(request.getBio())) {
-                counsellor.setBio(request.getBio());
-            }
-            counsellorRepo.save(counsellor);
-            return "counsellor update successfully";
         }
         return "this id not in database";
     }
@@ -191,21 +140,23 @@ public class CounsellorImpl implements CounsellorService {
         if (response.getPageSize() != null) {
             pageable = PageRequest.of(response.getPageNumber(), response.getPageSize());
         }
-        if (response.getAppUserName() != null) {
-            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.DESC, "userName");
+        if (response.getSortCounsellorName() != null && response.getSortCounsellorName().equals(Boolean.TRUE)) {
+            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.ASC, "counsellorName");
+        }else if(response.getSortCounsellorName() != null && response.getSortCounsellorName().equals(Boolean.FALSE)){
+            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.DESC, "counsellorName");
         }
         //filters
-        Specification<Counsellor> addUserSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
+        Specification<Counsellor> addCounsellorSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> addCounsellorPredicate = new ArrayList<>();
-            if (response.getAppUserName() != null) {
-                Predicate appUserName = criteriaBuilder.and(root.get("userName").in(response.getAppUserName()));
-                addCounsellorPredicate.add(appUserName);
+            if (response.getCounsellorName() != null) {
+                Predicate counsellorName = criteriaBuilder.and(root.get("counsellorName").in(response.getCounsellorName()));
+                addCounsellorPredicate.add(counsellorName);
             }
-            if (response.getEmployeeId() != null && !response.getEmployeeId().isEmpty()) {
-                Predicate employeeId = criteriaBuilder.and(root.get("empId").in(response.getEmployeeId()));
-                addCounsellorPredicate.add(employeeId);
+            if (response.getEmpId() != null && !response.getEmpId().isEmpty()) {
+                Predicate empId = criteriaBuilder.and(root.get("empId").in(response.getEmpId()));
+                addCounsellorPredicate.add(empId);
             }
-            if (response.getAddedOn() != null) {
+            if (response.getAddedOn() != null && response.getAddedOn().equals(Boolean.TRUE)) {
                 Predicate addedOn = criteriaBuilder.and(root.get("createdOn").in(response.getAddedOn()));
                 addCounsellorPredicate.add(addedOn);
             }
@@ -213,18 +164,16 @@ public class CounsellorImpl implements CounsellorService {
                 Predicate designation = criteriaBuilder.and(root.get("roles").in(response.getDesignation()));
                 addCounsellorPredicate.add(designation);
             }
-            if (response.getShiftTimings() != null) {
-                Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(response.getShiftTimings()));
-                addCounsellorPredicate.add(shiftTimings);
-            }
-            if (response.getSite() != null) {
-                Predicate site = criteriaBuilder.and(root.get("site").in(response.getSite()));
+            if (response.getSiteId() != null) {
+                Predicate site = criteriaBuilder.and(root.get("site").in(response.getSiteId()));
                 addCounsellorPredicate.add(site);
             }
-            if (response.getTeam() != null) {
-                Predicate team = criteriaBuilder.and(root.get("team").in(response.getTeam()));
-                addCounsellorPredicate.add(team);
+
+            if(response.getShiftTimings() != null){
+                Predicate shiftTimings= criteriaBuilder.and(root.get("shiftTimings").in(response.getShiftTimings()));
+                addCounsellorPredicate.add(shiftTimings);
             }
+
             if (Validator.isValid(response.getSearchKey())) {
                 Predicate searchPredicate = criteriaBuilder.like(
                         criteriaBuilder.lower(root.get("searchKey")),
@@ -233,13 +182,13 @@ public class CounsellorImpl implements CounsellorService {
             }
             return criteriaBuilder.and(addCounsellorPredicate.toArray(new Predicate[0]));
         });
-        Page<Counsellor> counsellorObjectives = counsellorRepo.findAll(addUserSpecification, pageable);
+        assert pageable != null;
+        Page<Counsellor> counsellorObjectives = counsellorRepo.findAll(addCounsellorSpecification, pageable);
 
-        List<Counsellor> counsellorList = new ArrayList<>();
         if (counsellorObjectives.getContent() != null) {
-            counsellorList = counsellorObjectives.getContent().stream().filter(obj -> obj.getAppUser().getRoles().equals(Roles.COUNSELLOR) && obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+            return new ArrayList<>(counsellorObjectives.getContent());
         }
-        return counsellorList;
+        return new ArrayList<>();
     }
 
     @Override

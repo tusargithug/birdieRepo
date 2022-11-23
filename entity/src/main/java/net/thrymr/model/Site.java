@@ -8,6 +8,7 @@ import net.thrymr.model.master.MtCountry;
 import net.thrymr.model.master.MtRegion;
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @Getter
@@ -17,18 +18,27 @@ import java.util.List;
 public class Site extends BaseEntity {
     @Column(name = "site_id")
     private String siteId;
+
     @Column(name = "site_name")
     private String siteName;
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private MtCity city;
+
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private MtCountry country;
+
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private MtRegion region;
+
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Team> teams =new ArrayList<>();
+
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "site")
     private List<AppUser> appUser;
-    /*@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "site")
-    private List<Counsellor> counsellorList;*/
+
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private Vendor vendor;
+
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "site")
+    private List<Counsellor> counsellorList=new ArrayList<>();
 }

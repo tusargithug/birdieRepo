@@ -38,33 +38,11 @@ public class VendorServiceImpl implements VendorService {
     @Override
     public String saveVendor(VendorDto request) {
         Vendor vendor = new Vendor();
-        AppUser user = new AppUser();
-
-        if (Validator.isValid(request.getName())) {
-            user.setUserName(request.getName());
-            user.setRoles(Roles.VENDOR);
-        }
-        if (Validator.isValid(request.getEmpId())) {
-            user.setEmpId(request.getEmpId());
-        }
-        if (Validator.isValid(request.getEmail())) {
-            user.setEmail(request.getEmail());
-        }
-        if (Validator.isValid(request.getMobile())) {
-            user.setMobile(request.getMobile());
-        }
-        if (Validator.isValid(request.getSiteId())) {
-            Optional<Site> optionalSite = siteRepo.findById(request.getSiteId());
-            if (optionalSite.isPresent()) {
-                user.setSite(optionalSite.get());
-            }
-        }
-        appUserRepo.save(user);
-        if (Validator.isValid(request.getPOC())) {
-            vendor.setPOC(request.getPOC());
-        }
-        vendor.setAppUser(user);
-
+        vendor.setVendorName(request.getVendorName());
+        vendor.setVendorId(request.getVendorId());
+        vendor.setCountryCode(request.getCountryCode());
+        vendor.setMobileNumber(request.getMobileNumber());
+        vendor.setPOC(request.getPOC());
         vendorRepo.save(vendor);
         return "vendor creation success";
     }
@@ -106,52 +84,33 @@ public class VendorServiceImpl implements VendorService {
     @Override
 
     public String updateVendor(VendorDto request) {
-        AppUser user = null;
-        if (Validator.isValid(request.getAppUserId())) {
-            Optional<AppUser> optionalAppUser = appUserRepo.findById(request.getAppUserId());
-            if (optionalAppUser.isPresent()) {
-                user = optionalAppUser.get();
-
-                if (Validator.isValid(request.getName())) {
-                    user.setUserName(request.getName());
+        Vendor vendor = null;
+        if(Validator.isValid(request.getId())) {
+            Optional<Vendor> optionalVendor = vendorRepo.findById(request.getId());
+            if (optionalVendor.isPresent()) {
+                vendor=optionalVendor.get();
+                if (Validator.isValid(request.getVendorName())) {
+                    vendor.setVendorName(request.getVendorName());
                 }
-                if (Validator.isValid(request.getRole())) {
-                    user.setRoles(Roles.VENDOR);
+                if (Validator.isValid(request.getVendorId())) {
+                    vendor.setVendorId(request.getVendorId());
                 }
-                if (Validator.isValid(request.getEmpId())) {
-                    user.setEmpId(request.getEmpId());
+                if (Validator.isValid(request.getCountryCode())) {
+                    vendor.setCountryCode(request.getCountryCode());
                 }
-                if (Validator.isValid(request.getEmail())) {
-                    user.setEmail(request.getEmail());
+                if (Validator.isValid(request.getMobileNumber())) {
+                    vendor.setMobileNumber(request.getMobileNumber());
                 }
-                if (Validator.isValid(request.getMobile())) {
-                    user.setMobile(request.getMobile());
+                if (Validator.isValid(request.getPOC())) {
+                    vendor.setPOC(request.getPOC());
                 }
-                if (Validator.isValid(request.getSiteId())) {
-                    Optional<Site> optionalSite = siteRepo.findById(request.getSiteId());
-                    if (optionalSite.isPresent()) {
-                        user.setSite(optionalSite.get());
-                    }
-                }
-            }
-            Vendor vendor;
-            if (Validator.isValid(request.getId())) {
-                Optional<Vendor> optionalVendor = vendorRepo.findById(request.getId());
-                if (optionalVendor.isPresent()) {
-                    vendor = optionalVendor.get();
-                    if (Validator.isObjectValid(user)) {
-                        vendor.setAppUser(user);
-                    }
-                    if (Validator.isValid(request.getPOC())) {
-                        vendor.setPOC(request.getPOC());
-                    }
-                    vendorRepo.save(vendor);
-                    return "Vendor updated successfully";
-                }
+                vendorRepo.save(vendor);
+                return "Vendor updated successfully";
             }
         }
-        return "No data found";
+        return "This vendor id is not present in database";
     }
+
 
     @Override
     public List<Vendor> getAllVendorPagination(VendorDto response) {
@@ -159,22 +118,24 @@ public class VendorServiceImpl implements VendorService {
         if (Validator.isValid(response.getPageSize())) {
             pageable = PageRequest.of(response.getPageNumber(), response.getPageSize());
         }
-        if (Validator.isValid(response.getAddedOn())) {
-            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.DESC, "createdOn");
+        if (response.getSortVendorName() != null && response.getSortVendorName().equals(Boolean.TRUE)) {
+            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.ASC, "vendorName");
+        }else if(response.getSortVendorName() != null && response.getSortVendorName().equals(Boolean.FALSE)) {
+            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.DESC, "vendorName");
         }
         //filters
         Specification<Vendor> addVendorSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> addVendorPredicate = new ArrayList<>();
-            if (response.getName() != null) {
-                Predicate name = criteriaBuilder.and(root.get("userName").in(response.getName()));
+            if (response.getVendorName() != null) {
+                Predicate name = criteriaBuilder.and(root.get("userName").in(response.getVendorName()));
                 addVendorPredicate.add(name);
             }
             if (response.getPOC() != null && !response.getPOC().isEmpty()) {
                 Predicate poc = criteriaBuilder.and(root.get("POC").in(response.getPOC()));
                 addVendorPredicate.add(poc);
             }
-            if (response.getSite() != null) {
-                Predicate site = criteriaBuilder.and(root.get("site").in(response.getSite()));
+            if (response.getSiteId() != null) {
+                Predicate site = criteriaBuilder.and(root.get("site").in(response.getSiteId()));
                 addVendorPredicate.add(site);
             }
 

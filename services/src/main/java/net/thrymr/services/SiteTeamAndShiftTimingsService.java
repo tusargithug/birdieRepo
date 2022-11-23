@@ -28,7 +28,7 @@ public interface SiteTeamAndShiftTimingsService {
 
     String deleteSiteById(Long id);
 
-    String saveSiftTimings(ShiftTimingsDto shiftTimingsDto);
+    String saveShiftTimings(ShiftTimingsDto shiftTimingsDto);
 
     String updateSiftTimings(ShiftTimingsDto shiftTimingsDto);
 

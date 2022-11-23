@@ -10,6 +10,7 @@ import net.thrymr.model.master.MtRegion;
 import net.thrymr.repository.*;
 import net.thrymr.services.SiteTeamAndShiftTimingsService;
 import net.thrymr.utils.Validator;
+import org.apache.poi.sl.draw.geom.GuideIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -44,6 +45,8 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     ShiftTimingsRepo shiftTimingsRepo;
     @Autowired
     CounsellorRepo counsellorRepo;
+    @Autowired
+    VendorRepo vendorRepo;
 
     @Override
     public String createTeam(TeamDto teamDto) {
@@ -141,6 +144,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             Optional<MtCity> optionalCity = cityRepo.findById(siteDto.getCityId());
             optionalCity.ifPresent(site::setCity);
         }
+
         //siteManager
         siteDto.setSearchKey(saveSiteSearchKey(site));
         if (siteDto.getStatus() != null && siteDto.getStatus().equals(Boolean.TRUE) && siteDto.getStatus().equals(Boolean.FALSE)) {
@@ -273,7 +277,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     }
 
     @Override
-    public String saveSiftTimings(ShiftTimingsDto shiftTimingsDto) {
+    public String saveShiftTimings(ShiftTimingsDto shiftTimingsDto) {
         ShiftTimings shiftTimings = new ShiftTimings();
         if (shiftTimingsDto.getShiftName().equals(SlotShift.MORNING)) {
             shiftTimings.setShiftName(SlotShift.MORNING);

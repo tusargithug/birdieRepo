@@ -55,4 +55,8 @@ public class AppUserDto {
     private String addedOn;
 
     private Long counsellorId;
+
+    private String countryCode;
+
+    private String gender;
 }

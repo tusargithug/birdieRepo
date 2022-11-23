@@ -171,21 +171,25 @@ type UserAppointmentResponse{
 }
 
 input AppUserDto{
-    id:Int
-    userName:String
-    email:String
-    mobile:String
-    empId:String
-    roles:String
-    siteId:Int
-    teamId:Int
-    isActive:Boolean
-    dateOfJoining:String
-    alerts:String
-    pageSize:Int
-    pageNumber:Int
-    counsellorId:Int
-    fromAtoZ:Boolean
+     id:Int
+     email:String
+     userName:String
+     mobile:String
+     password:String
+     searchKey:String
+     isActive:Boolean
+     empId:String
+     roles:String
+     educationDetails:String
+     languages:String
+     siteId:Int
+     dateOfJoining:String
+     alerts:Alerts
+     pageSize:Int
+     pageNumber:Int
+     addedOn:String
+     countryCode:String
+     gender:String
 }
 enum Roles{
     NONE
@@ -203,15 +207,18 @@ enum Roles{
 
 
 type AppUser{
-    id:ID!
-    email:String
-    userName:String
-    mobile:String
     empId:String
+    userName:String
+    countryCode:String
+    mobile:String
+    email:String
+    password:String
+    dateOfJoining:Date
     roles:Roles
     site:Site
-    dateOfJoining:String
+    counsellorSlotList:[CounsellorSlot]
     alerts:Alerts
+    gender:Gender
 }
 
 type FileEntity{
@@ -253,14 +260,21 @@ type CounsellorSlot{
     isActive:Boolean
 }
 type Counsellor{
-    id:Int
-    appUser:AppUser
+    counsellorName:String
+    empId:String
+    emailId:String
+    countryCode:String
+    mobileNumber:String
+    designation:Roles
+    shiftStartAt:LocalTime
+    shiftEndAt:LocalTime
+    shiftTimings:String
     counsellorSlots:[CounsellorSlot]
-    shiftTimings:[ShiftTimings]
+    site:Site
     educationalDetails:[String]
     languages:[String]
     bio:String
-    isActive:Boolean
+    gender:Gender
 }
 scalar LocalTime
 scalar Date
@@ -294,51 +308,56 @@ enum Alerts{
     NONE
 }
 input CounsellorDto {
-    id:Int
-    educationalDetails:[String]
-    languages:[String]
-    siteId:Int
-    teamId:Int
-    designation:String
-    shiftTimingsId:Int
-    teamManagerId:Int
-    bio:String
-    appUserName:String
-    employeeId:String
-    emailId:String
-    contactNumber:String
-    appUserId:Int
-    pageNumber:Int
-    pageSize:Int
-    addedOn:String
-    shiftTimings: ShiftTimingsDto
-    site:SiteDto
-    team:TeamDto
-    isActive:Boolean
+     id:Int
+     educationalDetails:String
+     languages:String
+     siteId:Int
+     designation:String
+     bio:String
+     counsellorName:String
+     sortCounsellorName:Boolean
+     empId:String
+     emailId:String
+     mobileNumber:String
+     pageNumber:Int
+      pageSize:Int
+     addedOn:Boolean
+     searchKey:String
+     isActive:Boolean
+     shiftStartAt:LocalTime
+     shiftEndAt:LocalTime
+     shiftTimings:String
+     countryCode:String
+     gender:String
 }
 
 type Vendor{
     id:ID!
     POC:String
-    appUser:AppUser
+    vendorName:String
+    vendorId:String
     isActive:Boolean
+    mobileNumber:String
+    countryCode:String
+    site:[Site]
 }
 input VendorDto{
     id:Int
+    siteId:Int
     POC:String
-    name: String
+    vendorName:String
+    sortVendorName:Boolean
     pageNumber:Int
     pageSize:Int
     addedOn:String
     sortBy:String
-    siteId:Int
+    site:String
+    designation:String
     email:String
-    userName:String
-    mobile:String
+    mobileNumber:String
+    vendorId:String
     searchKey:String
-    role:String
-    empId:String
-    isActive:Boolean
+    countryCode:String
 }
 
 type UserAppointment {
@@ -493,4 +512,10 @@ enum TagType{
     VT
     BURNOUT
     DEPRESSION
+}
+enum Gender{
+    MALE
+    FEMALE
+    OTHERS
+    NONE
 }

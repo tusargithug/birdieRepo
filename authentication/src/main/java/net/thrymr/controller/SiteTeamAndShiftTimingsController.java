@@ -52,7 +52,7 @@ public class SiteTeamAndShiftTimingsController {
 
     @MutationMapping(name="saveSiftTimings")
     public String saveSiftTimings(@Argument(name = "input")ShiftTimingsDto shiftTimingsDto){
-        return siteTeamAndShiftTimingsService.saveSiftTimings(shiftTimingsDto);
+        return siteTeamAndShiftTimingsService.saveShiftTimings(shiftTimingsDto);
     }
 
     @MutationMapping(name="updateSiftTimings")

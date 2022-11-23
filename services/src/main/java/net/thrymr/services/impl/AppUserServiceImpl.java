@@ -4,6 +4,7 @@ package net.thrymr.services.impl;
 import net.thrymr.constant.Constants;
 import net.thrymr.dto.*;
 import net.thrymr.dto.response.UserAppointmentResponse;
+import net.thrymr.enums.Gender;
 import net.thrymr.enums.Roles;
 import net.thrymr.enums.Alerts;
 import net.thrymr.enums.SlotStatus;
@@ -190,7 +191,9 @@ public class AppUserServiceImpl implements AppUserService {
         }
         user.setRoles(Roles.valueOf(request.getRoles()));
         user.setEmail(request.getEmail());
+        user.setCountryCode(request.getCountryCode());
         user.setMobile(request.getMobile());
+        user.setGender(Gender.valueOf(request.getGender()));
         appUserRepo.save(user);
         return "User Saved successfully";
     }
@@ -216,6 +219,9 @@ public class AppUserServiceImpl implements AppUserService {
                         user.setSite(optionalSite.get());
                     }
                 }
+                if(Validator.isValid(request.getCountryCode())){
+                    user.setCountryCode(request.getCountryCode());
+                }
                 if (Validator.isValid(request.getMobile())) {
                     user.setMobile(request.getMobile());
                 }
@@ -225,6 +231,9 @@ public class AppUserServiceImpl implements AppUserService {
                 }
                 if (Validator.isValid(request.getRoles())) {
                     user.setRoles(Roles.valueOf(request.getRoles()));
+                }
+                if (Validator.isValid(request.getGender())) {
+                    user.setGender(Gender.valueOf(request.getGender()));
                 }
                 appUserRepo.save(user);
                 return "User updated successfully";

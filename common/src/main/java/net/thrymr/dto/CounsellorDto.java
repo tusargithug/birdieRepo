@@ -3,6 +3,7 @@ package net.thrymr.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Getter
@@ -12,22 +13,21 @@ public class CounsellorDto {
     private List<String> educationalDetails;
     private List<String> languages;
     private Long siteId;
-    private Long teamId;
     private String designation;
-    private Long shiftTimingsId;
-    private Long teamManagerId;
     private String bio;
-    private String appUserName;
-    private String employeeId;
+    private String counsellorName;
+    private Boolean sortCounsellorName;
+    private String empId;
     private String emailId;
-    private String contactNumber;
-    private Long appUserId;
+    private String mobileNumber;
     private Integer pageNumber;
     private Integer  pageSize;
-    private String addedOn;
-    private ShiftTimingsDto shiftTimings;
-    private SiteDto site;
-    private TeamDto team;
+    private Boolean addedOn;
     private String searchKey;
     private Boolean isActive;
+    private LocalTime shiftStartAt;
+    private LocalTime shiftEndAt;
+    private String shiftTimings;
+    private String countryCode;
+    private String gender;
 }

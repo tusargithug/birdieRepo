@@ -3,6 +3,7 @@ import net.thrymr.dto.CounsellorDto;
 import net.thrymr.model.AppUser;
 import net.thrymr.model.Counsellor;
 import net.thrymr.services.CounsellorService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -11,11 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 @RestController
 public class CounsellorController {
-    public final CounsellorService counsellorService;
-
-    public CounsellorController(CounsellorService counsellorService) {
-        this.counsellorService = counsellorService;
-    }
+    @Autowired
+     CounsellorService counsellorService;
 
     @MutationMapping(name ="createCounsellor")
     public String createCounsellor(@Argument(name = "input") CounsellorDto counsellorDto){

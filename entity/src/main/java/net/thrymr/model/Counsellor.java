@@ -3,7 +3,11 @@ package net.thrymr.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.thrymr.enums.Gender;
+import net.thrymr.enums.Roles;
+
 import javax.persistence.*;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,20 +16,42 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 public class Counsellor extends BaseEntity {
-    @OneToOne
-    private AppUser appUser;
-    @OneToOne
-    private AppUser teamManager;
+
+    private String counsellorName;
+
+    private String empId;
+
+    private String emailId;
+
+    private String countryCode;
+
+    private String mobileNumber;
+
+    @Enumerated(EnumType.STRING)
+    private Roles designation;
+
+    private LocalTime shiftStartAt;
+
+    private LocalTime shiftEndAt;
+
+    private String shiftTimings;
+
     @OneToMany(mappedBy = "counsellor",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<CounsellorSlot>counsellorSlots=new ArrayList<>();
-    @Column(name = "shift_timings")
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "counsellors")
-    private List<ShiftTimings> shiftTimings;
+
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private Site site;
+
     @Column(name = "educational_details")
     @ElementCollection(targetClass = String.class)
     private List<String> educationalDetails=new ArrayList<>();
+
     @ElementCollection(targetClass = String.class)
     private List<String> languages=new ArrayList<>();
+
     @Column(columnDefinition = "TEXT")
     private String bio;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 }
