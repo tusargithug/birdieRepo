@@ -188,26 +188,27 @@ type UserAppointmentResponse{
 }
 
 input AppUserDto{
-     id:Int
-     email:String
-     userName:String
-     mobile:String
-     password:String
-     searchKey:String
-     isActive:Boolean
-     empId:String
-     roles:String
-     siteId:Int
-     dateOfJoining:String
-     alerts:Alerts
-     pageSize:Int
-     pageNumber:Int
-     addedOn:String
-     countryCode:String
-     gender:String
-     isTeamLeader:Boolean
-     shiftStartAt:LocalTime
-     shiftEndAt:LocalTime
+    id:Int
+    email:String
+    userName:String
+    mobile:String
+    password:String
+    searchKey:String
+    isActive:Boolean
+    empId:String
+    roles:String
+    siteId:Int
+    dateOfJoining:String
+    alerts:Alerts
+    pageSize:Int
+    pageNumber:Int
+    addedOn:String
+    countryCode:String
+    gender:String
+    isTeamLeader:Boolean
+    shiftStartAt:String
+    shiftEndAt:String
+    sortUserName:Boolean
 }
 enum Roles{
     NONE
@@ -356,8 +357,8 @@ input CounsellorDto {
      addedOn:Boolean
      searchKey:String
      isActive:Boolean
-     shiftStartAt:LocalTime
-     shiftEndAt:LocalTime
+     shiftStartAt:String
+     shiftEndAt:String
      shiftTimings:String
      countryCode:String
      gender:String

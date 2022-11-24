@@ -230,7 +230,7 @@ public class MiniSessionImpl implements MiniSessionService {
     }
 
     @Override
-    public List<MiniSession> getAllMiniSessionPagination(MiniSessionDto request) {
+    public Page<MiniSession> getAllMiniSessionPagination(MiniSessionDto request) {
         Pageable pageable = null;
         if (request.getPageSize() != null) {
             pageable = PageRequest.of(request.getPageNumber(), request.getPageSize());
@@ -263,9 +263,9 @@ public class MiniSessionImpl implements MiniSessionService {
 
         Page<MiniSession> miniSessionsObjective = miniSessionRepo.findAll(miniSessionSpecification, pageable);
         if (miniSessionsObjective.getContent() != null) {
-            return miniSessionsObjective.stream().collect(Collectors.toList());
+            return new org.springframework.data.domain.PageImpl<>(miniSessionsObjective.getContent(), pageable, 0l);
         }
-        return new ArrayList<>();
+        return new org.springframework.data.domain.PageImpl<>(new ArrayList<>(), pageable, 0l);
     }
 
     @Override

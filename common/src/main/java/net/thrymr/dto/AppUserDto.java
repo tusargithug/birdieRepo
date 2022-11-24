@@ -64,7 +64,9 @@ public class AppUserDto {
 
     private Boolean isTeamLeader;
 
-    private LocalTime shiftStartAt;
-    private LocalTime shiftEndAt;
+    private String shiftStartAt;
+    private String shiftEndAt;
     private String shiftTimings;
+
+    private Boolean sortUserName;
 }

@@ -10,6 +10,7 @@ import net.thrymr.model.Site;
 import net.thrymr.model.Team;
 import net.thrymr.services.SiteTeamAndShiftTimingsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -65,11 +66,11 @@ public class SiteTeamAndShiftTimingsController {
     }
 
     @QueryMapping("getAllTeamPagination")
-    public List<Team> getAllTeamPagination(@Argument(name = "input")TeamDto teamdto){
+    public Page<Team> getAllTeamPagination(@Argument(name = "input")TeamDto teamdto){
         return siteTeamAndShiftTimingsService.getAllTeamPagination(teamdto);
     }
     @QueryMapping("getAllSitePagination")
-    public List<Site> getAllSitePagination(@Argument(name = "input") SiteDto siteDto){
+    public Page<Site> getAllSitePagination(@Argument(name = "input") SiteDto siteDto){
         return siteTeamAndShiftTimingsService.getAllSitePagination(siteDto);
     }
 

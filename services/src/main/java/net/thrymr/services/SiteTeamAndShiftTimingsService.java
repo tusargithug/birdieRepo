@@ -8,6 +8,7 @@ import net.thrymr.model.AppUser;
 import net.thrymr.model.ShiftTimings;
 import net.thrymr.model.Site;
 import net.thrymr.model.Team;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -34,9 +35,9 @@ public interface SiteTeamAndShiftTimingsService {
 
     String deleteSiftTimingsById(Long id);
 
-    List<Team> getAllTeamPagination(TeamDto teamdto);
+    Page<Team> getAllTeamPagination(TeamDto teamdto);
 
-    List<Site> getAllSitePagination(SiteDto siteDto);
+    Page<Site> getAllSitePagination(SiteDto siteDto);
 
     List<ShiftTimings> getAllShiftTimings();
 

@@ -137,7 +137,7 @@ public class CounsellorImpl implements CounsellorService {
     }
 
     @Override
-    public List<Counsellor> getAllCounsellor(CounsellorDto response) {
+    public Page<Counsellor> getAllCounsellor(CounsellorDto response) {
         Pageable pageable = null;
         if (response.getPageSize() != null) {
             pageable = PageRequest.of(response.getPageNumber(), response.getPageSize());
@@ -188,9 +188,9 @@ public class CounsellorImpl implements CounsellorService {
         Page<Counsellor> counsellorObjectives = counsellorRepo.findAll(addCounsellorSpecification, pageable);
 
         if (counsellorObjectives.getContent() != null) {
-            return new ArrayList<>(counsellorObjectives.getContent());
+            return new org.springframework.data.domain.PageImpl<>(counsellorObjectives.getContent(), pageable, 0l);
         }
-        return new ArrayList<>();
+        return new org.springframework.data.domain.PageImpl<>(new ArrayList<>(), pageable, 0l);
     }
 
     @Override

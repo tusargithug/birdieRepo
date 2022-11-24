@@ -193,9 +193,9 @@ public class AppUserServiceImpl implements AppUserService {
         user.setCountryCode(request.getCountryCode());
         user.setMobile(request.getMobile());
         user.setGender(Gender.valueOf(request.getGender()));
-        user.setShiftStartAt(request.getShiftStartAt());
-        user.setShiftEndAt(request.getShiftEndAt());
-        user.setShiftTimings(user.getShiftStartAt() + "-" + user.getShiftEndAt());
+        user.setShiftStartAt(DateUtils.toStringToLocalTime(request.getShiftStartAt(), Constants.TIME_FORMAT_12_HOURS));
+        user.setShiftEndAt(DateUtils.toStringToLocalTime(request.getShiftEndAt(), Constants.TIME_FORMAT_12_HOURS));
+        user.setShiftTimings(user.getShiftStartAt() + " - " + user.getShiftEndAt());
         appUserRepo.save(user);
         return "User Saved successfully";
     }
@@ -238,12 +238,12 @@ public class AppUserServiceImpl implements AppUserService {
                     user.setGender(Gender.valueOf(request.getGender()));
                 }
                 if (Validator.isObjectValid(request.getShiftStartAt())) {
-                    user.setShiftStartAt(request.getShiftStartAt());
+                    user.setShiftStartAt(DateUtils.toStringToLocalTime(request.getShiftStartAt(), Constants.TIME_FORMAT_12_HOURS));
                 }
                 if (Validator.isObjectValid(request.getShiftEndAt())) {
-                    user.setShiftEndAt(request.getShiftEndAt());
+                    user.setShiftEndAt(DateUtils.toStringToLocalTime(request.getShiftEndAt(), Constants.TIME_FORMAT_12_HOURS));
                 }
-                user.setShiftTimings(user.getShiftStartAt() + "-" + user.getShiftEndAt());
+                user.setShiftTimings(user.getShiftStartAt() + " - " + user.getShiftEndAt());
                 appUserRepo.save(user);
                 return "User updated successfully";
             }
@@ -368,14 +368,15 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public List<AppUser> getAllAppUserPagination(AppUserDto response) {
-        Pageable pageable;
+    public Page<AppUser> getAllAppUserPagination(AppUserDto response) {
+        Pageable pageable=null;
         if (Validator.isValid(response.getPageSize())) {
             pageable = PageRequest.of(response.getPageNumber(), response.getPageSize());
         }
-        pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.ASC, "createdOn");
-        if (Validator.isValid(response.getAddedOn())) {
-            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.ASC, "createdOn");
+        if (response.getSortUserName() != null && response.getSortUserName().equals(Boolean.TRUE)) {
+            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.ASC, "userName");
+        } else if (response.getSortUserName() != null && response.getSortUserName().equals(Boolean.FALSE)) {
+            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.DESC, "userName");
         }
 
         Specification<AppUser> appUserSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
@@ -402,22 +403,19 @@ public class AppUserServiceImpl implements AppUserService {
             }
 
             if (response.getRoles() != null && response.getRoles().equalsIgnoreCase(Roles.COUNSELLOR.toString())) {
-                Predicate roles = criteriaBuilder.and(root.get("userName").in(response.getCounsellorId()));
+                Predicate roles = criteriaBuilder.and(root.get("counsellorName").in(response.getCounsellorId()));
                 addVendorPredicate.add(roles);
             }
             if (response.getShiftTimings() != null) {
-                Predicate roles = criteriaBuilder.and(root.get("shiftTimings").in(response.getShiftTimings()));
-                addVendorPredicate.add(roles);
+                Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(response.getShiftTimings()));
+                addVendorPredicate.add(shiftTimings);
             }
             return criteriaBuilder.and(addVendorPredicate.toArray(new Predicate[0]));
         });
         Page<AppUser> appUserObjectives = appUserRepo.findAll(appUserSpecification, pageable);
-        List<AppUser> appUserList = null;
         if (appUserObjectives.getContent() != null) {
-            appUserList = appUserObjectives.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).toList();
+            return new org.springframework.data.domain.PageImpl<>(appUserObjectives.getContent(), pageable, 0l);
         }
-        return appUserList;
+        return new org.springframework.data.domain.PageImpl<>(new ArrayList<>(), pageable, 0l);
     }
-
-
 }

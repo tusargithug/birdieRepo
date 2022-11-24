@@ -4,6 +4,7 @@ import net.thrymr.dto.ChapterDto;
 import net.thrymr.dto.UnitDto;
 import net.thrymr.model.Chapter;
 import net.thrymr.model.Unit;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public interface UnitAndChapterServices {
     List<Unit> getAllUnit();
 
 
-    List<Unit> getLearnPath(UnitDto unitDto);
+    Page<Unit> getLearnPath(UnitDto unitDto);
 
     String deleteUnitById(Long id);
 

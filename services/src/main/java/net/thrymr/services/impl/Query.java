@@ -12,6 +12,7 @@ import net.thrymr.repository.CategoryRepo;
 import net.thrymr.repository.CourseRepo;
 import net.thrymr.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Component;
@@ -196,18 +197,17 @@ public class Query implements GraphQLQueryResolver {
     }
 
     @QueryMapping("getLearnPath")
-    public List<Unit> getLearnPath(UnitDto unitDto) {
-        List<Unit> unitList = unitAndChapterServices.getLearnPath(unitDto);
-        return unitList;
+    public Page<Unit> getLearnPath(UnitDto unitDto) {
+        return unitAndChapterServices.getLearnPath(unitDto);
     }
 
     @QueryMapping(name = "getAllTeamPagination")
-    public List<Team> getAllTeamPagination(TeamDto teamdto) {
+    public Page<Team> getAllTeamPagination(TeamDto teamdto) {
         return siteTeamAndShiftTimingsService.getAllTeamPagination(teamdto);
     }
 
     @QueryMapping(name = "getAllSitePagination")
-    public List<Site> getAllSitePagination(SiteDto siteDto) {
+    public Page<Site> getAllSitePagination(SiteDto siteDto) {
         return siteTeamAndShiftTimingsService.getAllSitePagination(siteDto);
     }
 
@@ -226,7 +226,7 @@ public class Query implements GraphQLQueryResolver {
     }
 
     @QueryMapping(name = "getAllVendorPagination")
-    public List<Vendor> getAllVendorPagination(@Argument(name = "input") VendorDto request) {
+    public Page<Vendor> getAllVendorPagination(@Argument(name = "input") VendorDto request) {
         return vendorService.getAllVendorPagination(request);
     }
 
@@ -246,7 +246,7 @@ public class Query implements GraphQLQueryResolver {
     }
 
     @QueryMapping(name = "getAllCounsellor")
-    public List<Counsellor> getAllCounsellor(@Argument(name = "input") CounsellorDto response) {
+    public Page<Counsellor> getAllCounsellor(@Argument(name = "input") CounsellorDto response) {
         return counsellorService.getAllCounsellor(response);
     }
 
@@ -320,7 +320,7 @@ public class Query implements GraphQLQueryResolver {
     }
 
     @QueryMapping(name = "getAllAppUserPagination")
-    public List<AppUser> getAllAppUserPagination(@Argument(name = "input") AppUserDto request) {
+    public Page<AppUser> getAllAppUserPagination(@Argument(name = "input") AppUserDto request) {
         return appUserService.getAllAppUserPagination(request);
     }
 
@@ -345,7 +345,7 @@ public class Query implements GraphQLQueryResolver {
     }
 
     @QueryMapping(name = "getAllMiniSessionPagination")
-    public List<MiniSession> getAllMiniSessionPagination(@Argument(name = "input") MiniSessionDto request) {
+    public Page<MiniSession> getAllMiniSessionPagination(@Argument(name = "input") MiniSessionDto request) {
         return miniSessionService.getAllMiniSessionPagination(request);
     }
 

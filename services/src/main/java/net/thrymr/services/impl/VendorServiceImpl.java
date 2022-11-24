@@ -126,7 +126,7 @@ public class VendorServiceImpl implements VendorService {
 
 
     @Override
-    public List<Vendor> getAllVendorPagination(VendorDto response) {
+    public Page<Vendor> getAllVendorPagination(VendorDto response) {
         Pageable pageable = null;
         if (Validator.isValid(response.getPageSize())) {
             pageable = PageRequest.of(response.getPageNumber(), response.getPageSize());
@@ -157,8 +157,8 @@ public class VendorServiceImpl implements VendorService {
         Page<Vendor> vendorObjectives = vendorRepo.findAll(addVendorSpecification, pageable);
         List<Vendor> vendorList = null;
         if (vendorObjectives.getContent() != null) {
-            vendorList = vendorObjectives.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).toList();
+            return new org.springframework.data.domain.PageImpl<>(vendorObjectives.getContent(), pageable, 0l);
         }
-        return vendorList;
+        return new org.springframework.data.domain.PageImpl<>(new ArrayList<>(), pageable, 0l);
     }
 }

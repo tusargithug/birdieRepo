@@ -157,7 +157,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         }
         //siteManager
         siteDto.setSearchKey(saveSiteSearchKey(site));
-        if (siteDto.getStatus() != null && siteDto.getStatus().equals(Boolean.TRUE) && siteDto.getStatus().equals(Boolean.FALSE)) {
+        if (siteDto.getStatus() != null && siteDto.getStatus().equals(Boolean.TRUE)) {
             site.setIsActive(siteDto.getStatus());
         }
         siteRepo.save(site);
@@ -215,7 +215,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     }
 
     @Override
-    public List<Site> getAllSitePagination(SiteDto siteDto) {
+    public Page<Site> getAllSitePagination(SiteDto siteDto) {
         Pageable pageable = null;
         if (siteDto.getPageSize() != null) {
             pageable = PageRequest.of(siteDto.getPageNumber(), siteDto.getPageSize());
@@ -259,9 +259,9 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         Page<Site> siteObjective = siteRepo.findAll(siteSpecification, pageable);
         System.out.println(siteObjective.getSize());
         if (siteObjective.getContent() != null) {
-            return siteObjective.stream().collect(Collectors.toList());
+            return new org.springframework.data.domain.PageImpl<>(siteObjective.getContent(), pageable, 0l);
         }
-        return new ArrayList<>();
+        return new org.springframework.data.domain.PageImpl<>(new ArrayList<>(),pageable,0l);
     }
 
     @Override
@@ -362,7 +362,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     }
 
     @Override
-    public List<Team> getAllTeamPagination(TeamDto teamDto) {
+    public Page<Team> getAllTeamPagination(TeamDto teamDto) {
 
         Pageable pageable = null;
         if (teamDto.getPageSize() != null) {
@@ -404,9 +404,9 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
 
         Page<Team> teamObjective = teamRepo.findAll(teamSpecification, pageable);
         if (teamObjective.getContent() != null) {
-            return teamObjective.stream().collect(Collectors.toList());
+            return new org.springframework.data.domain.PageImpl<>(teamObjective.getContent(), pageable, 0l);
         }
-        return new ArrayList<>();
+        return new org.springframework.data.domain.PageImpl<>(new ArrayList<>(), pageable, 0l);
     }
 
 

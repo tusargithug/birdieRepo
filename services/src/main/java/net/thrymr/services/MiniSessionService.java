@@ -7,6 +7,7 @@ import net.thrymr.enums.TagType;
 import net.thrymr.model.GroupDetails;
 import net.thrymr.model.Groups;
 import net.thrymr.model.MiniSession;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ public interface MiniSessionService {
 
     String saveFileDetails(FileDetailsDto request);
 
-    List<MiniSession> getAllMiniSessionPagination(MiniSessionDto request);
+    Page<MiniSession> getAllMiniSessionPagination(MiniSessionDto request);
 
     List<TagType> getAllEnumTags();
 

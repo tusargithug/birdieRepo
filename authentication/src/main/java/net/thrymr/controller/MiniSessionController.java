@@ -9,6 +9,7 @@ import net.thrymr.model.Groups;
 import net.thrymr.model.MiniSession;
 import net.thrymr.services.MiniSessionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -81,7 +82,7 @@ public class MiniSessionController {
     }
 
     @QueryMapping(name = "getAllMiniSessionPagination")
-    public List<MiniSession> getAllMiniSessionPagination(@Argument(name = "input") MiniSessionDto request) {
+    public Page<MiniSession> getAllMiniSessionPagination(@Argument(name = "input") MiniSessionDto request) {
         return miniSessionService.getAllMiniSessionPagination(request);
     }
 
