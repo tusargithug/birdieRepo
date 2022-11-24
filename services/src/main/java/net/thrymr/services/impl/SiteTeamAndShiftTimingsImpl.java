@@ -1,4 +1,5 @@
 package net.thrymr.services.impl;
+
 import net.thrymr.dto.*;
 import net.thrymr.enums.Alerts;
 import net.thrymr.enums.Roles;
@@ -17,11 +18,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import javax.persistence.criteria.Predicate;
-import java.util.*;
-import java.util.stream.Collectors;
 
-import static net.thrymr.enums.Roles.TEAM_LEADER;
+import javax.persistence.criteria.Predicate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsService {
@@ -62,6 +65,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             Optional<ShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(teamDto.getShiftTimingsId());
             optionalShiftTimings.ifPresent(team::setShiftTimings);
         }
+        //team.setShiftTimings(dtoToShiftTimings(teamDto.getShiftTimings()));
         if (teamDto.getStatus() != null && teamDto.getStatus().equals(Boolean.TRUE)) {
             team.setIsActive(teamDto.getStatus());
         }
@@ -365,11 +369,10 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         if (teamDto.getPageSize() != null) {
             pageable = PageRequest.of(teamDto.getPageNumber(), teamDto.getPageSize());
         }
-        if (teamDto.getSortTeamName() != null && teamDto.getSortTeamName().equals(Boolean.TRUE)) {
-            pageable = PageRequest.of(teamDto.getPageNumber(), teamDto.getPageSize(), Sort.Direction.ASC, "teamName");
-        } else if (teamDto.getSortTeamName() != null && teamDto.getSortTeamName().equals(Boolean.FALSE)) {
-            pageable = PageRequest.of(teamDto.getPageNumber(), teamDto.getPageSize(), Sort.Direction.DESC, "teamName");
+        if (teamDto.getTeamId() != null) {
+            pageable = PageRequest.of(teamDto.getPageNumber(), teamDto.getPageSize(), Sort.Direction.ASC, "teamId");
         }
+        Team team = new Team();
         //filters
         Specification<Team> teamSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> addTeamSpecification = new ArrayList<>();
@@ -405,6 +408,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         }
         return new ArrayList<>();
     }
+
 
     public String getTeamSearchKey(Team team) {
         String searchKey = "";
