@@ -107,8 +107,6 @@ input TeamDto {
     pageNumber:Int
     PageSize:Int
     searchKey:String
-    teamLeaderId:Int
-    teamManagerId:Int
     siteId:Int
     shiftTimingsId:Int
     sortTeamName:Boolean
@@ -145,17 +143,7 @@ type MtRegion{
     site:Site
     isActive:Boolean
 }
-type Site{
-    id:ID!
-    siteId:String
-    siteName:String
-    isActive:Boolean
-    city:MtCity
-    country:MtCountry
-    region:MtRegion
-    teams:[Team]
-    createdOn:String
-}
+
 type Team{
     id:ID!
     teamId:String
@@ -314,4 +302,15 @@ input SlotDetailsDto{
     appUserId:Int
     counsellorId:Int
     isActive:Boolean
+}
+type Site{
+    id:ID!
+    siteId:String
+    siteName:String
+    isActive:Boolean
+    city:MtCity
+    country:MtCountry
+    region:MtRegion
+    teams:[Team]
+    createdOn:String
 }

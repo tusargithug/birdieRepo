@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.thrymr.enums.Alerts;
 
+import java.time.LocalTime;
+
 
 @Setter
 @Getter
@@ -59,4 +61,10 @@ public class AppUserDto {
     private String countryCode;
 
     private String gender;
+
+    private Boolean isTeamLeader;
+
+    private LocalTime shiftStartAt;
+    private LocalTime shiftEndAt;
+    private String shiftTimings;
 }

@@ -1,6 +1,6 @@
 package net.thrymr.services.impl;
-
 import net.thrymr.dto.*;
+import net.thrymr.enums.Alerts;
 import net.thrymr.enums.Roles;
 import net.thrymr.enums.SlotShift;
 import net.thrymr.model.*;
@@ -10,7 +10,6 @@ import net.thrymr.model.master.MtRegion;
 import net.thrymr.repository.*;
 import net.thrymr.services.SiteTeamAndShiftTimingsService;
 import net.thrymr.utils.Validator;
-import org.apache.poi.sl.draw.geom.GuideIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,14 +17,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static net.thrymr.enums.Roles.TEAM_LEADER;
 
 @Service
 public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsService {
@@ -51,8 +47,12 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     @Override
     public String createTeam(TeamDto teamDto) {
         Team team = new Team();
-        team.setTeamId(teamDto.getTeamId());
-        team.setTeamName(teamDto.getTeamName());
+        if (Validator.isValid(teamDto.getTeamId())) {
+            team.setTeamId(teamDto.getTeamId());
+        }
+        if (Validator.isValid(teamDto.getTeamName())) {
+            team.setTeamName(teamDto.getTeamName());
+        }
         //Site
         if (teamDto.getSiteId() != null && siteRepo.existsById(teamDto.getSiteId())) {
             Optional<Site> optionalSite = siteRepo.findById(teamDto.getSiteId());
@@ -77,6 +77,9 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         Team team;
         if (teamId.isPresent()) {
             team = teamId.get();
+            if (Validator.isValid(teamDto.getTeamId())) {
+                team.setTeamId(teamDto.getTeamId());
+            }
             if (Validator.isValid(teamDto.getTeamName())) {
                 team.setTeamName(teamDto.getTeamName());
             }
@@ -440,11 +443,10 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
 
     @Override
     public List<AppUser> getAllAppUserByAlerts(AppUserDto request) {
-        List<Roles> appUserList = Arrays.asList(Roles.TEAM_LEADER, Roles.TEAM_MANAGER);
-        if (Validator.isValid(request.getAlerts().name())) {
-            return appUserRepo.findAllByAlertsAndRolesIn(request.getAlerts(), appUserList);
+        List<AppUser> appUserList = appUserRepo.findAll();
+        if (request.getIsTeamLeader()!= null && request.getIsTeamLeader().equals(Boolean.TRUE)  ) {
+            return appUserList.stream().filter(appUser -> appUser.getRoles().equals(Roles.TEAM_MANAGER) && appUser.getAlerts().equals(Alerts.RED_ALERT)).collect(Collectors.toList());
         }
-
         return new ArrayList<>();
     }
 }
