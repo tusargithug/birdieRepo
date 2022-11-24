@@ -6,6 +6,7 @@ import net.thrymr.enums.Alerts;
 import net.thrymr.enums.Gender;
 import net.thrymr.enums.Roles;
 import javax.persistence.*;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -53,5 +54,14 @@ public class AppUser extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
+    @Column(name = "shiftStartsAt")
+    private LocalTime shiftStartAt;
+
+    @Column(name = "shiftEndAt")
+    private LocalTime shiftEndAt;
+
+    @Column(name="shiftTimings")
+    private String shiftTimings;
 
 }

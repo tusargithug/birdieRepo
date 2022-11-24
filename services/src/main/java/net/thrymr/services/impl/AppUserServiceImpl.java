@@ -1,6 +1,5 @@
 package net.thrymr.services.impl;
 
-
 import net.thrymr.constant.Constants;
 import net.thrymr.dto.*;
 import net.thrymr.dto.response.UserAppointmentResponse;
@@ -194,13 +193,16 @@ public class AppUserServiceImpl implements AppUserService {
         user.setCountryCode(request.getCountryCode());
         user.setMobile(request.getMobile());
         user.setGender(Gender.valueOf(request.getGender()));
+        user.setShiftStartAt(request.getShiftStartAt());
+        user.setShiftEndAt(request.getShiftEndAt());
+        user.setShiftTimings(user.getShiftStartAt() + "-" + user.getShiftEndAt());
         appUserRepo.save(user);
         return "User Saved successfully";
     }
 
     @Override
     public String updateAppUser(AppUserDto request) throws ParseException {
-        if(Validator.isValid(request.getId())) {
+        if (Validator.isValid(request.getId())) {
             Optional<AppUser> optionalAppUser = appUserRepo.findById(request.getId());
             if (optionalAppUser.isPresent()) {
                 AppUser user = optionalAppUser.get();
@@ -219,7 +221,7 @@ public class AppUserServiceImpl implements AppUserService {
                         user.setSite(optionalSite.get());
                     }
                 }
-                if(Validator.isValid(request.getCountryCode())){
+                if (Validator.isValid(request.getCountryCode())) {
                     user.setCountryCode(request.getCountryCode());
                 }
                 if (Validator.isValid(request.getMobile())) {
@@ -235,6 +237,13 @@ public class AppUserServiceImpl implements AppUserService {
                 if (Validator.isValid(request.getGender())) {
                     user.setGender(Gender.valueOf(request.getGender()));
                 }
+                if (Validator.isObjectValid(request.getShiftStartAt())) {
+                    user.setShiftStartAt(request.getShiftStartAt());
+                }
+                if (Validator.isObjectValid(request.getShiftEndAt())) {
+                    user.setShiftEndAt(request.getShiftEndAt());
+                }
+                user.setShiftTimings(user.getShiftStartAt() + "-" + user.getShiftEndAt());
                 appUserRepo.save(user);
                 return "User updated successfully";
             }
@@ -307,7 +316,7 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public List<AppUser> getAllAppUsers(){
+    public List<AppUser> getAllAppUsers() {
         List<AppUser> appUserList = appUserRepo.findAll();
         if (!appUserList.isEmpty()) {
             return appUserList.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
@@ -394,6 +403,10 @@ public class AppUserServiceImpl implements AppUserService {
 
             if (response.getRoles() != null && response.getRoles().equalsIgnoreCase(Roles.COUNSELLOR.toString())) {
                 Predicate roles = criteriaBuilder.and(root.get("userName").in(response.getCounsellorId()));
+                addVendorPredicate.add(roles);
+            }
+            if (response.getShiftTimings() != null) {
+                Predicate roles = criteriaBuilder.and(root.get("shiftTimings").in(response.getShiftTimings()));
                 addVendorPredicate.add(roles);
             }
             return criteriaBuilder.and(addVendorPredicate.toArray(new Predicate[0]));

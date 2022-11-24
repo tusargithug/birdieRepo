@@ -2,6 +2,7 @@ package net.thrymr.services.impl;
 
 import net.thrymr.constant.Constants;
 import net.thrymr.dto.*;
+import net.thrymr.enums.Alerts;
 import net.thrymr.enums.Roles;
 import net.thrymr.enums.SlotShift;
 import net.thrymr.model.*;
@@ -408,6 +409,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         return new ArrayList<>();
     }
 
+
     public String getTeamSearchKey(Team team) {
         String searchKey = "";
         if (team.getSite() != null) {
@@ -445,9 +447,9 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
 
     @Override
     public List<AppUser> getAllAppUserByAlerts(AppUserDto request) {
-        List<Roles> appUserList = Arrays.asList(Roles.TEAM_LEADER, Roles.TEAM_MANAGER);
-        if (Validator.isValid(request.getAlerts().name())) {
-            return appUserRepo.findAllByAlertsAndRolesIn(request.getAlerts(), appUserList);
+        List<AppUser> appUserList = appUserRepo.findAll();
+        if (request.getIsTeamLeader()!= null && request.getIsTeamLeader().equals(Boolean.TRUE)  ) {
+            return appUserList.stream().filter(appUser -> appUser.getRoles().equals(Roles.TEAM_MANAGER) && appUser.getAlerts().equals(Alerts.RED_ALERT)).collect(Collectors.toList());
         }
 
         return new ArrayList<>();

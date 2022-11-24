@@ -1,29 +1,17 @@
 package net.thrymr.controller;
-
-
-
 import net.thrymr.dto.AppUserDto;
-
 import net.thrymr.dto.UserCourseDto;
 import net.thrymr.dto.response.UserAppointmentResponse;
 import net.thrymr.enums.Roles;
 import net.thrymr.model.AppUser;
-
 import net.thrymr.services.AppUserService;
 import net.thrymr.services.AssessmentService;
 import net.thrymr.services.RoleService;
-
-
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.graphql.data.method.annotation.*;
-
-
 import org.springframework.web.bind.annotation.RestController;
-
 import java.text.ParseException;
-
 import java.util.List;
 
 

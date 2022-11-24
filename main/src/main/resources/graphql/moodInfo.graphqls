@@ -60,6 +60,8 @@ type Query {
     getPsychoEducationById(id:ID!):MtPsychoEducation
     getAllMeditation:[MtMeditation]
     getMeditationById(id:ID!):MtMeditation
+    getAllAppUserByAlerts(input:AppUserDto):[AppUser]
+    getAllAppUserPagination(input:AppUserDto):[AppUser]
 }
 
 type Mutation {
@@ -203,6 +205,9 @@ input AppUserDto{
      addedOn:String
      countryCode:String
      gender:String
+     isTeamLeader:Boolean
+     shiftStartAt:LocalTime
+     shiftEndAt:LocalTime
 }
 enum Roles{
     NONE
@@ -233,6 +238,9 @@ type AppUser{
     counsellorSlotList:[CounsellorSlot]
     alerts:Alerts
     gender:Gender
+    shiftStartAt:LocalTime
+    shiftEndAt:LocalTime
+    shiftTimings:String
 }
 
 type FileEntity{
