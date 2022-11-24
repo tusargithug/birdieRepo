@@ -311,6 +311,5 @@ type Site{
     city:MtCity
     country:MtCountry
     region:MtRegion
-    teams:[Team]
     createdOn:String
 }

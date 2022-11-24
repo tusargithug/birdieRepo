@@ -8,7 +8,6 @@ import net.thrymr.model.master.MtCountry;
 import net.thrymr.model.master.MtRegion;
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 @Getter
@@ -29,15 +28,6 @@ public class Site extends BaseEntity {
 
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private MtRegion region;
-
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private List<Team> teams =new ArrayList<>();
-
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "site")
-    private List<AppUser> appUser;
-
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private Vendor vendor;
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "site")
     private List<Counsellor> counsellorList=new ArrayList<>();

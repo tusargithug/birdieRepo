@@ -1,5 +1,4 @@
 package net.thrymr.services.impl;
-
 import net.thrymr.dto.*;
 import net.thrymr.enums.Alerts;
 import net.thrymr.enums.Roles;
@@ -18,10 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -151,11 +148,6 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             Optional<MtCity> optionalCity = cityRepo.findById(siteDto.getCityId());
             optionalCity.ifPresent(site::setCity);
         }
-        //vendor
-        if(siteDto.getVendorId() != null && vendorRepo.existsById(siteDto.getVendorId())) {
-            Optional<Vendor> optionalVendor=vendorRepo.findById(siteDto.getVendorId());
-            optionalVendor.ifPresent(site::setVendor);
-        }
         //siteManager
         siteDto.setSearchKey(saveSiteSearchKey(site));
         if (siteDto.getStatus() != null && siteDto.getStatus().equals(Boolean.TRUE) && siteDto.getStatus().equals(Boolean.FALSE)) {
@@ -255,6 +247,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                 Predicate region = criteriaBuilder.and(root.get("region").in(siteDto.getRegion()));
                 addSitePredicate.add(region);
             }
+
             return criteriaBuilder.and(addSitePredicate.toArray(new Predicate[0]));
         });
         Page<Site> siteObjective = siteRepo.findAll(siteSpecification, pageable);
