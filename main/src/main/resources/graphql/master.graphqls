@@ -107,11 +107,11 @@ input TeamDto {
     pageNumber:Int
     PageSize:Int
     searchKey:String
-    teamLeaderId:Int
-    teamManagerId:Int
     siteId:Int
-    shiftTimingsId:Int
     sortTeamName:Boolean
+    shiftStartAt:String
+    shiftEndAt:String
+    shiftTimings:String
 }
 
 input UnitDto {
@@ -161,8 +161,10 @@ type Team{
     teamId:String
     teamName:String
     site:Site
-    shiftTimings:ShiftTimings
     isActive:Boolean
+    shiftStartAt:LocalTime
+    shiftEndAt:LocalTime
+    shiftTimings:String
 }
 type MtCity{
     id:ID!

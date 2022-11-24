@@ -1,7 +1,10 @@
 package net.thrymr.services.impl;
 
 import net.thrymr.dto.MeditationDto;
+import net.thrymr.model.FileDetails;
+import net.thrymr.model.FileEntity;
 import net.thrymr.model.master.MtMeditation;
+import net.thrymr.repository.FileRepo;
 import net.thrymr.repository.MeditationRepo;
 import net.thrymr.services.MeditationService;
 import net.thrymr.utils.Validator;
@@ -18,6 +21,8 @@ public class MeditationServiceImpl implements MeditationService {
 
     @Autowired
     private MeditationRepo meditationRepo;
+    @Autowired
+    FileRepo fileRepo;
 
     @Override
     public List<MtMeditation> getAllMeditation() {
@@ -65,6 +70,12 @@ public class MeditationServiceImpl implements MeditationService {
                 if (request.getIsActive() != null) {
                     mtMeditation.setIsActive(request.getIsActive());
                 }
+                if(Validator.isValid(request.getFileId())){
+                    Optional<FileEntity> fileEntity=fileRepo.findByFileId(request.getFileId());
+                    if(fileEntity.isPresent()){
+                        mtMeditation.setFile(fileEntity.get());
+                    }
+                }
                 meditationRepo.save(mtMeditation);
                 return "Meditation updated successfully";
             }
@@ -95,6 +106,12 @@ public class MeditationServiceImpl implements MeditationService {
         mtMeditation.setName(request.getName());
         mtMeditation.setMeditationVideoLink(request.getMeditationVideoLink());
         mtMeditation.setIsActive(request.getIsActive());
+        if(Validator.isValid(request.getFileId())){
+            Optional<FileEntity> fileEntity=fileRepo.findByFileId(request.getFileId());
+            if(fileEntity.isPresent()){
+                mtMeditation.setFile(fileEntity.get());
+            }
+        }
         return mtMeditation;
     }
 }

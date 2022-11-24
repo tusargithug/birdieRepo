@@ -26,7 +26,8 @@ public class Constants {
 
     public static final String TIME_FORMAT = "H:mm";
     public static final String TIME_FORMAT_2 = "HH:mm";
-    public static final String TIME_FORMAT_24 = "H:mm a";
+    public static final String TIME_FORMAT_24 = "HH:mm a";
+    public static final String TIME_FORMAT_12_HOURS = "hh:mm a";
     public static final String DATE_TIME_FORMAT = "dd-MM-yyyy HH:mm:ss";
     public static final String CUSTOM_DATE_TIME_FORMAT = "dd MMM yyyy HH:mm a";
     public static final String  DATE_FORMAT_3="dd-MMM-yyyy";

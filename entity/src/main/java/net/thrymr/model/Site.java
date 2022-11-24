@@ -36,9 +36,6 @@ public class Site extends BaseEntity {
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "site")
     private List<AppUser> appUser;
 
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private Vendor vendor;
-
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "site")
     private List<Counsellor> counsellorList=new ArrayList<>();
 }

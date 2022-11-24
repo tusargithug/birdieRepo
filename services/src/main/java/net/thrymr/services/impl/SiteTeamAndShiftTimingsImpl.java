@@ -1,5 +1,6 @@
 package net.thrymr.services.impl;
 
+import net.thrymr.constant.Constants;
 import net.thrymr.dto.*;
 import net.thrymr.enums.Roles;
 import net.thrymr.enums.SlotShift;
@@ -9,6 +10,7 @@ import net.thrymr.model.master.MtCountry;
 import net.thrymr.model.master.MtRegion;
 import net.thrymr.repository.*;
 import net.thrymr.services.SiteTeamAndShiftTimingsService;
+import net.thrymr.utils.DateUtils;
 import net.thrymr.utils.Validator;
 import org.apache.poi.sl.draw.geom.GuideIf;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,14 +55,13 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         Team team = new Team();
         team.setTeamId(teamDto.getTeamId());
         team.setTeamName(teamDto.getTeamName());
+        team.setShiftStartAt(DateUtils.toStringToLocalTime(teamDto.getShiftStartAt(), Constants.TIME_FORMAT_12_HOURS));
+        team.setShiftEndAt(DateUtils.toStringToLocalTime(teamDto.getShiftEndAt(), Constants.TIME_FORMAT_12_HOURS));
+        team.setShiftTimings(teamDto.getShiftStartAt()+" - "+teamDto.getShiftEndAt());
         //Site
         if (teamDto.getSiteId() != null && siteRepo.existsById(teamDto.getSiteId())) {
             Optional<Site> optionalSite = siteRepo.findById(teamDto.getSiteId());
             optionalSite.ifPresent(team::setSite);
-        }
-        if (teamDto.getShiftTimingsId() != null && shiftTimingsRepo.existsById(teamDto.getShiftTimingsId())) {
-            Optional<ShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(teamDto.getShiftTimingsId());
-            optionalShiftTimings.ifPresent(team::setShiftTimings);
         }
         if (teamDto.getStatus() != null && teamDto.getStatus().equals(Boolean.TRUE)) {
             team.setIsActive(teamDto.getStatus());
@@ -73,28 +74,37 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
 
     @Override
     public String updateTeam(TeamDto teamDto) {
-        Optional<Team> teamId = teamRepo.findById(teamDto.getId());
-        Team team;
-        if (teamId.isPresent()) {
-            team = teamId.get();
-            if (Validator.isValid(teamDto.getTeamName())) {
-                team.setTeamName(teamDto.getTeamName());
+        Team team=null;
+        if(Validator.isValid(teamDto.getId())) {
+            Optional<Team> teamId = teamRepo.findById(teamDto.getId());
+            if (teamId.isPresent()) {
+                team = teamId.get();
+                if(Validator.isValid(teamDto.getTeamId())){
+                    team.setTeamId(teamDto.getTeamId());
+                }
+                if (Validator.isValid(teamDto.getTeamName())) {
+                    team.setTeamName(teamDto.getTeamName());
+                }
+                //Site
+                if (teamDto.getSiteId() != null && siteRepo.existsById(teamDto.getSiteId())) {
+                    Optional<Site> optionalSite = siteRepo.findById(teamDto.getSiteId());
+                    optionalSite.ifPresent(team::setSite);
+                }
+                if (teamDto.getStatus() != null && teamDto.getStatus().equals(Boolean.FALSE) || teamDto.getStatus().equals(Boolean.TRUE)) {
+                    team.setIsActive(teamDto.getStatus());
+                }
+                if (teamDto.getShiftStartAt() != null) {
+                    team.setShiftStartAt(DateUtils.toStringToLocalTime(teamDto.getShiftStartAt(), Constants.TIME_FORMAT_12_HOURS));
+                }
+                if (teamDto.getShiftEndAt() != null) {
+                    team.setShiftStartAt(DateUtils.toStringToLocalTime(teamDto.getShiftEndAt(), Constants.TIME_FORMAT_12_HOURS));
+                }
+                if (teamDto.getShiftStartAt() != null && teamDto.getShiftStartAt() != null) {
+                    team.setShiftTimings(teamDto.getShiftStartAt() + " - " + teamDto.getShiftEndAt());
+                }
+                teamRepo.save(team);
+                return "Team update successfully";
             }
-            //Site
-            if (teamDto.getSiteId() != null && siteRepo.existsById(teamDto.getSiteId())) {
-                Optional<Site> optionalSite = siteRepo.findById(teamDto.getSiteId());
-                optionalSite.ifPresent(team::setSite);
-            }
-            if (teamDto.getShiftTimingsId() != null && shiftTimingsRepo.existsById(teamDto.getShiftTimingsId())) {
-                Optional<ShiftTimings> optionalShiftTimings = shiftTimingsRepo.findById(teamDto.getShiftTimingsId());
-                optionalShiftTimings.ifPresent(team::setShiftTimings);
-            }
-            if (teamDto.getStatus() != null && teamDto.getStatus().equals(Boolean.FALSE) || teamDto.getStatus().equals(Boolean.TRUE)) {
-                team.setIsActive(teamDto.getStatus());
-            }
-            //team.setSearchKey(getTeamSearchKey(team));
-            teamRepo.save(team);
-            return "Team update successfully";
         }
         return "this id not in database";
     }
@@ -143,11 +153,6 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         if (siteDto.getCityId() != null && cityRepo.existsById(siteDto.getCityId())) {
             Optional<MtCity> optionalCity = cityRepo.findById(siteDto.getCityId());
             optionalCity.ifPresent(site::setCity);
-        }
-        //vendor
-        if(siteDto.getVendorId() != null && vendorRepo.existsById(siteDto.getVendorId())) {
-            Optional<Vendor> optionalVendor=vendorRepo.findById(siteDto.getVendorId());
-            optionalVendor.ifPresent(site::setVendor);
         }
         //siteManager
         siteDto.setSearchKey(saveSiteSearchKey(site));
@@ -389,8 +394,8 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                 Predicate shiftTimings = criteriaBuilder.and(root.get("site").in(teamDto.getSiteId()));
                 addTeamSpecification.add(shiftTimings);
             }
-            if (Validator.isValid(teamDto.getShiftTimingsId())) {
-                Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(teamDto.getShiftTimingsId()));
+            if (Validator.isValid(teamDto.getShiftTimings())) {
+                Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(teamDto.getShiftTimings()));
                 addTeamSpecification.add(shiftTimings);
             }
             return criteriaBuilder.and(addTeamSpecification.toArray(new Predicate[0]));

@@ -25,8 +25,8 @@ public class CounsellorDto {
     private Boolean addedOn;
     private String searchKey;
     private Boolean isActive;
-    private LocalTime shiftStartAt;
-    private LocalTime shiftEndAt;
+    private String shiftStartAt;
+    private String shiftEndAt;
     private String shiftTimings;
     private String countryCode;
     private String gender;

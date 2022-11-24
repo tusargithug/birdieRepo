@@ -1,7 +1,9 @@
 package net.thrymr.services.impl;
 
 import net.thrymr.dto.WorksheetDto;
+import net.thrymr.model.FileEntity;
 import net.thrymr.model.master.MtWorksheet;
+import net.thrymr.repository.FileRepo;
 import net.thrymr.repository.WorksheetRepo;
 import net.thrymr.services.WorksheetService;
 import net.thrymr.utils.Validator;
@@ -17,7 +19,10 @@ import java.util.stream.Collectors;
 public class WorksheetServiceImpl implements WorksheetService {
 
     @Autowired
-    private WorksheetRepo worksheetRepo;
+    WorksheetRepo worksheetRepo;
+    @Autowired
+    FileRepo fileRepo;
+
 
 
     @Override
@@ -66,6 +71,12 @@ public class WorksheetServiceImpl implements WorksheetService {
                 if (request.getIsActive() != null) {
                     mtWorksheet.setIsActive(request.getIsActive());
                 }
+                if(Validator.isValid(request.getFileId())){
+                    Optional<FileEntity> fileEntity=fileRepo.findByFileId(request.getFileId());
+                    if(fileEntity.isPresent()){
+                        mtWorksheet.setFile(fileEntity.get());
+                    }
+                }
                 worksheetRepo.save(mtWorksheet);
                 return "Worksheet updated successfully";
             }
@@ -96,7 +107,12 @@ public class WorksheetServiceImpl implements WorksheetService {
         mtWorksheet.setName(request.getName());
         mtWorksheet.setDescription(request.getDescription());
         mtWorksheet.setIsActive(request.getIsActive());
-
+        if(Validator.isValid(request.getFileId())){
+            Optional<FileEntity> fileEntity=fileRepo.findByFileId(request.getFileId());
+            if(fileEntity.isPresent()){
+                mtWorksheet.setFile(fileEntity.get());
+            }
+        }
         return mtWorksheet;
     }
 }

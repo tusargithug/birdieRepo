@@ -236,13 +236,22 @@ type AppUser{
 }
 
 type FileEntity{
-    fileId:ID!
-    contentType:String!
-    name:String!
-    fileType:String!
-    employees:[Course]
+     fileId:String
+     fileName:String
+     fileType:FileType
+     fileSize:Int
+     fileContentType:String
 }
-
+enum FileType{
+    VIDEO
+    IMAGE
+    DOCUMENT
+    PDF
+    AUDIO
+    ZIP
+    EMOJI
+    NONE
+}
 type ShiftTimings{
     id: ID!
     shiftName:String
@@ -530,8 +539,10 @@ enum TagType{
 }
 
 type MtWorksheet{
+    id:Int
     name:String
     description:String
+    file:FileEntity
     isActive:Boolean
 }
 
@@ -540,12 +551,15 @@ input WorksheetDto{
     name:String
     description:String
     isActive:Boolean
+    fileId:String
 }
 
 type MtPsychoEducation{
+    id:Int
     name:String
     description:String
     isActive:Boolean
+    file:FileEntity
 }
 
 input PsychoEducationDto{
@@ -553,12 +567,15 @@ input PsychoEducationDto{
     name:String
     description:String
     isActive:Boolean
+    fileId:String
 }
 
 type MtMeditation{
+    id:Int
     name:String
     meditationVideoLink:String
     isActive:Boolean
+    file:FileEntity
 }
 
 input MeditationDto{
@@ -566,6 +583,7 @@ input MeditationDto{
     name:String
     meditationVideoLink:String
     isActive:Boolean
+    fileId:String
 }
 enum Gender{
     MALE

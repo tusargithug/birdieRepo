@@ -1,11 +1,13 @@
 package net.thrymr.services.impl;
 
+import net.thrymr.constant.Constants;
 import net.thrymr.dto.CounsellorDto;
 import net.thrymr.enums.Gender;
 import net.thrymr.enums.Roles;
 import net.thrymr.model.*;
 import net.thrymr.repository.*;
 import net.thrymr.services.CounsellorService;
+import net.thrymr.utils.DateUtils;
 import net.thrymr.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -44,9 +46,9 @@ public class CounsellorImpl implements CounsellorService {
         counsellor.setEmailId(request.getEmailId());
         counsellor.setLanguages(request.getLanguages());
         counsellor.setBio(request.getBio());
-        counsellor.setShiftStartAt(request.getShiftStartAt());
-        counsellor.setShiftEndAt(request.getShiftEndAt());
-        counsellor.setShiftTimings(request.getShiftStartAt()+"-"+request.getShiftEndAt());
+        counsellor.setShiftStartAt(DateUtils.toStringToLocalTime(request.getShiftStartAt(), Constants.TIME_FORMAT_12_HOURS));
+        counsellor.setShiftEndAt(DateUtils.toStringToLocalTime(request.getShiftEndAt(),Constants.TIME_FORMAT_12_HOURS));
+        counsellor.setShiftTimings(request.getShiftStartAt()+" - "+request.getShiftEndAt());
         if (Validator.isValid(request.getDesignation()) && request.getDesignation().equals("COUNSELLOR")) {
             counsellor.setDesignation(Roles.valueOf(request.getDesignation()));
         }
@@ -98,13 +100,13 @@ public class CounsellorImpl implements CounsellorService {
                     counsellor.setMobileNumber(request.getMobileNumber());
                 }
                 if(request.getShiftStartAt() != null) {
-                    counsellor.setShiftStartAt(request.getShiftStartAt());
+                    counsellor.setShiftStartAt(DateUtils.toStringToLocalTime(request.getShiftStartAt(), Constants.TIME_FORMAT_12_HOURS));
                 }
                 if(request.getShiftEndAt() != null) {
-                    counsellor.setShiftEndAt(request.getShiftEndAt());
+                    counsellor.setShiftEndAt(DateUtils.toStringToLocalTime(request.getShiftEndAt(),Constants.TIME_FORMAT_12_HOURS));
                 }
                 if(request.getShiftStartAt() != null && request.getShiftEndAt() != null){
-                    counsellor.setShiftTimings(request.getShiftStartAt()+"-"+request.getShiftEndAt());
+                    counsellor.setShiftTimings(request.getShiftStartAt()+" - "+request.getShiftEndAt());
                 }
                 if(Validator.isValid(request.getGender())){
                     counsellor.setGender(Gender.valueOf(request.getGender()));

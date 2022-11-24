@@ -1,7 +1,9 @@
 package net.thrymr.services.impl;
 
 import net.thrymr.dto.PsychoEducationDto;
+import net.thrymr.model.FileEntity;
 import net.thrymr.model.master.MtPsychoEducation;
+import net.thrymr.repository.FileRepo;
 import net.thrymr.repository.PsychoEducationRepo;
 import net.thrymr.services.PsychoEducationService;
 import net.thrymr.utils.Validator;
@@ -17,7 +19,9 @@ import java.util.stream.Collectors;
 public class PsychoEducationServiceImpl implements PsychoEducationService {
 
     @Autowired
-    private PsychoEducationRepo psychoEducationRepo;
+    PsychoEducationRepo psychoEducationRepo;
+    @Autowired
+    FileRepo fileRepo;
 
 
     @Override
@@ -72,6 +76,12 @@ public class PsychoEducationServiceImpl implements PsychoEducationService {
                 if (request.getIsActive() != null) {
                     mtPsychoEducation.setIsActive(request.getIsActive());
                 }
+                if(Validator.isValid(request.getFileId())){
+                    Optional<FileEntity> fileEntity=fileRepo.findByFileId(request.getFileId());
+                    if(fileEntity.isPresent()){
+                        mtPsychoEducation.setFile(fileEntity.get());
+                    }
+                }
                 psychoEducationRepo.save(mtPsychoEducation);
                 return "Psycho Education updated successfully";
             }
@@ -101,6 +111,12 @@ public class PsychoEducationServiceImpl implements PsychoEducationService {
         mtPsychoEducation.setName(request.getName());
         mtPsychoEducation.setDescription(request.getDescription());
         mtPsychoEducation.setIsActive(request.getIsActive());
+        if(Validator.isValid(request.getFileId())){
+            Optional<FileEntity> fileEntity=fileRepo.findByFileId(request.getFileId());
+            if(fileEntity.isPresent()){
+                mtPsychoEducation.setFile(fileEntity.get());
+            }
+        }
 
         return mtPsychoEducation;
     }
