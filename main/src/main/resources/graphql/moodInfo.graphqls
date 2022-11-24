@@ -208,10 +208,7 @@ input AppUserDto{
     isTeamManager:Boolean
      shiftStartAt:LocalTime
      shiftEndAt:LocalTime
-    isTeamManager:Boolean
-    redAlert:Boolean
-    greenAlert:Boolean
-    orangeAlert:Boolean
+    isTeamLeader:Boolean
 }
 enum Roles{
     NONE

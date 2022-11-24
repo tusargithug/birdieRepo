@@ -8,7 +8,6 @@ import net.thrymr.model.AppUser;
 import net.thrymr.model.ShiftTimings;
 import net.thrymr.model.Site;
 import net.thrymr.model.Team;
-
 import java.util.List;
 
 public interface SiteTeamAndShiftTimingsService {
