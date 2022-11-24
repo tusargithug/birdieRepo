@@ -205,9 +205,13 @@ input AppUserDto{
      addedOn:String
      countryCode:String
      gender:String
-     isTeamLeader:Boolean
+    isTeamManager:Boolean
      shiftStartAt:LocalTime
      shiftEndAt:LocalTime
+    isTeamManager:Boolean
+    redAlert:Boolean
+    greenAlert:Boolean
+    orangeAlert:Boolean
 }
 enum Roles{
     NONE

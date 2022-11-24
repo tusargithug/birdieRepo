@@ -3,7 +3,6 @@ package net.thrymr.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.thrymr.enums.TagType;
 
 import javax.persistence.*;
 import java.util.List;

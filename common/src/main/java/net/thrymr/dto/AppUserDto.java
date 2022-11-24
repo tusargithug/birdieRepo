@@ -67,4 +67,12 @@ public class AppUserDto {
     private LocalTime shiftStartAt;
     private LocalTime shiftEndAt;
     private String shiftTimings;
+
+    private Boolean isTeamManager;
+
+    private Boolean redAlert;
+
+    private Boolean greenAlert;
+
+    private Boolean orangeAlert;
 }

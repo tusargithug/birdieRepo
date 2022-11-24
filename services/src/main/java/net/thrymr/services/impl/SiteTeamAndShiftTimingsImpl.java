@@ -448,8 +448,23 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     @Override
     public List<AppUser> getAllAppUserByAlerts(AppUserDto request) {
         List<AppUser> appUserList = appUserRepo.findAll();
-        if (request.getIsTeamLeader()!= null && request.getIsTeamLeader().equals(Boolean.TRUE)  ) {
-            return appUserList.stream().filter(appUser -> appUser.getRoles().equals(Roles.TEAM_MANAGER) && appUser.getAlerts().equals(Alerts.RED_ALERT)).collect(Collectors.toList());
+        if (request.getIsTeamLeader()!= null && request.getIsTeamLeader().equals(Boolean.TRUE) && request.getRedAlert().equals(Boolean.TRUE) ) {
+            return appUserList.stream().filter(appUser -> appUser.getRoles().equals(Roles.TEAM_LEADER)).collect(Collectors.toList());
+        }
+        if (request.getIsTeamManager()!= null && request.getIsTeamManager().equals(Boolean.TRUE) && request.getRedAlert().equals(Boolean.TRUE) ) {
+            return appUserList.stream().filter(appUser -> appUser.getRoles().equals(Roles.TEAM_MANAGER)).collect(Collectors.toList());
+        }
+        if (request.getIsTeamLeader()!= null && request.getIsTeamLeader().equals(Boolean.TRUE) && request.getGreenAlert().equals(Boolean.TRUE) ) {
+            return appUserList.stream().filter(appUser -> appUser.getRoles().equals(Roles.TEAM_LEADER)).collect(Collectors.toList());
+        }
+        if (request.getIsTeamManager()!= null && request.getIsTeamManager().equals(Boolean.TRUE) && request.getGreenAlert().equals(Boolean.TRUE) ) {
+            return appUserList.stream().filter(appUser -> appUser.getRoles().equals(Roles.TEAM_MANAGER)).collect(Collectors.toList());
+        }
+        if (request.getIsTeamLeader()!= null && request.getIsTeamLeader().equals(Boolean.TRUE) && request.getOrangeAlert().equals(Boolean.TRUE) ) {
+            return appUserList.stream().filter(appUser -> appUser.getRoles().equals(Roles.TEAM_LEADER)).collect(Collectors.toList());
+        }
+        if (request.getIsTeamManager()!= null && request.getIsTeamManager().equals(Boolean.TRUE) && request.getOrangeAlert().equals(Boolean.TRUE) ) {
+            return appUserList.stream().filter(appUser -> appUser.getRoles().equals(Roles.TEAM_MANAGER)).collect(Collectors.toList());
         }
         return new ArrayList<>();
     }
