@@ -62,6 +62,7 @@ type Query {
     getMeditationById(id:ID!):MtMeditation
     getAllAppUserByAlerts(input:AppUserDto):[AppUser]
     getAllAppUserPagination(input:AppUserDto):[AppUser]
+    previewAlertNotification(input:AppUserDto):[AppUser]
 }
 
 type Mutation {
@@ -209,6 +210,9 @@ input AppUserDto{
      shiftStartAt:LocalTime
      shiftEndAt:LocalTime
     isTeamLeader:Boolean
+    teamManagerIds:[ID]
+    teamLeaderIds:[ID]
+
 }
 enum Roles{
     NONE

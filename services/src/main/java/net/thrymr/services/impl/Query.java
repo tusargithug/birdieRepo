@@ -394,4 +394,9 @@ public class Query implements GraphQLQueryResolver {
     public MtMeditation getMeditationById(@Argument Long id) {
         return meditationService.getMeditationById(id);
     }
+
+    @QueryMapping(name="previewAlertNotification")
+    public List<AppUser> previewAlertNotification(@Argument(name = "input") AppUserDto request)  {
+        return siteTeamAndShiftTimingsService.previewAlertNotification(request);
+    }
 }

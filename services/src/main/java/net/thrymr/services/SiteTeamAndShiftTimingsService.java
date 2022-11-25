@@ -40,4 +40,6 @@ public interface SiteTeamAndShiftTimingsService {
     List<ShiftTimings> getAllShiftTimings();
 
     List<AppUser> getAllAppUserByAlerts(AppUserDto request);
+
+    List<AppUser> previewAlertNotification(AppUserDto request);
 }

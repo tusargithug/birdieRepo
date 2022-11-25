@@ -93,4 +93,9 @@ public class SiteTeamAndShiftTimingsController {
         return siteTeamAndShiftTimingsService.getAllAppUserByAlerts(request);
     }
 
+    @QueryMapping(name="previewAlertNotification")
+    public List<AppUser> previewAlertNotification(@Argument(name = "input") AppUserDto request)  {
+        return siteTeamAndShiftTimingsService.previewAlertNotification(request);
+    }
+
 }

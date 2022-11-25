@@ -8,6 +8,7 @@ import lombok.Setter;
 import net.thrymr.enums.Alerts;
 
 import java.time.LocalTime;
+import java.util.List;
 
 
 @Setter
@@ -75,4 +76,8 @@ public class AppUserDto {
     private Boolean greenAlert;
 
     private Boolean orangeAlert;
+
+    private List<Long> teamManagerIds;
+
+    private List<Long> teamLeaderIds;
 }
