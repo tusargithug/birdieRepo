@@ -389,6 +389,10 @@ public class Query implements GraphQLQueryResolver {
     public List<MtMeditation> getAllMeditation() {
         return meditationService.getAllMeditation();
     }
+    @QueryMapping("getAllMeditationPagination")
+    public Page<MtMeditation> getAllMeditationPagination(@Argument (name = "input") MeditationDto response) {
+        return meditationService.getAllMeditationPagination(response);
+    }
 
     @QueryMapping("getMeditationById")
     public MtMeditation getMeditationById(@Argument Long id) {

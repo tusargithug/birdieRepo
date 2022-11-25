@@ -160,6 +160,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         if (siteDto.getStatus() != null && siteDto.getStatus().equals(Boolean.TRUE)) {
             site.setIsActive(siteDto.getStatus());
         }
+        site.setSearchKey(saveSiteSearchKey(site));
         siteRepo.save(site);
         return "site save successfully";
     }
@@ -217,7 +218,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     @Override
     public Page<Site> getAllSitePagination(SiteDto siteDto) {
         Pageable pageable = null;
-        if (siteDto.getPageSize() != null) {
+        if (siteDto.getPageSize() != null && siteDto.getPageNumber() != null) {
             pageable = PageRequest.of(siteDto.getPageNumber(), siteDto.getPageSize());
         }
         if (siteDto.getSortSiteName() != null && siteDto.getSortSiteName().equals(Boolean.TRUE)) {
@@ -253,6 +254,12 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             if (siteDto.getRegion() != null) {
                 Predicate region = criteriaBuilder.and(root.get("region").in(siteDto.getRegion()));
                 addSitePredicate.add(region);
+            }
+            if (Validator.isValid(siteDto.getSearchKey())) {
+                Predicate searchPredicate = criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get("searchKey")),
+                        "%" + siteDto.getSearchKey().toLowerCase() + "%");
+                addSitePredicate.add(searchPredicate);
             }
             return criteriaBuilder.and(addSitePredicate.toArray(new Predicate[0]));
         });
@@ -398,6 +405,12 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             if (Validator.isValid(teamDto.getShiftTimings())) {
                 Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(teamDto.getShiftTimings()));
                 addTeamSpecification.add(shiftTimings);
+            }
+            if (Validator.isValid(teamDto.getSearchKey())) {
+                Predicate searchPredicate = criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get("searchKey")),
+                        "%" + teamDto.getSearchKey().toLowerCase() + "%");
+                addTeamSpecification.add(searchPredicate);
             }
             return criteriaBuilder.and(addTeamSpecification.toArray(new Predicate[0]));
         });
