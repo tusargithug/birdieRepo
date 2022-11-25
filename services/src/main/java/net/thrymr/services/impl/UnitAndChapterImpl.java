@@ -4,8 +4,10 @@ import net.thrymr.dto.ChapterDto;
 import net.thrymr.dto.UnitDto;
 
 import net.thrymr.model.Chapter;
+import net.thrymr.model.FileEntity;
 import net.thrymr.model.Unit;
 import net.thrymr.repository.ChapterRepo;
+import net.thrymr.repository.FileRepo;
 import net.thrymr.repository.UnitRpo;
 import net.thrymr.services.UnitAndChapterServices;
 import net.thrymr.utils.Validator;
@@ -32,6 +34,9 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
 
     @Autowired
     ChapterRepo chapterRepo;
+
+    @Autowired
+    FileRepo fileRepo;
 
     @Override
     public String saveUnit(UnitDto request) {
@@ -142,11 +147,17 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                 if (Validator.isValid(dto.getDescription())) {
                     chapter.setDescription(dto.getDescription());
                 }
-                if (Validator.isValid(String.valueOf(dto.getProfilePicture()))) {
-                    chapter.setProfilePicture(dto.getProfilePicture());
+                if (Validator.isValid(dto.getProfilePictureId())) {
+                    Optional<FileEntity> optionalFileEntity=fileRepo.findByFileId(dto.getProfilePictureId());
+                    if(optionalFileEntity.isPresent()) {
+                        chapter.setProfilePicture(optionalFileEntity.get());
+                    }
                 }
-                if (Validator.isValid(String.valueOf(dto.getVideo()))) {
-                    chapter.setVideo(dto.getVideo());
+                if (Validator.isValid(dto.getVideoId())) {
+                    Optional<FileEntity> optionalFileEntity=fileRepo.findByFileId(dto.getVideoId());
+                    if(optionalFileEntity.isPresent()) {
+                        chapter.setVideo(optionalFileEntity.get());
+                    }
                 }
                 if (dto.getIsActive() != null && dto.getIsActive().equals(Boolean.TRUE) || dto.getIsActive().equals(Boolean.FALSE)) {
                     chapter.setIsActive(dto.getIsActive());
@@ -243,8 +254,18 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         Chapter chapter = new Chapter();
         chapter.setChapterName(chapterDto.getChapterName());
         chapter.setDescription(chapterDto.getDescription());
-        chapter.setProfilePicture(chapterDto.getProfilePicture());
-        chapter.setVideo(chapterDto.getVideo());
+        if (Validator.isValid(chapterDto.getProfilePictureId())) {
+            Optional<FileEntity> optionalFileEntity=fileRepo.findByFileId(chapterDto.getProfilePictureId());
+            if(optionalFileEntity.isPresent()) {
+                chapter.setProfilePicture(optionalFileEntity.get());
+            }
+        }
+        if (Validator.isValid(chapterDto.getVideoId())) {
+            Optional<FileEntity> optionalFileEntity=fileRepo.findByFileId(chapterDto.getVideoId());
+            if(optionalFileEntity.isPresent()) {
+                chapter.setVideo(optionalFileEntity.get());
+            }
+        }
         if (chapterDto.getUnitId() != null) {
             Optional<Unit> unitId = unitRpo.findById(chapterDto.getUnitId());
             if (unitId.isPresent()) {

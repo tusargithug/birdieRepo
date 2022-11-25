@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Calendar;
 
 @Getter
 @Setter
@@ -15,10 +16,15 @@ public class Chapter extends  BaseEntity {
 
     @Column(name ="chapter_name" )
     private String chapterName;
-    private String profilePicture;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private FileEntity profilePicture;
+
     @Column(name = "description",columnDefinition = "TEXT")
     private String description;
-    private String video;//tutorial
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private FileEntity video;
+
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private Unit unit;
