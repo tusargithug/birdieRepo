@@ -2,8 +2,9 @@ package net.thrymr.repository;
 
 import net.thrymr.model.master.MtPsychoEducation;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PsychoEducationRepo extends JpaRepository<MtPsychoEducation, Long> {
+public interface PsychoEducationRepo extends JpaRepository<MtPsychoEducation, Long>, JpaSpecificationExecutor<MtPsychoEducation> {
 }

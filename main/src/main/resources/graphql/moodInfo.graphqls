@@ -58,6 +58,7 @@ type Query {
     getWorksheetById(id:ID!):MtWorksheet
     getAllPsychoEducation:[MtPsychoEducation]
     getPsychoEducationById(id:ID!):MtPsychoEducation
+    getPaginationPsychoEducation(input:PsychoEducationDto):[MtPsychoEducation]
     getAllMeditation:[MtMeditation]
     getMeditationById(id:ID!):MtMeditation
     getAllAppUserByAlerts(input:AppUserDto):[AppUser]
@@ -577,6 +578,9 @@ input PsychoEducationDto{
     description:String
     isActive:Boolean
     fileId:String
+    pageNumber:Int
+    pageSize:Int
+    sortPsychoEducationName:Boolean
 }
 
 type MtMeditation{
