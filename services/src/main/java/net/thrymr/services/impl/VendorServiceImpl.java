@@ -1,8 +1,6 @@
 package net.thrymr.services.impl;
 
 import net.thrymr.dto.VendorDto;
-import net.thrymr.enums.Roles;
-import net.thrymr.model.AppUser;
 import net.thrymr.model.Site;
 import net.thrymr.model.Vendor;
 import net.thrymr.repository.AppUserRepo;

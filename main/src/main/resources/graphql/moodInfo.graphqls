@@ -62,7 +62,7 @@ type Query {
     getMeditationById(id:ID!):MtMeditation
     getAllAppUserByAlerts(input:AppUserDto):[AppUser]
     getAllAppUserPagination(input:AppUserDto):[AppUser]
-    previewAlertNotification(input:AppUserDto):[AppUser]
+    previewAlertNotification(input:AppUserDto):RoleWiseCountResponse
 }
 
 type Mutation {
@@ -189,26 +189,26 @@ type UserAppointmentResponse{
 }
 
 input AppUserDto{
-     id:Int
-     email:String
-     userName:String
-     mobile:String
-     password:String
-     searchKey:String
-     isActive:Boolean
-     empId:String
-     roles:String
-     siteId:Int
-     dateOfJoining:String
-     alerts:Alerts
-     pageSize:Int
-     pageNumber:Int
-     addedOn:String
-     countryCode:String
-     gender:String
+    id:Int
+    email:String
+    userName:String
+    mobile:String
+    password:String
+    searchKey:String
+    isActive:Boolean
+    empId:String
+    roles:String
+    siteId:Int
+    dateOfJoining:String
+    alerts:Alerts
+    pageSize:Int
+    pageNumber:Int
+    addedOn:String
+    countryCode:String
+    gender:String
     isTeamManager:Boolean
-     shiftStartAt:LocalTime
-     shiftEndAt:LocalTime
+    shiftStartAt:LocalTime
+    shiftEndAt:LocalTime
     isTeamLeader:Boolean
     teamManagerIds:[ID]
     teamLeaderIds:[ID]
@@ -224,7 +224,6 @@ enum Roles{
     DIRECTOR
     TEAM_MANAGER
     TEAM_LEADER
-    OP_STREAM
     SITE_MANAGER
 }
 
@@ -336,27 +335,27 @@ enum Alerts{
     NONE
 }
 input CounsellorDto {
-     id:Int
-     educationalDetails:[String]
-     languages:[String]
-     siteId:Int
-     designation:String
-     bio:String
-     counsellorName:String
-     sortCounsellorName:Boolean
-     empId:String
-     emailId:String
-     mobileNumber:String
-     pageNumber:Int
-      pageSize:Int
-     addedOn:Boolean
-     searchKey:String
-     isActive:Boolean
-     shiftStartAt:LocalTime
-     shiftEndAt:LocalTime
-     shiftTimings:String
-     countryCode:String
-     gender:String
+    id:Int
+    educationalDetails:[String]
+    languages:[String]
+    siteId:Int
+    designation:String
+    bio:String
+    counsellorName:String
+    sortCounsellorName:Boolean
+    empId:String
+    emailId:String
+    mobileNumber:String
+    pageNumber:Int
+    pageSize:Int
+    addedOn:Boolean
+    searchKey:String
+    isActive:Boolean
+    shiftStartAt:LocalTime
+    shiftEndAt:LocalTime
+    shiftTimings:String
+    countryCode:String
+    gender:String
 }
 
 type Vendor{
@@ -451,6 +450,14 @@ input FileDetailsDto{
     groupId:Int
 }
 
+type RoleWiseCountResponse{
+    teamLeaderCount:Int
+    teamManagerCount:Int
+    directorCount:Int
+    seniorManagerCount:Int
+    accountManagerCount:Int
+    generalManagerCount:Int
+}
 input MiniSessionDto {
     id:Int
     tags:[String]

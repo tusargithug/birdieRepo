@@ -3,6 +3,7 @@ package net.thrymr.services.impl;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import net.thrymr.FileDocument;
 import net.thrymr.dto.*;
+import net.thrymr.dto.response.RoleWiseCountResponse;
 import net.thrymr.dto.response.UserAppointmentResponse;
 import net.thrymr.enums.Roles;
 import net.thrymr.enums.TagType;
@@ -396,7 +397,7 @@ public class Query implements GraphQLQueryResolver {
     }
 
     @QueryMapping(name="previewAlertNotification")
-    public List<AppUser> previewAlertNotification(@Argument(name = "input") AppUserDto request)  {
+    public RoleWiseCountResponse previewAlertNotification(@Argument(name = "input") AppUserDto request)  {
         return siteTeamAndShiftTimingsService.previewAlertNotification(request);
     }
 }

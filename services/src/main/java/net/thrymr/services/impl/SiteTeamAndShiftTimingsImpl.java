@@ -1,7 +1,7 @@
 package net.thrymr.services.impl;
 
 import net.thrymr.dto.*;
-import net.thrymr.enums.Alerts;
+import net.thrymr.dto.response.RoleWiseCountResponse;
 import net.thrymr.enums.Roles;
 import net.thrymr.enums.SlotShift;
 import net.thrymr.model.*;
@@ -18,9 +18,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -150,8 +152,8 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             optionalCity.ifPresent(site::setCity);
         }
         //vendor
-        if(siteDto.getVendorId() != null && vendorRepo.existsById(siteDto.getVendorId())) {
-            Optional<Vendor> optionalVendor=vendorRepo.findById(siteDto.getVendorId());
+        if (siteDto.getVendorId() != null && vendorRepo.existsById(siteDto.getVendorId())) {
+            Optional<Vendor> optionalVendor = vendorRepo.findById(siteDto.getVendorId());
             optionalVendor.ifPresent(site::setVendor);
         }
         //siteManager
@@ -456,7 +458,39 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     }
 
     @Override
-    public List<AppUser> previewAlertNotification(AppUserDto request) {
-        List<AppUser> appUserList = appUserRepo.findAllByRolesIn(request.getTeamLeaderIds());
-        return appUserList;
-    }}
+    public RoleWiseCountResponse previewAlertNotification(AppUserDto request) {
+        RoleWiseCountResponse roleWiseCountResponse = new RoleWiseCountResponse();
+        roleWiseCountResponse.setTeamLeaderCount(0);
+        roleWiseCountResponse.setTeamManagerCount(0);
+        roleWiseCountResponse.setDirectorCount(0);
+        roleWiseCountResponse.setGeneralManagerCount(0);
+        roleWiseCountResponse.setSeniorManagerCount(0);
+        roleWiseCountResponse.setAccountManagerCount(0);
+//        Optional<Team> optionalTeam= teamRepo.findById(request.getId());
+//        if (optionalTeam.isPresent() && optionalTeam.get().getIsActive().equals(Boolean.TRUE)) {
+//            roleWiseCountResponse.setAppUser(optionalTeam.get());
+        List<AppUser> appUserList = appUserRepo.findAllById(request.getTeamLeaderIds());
+        for (AppUser appUser : appUserList) {
+            if (appUser.getRoles().equals(Roles.TEAM_LEADER)) {
+                roleWiseCountResponse.setTeamLeaderCount(roleWiseCountResponse.getTeamLeaderCount() + 1);
+            }
+            if (appUser.getRoles().equals(Roles.TEAM_MANAGER)) {
+                roleWiseCountResponse.setTeamManagerCount(roleWiseCountResponse.getTeamManagerCount() + 1);
+            }
+            if (appUser.getRoles().equals(Roles.DIRECTOR)) {
+                roleWiseCountResponse.setDirectorCount(roleWiseCountResponse.getDirectorCount() + 1);
+            }
+            if (appUser.getRoles().equals(Roles.ACCOUNTMANAGER)) {
+                roleWiseCountResponse.setAccountManagerCount(roleWiseCountResponse.getAccountManagerCount() + 1);
+            }
+            if (appUser.getRoles().equals(Roles.GENERALMANAGER)) {
+                roleWiseCountResponse.setGeneralManagerCount(roleWiseCountResponse.getGeneralManagerCount() + 1);
+            }
+            if (appUser.getRoles().equals(Roles.SENIORMANAGER)) {
+                roleWiseCountResponse.setSeniorManagerCount(roleWiseCountResponse.getSeniorManagerCount() + 1);
+            }
+        }
+
+        return roleWiseCountResponse;
+    }
+}

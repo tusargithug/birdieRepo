@@ -326,7 +326,7 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public List<Roles> getAllEnumRoles() {
-        List<Roles> rolesList = Arrays.asList(Roles.ADMIN, Roles.COUNSELLOR, Roles.DIRECTOR, Roles.EMPLOYEE, Roles.NONE, Roles.OP_STREAM, Roles.TEAM_LEADER, Roles.TEAM_MANAGER, Roles.VENDOR
+        List<Roles> rolesList = Arrays.asList(Roles.ADMIN, Roles.COUNSELLOR, Roles.DIRECTOR, Roles.EMPLOYEE, Roles.NONE, Roles.TEAM_LEADER, Roles.TEAM_MANAGER, Roles.VENDOR
                 , Roles.WELL_BEING_MANGER, Roles.SITE_MANAGER);
         return rolesList;
     }

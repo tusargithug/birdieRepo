@@ -4,6 +4,7 @@ import net.thrymr.dto.AppUserDto;
 import net.thrymr.dto.ShiftTimingsDto;
 import net.thrymr.dto.SiteDto;
 import net.thrymr.dto.TeamDto;
+import net.thrymr.dto.response.RoleWiseCountResponse;
 import net.thrymr.model.AppUser;
 import net.thrymr.model.ShiftTimings;
 import net.thrymr.model.Site;
@@ -94,7 +95,7 @@ public class SiteTeamAndShiftTimingsController {
     }
 
     @QueryMapping(name="previewAlertNotification")
-    public List<AppUser> previewAlertNotification(@Argument(name = "input") AppUserDto request)  {
+    public RoleWiseCountResponse previewAlertNotification(@Argument(name = "input") AppUserDto request)  {
         return siteTeamAndShiftTimingsService.previewAlertNotification(request);
     }
 
