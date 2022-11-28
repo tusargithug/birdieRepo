@@ -262,6 +262,12 @@ public class MiniSessionImpl implements MiniSessionService {
                 Predicate shiftTimings = criteriaBuilder.and(root.get("tags").in(request.getTags()));
                 addMiniSessionSpecification.add(shiftTimings);
             }
+            if (Validator.isValid(request.getSearchKey())) {
+                Predicate searchPredicate = criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get("searchKey")),
+                        "%" + request.getSearchKey().toLowerCase() + "%");
+                addMiniSessionSpecification.add(searchPredicate);
+            }
             return criteriaBuilder.and(addMiniSessionSpecification.toArray(new Predicate[0]));
         });
 

@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Table(name = "vendor")
-public class    Vendor extends BaseEntity{
+public class Vendor extends BaseEntity {
     @Column(name = "vendorPOC")
     private String POC;
 

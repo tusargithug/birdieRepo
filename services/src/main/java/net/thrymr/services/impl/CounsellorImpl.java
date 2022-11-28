@@ -62,6 +62,7 @@ public class CounsellorImpl implements CounsellorService {
                 counsellor.setSite(optionalSite.get());
             }
         }
+        counsellor.setSearchKey(getCounsellorSearchKey(counsellor));
         counsellorRepo.save(counsellor);
         return "counsellor create successfully";
     }
@@ -118,6 +119,7 @@ public class CounsellorImpl implements CounsellorService {
                         counsellor.setSite(optionalSite.get());
                     }
                 }
+                counsellor.setSearchKey(getCounsellorSearchKey(counsellor));
                 counsellorRepo.save(counsellor);
                 return "counsellor update successfully";
             }
@@ -133,6 +135,7 @@ public class CounsellorImpl implements CounsellorService {
             counsellor = optionalCounsellor.get();
             counsellor.setIsDeleted(Boolean.TRUE);
             counsellor.setIsActive(Boolean.FALSE);
+            counsellor.setSearchKey(getCounsellorSearchKey(counsellor));
             counsellorRepo.save(counsellor);
         }
         return "counsellor delete successfully";
@@ -205,5 +208,48 @@ public class CounsellorImpl implements CounsellorService {
         }
         return new Counsellor();
     }
+
+    public String getCounsellorSearchKey(Counsellor counsellor) {
+        String searchKey = "";
+        if (counsellor.getCounsellorName() != null) {
+            searchKey = searchKey + " " + counsellor.getCounsellorName();
+        }
+        if (counsellor.getEmpId() != null) {
+            searchKey = searchKey + " " + counsellor.getEmpId();
+        }
+        if (counsellor.getEmailId() != null) {
+            searchKey = searchKey + " " + counsellor.getEmailId();
+        }
+        if (counsellor.getCountryCode() != null) {
+            searchKey = searchKey + " " + counsellor.getCountryCode();
+        }
+        if (counsellor.getMobileNumber() != null) {
+            searchKey = searchKey + " " + counsellor.getMobileNumber();
+        }
+        if (counsellor.getDesignation() != null) {
+            searchKey = searchKey + " " + counsellor.getDesignation();
+        }
+        if (counsellor.getShiftStartAt() != null) {
+            searchKey = searchKey + " " + counsellor.getShiftStartAt();
+        }
+        if (counsellor.getShiftEndAt() != null) {
+            searchKey = searchKey + " " + counsellor.getShiftEndAt();
+        }
+        if (counsellor.getShiftTimings() != null) {
+            searchKey = searchKey + " " + counsellor.getShiftTimings();
+        }
+        if (counsellor.getBio() != null) {
+            searchKey = searchKey + " " + counsellor.getBio();
+        }
+        if (counsellor.getGender() != null) {
+            searchKey = searchKey + " " + counsellor.getGender();
+        }
+        if (counsellor.getIsActive() != null) {
+            searchKey = searchKey + " " + counsellor.getIsActive();
+        }
+        return searchKey;
+    }
+
+
 
 }

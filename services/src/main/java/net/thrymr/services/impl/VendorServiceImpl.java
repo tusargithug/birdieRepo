@@ -153,6 +153,12 @@ public class VendorServiceImpl implements VendorService {
                 Predicate site = criteriaBuilder.and(siteJoin.get("id").in(response.getSiteIdList()));
                 addVendorPredicate.add(site);
             }
+            if (Validator.isValid(response.getSearchKey())) {
+                Predicate searchPredicate = criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get("searchKey")),
+                        "%" + response.getSearchKey().toLowerCase() + "%");
+                addVendorPredicate.add(searchPredicate);
+            }
             return criteriaBuilder.and(addVendorPredicate.toArray(new Predicate[0]));
         });
         Page<Vendor> vendorObjectives = vendorRepo.findAll(addVendorSpecification, pageable);

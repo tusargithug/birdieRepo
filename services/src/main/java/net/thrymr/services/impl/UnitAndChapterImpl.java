@@ -103,6 +103,12 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                 Predicate unitName = criteriaBuilder.and(root.get("unitName").in(unitDto.getUnitName()));
                 addUnitPredicate.add(unitName);
             }
+            if (Validator.isValid(unitDto.getSearchKey())) {
+                Predicate searchPredicate = criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get("searchKey")),
+                        "%" + unitDto.getSearchKey().toLowerCase() + "%");
+                addUnitPredicate.add(searchPredicate);
+            }
             return criteriaBuilder.and(addUnitPredicate.toArray(new Predicate[0]));
         });
         Page<Unit> unitObjectives = unitRpo.findAll(addUnitSpecification, pageable);

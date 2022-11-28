@@ -257,6 +257,12 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                 Predicate region = criteriaBuilder.and(root.get("region").in(siteDto.getRegion()));
                 addSitePredicate.add(region);
             }
+            if (Validator.isValid(siteDto.getSearchKey())) {
+                Predicate searchPredicate = criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get("searchKey")),
+                        "%" + siteDto.getSearchKey().toLowerCase() + "%");
+                addSitePredicate.add(searchPredicate);
+            }
             return criteriaBuilder.and(addSitePredicate.toArray(new Predicate[0]));
         });
         Page<Site> siteObjective = siteRepo.findAll(siteSpecification, pageable);
@@ -405,6 +411,12 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             if (Validator.isValid(teamDto.getShiftTimings())) {
                 Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(teamDto.getShiftTimings()));
                 addTeamSpecification.add(shiftTimings);
+            }
+            if (Validator.isValid(teamDto.getSearchKey())) {
+                Predicate searchPredicate = criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get("searchKey")),
+                        "%" + teamDto.getSearchKey().toLowerCase() + "%");
+                addTeamSpecification.add(searchPredicate);
             }
             return criteriaBuilder.and(addTeamSpecification.toArray(new Predicate[0]));
         });
