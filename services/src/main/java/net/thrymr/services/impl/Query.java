@@ -391,6 +391,11 @@ public class Query implements GraphQLQueryResolver {
         return psychoEducationService.getPsychoEducationById(id);
     }
 
+    @QueryMapping(name = "getPaginationPsychoEducation")
+    public Page<MtPsychoEducation> getPaginationPsychoEducation(@Argument(name = "input") PsychoEducationDto request) {
+        return psychoEducationService.getPaginationPsychoEducation(request);
+    }
+
     @QueryMapping("getAllMeditation")
     public List<MtMeditation> getAllMeditation() {
         return meditationService.getAllMeditation();
