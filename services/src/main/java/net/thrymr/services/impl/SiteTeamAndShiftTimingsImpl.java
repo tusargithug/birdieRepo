@@ -1,7 +1,6 @@
 package net.thrymr.services.impl;
 
 import net.thrymr.dto.*;
-import net.thrymr.dto.response.RoleWiseCountResponse;
 import net.thrymr.enums.Roles;
 import net.thrymr.enums.SlotShift;
 import net.thrymr.model.*;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Service;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
