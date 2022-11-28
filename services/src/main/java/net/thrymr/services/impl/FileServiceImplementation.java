@@ -56,6 +56,24 @@ public class FileServiceImplementation implements FileService {
             fileEntity.setFileId(fileID.toString());
             fileEntity.setFileName(upload.getOriginalFilename());
             fileEntity.setFileSize(upload.getSize());
+            if(upload.getContentType().contains("audio")){
+                fileEntity.setFileType("AUDIO");
+            }
+            if(upload.getContentType().contains("video")){
+                fileEntity.setFileType("VIDEO");
+            }
+            if(upload.getContentType().contains("pdf")){
+                fileEntity.setFileType("PDF");
+            }
+            if(upload.getContentType().contains("document")){
+                fileEntity.setFileType("DOCUMENT");
+            }
+            if(upload.getContentType().contains("image")){
+                fileEntity.setFileType("IMAGE");
+            }
+            if(upload.getContentType().contains("zip")){
+                fileEntity.setFileType("ZIP");
+            }
             fileEntity.setFileContentType(upload.getContentType());
             FileDocument fileDocument = new FileDocument();
             fileDocument.setFileEntity(fileEntity);

@@ -63,6 +63,7 @@ type Query {
     getMeditationById(id:ID!):MtMeditation
     getAllAppUserByAlerts(input:AppUserDto):[AppUser]
     getAllAppUserPagination(input:AppUserDto):[AppUser]
+    getAllMeditationPagination(input:MeditationDto):[MtMeditation]
 }
 
 type Mutation {
@@ -248,7 +249,7 @@ type AppUser{
 type FileEntity{
      fileId:String
      fileName:String
-     fileType:FileType
+     fileType:String
      fileSize:Int
      fileContentType:String
 }
@@ -589,6 +590,7 @@ type MtMeditation{
     meditationVideoLink:String
     isActive:Boolean
     file:FileEntity
+    createdOn:String
 }
 
 input MeditationDto{
@@ -597,6 +599,12 @@ input MeditationDto{
     meditationVideoLink:String
     isActive:Boolean
     fileId:String
+    createdOn:String
+    sortName:Boolean
+    pageNumber:Int
+    pageSize:Int
+    fileType:String
+    searchKey:String
 }
 enum Gender{
     MALE
