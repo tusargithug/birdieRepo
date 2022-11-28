@@ -2,7 +2,6 @@ package net.thrymr.services.impl;
 
 import net.thrymr.dto.VendorDto;
 import net.thrymr.enums.Roles;
-import net.thrymr.model.AppUser;
 import net.thrymr.model.Site;
 import net.thrymr.model.Vendor;
 import net.thrymr.repository.AppUserRepo;
@@ -44,12 +43,13 @@ public class VendorServiceImpl implements VendorService {
         vendor.setCountryCode(request.getCountryCode());
         vendor.setMobileNumber(request.getMobileNumber());
         vendor.setPOC(request.getPOC());
-        if(request.getSiteIdList() != null){
-            List<Site> siteList=siteRepo.findAllById(request.getSiteIdList());
-            if(!siteList.isEmpty()){
+        if (request.getSiteIdList() != null) {
+            List<Site> siteList = siteRepo.findAllById(request.getSiteIdList());
+            if (!siteList.isEmpty()) {
                 vendor.setSite(siteList);
             }
         }
+        vendor.setSearchKey(getVendorSearchKey(vendor));
         vendorRepo.save(vendor);
         return "vendor creation success";
     }
@@ -92,10 +92,10 @@ public class VendorServiceImpl implements VendorService {
 
     public String updateVendor(VendorDto request) {
         Vendor vendor = null;
-        if(Validator.isValid(request.getId())) {
+        if (Validator.isValid(request.getId())) {
             Optional<Vendor> optionalVendor = vendorRepo.findById(request.getId());
             if (optionalVendor.isPresent()) {
-                vendor=optionalVendor.get();
+                vendor = optionalVendor.get();
                 if (Validator.isValid(request.getVendorName())) {
                     vendor.setVendorName(request.getVendorName());
                 }
@@ -111,12 +111,13 @@ public class VendorServiceImpl implements VendorService {
                 if (Validator.isValid(request.getPOC())) {
                     vendor.setPOC(request.getPOC());
                 }
-                if(request.getSiteIdList() != null){
-                    List<Site> siteList=siteRepo.findAllById(request.getSiteIdList());
-                    if(!siteList.isEmpty()){
+                if (request.getSiteIdList() != null) {
+                    List<Site> siteList = siteRepo.findAllById(request.getSiteIdList());
+                    if (!siteList.isEmpty()) {
                         vendor.setSite(siteList);
                     }
                 }
+                vendor.setSearchKey(getVendorSearchKey(vendor));
                 vendorRepo.save(vendor);
                 return "Vendor updated successfully";
             }
@@ -133,13 +134,13 @@ public class VendorServiceImpl implements VendorService {
         }
         if (response.getSortVendorName() != null && response.getSortVendorName().equals(Boolean.TRUE)) {
             pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.ASC, "vendorName");
-        }else if(response.getSortVendorName() != null && response.getSortVendorName().equals(Boolean.FALSE)) {
+        } else if (response.getSortVendorName() != null && response.getSortVendorName().equals(Boolean.FALSE)) {
             pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.DESC, "vendorName");
         }
         //filters
         Specification<Vendor> addVendorSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> addVendorPredicate = new ArrayList<>();
-                Join<Vendor, Site> siteJoin = root.join("site");
+            Join<Vendor, Site> siteJoin = root.join("site");
             if (response.getVendorName() != null) {
                 Predicate name = criteriaBuilder.and(root.get("userName").in(response.getVendorName()));
                 addVendorPredicate.add(name);
@@ -148,7 +149,7 @@ public class VendorServiceImpl implements VendorService {
                 Predicate poc = criteriaBuilder.and(root.get("POC").in(response.getPOC()));
                 addVendorPredicate.add(poc);
             }
-            if (response.getSiteIdList()!=null && !response.getSiteIdList().isEmpty()) {
+            if (response.getSiteIdList() != null && !response.getSiteIdList().isEmpty()) {
                 Predicate site = criteriaBuilder.and(siteJoin.get("id").in(response.getSiteIdList()));
                 addVendorPredicate.add(site);
             }
@@ -160,5 +161,31 @@ public class VendorServiceImpl implements VendorService {
             return new org.springframework.data.domain.PageImpl<>(vendorObjectives.getContent(), pageable, 0l);
         }
         return new org.springframework.data.domain.PageImpl<>(new ArrayList<>(), pageable, 0l);
+    }
+
+    public String getVendorSearchKey(Vendor vendor) {
+        String searchKey = "";
+        if (vendor.getPOC() != null) {
+            searchKey = searchKey + " " + vendor.getPOC();
+        }
+        if (vendor.getVendorName() != null) {
+            searchKey = searchKey + " " + vendor.getVendorName();
+        }
+        if (vendor.getVendorId() != null) {
+            searchKey = searchKey + " " + vendor.getVendorId();
+        }
+        if (vendor.getCountryCode() != null) {
+            searchKey = searchKey + " " + vendor.getCountryCode();
+        }
+        if (vendor.getMobileNumber() != null) {
+            searchKey = searchKey + " " + vendor.getMobileNumber();
+        }
+        if (vendor.getIsActive() != null) {
+            searchKey = searchKey + " " + vendor.getIsActive();
+        }
+        if (vendor.getSite() != null) {
+            searchKey = searchKey + " " + vendor.getSite();
+        }
+        return searchKey;
     }
 }

@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,8 +48,8 @@ public class CounsellorImpl implements CounsellorService {
         counsellor.setLanguages(request.getLanguages());
         counsellor.setBio(request.getBio());
         counsellor.setShiftStartAt(DateUtils.toStringToLocalTime(request.getShiftStartAt(), Constants.TIME_FORMAT_12_HOURS));
-        counsellor.setShiftEndAt(DateUtils.toStringToLocalTime(request.getShiftEndAt(),Constants.TIME_FORMAT_12_HOURS));
-        counsellor.setShiftTimings(request.getShiftStartAt()+" - "+request.getShiftEndAt());
+        counsellor.setShiftEndAt(DateUtils.toStringToLocalTime(request.getShiftEndAt(), Constants.TIME_FORMAT_12_HOURS));
+        counsellor.setShiftTimings(request.getShiftStartAt() + " - " + request.getShiftEndAt());
         if (Validator.isValid(request.getDesignation()) && request.getDesignation().equals("COUNSELLOR")) {
             counsellor.setDesignation(Roles.valueOf(request.getDesignation()));
         }
@@ -93,22 +94,22 @@ public class CounsellorImpl implements CounsellorService {
                 if (Validator.isValid(request.getDesignation()) && request.getDesignation().equals("COUNSELLOR")) {
                     counsellor.setDesignation(Roles.valueOf(request.getDesignation()));
                 }
-                if(Validator.isValid(request.getCountryCode())){
+                if (Validator.isValid(request.getCountryCode())) {
                     counsellor.setCountryCode(request.getCountryCode());
                 }
                 if (Validator.isValid(request.getMobileNumber())) {
                     counsellor.setMobileNumber(request.getMobileNumber());
                 }
-                if(request.getShiftStartAt() != null) {
+                if (request.getShiftStartAt() != null) {
                     counsellor.setShiftStartAt(DateUtils.toStringToLocalTime(request.getShiftStartAt(), Constants.TIME_FORMAT_12_HOURS));
                 }
-                if(request.getShiftEndAt() != null) {
-                    counsellor.setShiftEndAt(DateUtils.toStringToLocalTime(request.getShiftEndAt(),Constants.TIME_FORMAT_12_HOURS));
+                if (request.getShiftEndAt() != null) {
+                    counsellor.setShiftEndAt(DateUtils.toStringToLocalTime(request.getShiftEndAt(), Constants.TIME_FORMAT_12_HOURS));
                 }
-                if(request.getShiftStartAt() != null && request.getShiftEndAt() != null){
-                    counsellor.setShiftTimings(request.getShiftStartAt()+" - "+request.getShiftEndAt());
+                if (request.getShiftStartAt() != null && request.getShiftEndAt() != null) {
+                    counsellor.setShiftTimings(request.getShiftStartAt() + " - " + request.getShiftEndAt());
                 }
-                if(Validator.isValid(request.getGender())){
+                if (Validator.isValid(request.getGender())) {
                     counsellor.setGender(Gender.valueOf(request.getGender()));
                 }
                 if (Validator.isValid(request.getSiteId())) {
@@ -132,6 +133,7 @@ public class CounsellorImpl implements CounsellorService {
             counsellor = optionalCounsellor.get();
             counsellor.setIsDeleted(Boolean.TRUE);
             counsellor.setIsActive(Boolean.FALSE);
+            counsellorRepo.save(counsellor);
         }
         return "counsellor delete successfully";
     }
@@ -144,7 +146,7 @@ public class CounsellorImpl implements CounsellorService {
         }
         if (response.getSortCounsellorName() != null && response.getSortCounsellorName().equals(Boolean.TRUE)) {
             pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.ASC, "counsellorName");
-        }else if(response.getSortCounsellorName() != null && response.getSortCounsellorName().equals(Boolean.FALSE)){
+        } else if (response.getSortCounsellorName() != null && response.getSortCounsellorName().equals(Boolean.FALSE)) {
             pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.DESC, "counsellorName");
         }
         //filters
@@ -171,8 +173,8 @@ public class CounsellorImpl implements CounsellorService {
                 addCounsellorPredicate.add(site);
             }
 
-            if(response.getShiftTimings() != null){
-                Predicate shiftTimings= criteriaBuilder.and(root.get("shiftTimings").in(response.getShiftTimings()));
+            if (response.getShiftTimings() != null) {
+                Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(response.getShiftTimings()));
                 addCounsellorPredicate.add(shiftTimings);
             }
 

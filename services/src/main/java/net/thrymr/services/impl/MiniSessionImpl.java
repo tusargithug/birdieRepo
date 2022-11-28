@@ -1,6 +1,5 @@
 package net.thrymr.services.impl;
 
-import net.thrymr.FileDocument;
 import net.thrymr.FileDocumentRepo;
 import net.thrymr.dto.FileDetailsDto;
 
@@ -48,10 +47,10 @@ public class MiniSessionImpl implements MiniSessionService {
         MiniSession miniSession = new MiniSession();
         miniSession.setMiniSessionName(request.getMiniSessionName());
         miniSession.setTags(request.getTags());
+        miniSession.setSearchKey(getMiniSessionSearchKey(miniSession));
         miniSessionRepo.save(miniSession);
         return "Mini session save successfully";
     }
-
 
 
     @Override
@@ -61,13 +60,14 @@ public class MiniSessionImpl implements MiniSessionService {
             Optional<MiniSession> optionalMiniSession = miniSessionRepo.findById(request.getId());
             if (optionalMiniSession.isPresent()) {
                 miniSession = optionalMiniSession.get();
-                if(Validator.isValid(request.getMiniSessionName())) {
+                if (Validator.isValid(request.getMiniSessionName())) {
                     miniSession.setMiniSessionName(request.getMiniSessionName());
-                }else if(Validator.isValid(request.getTags())) {
+                } else if (Validator.isValid(request.getTags())) {
                     miniSession.setTags(request.getTags());
-                }else {
+                } else {
                     return "invalid request";
                 }
+                miniSession.setSearchKey(getMiniSessionSearchKey(miniSession));
                 miniSessionRepo.save(miniSession);
                 return "Mini session updated successfully";
             }
@@ -84,6 +84,7 @@ public class MiniSessionImpl implements MiniSessionService {
                 miniSession = optionalMiniSession.get();
                 miniSession.setIsActive(Boolean.FALSE);
                 miniSession.setIsDeleted(Boolean.TRUE);
+                miniSession.setSearchKey(getMiniSessionSearchKey(miniSession));
                 miniSessionRepo.save(miniSession);
             }
         }
@@ -121,6 +122,7 @@ public class MiniSessionImpl implements MiniSessionService {
             Optional<MiniSession> optionalMiniSession = miniSessionRepo.findById(request.getMiniSessionId());
             groups.setMiniSession(optionalMiniSession.get());
         }
+        groups.setSearchKey(getGroupSearchKey(groups));
         groupRepo.save(groups);
         return "group saved successfully";
     }
@@ -142,6 +144,7 @@ public class MiniSessionImpl implements MiniSessionService {
                     Optional<MiniSession> optionalMiniSession = miniSessionRepo.findById(request.getMiniSessionId());
                     groups.setMiniSession(optionalMiniSession.get());
                 }
+                groups.setSearchKey(getGroupSearchKey(groups));
                 groupRepo.save(groups);
                 return "Group update successfully";
             }
@@ -161,7 +164,7 @@ public class MiniSessionImpl implements MiniSessionService {
         Optional<FileDetails> optionalFileDetails = fileDetailsRepo.findByFileId(request.getFileId());
         if (optionalFileDetails.isPresent()) {
             groupDetails.setFileId(request.getFileId());
-        }else {
+        } else {
             return "please add file_id";
         }
 
@@ -187,6 +190,7 @@ public class MiniSessionImpl implements MiniSessionService {
             groupDetails.setIsText(request.getIsText());
             groupDetails.setText(request.getText());
         }
+        groupDetails.setSearchKey(getGroupDetailsSearchKey(groupDetails));
         groupDetailsRepo.save(groupDetails);
         return "Group details saved successfully";
     }
@@ -270,14 +274,14 @@ public class MiniSessionImpl implements MiniSessionService {
 
     @Override
     public List<TagType> getAllEnumTags() {
-        List<TagType> tagList= Arrays.asList(TagType.NONE,TagType.ANXIETY,TagType.BURNOUT,TagType.VT,TagType.DEPRESSION,TagType.STRESS,TagType.PTSD);
+        List<TagType> tagList = Arrays.asList(TagType.NONE, TagType.ANXIETY, TagType.BURNOUT, TagType.VT, TagType.DEPRESSION, TagType.STRESS, TagType.PTSD);
         return tagList;
     }
 
     @Override
     public List<Groups> getAllGroups() {
         List<Groups> groupsList = groupRepo.findAll();
-        if(!groupsList.isEmpty()){
+        if (!groupsList.isEmpty()) {
             return groupsList.stream().filter(groups -> groups.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
         }
         return new ArrayList<>();
@@ -289,8 +293,92 @@ public class MiniSessionImpl implements MiniSessionService {
             fileDetails.setFileId(request.getFileId());
             fileDetails.setFileName(request.getFileName());
             fileDetails.setFileContentType(FileType.valueOf(request.getContentType()));
+            fileDetails.setSearchKey(getFileDetailsSearchKey(fileDetails));
             fileDetailsRepo.save(fileDetails);
         }
         return fileDetails;
     }
+
+    public String getMiniSessionSearchKey(MiniSession miniSession) {
+        String searchKey = "";
+        if (miniSession.getMiniSessionName() != null) {
+            searchKey = searchKey + " " + miniSession.getMiniSessionName();
+        }
+        if (miniSession.getIsActive() != null) {
+            searchKey = searchKey + " " + miniSession.getIsActive();
+        }
+
+        return searchKey;
+    }
+
+    public String getGroupSearchKey(Groups groups) {
+        String searchKey = "";
+        if (groups.getGroupName() != null) {
+            searchKey = searchKey + " " + groups.getGroupName();
+        }
+        if (groups.getMiniSession() != null) {
+            searchKey = searchKey + " " + groups.getMiniSession();
+        }
+        if (groups.getIsActive() != null) {
+            searchKey = searchKey + " " + groups.getIsActive();
+        }
+
+        return searchKey;
+    }
+
+    public String getGroupDetailsSearchKey(GroupDetails details) {
+        String searchKey = "";
+        if (details.getFileId() != null) {
+            searchKey = searchKey + " " + details.getFileId();
+        }
+        if (details.getText() != null) {
+            searchKey = searchKey + " " + details.getText();
+        }
+        if (details.getIsImage() != null) {
+            searchKey = searchKey + " " + details.getIsImage();
+        }
+        if (details.getIsZif() != null) {
+            searchKey = searchKey + " " + details.getIsZif();
+        }
+        if (details.getIsPdf() != null) {
+            searchKey = searchKey + " " + details.getIsPdf();
+        }
+        if (details.getIsVideo() != null) {
+            searchKey = searchKey + " " + details.getIsVideo();
+        }
+        if (details.getIsAudio() != null) {
+            searchKey = searchKey + " " + details.getIsAudio();
+        }
+        if (details.getIsEmoji() != null) {
+            searchKey = searchKey + " " + details.getIsEmoji();
+        }
+        if (details.getIsText() != null) {
+            searchKey = searchKey + " " + details.getIsText();
+        }
+        if (details.getIsActive() != null) {
+            searchKey = searchKey + " " + details.getIsActive();
+        }
+        return searchKey;
+    }
+
+    public String getFileDetailsSearchKey(FileDetails fileDetails) {
+        String searchKey = "";
+        if (fileDetails.getFileId() != null) {
+            searchKey = searchKey + " " + fileDetails.getFileId();
+        }
+        if (fileDetails.getFileName() != null) {
+            searchKey = searchKey + " " + fileDetails.getFileName();
+        }
+        if (fileDetails.getFileContentType() != null) {
+            searchKey = searchKey + " " + fileDetails.getFileContentType();
+        }
+        if (fileDetails.getIsActive() != null) {
+            searchKey = searchKey + " " + fileDetails.getIsActive();
+        }
+        if (fileDetails.getGroups() != null) {
+            searchKey = searchKey + " " + fileDetails.getGroups();
+        }
+        return searchKey;
+    }
+
 }

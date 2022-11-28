@@ -49,9 +49,9 @@ input RolesDto{
 input ChapterDto{
     id:Int
     chapterName:String
-    profilePictureId:String
+    profilePicture:String
     isActive:Boolean
-    videoId:String
+    video:String
     unitId:Int
     description:String
 }
@@ -166,9 +166,9 @@ type MtCity{
 type Chapter{
     id:ID!
     chapterName:String
-    profilePicture:FileEntity
+    profilePicture:String
     description:String
-    video:FileEntity
+    video:String
     unit:Unit
     isActive:Boolean
 }

@@ -1,10 +1,7 @@
 package net.thrymr.services.impl;
 
 import net.thrymr.dto.MeditationDto;
-import net.thrymr.model.FileDetails;
 import net.thrymr.model.FileEntity;
-import net.thrymr.model.Site;
-import net.thrymr.model.Vendor;
 import net.thrymr.model.master.MtMeditation;
 import net.thrymr.repository.FileRepo;
 import net.thrymr.repository.MeditationRepo;
