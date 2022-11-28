@@ -2,6 +2,7 @@ package net.thrymr.services.impl;
 
 import net.thrymr.constant.Constants;
 import net.thrymr.dto.*;
+import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.dto.response.UserAppointmentResponse;
 import net.thrymr.enums.Gender;
 import net.thrymr.enums.Roles;
@@ -32,6 +33,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.method.P;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -131,7 +133,7 @@ public class AppUserServiceImpl implements AppUserService {
                         if (row.getCell(8) != null) {
                             appUser.setRoles(Roles.valueOf(getCellValue(row.getCell(8))));
                         }
-                        setUserSearchKey(appUser);
+                        getAppUserSearchKey(appUser);
                         appUsers.add(appUser);
                     } catch (Exception e) {
                         logger.error("Exception{} ", e);
@@ -166,13 +168,6 @@ public class AppUserServiceImpl implements AppUserService {
         return value;
     }
 
-    private void setUserSearchKey(AppUser appUser) {
-        String searchKey = "";
-        if (Validator.isValid(appUser.getUserName())) {
-            searchKey = searchKey + appUser.getUserName();
-        }
-        appUser.setSearchKey(searchKey);
-    }
 
     @Override
     public String createAppUser(AppUserDto request) throws ParseException {
@@ -195,7 +190,8 @@ public class AppUserServiceImpl implements AppUserService {
         user.setGender(Gender.valueOf(request.getGender()));
         user.setShiftStartAt(DateUtils.toStringToLocalTime(request.getShiftStartAt(), Constants.TIME_FORMAT_12_HOURS));
         user.setShiftEndAt(DateUtils.toStringToLocalTime(request.getShiftEndAt(), Constants.TIME_FORMAT_12_HOURS));
-        user.setShiftTimings(user.getShiftStartAt() + " - " + user.getShiftEndAt());
+        user.setShiftTimings(request.getShiftStartAt() + " - " + request.getShiftEndAt());
+        user.setSearchKey(getAppUserSearchKey(user));
         appUserRepo.save(user);
         return "User Saved successfully";
     }
@@ -243,7 +239,7 @@ public class AppUserServiceImpl implements AppUserService {
                 if (Validator.isObjectValid(request.getShiftEndAt())) {
                     user.setShiftEndAt(DateUtils.toStringToLocalTime(request.getShiftEndAt(), Constants.TIME_FORMAT_12_HOURS));
                 }
-                user.setShiftTimings(user.getShiftStartAt() + " - " + user.getShiftEndAt());
+                user.setShiftTimings(request.getShiftStartAt() + " - " + request.getShiftEndAt());
                 appUserRepo.save(user);
                 return "User updated successfully";
             }
@@ -368,7 +364,7 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public Page<AppUser> getAllAppUserPagination(AppUserDto response) {
+    public PaginationResponse getAllAppUserPagination(AppUserDto response) {
         Pageable pageable=null;
         if (Validator.isValid(response.getPageSize())) {
             pageable = PageRequest.of(response.getPageNumber(), response.getPageSize());
@@ -410,12 +406,66 @@ public class AppUserServiceImpl implements AppUserService {
                 Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(response.getShiftTimings()));
                 addVendorPredicate.add(shiftTimings);
             }
+            if (Validator.isValid(response.getSearchKey())) {
+                Predicate searchPredicate = criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get("searchKey")),
+                        "%" + response.getSearchKey().toLowerCase() + "%");
+                addVendorPredicate.add(searchPredicate);
+            }
             return criteriaBuilder.and(addVendorPredicate.toArray(new Predicate[0]));
         });
         Page<AppUser> appUserObjectives = appUserRepo.findAll(appUserSpecification, pageable);
         if (appUserObjectives.getContent() != null) {
-            return new org.springframework.data.domain.PageImpl<>(appUserObjectives.getContent(), pageable, 0l);
+            PaginationResponse paginationResponse=new PaginationResponse();
+            paginationResponse.setAppUserList(appUserObjectives.getContent());
+            paginationResponse.setTotalPages(appUserObjectives.getTotalPages());
+            paginationResponse.setTotalElements(appUserObjectives.getTotalElements());
+            return paginationResponse;
         }
-        return new org.springframework.data.domain.PageImpl<>(new ArrayList<>(), pageable, 0l);
+        return new PaginationResponse();
+    }
+
+    public String getAppUserSearchKey(AppUser appUser) {
+        String searchKey = "";
+        if (appUser.getUserName() != null) {
+            searchKey = searchKey + " " + appUser.getUserName();
+        }
+        if (appUser.getRoles() != null) {
+            searchKey = searchKey + " " + appUser.getRoles();
+        }
+        if (appUser.getGender() != null) {
+            searchKey = searchKey + " " + appUser.getGender();
+        }
+        if (appUser.getShiftTimings() != null) {
+            searchKey = searchKey + " " + appUser.getShiftTimings();
+        }
+        if(appUser.getIsActive() != null){
+            searchKey = searchKey + " " + appUser.getIsActive();
+        }
+        if(appUser.getCreatedOn() != null){
+            searchKey = searchKey + " " + appUser.getCreatedOn();
+        }
+        if(appUser.getEmpId() != null){
+            searchKey = searchKey + " " + appUser.getEmpId();
+        }
+        if(appUser.getEmail() != null){
+            searchKey = searchKey + " " + appUser.getEmail();
+        }
+        if(appUser.getDateOfJoining() != null){
+            searchKey = searchKey + " " + appUser.getDateOfJoining();
+        }
+        if(appUser.getShiftEndAt() != null){
+            searchKey = searchKey + " " + appUser.getShiftEndAt();
+        }
+        if(appUser.getIsActive() != null){
+            searchKey = searchKey + " " + appUser.getShiftEndAt();
+        }
+        if(appUser.getMobile() != null){
+            searchKey = searchKey +" "+ appUser.getUserName();
+        }
+        if(appUser.getCountryCode() != null){
+            searchKey = searchKey +" "+appUser.getCountryCode();
+        }
+        return searchKey;
     }
 }

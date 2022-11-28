@@ -22,4 +22,16 @@ public class MeditationDto {
     private String fileId;
 
     private Boolean isActive;
+
+    private Integer pageNumber;
+
+    private Integer pageSize;
+
+    private Boolean sortName;
+
+    private String createdOn;
+
+    private String fileType;
+
+    private String searchKey;
 }

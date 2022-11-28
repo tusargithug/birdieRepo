@@ -1,6 +1,7 @@
 package net.thrymr.services;
 
 import net.thrymr.dto.VendorDto;
+import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.model.Vendor;
 import org.springframework.data.domain.Page;
 
@@ -14,6 +15,6 @@ public interface VendorService {
 
     String updateVendor(VendorDto request);
 
-    Page<Vendor> getAllVendorPagination(VendorDto vendorDto);
+    PaginationResponse getAllVendorPagination(VendorDto vendorDto);
 
 }

@@ -11,10 +11,12 @@ public class ChapterDto {
     private Long id;
     private String chapterName;
     private String description;
-    private Boolean isActive=Boolean.FALSE;
+    private Long questionId;
+    private Boolean isActive;
     private Long unitId;
     private Integer pageNumber;
     private Integer pageSize;
+    private Boolean isSorting;
     private String addedOn;
     private String videoId;
     private String profilePictureId;

@@ -29,6 +29,9 @@ public class MtCountry extends BaseEntity {
     @Column(name = "country_code")
     private String countryCode;
 
+    @Column(name = "international_dialing")
+    private String internationalDialing;
+
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private MtRegion region;
 

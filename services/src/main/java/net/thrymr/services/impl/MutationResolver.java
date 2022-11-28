@@ -311,10 +311,10 @@ public class MutationResolver implements GraphQLMutationResolver {
         return unitAndChapterServices.deleteChapterById(id);
     }
 
-   /* @MutationMapping(name = "uploadRegionData")
-    public String uploadRegionData(@RequestParam MultipartFile file) {
+    @MutationMapping(name = "uploadRegionData")
+    public String uploadRegionData(@Argument MultipartFile file) {
         return cityCountyAndRegionService.uploadRegionData(file);
-    }*/
+    }
 
     /*@MutationMapping(name="upload-excel-city-data")
     public String uploadCityData(@Argument MultipartFile file) {

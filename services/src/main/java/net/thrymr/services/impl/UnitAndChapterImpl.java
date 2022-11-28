@@ -3,9 +3,11 @@ package net.thrymr.services.impl;
 import net.thrymr.dto.ChapterDto;
 import net.thrymr.dto.UnitDto;
 
+import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.model.Chapter;
 import net.thrymr.model.FileEntity;
 import net.thrymr.model.Unit;
+import net.thrymr.model.master.MtQuestion;
 import net.thrymr.repository.ChapterRepo;
 import net.thrymr.repository.FileRepo;
 import net.thrymr.repository.UnitRpo;
@@ -19,8 +21,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -191,37 +195,51 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
     }
 
     @Override
-    public List<Chapter> getAllChapterPagination(ChapterDto chapterDto) {
+    public PaginationResponse getAllChapterPagination(ChapterDto chapterDto) {
         Pageable pageable = null;
         if (chapterDto.getPageNumber() != null) {
             pageable = PageRequest.of(chapterDto.getPageNumber(), chapterDto.getPageSize());
         }
-        if (chapterDto.getAddedOn() != null) {
-            pageable = PageRequest.of(chapterDto.getPageNumber(), chapterDto.getPageSize(), Sort.Direction.DESC, "createdOn");
+        if (chapterDto.getIsSorting() != null && chapterDto.getIsSorting().equals(Boolean.TRUE) ) {
+            pageable = PageRequest.of(chapterDto.getPageNumber(), chapterDto.getPageSize(), Sort.Direction.ASC, "chapterName");
+        } else  if (chapterDto.getIsSorting() != null && chapterDto.getIsSorting().equals(Boolean.FALSE) ) {
+            pageable = PageRequest.of(chapterDto.getPageNumber(), chapterDto.getPageSize(), Sort.Direction.DESC, "chapterName");
         }
         //filters
         Specification<Chapter> chapterSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> addUnitPredicate = new ArrayList<>();
-            if (chapterDto.getId() != null) {
-                Predicate id = criteriaBuilder.and(root.get("id").in(chapterDto.getId()));
-                addUnitPredicate.add(id);
+            Join<Chapter, MtQuestion> questionJoin = root.join("questionList");
+            if(chapterDto.getIsActive() != null && chapterDto.getIsActive().equals(Boolean.TRUE)){
+                Predicate isActive = criteriaBuilder.and(root.get("isActive").in(chapterDto.getIsActive()));
+                addUnitPredicate.add(isActive);
+            } else  if (chapterDto.getIsActive() != null && chapterDto.getIsActive().equals(Boolean.FALSE)){
+                Predicate isActive = criteriaBuilder.and(root.get("isActive").in(chapterDto.getIsActive()));
+                addUnitPredicate.add(isActive);
             }
             if (chapterDto.getChapterName() != null && !chapterDto.getChapterName().isEmpty()) {
                 Predicate unitName = criteriaBuilder.and(root.get("chapterName").in(chapterDto.getChapterName()));
                 addUnitPredicate.add(unitName);
             }
             if (chapterDto.getAddedOn() != null) {
-                Predicate createdOn = criteriaBuilder.and(root.get("createdOn").in(chapterDto.getAddedOn()));
+                Predicate createdOn = criteriaBuilder.and(questionJoin.get("createdOn").in(chapterDto.getAddedOn()));
                 addUnitPredicate.add(createdOn);
             }
+            if(chapterDto.getQuestionId() != null){
+                Predicate question = criteriaBuilder.and(root.get("question").in(chapterDto.getQuestionId()));
+                addUnitPredicate.add(question);
+            }
+
             return criteriaBuilder.and(addUnitPredicate.toArray(new Predicate[0]));
         });
         Page<Chapter> chapterObjectives = chapterRepo.findAll(chapterSpecification, pageable);
-        List<Chapter> chapterList = null;
         if (chapterObjectives.getContent() != null) {
-            chapterList = chapterObjectives.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+            PaginationResponse paginationResponse = new PaginationResponse();
+            paginationResponse.setChapterList(new HashSet<>(chapterObjectives.getContent()));
+            paginationResponse.setTotalPages(chapterObjectives.getTotalPages());
+            paginationResponse.setTotalElements(chapterObjectives.getTotalElements());
+            return paginationResponse;
         }
-        return chapterList;
+        return new PaginationResponse();
     }
 
     public Unit dtoToEntity(UnitDto dto) {
