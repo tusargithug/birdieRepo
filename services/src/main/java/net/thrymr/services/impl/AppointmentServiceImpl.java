@@ -213,6 +213,4 @@ public class AppointmentServiceImpl implements AppointmentService {
         List<UserAppointment> userAppointmentList = appointmentRepo.findAll();
         return userAppointmentList.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
     }
-
-
 }

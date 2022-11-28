@@ -11,6 +11,7 @@ import net.thrymr.enums.QuestionCalType;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.thrymr.model.Chapter;
 
 @Entity
 @Setter
@@ -35,4 +36,7 @@ public class MtQuestion extends BaseEntity{
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private MtAssessment assessment;
+
+	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	private Chapter chapter;
 }

@@ -2,6 +2,7 @@ package net.thrymr.services.impl;
 
 import net.thrymr.constant.Constants;
 import net.thrymr.dto.*;
+import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.dto.response.UserAppointmentResponse;
 import net.thrymr.enums.Gender;
 import net.thrymr.enums.Roles;
@@ -32,6 +33,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.method.P;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -362,7 +364,7 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public Page<AppUser> getAllAppUserPagination(AppUserDto response) {
+    public PaginationResponse getAllAppUserPagination(AppUserDto response) {
         Pageable pageable=null;
         if (Validator.isValid(response.getPageSize())) {
             pageable = PageRequest.of(response.getPageNumber(), response.getPageSize());
@@ -414,9 +416,13 @@ public class AppUserServiceImpl implements AppUserService {
         });
         Page<AppUser> appUserObjectives = appUserRepo.findAll(appUserSpecification, pageable);
         if (appUserObjectives.getContent() != null) {
-            return new org.springframework.data.domain.PageImpl<>(appUserObjectives.getContent(), pageable, 0l);
+            PaginationResponse paginationResponse=new PaginationResponse();
+            paginationResponse.setAppUserList(appUserObjectives.getContent());
+            paginationResponse.setTotalPages(appUserObjectives.getTotalPages());
+            paginationResponse.setTotalElements(appUserObjectives.getTotalElements());
+            return paginationResponse;
         }
-        return new org.springframework.data.domain.PageImpl<>(new ArrayList<>(), pageable, 0l);
+        return new PaginationResponse();
     }
 
     public String getAppUserSearchKey(AppUser appUser) {
