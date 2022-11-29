@@ -53,6 +53,7 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
                 question.setAssessment(optionalAssessment.get());
             }
         }
+        question.setSearchKey(getAppUserSearchKey(question));
         questionRepo.save(question);
         return "create question successfully";
     }
@@ -132,6 +133,7 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
                         question.setAssessment(optionalAssessment.get());
                     }
                 }
+                question.setSearchKey(getAppUserSearchKey(question));
                 questionRepo.save(question);
                 return "update question successfully";
             }
@@ -155,6 +157,7 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
                 options.setUserCourse(optionalUserCourse.get());
             }
         }
+        options.setSearchKey(getOptionsSearchKey(options));
         optionsRepo.save(options);
         return "created option successfully";
     }
@@ -182,6 +185,7 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
                         options.setUserCourse(optionalUserCourse.get());
                     }
                 }
+                options.setSearchKey(getOptionsSearchKey(options));
                 optionsRepo.save(options);
             }
             return "Option updated successfully";
@@ -225,5 +229,41 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
             }
         }
         return "option deleted successfully";
+    }
+
+    public String getAppUserSearchKey(MtQuestion question) {
+        String searchKey = "";
+        if (question.getQuestion() != null) {
+            searchKey = searchKey + " " + question.getQuestion();
+        }
+        if (question.getMtOptions() != null) {
+            searchKey = searchKey + " " + question.getMtOptions();
+        }
+        if (question.getPsychometricTest() != null) {
+            searchKey = searchKey + " " + question.getPsychometricTest();
+        }
+        if (question.getQuestionCalType() != null) {
+            searchKey = searchKey + " " + question.getQuestionCalType();
+        }
+        if (question.getSequence() != null) {
+            searchKey = searchKey + " " + question.getSequence();
+        }
+        if (question.getAssessment() != null) {
+            searchKey = searchKey + " " + question.getAssessment();
+        }
+        return searchKey;
+    }
+    public String getOptionsSearchKey(MtOptions options) {
+        String searchKey = "";
+        if (options.getTextAnswer() != null) {
+            searchKey = searchKey + " " + options.getTextAnswer();
+        }
+        if (options.getQuestion() != null) {
+            searchKey = searchKey + " " + options.getQuestion();
+        }
+        if (options.getUserCourse() != null) {
+            searchKey = searchKey + " " + options.getUserCourse();
+        }
+        return searchKey;
     }
 }

@@ -2,20 +2,23 @@ package net.thrymr.services.impl;
 
 import net.thrymr.constant.Constants;
 import net.thrymr.dto.AssessmentDto;
+import net.thrymr.dto.OptionsDto;
+import net.thrymr.dto.QuestionDto;
 import net.thrymr.enums.FrequencyType;
 import net.thrymr.model.master.MtAssessment;
+import net.thrymr.model.master.MtOptions;
+import net.thrymr.model.master.MtQuestion;
 import net.thrymr.repository.AssessmentRepo;
+import net.thrymr.repository.OptionsRepo;
+import net.thrymr.repository.QuestionRepo;
 import net.thrymr.services.AssessmentService;
 import net.thrymr.utils.DateUtils;
 import net.thrymr.utils.Validator;
-import org.apache.poi.sl.draw.geom.GuideIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,6 +27,12 @@ public class AssessmentServiceImpl implements AssessmentService {
 
     @Autowired
     AssessmentRepo assessmentRepo;
+
+    @Autowired
+    QuestionRepo questionRepo;
+
+    @Autowired
+    OptionsRepo optionsRepo;
 
     @Override
     public List<MtAssessment> getAllAssessment() {
@@ -36,8 +45,51 @@ public class AssessmentServiceImpl implements AssessmentService {
 
     @Override
     public String createAssessment(AssessmentDto request) throws ParseException {
-        MtAssessment mtAssessment = dtoToAssessmentEntity(request);
-        assessmentRepo.save(dtoToAssessmentEntity(request));
+        MtAssessment mtAssessment = new MtAssessment();
+        if (Validator.isValid(request.getName())) {
+            mtAssessment.setName(request.getName());
+        }
+        mtAssessment.setDescription(request.getDescription());
+        if (Validator.isValid(request.getInstructions())) {
+            mtAssessment.setInstructions(request.getInstructions());
+        }
+        mtAssessment.setDateOfPublishing(DateUtils.toFormatStringToDate(request.getDateOfPublishing(), Constants.DATE_FORMAT));
+        mtAssessment.setFrequencyType(FrequencyType.valueOf(request.getFrequencyType()));
+        if (Validator.isValid(request.getHigh())) {
+            mtAssessment.setHigh(request.getHigh());
+        } else if (Validator.isValid(request.getModerate())) {
+            mtAssessment.setModerate(request.getModerate());
+        } else {
+            mtAssessment.setLow(request.getLow());
+        }
+        Set<MtQuestion> mtQuestionSet = new HashSet<>();
+        Set<MtOptions> mtOptionsSet = new HashSet<>();
+        if (Validator.isValid(request.getQuestionDtoList())) {
+            for (QuestionDto questionDto : request.getQuestionDtoList()) {
+                MtQuestion mtQuestion = new MtQuestion();
+                mtQuestion.setQuestion(questionDto.getQuestion());
+                mtQuestion.setSequence(questionDto.getSequence());
+                mtQuestionSet.add(mtQuestion);
+                for (OptionsDto optionsDto : request.getOptionsDtoList()) {
+                    MtOptions mtOptions = new MtOptions();
+                    mtOptions.setTextAnswer(optionsDto.getTextAnswer());
+                    mtOptionsSet.add(mtOptions);
+                }
+                mtQuestion.setMtOptions(mtOptionsSet);
+                mtQuestionSet.add(mtQuestion);
+            }
+            mtAssessment.setQuestionList(mtQuestionSet);
+            mtAssessment = assessmentRepo.save(mtAssessment);
+            MtAssessment finalMtAssessment = mtAssessment;
+            mtQuestionSet.stream().map(o -> {
+                o.setAssessment(finalMtAssessment);
+                return null;
+            }).collect(Collectors.toSet());
+//            mtQuestionSet = new HashSet<>(questionRepo.saveAll(mtQuestionSet));
+//            Set<MtQuestion> finalMtQuestionSet = mtQuestionSet;
+//            mtOptionsSet.stream().map(obj -> obj.setQuestion(finalMtQuestionSet)).collect(Collectors.toSet());
+            optionsRepo.saveAll(mtOptionsSet);
+        }
         return "create Assessment successfully";
     }
 
@@ -58,6 +110,7 @@ public class AssessmentServiceImpl implements AssessmentService {
         if (request.getIsActive() != null && request.getIsActive().equals(Boolean.TRUE)) {
             assessment.setIsActive(request.getIsActive());
         }
+        assessment.setSearchKey(getAppUserSearchKey(assessment));
         return assessment;
     }
 
@@ -95,6 +148,7 @@ public class AssessmentServiceImpl implements AssessmentService {
                 if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
                     assessment.setIsActive(request.getIsActive());
                 }
+                assessment.setSearchKey(getAppUserSearchKey(assessment));
                 assessmentRepo.save(assessment);
                 return "Assessment update successfully";
             }
@@ -130,4 +184,38 @@ public class AssessmentServiceImpl implements AssessmentService {
         return new MtAssessment();
     }
 
+    public String getAppUserSearchKey(MtAssessment mtAssessment) {
+        String searchKey = "";
+        if (mtAssessment.getName() != null) {
+            searchKey = searchKey + " " + mtAssessment.getName();
+        }
+        if (mtAssessment.getDescription() != null) {
+            searchKey = searchKey + " " + mtAssessment.getDescription();
+        }
+        if (mtAssessment.getCourses() != null) {
+            searchKey = searchKey + " " + mtAssessment.getCourses();
+        }
+        if (mtAssessment.getInstructions() != null) {
+            searchKey = searchKey + " " + mtAssessment.getInstructions();
+        }
+        if (mtAssessment.getFrequencyType() != null) {
+            searchKey = searchKey + " " + mtAssessment.getFrequencyType();
+        }
+        if (mtAssessment.getHigh() != null) {
+            searchKey = searchKey + " " + mtAssessment.getHigh();
+        }
+        if (mtAssessment.getModerate() != null) {
+            searchKey = searchKey + " " + mtAssessment.getModerate();
+        }
+        if (mtAssessment.getLow() != null) {
+            searchKey = searchKey + " " + mtAssessment.getLow();
+        }
+        if (mtAssessment.getDateOfPublishing() != null) {
+            searchKey = searchKey + " " + mtAssessment.getDateOfPublishing();
+        }
+        if (mtAssessment.getQuestionList() != null) {
+            searchKey = searchKey + " " + mtAssessment.getQuestionList();
+        }
+        return searchKey;
+    }
 }

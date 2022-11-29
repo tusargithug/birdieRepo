@@ -7,7 +7,6 @@ import net.thrymr.services.MeditationService;
 import net.thrymr.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -96,5 +95,22 @@ public class MeditationServiceImpl implements MeditationService {
         mtMeditation.setMeditationVideoLink(request.getMeditationVideoLink());
         mtMeditation.setIsActive(request.getIsActive());
         return mtMeditation;
+    }
+
+    public String saveMeditationSearchKey(MtMeditation mtMeditation) {
+        String searchKey = "";
+        if (mtMeditation.getMeditationVideoLink() != null) {
+            searchKey = searchKey + " " + mtMeditation.getMeditationVideoLink();
+        }
+        if (mtMeditation.getName() != null) {
+            searchKey = searchKey + " " + mtMeditation.getName();
+        }
+        if (mtMeditation.getFile() != null) {
+            searchKey = searchKey + " " + mtMeditation.getFile();
+        }
+        if(mtMeditation.getCreatedOn() !=null){
+            searchKey = searchKey + " " + mtMeditation.getCreatedOn();
+        }
+        return searchKey;
     }
 }

@@ -16,4 +16,6 @@ public class PsychoEducationDto {
     private String description;
 
     private Boolean isActive;
+
+    private String fileId;
 }

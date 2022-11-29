@@ -31,7 +31,7 @@ public class MtQuestion extends BaseEntity{
 	@Enumerated(EnumType.STRING)
 	private QuestionCalType questionCalType;
 	
-	private int sequence;
+	private Integer sequence;
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private MtAssessment assessment;

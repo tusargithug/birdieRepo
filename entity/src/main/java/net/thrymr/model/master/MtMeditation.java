@@ -4,9 +4,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.thrymr.model.BaseEntity;
+import net.thrymr.model.FileEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Setter
@@ -17,4 +17,7 @@ public class MtMeditation extends BaseEntity {
 
     private String name;
     private String meditationVideoLink;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private FileEntity file;
 }
