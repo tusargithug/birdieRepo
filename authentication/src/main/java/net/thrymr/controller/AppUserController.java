@@ -1,7 +1,7 @@
 package net.thrymr.controller;
 import net.thrymr.dto.AppUserDto;
+import net.thrymr.dto.PaginationResponse;
 import net.thrymr.dto.UserCourseDto;
-import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.dto.response.UserAppointmentResponse;
 import net.thrymr.enums.Roles;
 import net.thrymr.model.AppUser;

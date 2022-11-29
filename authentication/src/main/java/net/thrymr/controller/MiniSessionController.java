@@ -3,7 +3,7 @@ package net.thrymr.controller;
 import net.thrymr.dto.FileDetailsDto;
 import net.thrymr.dto.GroupsDto;
 import net.thrymr.dto.MiniSessionDto;
-import net.thrymr.dto.response.PaginationResponse;
+import net.thrymr.dto.PaginationResponse;
 import net.thrymr.enums.TagType;
 import net.thrymr.model.GroupDetails;
 import net.thrymr.model.Groups;

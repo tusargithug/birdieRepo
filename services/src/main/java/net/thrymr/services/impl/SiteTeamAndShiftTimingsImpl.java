@@ -2,7 +2,6 @@ package net.thrymr.services.impl;
 
 import net.thrymr.constant.Constants;
 import net.thrymr.dto.*;
-import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.enums.Alerts;
 import net.thrymr.enums.Roles;
 import net.thrymr.enums.SlotShift;

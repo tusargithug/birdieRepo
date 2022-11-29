@@ -1,7 +1,7 @@
 package net.thrymr.services.impl;
 
+import net.thrymr.dto.PaginationResponse;
 import net.thrymr.dto.VendorDto;
-import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.enums.Roles;
 import net.thrymr.model.AppUser;
 import net.thrymr.model.Site;
@@ -159,7 +159,7 @@ public class VendorServiceImpl implements VendorService {
         Page<Vendor> vendorObjectives = vendorRepo.findAll(addVendorSpecification, pageable);
         if (vendorObjectives.getContent() != null) {
             PaginationResponse paginationResponse = new PaginationResponse();
-            paginationResponse.setVendorList(new HashSet<>(vendorObjectives.getContent()));
+            paginationResponse.setVendorList(new ArrayList<>(vendorObjectives.getContent()));
             paginationResponse.setTotalElements(vendorObjectives.getTotalElements());
             paginationResponse.setTotalPages(vendorObjectives.getTotalPages());
             return paginationResponse;

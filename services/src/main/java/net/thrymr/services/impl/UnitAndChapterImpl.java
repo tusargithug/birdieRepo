@@ -1,9 +1,9 @@
 package net.thrymr.services.impl;
 
 import net.thrymr.dto.ChapterDto;
+import net.thrymr.dto.PaginationResponse;
 import net.thrymr.dto.UnitDto;
 
-import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.model.Chapter;
 import net.thrymr.model.FileEntity;
 import net.thrymr.model.Unit;
@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static net.thrymr.utils.DateUtils.dateToString;
 
 @Service
 public class UnitAndChapterImpl implements UnitAndChapterServices {
@@ -83,14 +82,13 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
 
     @Override
     public Page<Unit> getLearnPath(UnitDto unitDto) {
-
         Pageable pageable = null;
         if (unitDto.getPageSize() != null) {
             pageable = PageRequest.of(unitDto.getPageNumber(), unitDto.getPageSize());
         }
         if (unitDto.getSortUserName() != null && unitDto.getSortUserName().equals(Boolean.TRUE)) {
             pageable = PageRequest.of(unitDto.getPageNumber(), unitDto.getPageSize(), Sort.Direction.ASC, "unitName");
-        } else if(unitDto.getSortUserName() != null && unitDto.getSortUserName().equals(Boolean.FALSE)){
+        } else if (unitDto.getSortUserName() != null && unitDto.getSortUserName().equals(Boolean.FALSE)) {
             pageable = PageRequest.of(unitDto.getPageNumber(), unitDto.getPageSize(), Sort.Direction.DESC, "unitName");
         }
         //filters
@@ -100,6 +98,10 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                 Predicate id = criteriaBuilder.and(root.get("id").in(unitDto.getId()));
                 addUnitPredicate.add(id);
             }
+            if (unitDto.getCreatedOn() != null) {
+                Predicate createdOn = criteriaBuilder.and(root.get("createdOn").in(unitDto.getCreatedOn()));
+                addUnitPredicate.add(createdOn);
+            }
             if (unitDto.getIsActive() != null && unitDto.getIsActive().equals(Boolean.TRUE)) {
                 Predicate status = criteriaBuilder.and(root.get("isActive").in(unitDto.getIsActive()));
                 addUnitPredicate.add(status);
@@ -107,9 +109,9 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                 Predicate status = criteriaBuilder.and(root.get("isActive").in(unitDto.getIsActive()));
                 addUnitPredicate.add(status);
             }
-            if (unitDto.getUnitName() != null && !unitDto.getUnitName().isEmpty()) {
-                Predicate unitName = criteriaBuilder.and(root.get("unitName").in(unitDto.getUnitName()));
-                addUnitPredicate.add(unitName);
+            if (unitDto.getChapterCount() != null) {
+                Predicate chapters = criteriaBuilder.and(root.get("chapters").in(unitDto.getChapterCount()));
+                addUnitPredicate.add(chapters);
             }
             return criteriaBuilder.and(addUnitPredicate.toArray(new Predicate[0]));
         });
@@ -200,19 +202,19 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         if (chapterDto.getPageNumber() != null) {
             pageable = PageRequest.of(chapterDto.getPageNumber(), chapterDto.getPageSize());
         }
-        if (chapterDto.getIsSorting() != null && chapterDto.getIsSorting().equals(Boolean.TRUE) ) {
+        if (chapterDto.getIsSorting() != null && chapterDto.getIsSorting().equals(Boolean.TRUE)) {
             pageable = PageRequest.of(chapterDto.getPageNumber(), chapterDto.getPageSize(), Sort.Direction.ASC, "chapterName");
-        } else  if (chapterDto.getIsSorting() != null && chapterDto.getIsSorting().equals(Boolean.FALSE) ) {
+        } else if (chapterDto.getIsSorting() != null && chapterDto.getIsSorting().equals(Boolean.FALSE)) {
             pageable = PageRequest.of(chapterDto.getPageNumber(), chapterDto.getPageSize(), Sort.Direction.DESC, "chapterName");
         }
         //filters
         Specification<Chapter> chapterSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> addUnitPredicate = new ArrayList<>();
             Join<Chapter, MtQuestion> questionJoin = root.join("questionList");
-            if(chapterDto.getIsActive() != null && chapterDto.getIsActive().equals(Boolean.TRUE)){
+            if (chapterDto.getIsActive() != null && chapterDto.getIsActive().equals(Boolean.TRUE)) {
                 Predicate isActive = criteriaBuilder.and(root.get("isActive").in(chapterDto.getIsActive()));
                 addUnitPredicate.add(isActive);
-            } else  if (chapterDto.getIsActive() != null && chapterDto.getIsActive().equals(Boolean.FALSE)){
+            } else if (chapterDto.getIsActive() != null && chapterDto.getIsActive().equals(Boolean.FALSE)) {
                 Predicate isActive = criteriaBuilder.and(root.get("isActive").in(chapterDto.getIsActive()));
                 addUnitPredicate.add(isActive);
             }
@@ -224,7 +226,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                 Predicate createdOn = criteriaBuilder.and(questionJoin.get("createdOn").in(chapterDto.getAddedOn()));
                 addUnitPredicate.add(createdOn);
             }
-            if(chapterDto.getQuestionId() != null){
+            if (chapterDto.getQuestionId() != null) {
                 Predicate question = criteriaBuilder.and(root.get("question").in(chapterDto.getQuestionId()));
                 addUnitPredicate.add(question);
             }
@@ -234,7 +236,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         Page<Chapter> chapterObjectives = chapterRepo.findAll(chapterSpecification, pageable);
         if (chapterObjectives.getContent() != null) {
             PaginationResponse paginationResponse = new PaginationResponse();
-            paginationResponse.setChapterList(new HashSet<>(chapterObjectives.getContent()));
+            paginationResponse.setChapterList(new ArrayList<>(chapterObjectives.getContent()));
             paginationResponse.setTotalPages(chapterObjectives.getTotalPages());
             paginationResponse.setTotalElements(chapterObjectives.getTotalElements());
             return paginationResponse;

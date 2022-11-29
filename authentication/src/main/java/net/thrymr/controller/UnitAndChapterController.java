@@ -1,7 +1,6 @@
 package net.thrymr.controller;
 
 import net.thrymr.dto.*;
-import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.model.Chapter;
 import net.thrymr.model.Unit;
 import net.thrymr.services.UnitAndChapterServices;

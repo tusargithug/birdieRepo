@@ -1,7 +1,7 @@
 package net.thrymr.services.impl;
 
 import net.thrymr.dto.MeditationDto;
-import net.thrymr.dto.response.PaginationResponse;
+import net.thrymr.dto.PaginationResponse;
 import net.thrymr.model.FileDetails;
 import net.thrymr.model.FileEntity;
 import net.thrymr.model.Site;
