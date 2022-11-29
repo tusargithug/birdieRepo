@@ -65,6 +65,7 @@ type Query {
     getAllMeditationPagination(input:MeditationDto):PaginationResponse
     getAllWorkSheetPagination(input:WorksheetDto):PaginationResponse
     getAllChapterPagination(input:ChapterDto):PaginationResponse
+#    getAllMoodIntensitiesByMoodInfoId(id:ID!):[MtMoodIntensity]
 }
 
 type Mutation {
