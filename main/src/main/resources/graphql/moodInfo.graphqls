@@ -15,7 +15,7 @@ type Query {
     getAllCourse:[Course]
     getAllUnit:[Unit]
     getAllChapters:[Chapter]
-    getLearnPath(input:UnitDto):[Unit]
+    getLearnPath(input:UnitDto):PaginationResponse
     getAllSitePagination(input:SiteDto):PaginationResponse
     getAllTeamPagination(input:TeamDto):PaginationResponse
     getAllSite:[Site]
@@ -629,6 +629,7 @@ type PaginationResponse{
     meditationList:[MtMeditation]
     worksheetList:[MtWorksheet]
     chapterList:[Chapter]
+    unitList:[Unit]
     totalPages:Int
     totalElements:Int
 }
