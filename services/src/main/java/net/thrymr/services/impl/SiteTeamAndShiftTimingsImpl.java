@@ -103,7 +103,6 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                 if (teamDto.getShiftStartAt() != null && teamDto.getShiftStartAt() != null) {
                     team.setShiftTimings(teamDto.getShiftStartAt() + " - " + teamDto.getShiftEndAt());
                 }
-                team.setSearchKey(getTeamSearchKey(team));
                 teamRepo.save(team);
                 return "Team update successfully";
             }
@@ -294,7 +293,6 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             site = optionalSite.get();
             site.setIsActive(Boolean.FALSE);
             site.setIsDeleted(Boolean.TRUE);
-            site.setSearchKey(getSiteSearchKey(site));
             siteRepo.save(site);
         }
         return "delete record successfully";
@@ -408,8 +406,8 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                 Predicate isActive = criteriaBuilder.and(root.get("isActive").in(teamDto.getStatus()));
                 addTeamSpecification.add(isActive);
             }
-            if (Validator.isValid(teamDto.getSiteId())) {
-                Predicate shiftTimings = criteriaBuilder.and(root.get("site").in(teamDto.getSiteId()));
+            if (Validator.isValid(teamDto.getSiteIds())) {
+                Predicate shiftTimings = criteriaBuilder.and(root.get("site").in(teamDto.getSiteIds()));
                 addTeamSpecification.add(shiftTimings);
             }
             if (Validator.isValid(teamDto.getShiftTimings())) {

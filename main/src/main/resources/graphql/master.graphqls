@@ -116,6 +116,7 @@ input TeamDto {
     shiftStartAt:String
     shiftEndAt:String
     shiftTimings:String
+    siteIds:[Int]
 }
 
 input UnitDto {
