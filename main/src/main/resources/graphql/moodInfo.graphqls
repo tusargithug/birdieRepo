@@ -209,7 +209,7 @@ input AppUserDto{
      addedOn:String
      countryCode:String
      gender:String
-     isTeamLeader:Boolean
+#     isTeamLeader:Boolean
      shiftStartAt:LocalTime
      shiftEndAt:LocalTime
     isTeamLeader:Boolean
@@ -227,7 +227,6 @@ enum Roles{
     DIRECTOR
     TEAM_MANAGER
     TEAM_LEADER
-    OP_STREAM
     SITE_MANAGER
 }
 
