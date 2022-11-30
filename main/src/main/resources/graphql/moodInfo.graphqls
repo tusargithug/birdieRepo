@@ -15,7 +15,7 @@ type Query {
     getAllCourse:[Course]
     getAllUnit:[Unit]
     getAllChapters:[Chapter]
-    getLearnPath(input:UnitDto):[Unit]
+    getLearnPath(input:UnitDto):PaginationResponse
     getAllSitePagination(input:SiteDto):PaginationResponse
     getAllTeamPagination(input:TeamDto):PaginationResponse
     getAllSite:[Site]
@@ -58,6 +58,7 @@ type Query {
     getWorksheetById(id:ID!):MtWorksheet
     getAllPsychoEducation:[MtPsychoEducation]
     getPsychoEducationById(id:ID!):MtPsychoEducation
+    getPaginationPsychoEducation(input:PsychoEducationDto):[MtPsychoEducation]
     getAllMeditation:[MtMeditation]
     getMeditationById(id:ID!):MtMeditation
     getAllAppUserByAlerts(input:AppUserDto):[AppUser]
@@ -596,6 +597,9 @@ input PsychoEducationDto{
     description:String
     isActive:Boolean
     fileId:String
+    pageNumber:Int
+    pageSize:Int
+    sortPsychoEducationName:Boolean
 }
 
 type MtMeditation{
@@ -636,6 +640,7 @@ type PaginationResponse{
     meditationList:[MtMeditation]
     worksheetList:[MtWorksheet]
     chapterList:[Chapter]
+    unitList:[Unit]
     totalPages:Int
     totalElements:Int
 }

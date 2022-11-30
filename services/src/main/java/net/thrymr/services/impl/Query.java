@@ -3,6 +3,7 @@ package net.thrymr.services.impl;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import net.thrymr.FileDocument;
 import net.thrymr.dto.*;
+import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.dto.response.UserAppointmentResponse;
 import net.thrymr.enums.Roles;
 import net.thrymr.enums.TagType;
@@ -197,7 +198,7 @@ public class Query implements GraphQLQueryResolver {
     }
 
     @QueryMapping("getLearnPath")
-    public Page<Unit> getLearnPath(UnitDto unitDto) {
+    public PaginationResponse getLearnPath(UnitDto unitDto) {
         return unitAndChapterServices.getLearnPath(unitDto);
     }
 
@@ -388,6 +389,11 @@ public class Query implements GraphQLQueryResolver {
     @QueryMapping("getPsychoEducationById")
     public MtPsychoEducation getPsychoEducationById(@Argument Long id) {
         return psychoEducationService.getPsychoEducationById(id);
+    }
+
+    @QueryMapping(name = "getPaginationPsychoEducation")
+    public Page<MtPsychoEducation> getPaginationPsychoEducation(@Argument(name = "input") PsychoEducationDto request) {
+        return psychoEducationService.getPaginationPsychoEducation(request);
     }
 
     @QueryMapping("getAllMeditation")

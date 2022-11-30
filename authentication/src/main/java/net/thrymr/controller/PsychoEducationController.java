@@ -4,6 +4,7 @@ import net.thrymr.dto.PsychoEducationDto;
 import net.thrymr.model.master.MtPsychoEducation;
 import net.thrymr.services.PsychoEducationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -40,6 +41,11 @@ public class PsychoEducationController {
     @MutationMapping("deletePsychoEducationById")
     private String deletePsychoEducationById(@Argument Long id) {
         return psychoEducationService.deletePsychoEducationById(id);
+    }
+
+    @QueryMapping(name = "getPaginationPsychoEducation")
+    public Page<MtPsychoEducation> getPaginationPsychoEducation(@Argument(name="input") PsychoEducationDto request) {
+        return psychoEducationService.getPaginationPsychoEducation(request);
     }
 
 }

@@ -1,6 +1,7 @@
 package net.thrymr.controller;
 
 import net.thrymr.dto.*;
+import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.model.Chapter;
 import net.thrymr.model.Unit;
 import net.thrymr.services.UnitAndChapterServices;
@@ -69,7 +70,7 @@ public class UnitAndChapterController {
 
 
     @QueryMapping(name = "getLearnPath")
-    public Page<Unit> getLearnPath(@Argument(name = "input")UnitDto unitDto){
+    public PaginationResponse getLearnPath(@Argument(name = "input")UnitDto unitDto){
         return unitAndChapterServices.getLearnPath(unitDto);
     }
 }

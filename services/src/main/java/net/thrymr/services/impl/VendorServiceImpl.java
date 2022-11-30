@@ -1,7 +1,7 @@
 package net.thrymr.services.impl;
 
-import net.thrymr.dto.PaginationResponse;
 import net.thrymr.dto.VendorDto;
+import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.model.Site;
 import net.thrymr.model.Vendor;
 import net.thrymr.repository.AppUserRepo;

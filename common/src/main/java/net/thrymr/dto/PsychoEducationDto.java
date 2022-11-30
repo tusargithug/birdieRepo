@@ -10,12 +10,11 @@ import lombok.Setter;
 public class PsychoEducationDto {
 
     private Long id;
-
     private String name;
-
     private String description;
-
     private Boolean isActive;
-
     private String fileId;
+    private Integer pageNumber;
+    private Integer pageSize;
+    private Boolean sortPsychoEducationName;
 }

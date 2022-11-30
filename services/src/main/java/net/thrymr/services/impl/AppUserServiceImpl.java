@@ -2,6 +2,7 @@ package net.thrymr.services.impl;
 
 import net.thrymr.constant.Constants;
 import net.thrymr.dto.*;
+import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.dto.response.UserAppointmentResponse;
 import net.thrymr.enums.Gender;
 import net.thrymr.enums.Roles;

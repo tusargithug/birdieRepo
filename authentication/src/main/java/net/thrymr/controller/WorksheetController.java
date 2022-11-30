@@ -1,7 +1,7 @@
 package net.thrymr.controller;
 
-import net.thrymr.dto.PaginationResponse;
 import net.thrymr.dto.WorksheetDto;
+import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.model.master.MtWorksheet;
 import net.thrymr.services.WorksheetService;
 import org.springframework.beans.factory.annotation.Autowired;

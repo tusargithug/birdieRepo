@@ -1,8 +1,8 @@
 package net.thrymr.services;
 
 import net.thrymr.dto.ChapterDto;
-import net.thrymr.dto.PaginationResponse;
 import net.thrymr.dto.UnitDto;
+import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.model.Chapter;
 import net.thrymr.model.Unit;
 import org.springframework.data.domain.Page;
@@ -17,7 +17,7 @@ public interface UnitAndChapterServices {
     List<Unit> getAllUnit();
 
 
-    Page<Unit> getLearnPath(UnitDto unitDto);
+    PaginationResponse getLearnPath(UnitDto unitDto);
 
     String deleteUnitById(Long id);
 

@@ -1,7 +1,6 @@
 package net.thrymr.services;
-
-import net.thrymr.dto.PaginationResponse;
 import net.thrymr.dto.WorksheetDto;
+import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.model.master.MtWorksheet;
 
 import java.util.List;

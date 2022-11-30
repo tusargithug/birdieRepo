@@ -1,13 +1,15 @@
 package net.thrymr.services.impl;
 
 import net.thrymr.dto.ChapterDto;
-import net.thrymr.dto.PaginationResponse;
 import net.thrymr.dto.UnitDto;
 
+import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.model.Chapter;
+import net.thrymr.model.FileEntity;
 import net.thrymr.model.Unit;
 import net.thrymr.model.master.MtQuestion;
 import net.thrymr.repository.ChapterRepo;
+import net.thrymr.repository.FileRepo;
 import net.thrymr.repository.UnitRpo;
 import net.thrymr.services.UnitAndChapterServices;
 import net.thrymr.utils.Validator;
@@ -35,6 +37,9 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
 
     @Autowired
     ChapterRepo chapterRepo;
+
+    @Autowired
+    FileRepo fileRepo;
 
     @Override
     public String saveUnit(UnitDto request) {
@@ -76,7 +81,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
     }
 
     @Override
-    public Page<Unit> getLearnPath(UnitDto unitDto) {
+    public PaginationResponse getLearnPath(UnitDto unitDto) {
         Pageable pageable = null;
         if (unitDto.getPageSize() != null) {
             pageable = PageRequest.of(unitDto.getPageNumber(), unitDto.getPageSize());
@@ -112,9 +117,13 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         });
         Page<Unit> unitObjectives = unitRpo.findAll(addUnitSpecification, pageable);
         if (unitObjectives.getContent() != null) {
-            return new org.springframework.data.domain.PageImpl<>(unitObjectives.getContent(), pageable, 0l);
+            PaginationResponse paginationResponse = new PaginationResponse();
+            paginationResponse.setUnitList(unitObjectives.getContent());
+            paginationResponse.setTotalPages(unitObjectives.getTotalPages());
+            paginationResponse.setTotalElements(unitObjectives.getTotalElements());
+            return paginationResponse;
         }
-        return new org.springframework.data.domain.PageImpl<>(new ArrayList<>(), pageable, 0l);
+        return new PaginationResponse();
     }
 
     @Override
@@ -148,11 +157,17 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                 if (Validator.isValid(dto.getDescription())) {
                     chapter.setDescription(dto.getDescription());
                 }
-                if (Validator.isValid(String.valueOf(dto.getProfilePicture()))) {
-                    chapter.setProfilePicture(dto.getProfilePicture());
+                if (Validator.isValid(dto.getProfilePictureId())) {
+                    Optional<FileEntity> optionalFileEntity=fileRepo.findByFileId(dto.getProfilePictureId());
+                    if(optionalFileEntity.isPresent()) {
+                        chapter.setProfilePicture(optionalFileEntity.get());
+                    }
                 }
-                if (Validator.isValid(String.valueOf(dto.getVideo()))) {
-                    chapter.setVideo(dto.getVideo());
+                if (Validator.isValid(dto.getVideoId())) {
+                    Optional<FileEntity> optionalFileEntity=fileRepo.findByFileId(dto.getVideoId());
+                    if(optionalFileEntity.isPresent()) {
+                        chapter.setVideo(optionalFileEntity.get());
+                    }
                 }
                 if (dto.getIsActive() != null && dto.getIsActive().equals(Boolean.TRUE) || dto.getIsActive().equals(Boolean.FALSE)) {
                     chapter.setIsActive(dto.getIsActive());
@@ -263,8 +278,18 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         Chapter chapter = new Chapter();
         chapter.setChapterName(chapterDto.getChapterName());
         chapter.setDescription(chapterDto.getDescription());
-        chapter.setProfilePicture(chapterDto.getProfilePicture());
-        chapter.setVideo(chapterDto.getVideo());
+        if (Validator.isValid(chapterDto.getProfilePictureId())) {
+            Optional<FileEntity> optionalFileEntity=fileRepo.findByFileId(chapterDto.getProfilePictureId());
+            if(optionalFileEntity.isPresent()) {
+                chapter.setProfilePicture(optionalFileEntity.get());
+            }
+        }
+        if (Validator.isValid(chapterDto.getVideoId())) {
+            Optional<FileEntity> optionalFileEntity=fileRepo.findByFileId(chapterDto.getVideoId());
+            if(optionalFileEntity.isPresent()) {
+                chapter.setVideo(optionalFileEntity.get());
+            }
+        }
         if (chapterDto.getUnitId() != null) {
             Optional<Unit> unitId = unitRpo.findById(chapterDto.getUnitId());
             if (unitId.isPresent()) {

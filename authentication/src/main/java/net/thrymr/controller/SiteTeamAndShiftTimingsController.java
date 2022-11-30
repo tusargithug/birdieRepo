@@ -1,6 +1,7 @@
 package net.thrymr.controller;
 
 import net.thrymr.dto.*;
+import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.model.AppUser;
 import net.thrymr.model.ShiftTimings;
 import net.thrymr.model.Site;

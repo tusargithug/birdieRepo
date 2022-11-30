@@ -1,7 +1,7 @@
 package net.thrymr.services;
 
 import net.thrymr.dto.MeditationDto;
-import net.thrymr.dto.PaginationResponse;
+import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.model.master.MtMeditation;
 
 import java.util.List;

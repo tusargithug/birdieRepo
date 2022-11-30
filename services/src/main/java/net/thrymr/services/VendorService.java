@@ -1,7 +1,7 @@
 package net.thrymr.services;
 
-import net.thrymr.dto.PaginationResponse;
 import net.thrymr.dto.VendorDto;
+import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.model.Vendor;
 
 import java.util.List;
