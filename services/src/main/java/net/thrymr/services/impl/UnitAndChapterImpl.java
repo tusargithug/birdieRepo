@@ -81,7 +81,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
     }
 
     @Override
-    public Page<Unit> getLearnPath(UnitDto unitDto) {
+    public PaginationResponse getLearnPath(UnitDto unitDto) {
         Pageable pageable = null;
         if (unitDto.getPageSize() != null) {
             pageable = PageRequest.of(unitDto.getPageNumber(), unitDto.getPageSize());
@@ -117,9 +117,13 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         });
         Page<Unit> unitObjectives = unitRpo.findAll(addUnitSpecification, pageable);
         if (unitObjectives.getContent() != null) {
-            return new org.springframework.data.domain.PageImpl<>(unitObjectives.getContent(), pageable, 0l);
+            PaginationResponse paginationResponse = new PaginationResponse();
+            paginationResponse.setUnitList(unitObjectives.getContent());
+            paginationResponse.setTotalPages(unitObjectives.getTotalPages());
+            paginationResponse.setTotalElements(unitObjectives.getTotalElements());
+            return paginationResponse;
         }
-        return new org.springframework.data.domain.PageImpl<>(new ArrayList<>(), pageable, 0l);
+        return new PaginationResponse();
     }
 
     @Override

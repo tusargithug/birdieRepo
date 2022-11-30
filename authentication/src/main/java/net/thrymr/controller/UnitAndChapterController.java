@@ -70,7 +70,7 @@ public class UnitAndChapterController {
 
 
     @QueryMapping(name = "getLearnPath")
-    public Page<Unit> getLearnPath(@Argument(name = "input")UnitDto unitDto){
+    public PaginationResponse getLearnPath(@Argument(name = "input")UnitDto unitDto){
         return unitAndChapterServices.getLearnPath(unitDto);
     }
 }

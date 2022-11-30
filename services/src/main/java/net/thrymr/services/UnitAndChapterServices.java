@@ -17,7 +17,7 @@ public interface UnitAndChapterServices {
     List<Unit> getAllUnit();
 
 
-    Page<Unit> getLearnPath(UnitDto unitDto);
+    PaginationResponse getLearnPath(UnitDto unitDto);
 
     String deleteUnitById(Long id);
 

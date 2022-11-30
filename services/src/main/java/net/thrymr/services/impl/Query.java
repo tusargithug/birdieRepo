@@ -198,7 +198,7 @@ public class Query implements GraphQLQueryResolver {
     }
 
     @QueryMapping("getLearnPath")
-    public Page<Unit> getLearnPath(UnitDto unitDto) {
+    public PaginationResponse getLearnPath(UnitDto unitDto) {
         return unitAndChapterServices.getLearnPath(unitDto);
     }
 
