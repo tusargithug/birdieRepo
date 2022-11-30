@@ -60,6 +60,14 @@ public class UnitAndChapterController {
         List<Chapter> chapterList = unitAndChapterServices.getAllChapters();
         return chapterList;
     }
+
+    @QueryMapping("getAllChapterPagination")
+    public PaginationResponse getAllChapterPagination(@Argument(name = "input") ChapterDto response){
+        return unitAndChapterServices.getAllChapterPagination(response);
+    }
+
+
+
     @QueryMapping(name = "getLearnPath")
     public Page<Unit> getLearnPath(@Argument(name = "input")UnitDto unitDto){
         return unitAndChapterServices.getLearnPath(unitDto);

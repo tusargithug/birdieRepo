@@ -1,6 +1,7 @@
 package net.thrymr.services;
 
 import net.thrymr.dto.MeditationDto;
+import net.thrymr.dto.PaginationResponse;
 import net.thrymr.model.master.MtMeditation;
 import org.springframework.data.domain.Page;
 
@@ -18,5 +19,5 @@ public interface MeditationService {
 
     String deleteMeditationById(Long id);
 
-    Page<MtMeditation> getAllMeditationPagination(MeditationDto response);
+    PaginationResponse getAllMeditationPagination(MeditationDto response);
 }

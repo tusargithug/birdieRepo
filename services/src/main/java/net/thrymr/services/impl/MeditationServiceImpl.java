@@ -1,6 +1,8 @@
 package net.thrymr.services.impl;
 
 import net.thrymr.dto.MeditationDto;
+import net.thrymr.dto.PaginationResponse;
+import net.thrymr.model.FileDetails;
 import net.thrymr.model.FileEntity;
 import net.thrymr.model.master.MtMeditation;
 import net.thrymr.repository.FileRepo;
@@ -108,7 +110,7 @@ public class MeditationServiceImpl implements MeditationService {
     }
 
     @Override
-    public Page<MtMeditation> getAllMeditationPagination(MeditationDto response) {
+    public PaginationResponse getAllMeditationPagination(MeditationDto response) {
         Pageable pageable = null;
         if ( Validator.isValid(response.getPageSize())) {
             pageable = PageRequest.of(response.getPageNumber(), response.getPageSize());
@@ -150,9 +152,13 @@ public class MeditationServiceImpl implements MeditationService {
         });
         Page<MtMeditation> meditationObject = meditationRepo.findAll(meditationSpecification, pageable);
         if(meditationObject != null){
-            return new org.springframework.data.domain.PageImpl<>(meditationObject.getContent(), pageable, 0l);
+           PaginationResponse paginationResponse=new PaginationResponse();
+           paginationResponse.setMeditationList(meditationObject.getContent());
+           paginationResponse.setTotalPages(meditationObject.getTotalPages());
+           paginationResponse.setTotalElements(meditationObject.getTotalElements());
+           return paginationResponse;
         }
-        return new org.springframework.data.domain.PageImpl<>(new ArrayList<>(), pageable, 0l);
+        return new PaginationResponse();
     }
 
     private MtMeditation dtoToMeditationEntity(MeditationDto request) {

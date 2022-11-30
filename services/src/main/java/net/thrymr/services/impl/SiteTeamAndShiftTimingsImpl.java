@@ -218,9 +218,9 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     }
 
     @Override
-    public Page<Site> getAllSitePagination(SiteDto siteDto) {
+    public PaginationResponse getAllSitePagination(SiteDto siteDto) {
         Pageable pageable = null;
-        if (siteDto.getPageSize() != null) {
+        if (siteDto.getPageSize() != null && siteDto.getPageNumber() != null) {
             pageable = PageRequest.of(siteDto.getPageNumber(), siteDto.getPageSize());
         }
         if (siteDto.getSortSiteName() != null && siteDto.getSortSiteName().equals(Boolean.TRUE)) {
@@ -266,11 +266,15 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             return criteriaBuilder.and(addSitePredicate.toArray(new Predicate[0]));
         });
         Page<Site> siteObjective = siteRepo.findAll(siteSpecification, pageable);
-        System.out.println(siteObjective.getSize());
+        System.out.println(siteObjective.getContent());
         if (siteObjective.getContent() != null) {
-            return new org.springframework.data.domain.PageImpl<>(siteObjective.getContent(), pageable, 0l);
+            PaginationResponse paginationResponse=new PaginationResponse();
+            paginationResponse.setSiteList(siteObjective.getContent());
+            paginationResponse.setTotalPages(siteObjective.getTotalPages());
+            paginationResponse.setTotalElements(siteObjective.getTotalElements());
+            return paginationResponse;
         }
-        return new org.springframework.data.domain.PageImpl<>(new ArrayList<>(), pageable, 0l);
+        return new PaginationResponse();
     }
 
     @Override
@@ -375,7 +379,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     }
 
     @Override
-    public Page<Team> getAllTeamPagination(TeamDto teamDto) {
+    public PaginationResponse getAllTeamPagination(TeamDto teamDto) {
 
         Pageable pageable = null;
         if (teamDto.getPageSize() != null) {
@@ -423,9 +427,13 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
 
         Page<Team> teamObjective = teamRepo.findAll(teamSpecification, pageable);
         if (teamObjective.getContent() != null) {
-            return new org.springframework.data.domain.PageImpl<>(teamObjective.getContent(), pageable, 0l);
-        }
-        return new org.springframework.data.domain.PageImpl<>(new ArrayList<>(), pageable, 0l);
+                PaginationResponse paginationResponse=new PaginationResponse();
+                paginationResponse.setTeamList(teamObjective.getContent());
+                paginationResponse.setTotalPages(teamObjective.getTotalPages());
+                paginationResponse.setTotalElements(teamObjective.getTotalElements());
+                return paginationResponse;
+            }
+            return new PaginationResponse();
     }
 
 

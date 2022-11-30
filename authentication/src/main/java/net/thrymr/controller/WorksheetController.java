@@ -1,5 +1,6 @@
 package net.thrymr.controller;
 
+import net.thrymr.dto.PaginationResponse;
 import net.thrymr.dto.WorksheetDto;
 import net.thrymr.model.master.MtWorksheet;
 import net.thrymr.services.WorksheetService;
@@ -36,6 +37,11 @@ public class WorksheetController {
     @MutationMapping("updateWorksheetById")
     public String updateWorksheetById(@Argument(name = "input") WorksheetDto request) {
         return worksheetService.updateWorksheetById(request);
+    }
+
+    @QueryMapping("getAllWorkSheetPagination")
+    public PaginationResponse getAllWorkSheetPagination(@Argument(name = "input") WorksheetDto request) {
+        return worksheetService.getAllWorkSheetPagination(request);
     }
 
     @MutationMapping("deleteWorksheetById")

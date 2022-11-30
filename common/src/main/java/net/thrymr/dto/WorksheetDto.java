@@ -19,4 +19,14 @@ public class WorksheetDto {
     private Boolean isActive;
 
     private String fileId;
+
+    private String fileType;
+
+    private Integer pageNumber;
+
+    private Integer pageSize;
+
+    private Boolean sortName;
+
+    private String createdOn;
 }

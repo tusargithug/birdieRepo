@@ -1,5 +1,6 @@
 package net.thrymr.services.impl;
 
+import net.thrymr.dto.PaginationResponse;
 import net.thrymr.dto.VendorDto;
 import net.thrymr.enums.Roles;
 import net.thrymr.model.Site;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -127,7 +129,7 @@ public class VendorServiceImpl implements VendorService {
 
 
     @Override
-    public Page<Vendor> getAllVendorPagination(VendorDto response) {
+    public PaginationResponse getAllVendorPagination(VendorDto response) {
         Pageable pageable = null;
         if (Validator.isValid(response.getPageSize())) {
             pageable = PageRequest.of(response.getPageNumber(), response.getPageSize());
@@ -142,7 +144,7 @@ public class VendorServiceImpl implements VendorService {
             List<Predicate> addVendorPredicate = new ArrayList<>();
             Join<Vendor, Site> siteJoin = root.join("site");
             if (response.getVendorName() != null) {
-                Predicate name = criteriaBuilder.and(root.get("userName").in(response.getVendorName()));
+                Predicate name = criteriaBuilder.and(root.get("vendorName").in(response.getVendorName()));
                 addVendorPredicate.add(name);
             }
             if (response.getPOC() != null && !response.getPOC().isEmpty()) {
@@ -162,11 +164,14 @@ public class VendorServiceImpl implements VendorService {
             return criteriaBuilder.and(addVendorPredicate.toArray(new Predicate[0]));
         });
         Page<Vendor> vendorObjectives = vendorRepo.findAll(addVendorSpecification, pageable);
-        List<Vendor> vendorList = null;
         if (vendorObjectives.getContent() != null) {
-            return new org.springframework.data.domain.PageImpl<>(vendorObjectives.getContent(), pageable, 0l);
+            PaginationResponse paginationResponse = new PaginationResponse();
+            paginationResponse.setVendorList(new ArrayList<>(vendorObjectives.getContent()));
+            paginationResponse.setTotalElements(vendorObjectives.getTotalElements());
+            paginationResponse.setTotalPages(vendorObjectives.getTotalPages());
+            return paginationResponse;
         }
-        return new org.springframework.data.domain.PageImpl<>(new ArrayList<>(), pageable, 0l);
+        return new PaginationResponse();
     }
 
     public String getVendorSearchKey(Vendor vendor) {

@@ -3,6 +3,7 @@ package net.thrymr.services;
 import net.thrymr.dto.FileDetailsDto;
 import net.thrymr.dto.GroupsDto;
 import net.thrymr.dto.MiniSessionDto;
+import net.thrymr.dto.PaginationResponse;
 import net.thrymr.enums.TagType;
 import net.thrymr.model.GroupDetails;
 import net.thrymr.model.Groups;
@@ -34,7 +35,7 @@ public interface MiniSessionService {
 
     String saveFileDetails(FileDetailsDto request);
 
-    Page<MiniSession> getAllMiniSessionPagination(MiniSessionDto request);
+    PaginationResponse getAllMiniSessionPagination(MiniSessionDto request);
 
     List<TagType> getAllEnumTags();
 

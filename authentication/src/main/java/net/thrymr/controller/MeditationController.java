@@ -1,10 +1,10 @@
 package net.thrymr.controller;
 
 import net.thrymr.dto.MeditationDto;
+import net.thrymr.dto.PaginationResponse;
 import net.thrymr.model.master.MtMeditation;
 import net.thrymr.services.MeditationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -44,7 +44,7 @@ public class MeditationController {
     }
 
     @QueryMapping("getAllMeditationPagination")
-    public Page<MtMeditation> getAllMeditationPagination(@Argument (name = "input") MeditationDto response) {
+    public PaginationResponse getAllMeditationPagination(@Argument (name = "input") MeditationDto response) {
         return meditationService.getAllMeditationPagination(response);
     }
 }

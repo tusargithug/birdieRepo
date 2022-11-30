@@ -1,6 +1,7 @@
 package net.thrymr.services;
 
 import net.thrymr.dto.ChapterDto;
+import net.thrymr.dto.PaginationResponse;
 import net.thrymr.dto.UnitDto;
 import net.thrymr.model.Chapter;
 import net.thrymr.model.Unit;
@@ -27,5 +28,5 @@ public interface UnitAndChapterServices {
     List<Chapter> getAllChapters();
 
     String deleteChapterById(Long id);
-    List<Chapter> getAllChapterPagination(ChapterDto chapterDto);
+    PaginationResponse getAllChapterPagination(ChapterDto chapterDto);
 }

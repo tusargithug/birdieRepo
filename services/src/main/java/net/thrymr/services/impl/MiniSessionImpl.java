@@ -5,6 +5,7 @@ import net.thrymr.dto.FileDetailsDto;
 
 import net.thrymr.dto.GroupsDto;
 import net.thrymr.dto.MiniSessionDto;
+import net.thrymr.dto.PaginationResponse;
 import net.thrymr.enums.FileType;
 
 
@@ -234,7 +235,7 @@ public class MiniSessionImpl implements MiniSessionService {
     }
 
     @Override
-    public Page<MiniSession> getAllMiniSessionPagination(MiniSessionDto request) {
+    public PaginationResponse getAllMiniSessionPagination(MiniSessionDto request) {
         Pageable pageable = null;
         if (request.getPageSize() != null) {
             pageable = PageRequest.of(request.getPageNumber(), request.getPageSize());
@@ -273,9 +274,13 @@ public class MiniSessionImpl implements MiniSessionService {
 
         Page<MiniSession> miniSessionsObjective = miniSessionRepo.findAll(miniSessionSpecification, pageable);
         if (miniSessionsObjective.getContent() != null) {
-            return new org.springframework.data.domain.PageImpl<>(miniSessionsObjective.getContent(), pageable, 0l);
+            PaginationResponse paginationResponse=new PaginationResponse();
+            paginationResponse.setMiniSessionList(miniSessionsObjective.getContent());
+            paginationResponse.setTotalPages(miniSessionsObjective.getTotalPages());
+            paginationResponse.setTotalElements(miniSessionsObjective.getTotalElements());
+            return paginationResponse;
         }
-        return new org.springframework.data.domain.PageImpl<>(new ArrayList<>(), pageable, 0l);
+        return new PaginationResponse();
     }
 
     @Override

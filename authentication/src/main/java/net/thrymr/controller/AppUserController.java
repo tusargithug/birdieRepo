@@ -1,5 +1,6 @@
 package net.thrymr.controller;
 import net.thrymr.dto.AppUserDto;
+import net.thrymr.dto.PaginationResponse;
 import net.thrymr.dto.UserCourseDto;
 import net.thrymr.dto.response.UserAppointmentResponse;
 import net.thrymr.enums.Roles;
@@ -77,7 +78,7 @@ public class AppUserController {
     }
 
     @QueryMapping(name = "getAllAppUserPagination")
-    public Page<AppUser> getAllAppUserPagination(@Argument(name = "input") AppUserDto request) {
+    public PaginationResponse getAllAppUserPagination(@Argument(name = "input") AppUserDto request) {
         return appUserService.getAllAppUserPagination(request);
     }
 }

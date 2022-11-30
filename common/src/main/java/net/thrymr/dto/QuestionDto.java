@@ -15,6 +15,7 @@ public class QuestionDto {
     private Long assessmentId;
     private Long psychometricTestId;
     private String questionCalType;
+    private Long chapterId;
     private Integer Sequence;
     //TODO questionType
    // one month

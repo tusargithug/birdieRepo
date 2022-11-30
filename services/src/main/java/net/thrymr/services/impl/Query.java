@@ -202,12 +202,12 @@ public class Query implements GraphQLQueryResolver {
     }
 
     @QueryMapping(name = "getAllTeamPagination")
-    public Page<Team> getAllTeamPagination(TeamDto teamdto) {
+    public PaginationResponse getAllTeamPagination(TeamDto teamdto) {
         return siteTeamAndShiftTimingsService.getAllTeamPagination(teamdto);
     }
 
     @QueryMapping(name = "getAllSitePagination")
-    public Page<Site> getAllSitePagination(SiteDto siteDto) {
+    public PaginationResponse getAllSitePagination(SiteDto siteDto) {
         return siteTeamAndShiftTimingsService.getAllSitePagination(siteDto);
     }
 
@@ -226,7 +226,7 @@ public class Query implements GraphQLQueryResolver {
     }
 
     @QueryMapping(name = "getAllVendorPagination")
-    public Page<Vendor> getAllVendorPagination(@Argument(name = "input") VendorDto request) {
+    public PaginationResponse getAllVendorPagination(@Argument(name = "input") VendorDto request) {
         return vendorService.getAllVendorPagination(request);
     }
 
@@ -320,7 +320,7 @@ public class Query implements GraphQLQueryResolver {
     }
 
     @QueryMapping(name = "getAllAppUserPagination")
-    public Page<AppUser> getAllAppUserPagination(@Argument(name = "input") AppUserDto request) {
+    public PaginationResponse getAllAppUserPagination(@Argument(name = "input") AppUserDto request) {
         return appUserService.getAllAppUserPagination(request);
     }
 
@@ -345,7 +345,7 @@ public class Query implements GraphQLQueryResolver {
     }
 
     @QueryMapping(name = "getAllMiniSessionPagination")
-    public Page<MiniSession> getAllMiniSessionPagination(@Argument(name = "input") MiniSessionDto request) {
+    public PaginationResponse getAllMiniSessionPagination(@Argument(name = "input") MiniSessionDto request) {
         return miniSessionService.getAllMiniSessionPagination(request);
     }
 
@@ -368,6 +368,11 @@ public class Query implements GraphQLQueryResolver {
     @QueryMapping("getAllWorksheet")
     public List<MtWorksheet> getAllWorksheet() {
         return worksheetService.getAllWorksheet();
+    }
+
+    @QueryMapping("getAllWorkSheetPagination")
+    public PaginationResponse getAllWorkSheetPagination(@Argument(name = "input") WorksheetDto request) {
+        return worksheetService.getAllWorkSheetPagination(request);
     }
 
     @QueryMapping("getWorksheetById")
@@ -395,12 +400,17 @@ public class Query implements GraphQLQueryResolver {
         return meditationService.getAllMeditation();
     }
     @QueryMapping("getAllMeditationPagination")
-    public Page<MtMeditation> getAllMeditationPagination(@Argument (name = "input") MeditationDto response) {
+    public PaginationResponse getAllMeditationPagination(@Argument (name = "input") MeditationDto response) {
         return meditationService.getAllMeditationPagination(response);
     }
 
     @QueryMapping("getMeditationById")
     public MtMeditation getMeditationById(@Argument Long id) {
         return meditationService.getMeditationById(id);
+    }
+
+    @QueryMapping("getAllChapterPagination")
+    public PaginationResponse getAllChapterPagination(@Argument(name = "input") ChapterDto response){
+        return unitAndChapterServices.getAllChapterPagination(response);
     }
 }

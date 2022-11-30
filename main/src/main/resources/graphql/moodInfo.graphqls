@@ -16,8 +16,8 @@ type Query {
     getAllUnit:[Unit]
     getAllChapters:[Chapter]
     getLearnPath(input:UnitDto):[Unit]
-    getAllSitePagination(input:SiteDto):[Site]
-    getAllTeamPagination(input:TeamDto):[Team]
+    getAllSitePagination(input:SiteDto):PaginationResponse
+    getAllTeamPagination(input:TeamDto):PaginationResponse
     getAllSite:[Site]
     getAllTeam:[Team]
     getAllCountry:[MtCountry]
@@ -29,7 +29,7 @@ type Query {
     getAllCounsellor(input:CounsellorDto):[Counsellor]
     getAllVendor:[Vendor]
     getVendorById(id:ID):Vendor
-    getAllVendorPagination(input:VendorDto):[Vendor]
+    getAllVendorPagination(input:VendorDto):PaginationResponse
     getAllAssessment:[MtAssessment]
     getAssessmentById(id:ID!):MtAssessment
     getQuestionById(id:ID!):MtQuestion
@@ -51,7 +51,7 @@ type Query {
     getAllMoodSources:[MtMoodSource]
     getAllGroupDetails:[GroupDetails]
     getGroupById(id:ID):Groups
-    getAllMiniSessionPagination(input:MiniSessionDto):[MiniSession]
+    getAllMiniSessionPagination(input:MiniSessionDto):PaginationResponse
     getAllEnumTags:[TagType]
     getAllGroups:[Groups]
     getAllWorksheet:[MtWorksheet]
@@ -62,8 +62,11 @@ type Query {
     getAllMeditation:[MtMeditation]
     getMeditationById(id:ID!):MtMeditation
     getAllAppUserByAlerts(input:AppUserDto):[AppUser]
-    getAllAppUserPagination(input:AppUserDto):[AppUser]
-    getAllMeditationPagination(input:MeditationDto):[MtMeditation]
+    getAllAppUserPagination(input:AppUserDto):PaginationResponse
+    getAllMeditationPagination(input:MeditationDto):PaginationResponse
+    getAllWorkSheetPagination(input:WorksheetDto):PaginationResponse
+    getAllChapterPagination(input:ChapterDto):PaginationResponse
+#    getAllMoodIntensitiesByMoodInfoId(id:ID!):[MtMoodIntensity]
 }
 
 type Mutation {
@@ -108,7 +111,7 @@ type Mutation {
     updateCityById(input:CityDto):String!
     deleteCityById(id:ID):String!
     saveRegion(input:RegionDto):String!
-    #uploadRegionData(file:Upload!):String!
+    #uploadRegionData(file:Upload):String!
     updateRegionById(input:RegionDto):String!
     deleteRegionById(id:ID):String!
     createCounsellorSlot(input:TimeSlotDto):String!
@@ -143,7 +146,6 @@ type Mutation {
     updateGroupById(input:GroupsDto):String!
     saveGroupDetails(input:GroupsDto):String!
     saveFileDetails(input:FileDetailsDto):String!
-    uploadFile(file: Upload): String!
     createWorksheet(input:WorksheetDto):String!
     updateWorksheetById(input:WorksheetDto):String!
     deleteWorksheetById(id:ID!):String!
@@ -564,6 +566,11 @@ input WorksheetDto{
     description:String
     isActive:Boolean
     fileId:String
+    fileType:String
+    pageNumber:Int
+    pageSize:Int
+    sortName:Int
+    createdOn:Int
 }
 
 type MtPsychoEducation{
@@ -612,4 +619,17 @@ enum Gender{
     FEMALE
     OTHERS
     NONE
+}
+
+type PaginationResponse{
+    siteList:[Site]
+    teamList:[Team]
+    vendorList:[Vendor]
+    appUserList:[AppUser]
+    miniSessionList:[MiniSession]
+    meditationList:[MtMeditation]
+    worksheetList:[MtWorksheet]
+    chapterList:[Chapter]
+    totalPages:Int
+    totalElements:Int
 }

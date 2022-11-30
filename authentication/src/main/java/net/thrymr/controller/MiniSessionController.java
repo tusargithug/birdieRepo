@@ -3,6 +3,7 @@ package net.thrymr.controller;
 import net.thrymr.dto.FileDetailsDto;
 import net.thrymr.dto.GroupsDto;
 import net.thrymr.dto.MiniSessionDto;
+import net.thrymr.dto.PaginationResponse;
 import net.thrymr.enums.TagType;
 import net.thrymr.model.GroupDetails;
 import net.thrymr.model.Groups;
@@ -82,7 +83,7 @@ public class MiniSessionController {
     }
 
     @QueryMapping(name = "getAllMiniSessionPagination")
-    public Page<MiniSession> getAllMiniSessionPagination(@Argument(name = "input") MiniSessionDto request) {
+    public PaginationResponse getAllMiniSessionPagination(@Argument(name = "input") MiniSessionDto request) {
         return miniSessionService.getAllMiniSessionPagination(request);
     }
 
