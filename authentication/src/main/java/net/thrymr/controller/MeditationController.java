@@ -1,7 +1,7 @@
 package net.thrymr.controller;
 
 import net.thrymr.dto.MeditationDto;
-import net.thrymr.dto.PaginationResponse;
+import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.model.master.MtMeditation;
 import net.thrymr.services.MeditationService;
 import org.springframework.beans.factory.annotation.Autowired;

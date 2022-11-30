@@ -1,9 +1,9 @@
 package net.thrymr.services.impl;
 
 import net.thrymr.dto.ChapterDto;
-import net.thrymr.dto.PaginationResponse;
 import net.thrymr.dto.UnitDto;
 
+import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.model.Chapter;
 import net.thrymr.model.FileEntity;
 import net.thrymr.model.Unit;
@@ -236,7 +236,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         Page<Chapter> chapterObjectives = chapterRepo.findAll(chapterSpecification, pageable);
         if (chapterObjectives.getContent() != null) {
             PaginationResponse paginationResponse = new PaginationResponse();
-            paginationResponse.setChapterList(new ArrayList<>(chapterObjectives.getContent()));
+            paginationResponse.setChapterList(new HashSet<>(chapterObjectives.getContent()));
             paginationResponse.setTotalPages(chapterObjectives.getTotalPages());
             paginationResponse.setTotalElements(chapterObjectives.getTotalElements());
             return paginationResponse;

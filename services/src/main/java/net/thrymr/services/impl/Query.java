@@ -3,6 +3,7 @@ package net.thrymr.services.impl;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import net.thrymr.FileDocument;
 import net.thrymr.dto.*;
+import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.dto.response.UserAppointmentResponse;
 import net.thrymr.enums.Roles;
 import net.thrymr.enums.TagType;
