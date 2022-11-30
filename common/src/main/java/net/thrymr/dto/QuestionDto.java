@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -16,6 +18,8 @@ public class QuestionDto {
     private Long psychometricTestId;
     private String questionCalType;
     private Integer Sequence;
+
+    private List<OptionsDto> optionsDtoList;
     //TODO questionType
    // one month
      //       6 month

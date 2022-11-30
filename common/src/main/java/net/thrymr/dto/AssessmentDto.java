@@ -34,5 +34,5 @@ public class AssessmentDto {
 
     private List<QuestionDto> questionDtoList;
 
-     private List<OptionsDto> optionsDtoList;
+
 }

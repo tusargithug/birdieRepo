@@ -16,7 +16,6 @@ import net.thrymr.utils.DateUtils;
 import net.thrymr.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -70,7 +69,7 @@ public class AssessmentServiceImpl implements AssessmentService {
                 mtQuestion.setQuestion(questionDto.getQuestion());
                 mtQuestion.setSequence(questionDto.getSequence());
                 mtQuestionSet.add(mtQuestion);
-                for (OptionsDto optionsDto : request.getOptionsDtoList()) {
+                for (OptionsDto optionsDto : questionDto.getOptionsDtoList()) {
                     MtOptions mtOptions = new MtOptions();
                     mtOptions.setTextAnswer(optionsDto.getTextAnswer());
                     mtOptionsSet.add(mtOptions);
@@ -85,11 +84,16 @@ public class AssessmentServiceImpl implements AssessmentService {
                 o.setAssessment(finalMtAssessment);
                 return null;
             }).collect(Collectors.toSet());
-//            mtQuestionSet = new HashSet<>(questionRepo.saveAll(mtQuestionSet));
-//            Set<MtQuestion> finalMtQuestionSet = mtQuestionSet;
-//            mtOptionsSet.stream().map(obj -> obj.setQuestion(finalMtQuestionSet)).collect(Collectors.toSet());
-            optionsRepo.saveAll(mtOptionsSet);
-        }
+           mtQuestionSet = new HashSet<>(questionRepo.saveAll(mtQuestionSet));
+           for(MtQuestion question:mtQuestionSet){
+               for(MtOptions options:question.getMtOptions()){
+                   options.setQuestion(question);
+                   optionsRepo.save(options);
+               }
+               }
+
+           }
+
         return "create Assessment successfully";
     }
 

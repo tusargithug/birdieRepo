@@ -258,6 +258,7 @@ input AssessmentDto{
     low:String
     isActive:Boolean
     dateOfPublishing:String
+    questionDtoList:[QuestionDto]
 }
 enum FrequencyType{
     NONE
@@ -274,6 +275,7 @@ input QuestionDto {
     questionCalType:String
     Sequence:Int
     isActive:Boolean
+    optionsDtoList:[OptionsDto]
 }
 input OptionsDto{
     id:Int
