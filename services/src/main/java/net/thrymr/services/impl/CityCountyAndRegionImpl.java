@@ -266,7 +266,10 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
                         country.setCountryName(getCellValue(row.getCell(10)));
                     }
                     if(row.getCell(11)!=null){
-                        Optional<MtRegion> mtRegion = regionRepo.findById(Long.valueOf(getCellValue(row.getCell(11))));
+                        country.setInternationalDialing(getCellValue(row.getCell(11)));
+                    }
+                    if(row.getCell(12)!=null){
+                        Optional<MtRegion> mtRegion = regionRepo.findById(Long.valueOf(getCellValue(row.getCell(12))));
                         if(mtRegion.isPresent()){
                             country.setRegion(mtRegion.get());
                         }

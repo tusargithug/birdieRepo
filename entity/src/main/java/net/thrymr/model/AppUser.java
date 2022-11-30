@@ -6,6 +6,7 @@ import net.thrymr.enums.Alerts;
 import net.thrymr.enums.Gender;
 import net.thrymr.enums.Roles;
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,6 +29,7 @@ public class AppUser extends BaseEntity {
     private String countryCode;
 
     @Column(name = "mobile_number", unique = true)
+    @Size(min = 10, max = 10)
     private String mobile;
 
     @Column(unique = true)

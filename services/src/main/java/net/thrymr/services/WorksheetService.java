@@ -1,5 +1,6 @@
 package net.thrymr.services;
 
+import net.thrymr.dto.PaginationResponse;
 import net.thrymr.dto.WorksheetDto;
 import net.thrymr.model.master.MtWorksheet;
 
@@ -16,4 +17,6 @@ public interface WorksheetService {
     String updateWorksheetById(WorksheetDto request);
 
     String deleteWorksheetById(Long id);
+
+    PaginationResponse getAllWorkSheetPagination(WorksheetDto request);
 }

@@ -6,6 +6,7 @@ import net.thrymr.dto.FileDetailsDto;
 
 import net.thrymr.dto.GroupsDto;
 import net.thrymr.dto.MiniSessionDto;
+import net.thrymr.dto.PaginationResponse;
 import net.thrymr.enums.FileType;
 
 
@@ -230,7 +231,7 @@ public class MiniSessionImpl implements MiniSessionService {
     }
 
     @Override
-    public List<MiniSession> getAllMiniSessionPagination(MiniSessionDto request) {
+    public PaginationResponse getAllMiniSessionPagination(MiniSessionDto request) {
         Pageable pageable = null;
         if (request.getPageSize() != null) {
             pageable = PageRequest.of(request.getPageNumber(), request.getPageSize());
@@ -263,9 +264,13 @@ public class MiniSessionImpl implements MiniSessionService {
 
         Page<MiniSession> miniSessionsObjective = miniSessionRepo.findAll(miniSessionSpecification, pageable);
         if (miniSessionsObjective.getContent() != null) {
-            return miniSessionsObjective.stream().collect(Collectors.toList());
+            PaginationResponse paginationResponse=new PaginationResponse();
+            paginationResponse.setMiniSessionList(miniSessionsObjective.getContent());
+            paginationResponse.setTotalPages(miniSessionsObjective.getTotalPages());
+            paginationResponse.setTotalElements(miniSessionsObjective.getTotalElements());
+            return paginationResponse;
         }
-        return new ArrayList<>();
+        return new PaginationResponse();
     }
 
     @Override

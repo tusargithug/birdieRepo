@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.thrymr.enums.Alerts;
-
-import java.time.LocalTime;
 import java.util.List;
 
 
@@ -65,8 +63,8 @@ public class AppUserDto {
 
     private Boolean isTeamLeader;
 
-    private LocalTime shiftStartAt;
-    private LocalTime shiftEndAt;
+    private String shiftStartAt;
+    private String shiftEndAt;
     private String shiftTimings;
 
     private Boolean isTeamManager;
@@ -80,4 +78,6 @@ public class AppUserDto {
     private List<Long> teamManagerIds;
 
     private List<Long> teamLeaderIds;
+    private Boolean sortUserName;
+
 }

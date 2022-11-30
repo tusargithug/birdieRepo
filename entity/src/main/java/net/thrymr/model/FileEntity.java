@@ -19,7 +19,8 @@ public class FileEntity extends BaseEntity {
     @Column(name = "file_name")
     private String fileName;
 
-    private FileType fileType;
+    @Column(name = "file_type")
+    private String fileType;
 
     @Column(name = "file_size")
     private Long fileSize;

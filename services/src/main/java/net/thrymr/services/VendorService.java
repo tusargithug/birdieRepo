@@ -1,5 +1,6 @@
 package net.thrymr.services;
 
+import net.thrymr.dto.PaginationResponse;
 import net.thrymr.dto.VendorDto;
 import net.thrymr.model.Vendor;
 
@@ -13,6 +14,6 @@ public interface VendorService {
 
     String updateVendor(VendorDto request);
 
-    List<Vendor> getAllVendorPagination(VendorDto vendorDto);
+    PaginationResponse getAllVendorPagination(VendorDto vendorDto);
 
 }

@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+import java.util.Locale;
 
 
 public class DateUtils {
@@ -55,6 +55,12 @@ public class DateUtils {
     public static String toFormatLocalTime(LocalTime ldt, String format) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
         return ldt.format(formatter);
+    }
+
+    public static LocalTime toStringToLocalTime(String time, String format){
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(format,Locale.ENGLISH);
+        LocalTime localTime = LocalTime.parse(time, dateTimeFormatter);
+        return localTime;
     }
 
 

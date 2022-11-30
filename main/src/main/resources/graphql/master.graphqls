@@ -54,6 +54,10 @@ input ChapterDto{
     video:String
     unitId:Int
     description:String
+    pageNumber:Int
+    pageSize:Int
+    isSorting:Boolean
+    addedOn:String
 }
 input FileEntityDto{
     fileId:ID!
@@ -108,8 +112,10 @@ input TeamDto {
     PageSize:Int
     searchKey:String
     siteId:Int
-    shiftTimingsId:Int
     sortTeamName:Boolean
+    shiftStartAt:String
+    shiftEndAt:String
+    shiftTimings:String
 }
 
 input UnitDto {
@@ -149,8 +155,10 @@ type Team{
     teamId:String
     teamName:String
     site:Site
-    shiftTimings:ShiftTimings
     isActive:Boolean
+    shiftStartAt:LocalTime
+    shiftEndAt:LocalTime
+    shiftTimings:String
 }
 type MtCity{
     id:ID!
@@ -167,6 +175,8 @@ type Chapter{
     video:String
     unit:Unit
     isActive:Boolean
+    createdOn:String
+    questionList:[MtQuestion]
 }
 type MtOptions{
     textAnswer:String
@@ -189,6 +199,7 @@ type MtQuestion{
     questionCalType:QuestionCalType
     sequence:Int
     assessment:MtAssessment
+    chapter:Chapter
 }
 enum QuestionCalType{
     FORWARD
@@ -313,6 +324,5 @@ type Site{
     city:MtCity
     country:MtCountry
     region:MtRegion
-    teams:[Team]
     createdOn:String
 }

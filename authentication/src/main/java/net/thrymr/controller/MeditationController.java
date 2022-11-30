@@ -1,6 +1,7 @@
 package net.thrymr.controller;
 
 import net.thrymr.dto.MeditationDto;
+import net.thrymr.dto.PaginationResponse;
 import net.thrymr.model.master.MtMeditation;
 import net.thrymr.services.MeditationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +41,10 @@ public class MeditationController {
     @MutationMapping("deleteMeditationById")
     String deleteMeditationById(@Argument Long id) {
         return meditationService.deleteMeditationById(id);
+    }
+
+    @QueryMapping("getAllMeditationPagination")
+    public PaginationResponse getAllMeditationPagination(@Argument (name = "input") MeditationDto response) {
+        return meditationService.getAllMeditationPagination(response);
     }
 }

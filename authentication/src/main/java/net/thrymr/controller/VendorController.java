@@ -1,5 +1,6 @@
 package net.thrymr.controller;
 
+import net.thrymr.dto.PaginationResponse;
 import net.thrymr.dto.VendorDto;
 import net.thrymr.model.Vendor;
 import net.thrymr.services.VendorService;
@@ -42,7 +43,7 @@ public class VendorController {
     }
 
     @QueryMapping(name = "getAllVendorPagination")
-    public List<Vendor> getAllVendorPagination(@Argument(name="input") VendorDto request) {
+    public PaginationResponse getAllVendorPagination(@Argument(name="input") VendorDto request) {
         return vendorService.getAllVendorPagination(request);
     }
 }

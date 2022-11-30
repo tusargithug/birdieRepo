@@ -5,26 +5,21 @@ import com.mongodb.DBObject;
 import com.mongodb.client.gridfs.model.GridFSFile;
 import net.thrymr.FileDocument;
 import net.thrymr.FileDocumentRepo;
-import net.thrymr.model.FileDetails;
 import net.thrymr.model.FileEntity;
 import net.thrymr.model.Groups;
 import net.thrymr.repository.FileRepo;
 import net.thrymr.repository.GroupRepo;
 import net.thrymr.services.FileService;
-import net.thrymr.utils.Validator;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 
 @Service
@@ -56,6 +51,24 @@ public class FileServiceImplementation implements FileService {
             fileEntity.setFileId(fileID.toString());
             fileEntity.setFileName(upload.getOriginalFilename());
             fileEntity.setFileSize(upload.getSize());
+            if(upload.getContentType().contains("audio")){
+                fileEntity.setFileType("AUDIO");
+            }
+            if(upload.getContentType().contains("video")){
+                fileEntity.setFileType("VIDEO");
+            }
+            if(upload.getContentType().contains("pdf")){
+                fileEntity.setFileType("PDF");
+            }
+            if(upload.getContentType().contains("document")){
+                fileEntity.setFileType("DOCUMENT");
+            }
+            if(upload.getContentType().contains("image")){
+                fileEntity.setFileType("IMAGE");
+            }
+            if(upload.getContentType().contains("zip")){
+                fileEntity.setFileType("ZIP");
+            }
             fileEntity.setFileContentType(upload.getContentType());
             FileDocument fileDocument = new FileDocument();
             fileDocument.setFileEntity(fileEntity);

@@ -76,9 +76,9 @@ public class PsychoEducationServiceImpl implements PsychoEducationService {
                 if (request.getIsActive() != null) {
                     mtPsychoEducation.setIsActive(request.getIsActive());
                 }
-                if (Validator.isValid(request.getFileId())) {
-                    Optional<FileEntity> fileEntity = fileRepo.findByFileId(request.getFileId());
-                    if (fileEntity.isPresent()) {
+                if(Validator.isValid(request.getFileId())){
+                    Optional<FileEntity> fileEntity=fileRepo.findByFileId(request.getFileId());
+                    if(fileEntity.isPresent()){
                         mtPsychoEducation.setFile(fileEntity.get());
                     }
                 }
@@ -112,9 +112,9 @@ public class PsychoEducationServiceImpl implements PsychoEducationService {
         mtPsychoEducation.setName(request.getName());
         mtPsychoEducation.setDescription(request.getDescription());
         mtPsychoEducation.setIsActive(request.getIsActive());
-        if (Validator.isValid(request.getFileId())) {
-            Optional<FileEntity> fileEntity = fileRepo.findByFileId(request.getFileId());
-            if (fileEntity.isPresent()) {
+        if(Validator.isValid(request.getFileId())){
+            Optional<FileEntity> fileEntity=fileRepo.findByFileId(request.getFileId());
+            if(fileEntity.isPresent()){
                 mtPsychoEducation.setFile(fileEntity.get());
             }
         }

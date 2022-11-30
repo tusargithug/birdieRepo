@@ -1,28 +1,32 @@
 package net.thrymr.services.impl;
 
+import net.thrymr.dto.PaginationResponse;
 import net.thrymr.dto.WorksheetDto;
 import net.thrymr.model.FileEntity;
 import net.thrymr.model.master.MtWorksheet;
-import net.thrymr.repository.FileRepo;
 import net.thrymr.repository.WorksheetRepo;
 import net.thrymr.services.WorksheetService;
 import net.thrymr.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
 import java.util.stream.Collectors;
 
 @Service
 public class WorksheetServiceImpl implements WorksheetService {
 
     @Autowired
-    WorksheetRepo worksheetRepo;
-    @Autowired
-    FileRepo fileRepo;
-
+    private WorksheetRepo worksheetRepo;
 
 
     @Override
@@ -71,13 +75,6 @@ public class WorksheetServiceImpl implements WorksheetService {
                 if (request.getIsActive() != null) {
                     mtWorksheet.setIsActive(request.getIsActive());
                 }
-                if(Validator.isValid(request.getFileId())){
-                    Optional<FileEntity> fileEntity=fileRepo.findByFileId(request.getFileId());
-                    if(fileEntity.isPresent()){
-                        mtWorksheet.setFile(fileEntity.get());
-                    }
-                }
-                mtWorksheet.setSearchKey(getAppUserSearchKey(mtWorksheet));
                 worksheetRepo.save(mtWorksheet);
                 return "Worksheet updated successfully";
             }
@@ -103,18 +100,59 @@ public class WorksheetServiceImpl implements WorksheetService {
         return "Worksheet id not found";
     }
 
+    @Override
+    public PaginationResponse getAllWorkSheetPagination(WorksheetDto response) {
+        Pageable pageable = null;
+        if (Validator.isValid(response.getPageSize())) {
+            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize());
+        }
+        if (response.getSortName() != null && response.getSortName().equals(Boolean.TRUE)) {
+            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.ASC, "name");
+        } else if (response.getSortName() != null && response.getSortName().equals(Boolean.FALSE)) {
+            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.DESC, "name");
+        }
+        Specification<MtWorksheet> worksheetSpecification=((root, query, criteriaBuilder) -> {
+            List<Predicate> addWorkSheetPredicateList=new ArrayList<>();
+            Join<MtWorksheet,FileEntity> fileJoin=root.join("file");
+            if(Validator.isValid(response.getName())){
+                Predicate name = criteriaBuilder.and(root.get("name").in(response.getName()));
+                addWorkSheetPredicateList.add(name);
+            }
+            if(Validator.isValid(response.getCreatedOn())){
+                Predicate createdOn=criteriaBuilder.and(root.get("createdOn").in(response.getCreatedOn()));
+                addWorkSheetPredicateList.add(createdOn);
+            }
+            if (Validator.isValid(response.getFileType())) {
+                Predicate file=criteriaBuilder.and(fileJoin.get("fileType").in(response.getFileType()));
+                addWorkSheetPredicateList.add(file);
+            }
+            if(response.getIsActive() != null && response.getIsActive().equals(Boolean.TRUE)){
+                Predicate isActive=criteriaBuilder.and(root.get("isActive").in(response.getIsActive()));
+                addWorkSheetPredicateList.add(isActive);
+            } else if (response.getIsActive() != null && response.getIsActive().equals(Boolean.FALSE)) {
+                Predicate isActive=criteriaBuilder.and(root.get("isActive").in(response.getIsActive()));
+                addWorkSheetPredicateList.add(isActive);
+            }
+            return criteriaBuilder.and(addWorkSheetPredicateList.toArray(new Predicate[0]));
+
+        });
+        Page<MtWorksheet> worksheetsObject = worksheetRepo.findAll(worksheetSpecification, pageable);
+        if(worksheetsObject != null){
+            PaginationResponse paginationResponse=new PaginationResponse();
+            paginationResponse.setWorksheetList(worksheetsObject.getContent());
+            paginationResponse.setTotalPages(worksheetsObject.getTotalPages());
+            paginationResponse.setTotalElements(worksheetsObject.getTotalElements());
+            return paginationResponse;
+        }
+        return new PaginationResponse();
+    }
+
     private MtWorksheet dtoToWorksheetEntity(WorksheetDto request) {
         MtWorksheet mtWorksheet = new MtWorksheet();
         mtWorksheet.setName(request.getName());
         mtWorksheet.setDescription(request.getDescription());
         mtWorksheet.setIsActive(request.getIsActive());
-        if(Validator.isValid(request.getFileId())){
-            Optional<FileEntity> fileEntity=fileRepo.findByFileId(request.getFileId());
-            if(fileEntity.isPresent()){
-                mtWorksheet.setFile(fileEntity.get());
-            }
-        }
-        mtWorksheet.setSearchKey(getAppUserSearchKey(mtWorksheet));
+
         return mtWorksheet;
     }
 

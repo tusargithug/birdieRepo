@@ -1,9 +1,11 @@
 package net.thrymr.services;
+
 import net.thrymr.dto.*;
 import net.thrymr.model.AppUser;
 import net.thrymr.model.ShiftTimings;
 import net.thrymr.model.Site;
 import net.thrymr.model.Team;
+
 import java.util.List;
 
 public interface SiteTeamAndShiftTimingsService {
@@ -29,9 +31,9 @@ public interface SiteTeamAndShiftTimingsService {
 
     String deleteSiftTimingsById(Long id);
 
-    List<Team> getAllTeamPagination(TeamDto teamdto);
+    PaginationResponse getAllTeamPagination(TeamDto teamdto);
 
-    List<Site> getAllSitePagination(SiteDto siteDto);
+    PaginationResponse getAllSitePagination(SiteDto siteDto);
 
     List<ShiftTimings> getAllShiftTimings();
 

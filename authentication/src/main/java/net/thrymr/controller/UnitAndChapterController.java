@@ -8,6 +8,7 @@ import net.thrymr.utils.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -59,9 +60,16 @@ public class UnitAndChapterController {
         List<Chapter> chapterList = unitAndChapterServices.getAllChapters();
         return chapterList;
     }
+
+    @QueryMapping("getAllChapterPagination")
+    public PaginationResponse getAllChapterPagination(@Argument(name = "input") ChapterDto response){
+        return unitAndChapterServices.getAllChapterPagination(response);
+    }
+
+
+
     @QueryMapping(name = "getLearnPath")
-    public List<Unit> getLearnPath(@Argument(name = "input")UnitDto unitDto){
-        List<Unit> unitList = unitAndChapterServices.getLearnPath(unitDto);
-        return unitList;
+    public Page<Unit> getLearnPath(@Argument(name = "input")UnitDto unitDto){
+        return unitAndChapterServices.getLearnPath(unitDto);
     }
 }

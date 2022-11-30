@@ -7,6 +7,7 @@ import net.thrymr.enums.Gender;
 import net.thrymr.enums.Roles;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +20,16 @@ public class Counsellor extends BaseEntity {
 
     private String counsellorName;
 
+    @Column(unique = true)
     private String empId;
 
+    @Column(unique = true)
     private String emailId;
 
     private String countryCode;
 
+    @Column(unique = true)
+    @Size(min = 10, max = 10)
     private String mobileNumber;
 
     @Enumerated(EnumType.STRING)

@@ -16,6 +16,7 @@ import javax.persistence.*;
 public class MtMeditation extends BaseEntity {
 
     private String name;
+
     private String meditationVideoLink;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

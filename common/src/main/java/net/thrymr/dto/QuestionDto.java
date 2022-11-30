@@ -17,6 +17,7 @@ public class QuestionDto {
     private Long assessmentId;
     private Long psychometricTestId;
     private String questionCalType;
+    private Long chapterId;
     private Integer Sequence;
 
     private List<OptionsDto> optionsDtoList;

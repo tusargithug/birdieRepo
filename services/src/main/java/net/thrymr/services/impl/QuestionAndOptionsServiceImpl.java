@@ -4,6 +4,7 @@ package net.thrymr.services.impl;
 import net.thrymr.dto.OptionsDto;
 import net.thrymr.dto.QuestionDto;
 import net.thrymr.enums.QuestionCalType;
+import net.thrymr.model.Chapter;
 import net.thrymr.model.UserCourse;
 import net.thrymr.model.master.MtAssessment;
 import net.thrymr.model.master.MtOptions;
@@ -34,6 +35,8 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
     AssessmentRepo assessmentRepo;
     @Autowired
     UserCourseRepo userCourseRepo;
+    @Autowired
+    ChapterRepo chapterRepo;
 
     @Override
     public String createQuestion(QuestionDto request) {
@@ -51,6 +54,13 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
             Optional<MtAssessment> optionalAssessment = assessmentRepo.findById(request.getAssessmentId());
             if (optionalAssessment.isPresent()) {
                 question.setAssessment(optionalAssessment.get());
+            }
+        }
+
+        if(Validator.isValid(request.getChapterId())){
+            Optional<Chapter> chapterOptional= chapterRepo.findById(request.getChapterId());
+            if(chapterOptional.isPresent()){
+                question.setChapter(chapterOptional.get());
             }
         }
         question.setSearchKey(getAppUserSearchKey(question));
@@ -131,6 +141,12 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
                     Optional<MtAssessment> optionalAssessment = assessmentRepo.findById(request.getAssessmentId());
                     if (optionalAssessment.isPresent()) {
                         question.setAssessment(optionalAssessment.get());
+                    }
+                }
+                if(Validator.isValid(request.getChapterId())){
+                    Optional<Chapter> chapterOptional= chapterRepo.findById(request.getChapterId());
+                    if(chapterOptional.isPresent()){
+                        question.setChapter(chapterOptional.get());
                     }
                 }
                 question.setSearchKey(getAppUserSearchKey(question));

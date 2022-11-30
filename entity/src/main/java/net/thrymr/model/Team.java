@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalTime;
 
 
 @Getter
@@ -17,11 +18,11 @@ public class Team extends BaseEntity {
     private String teamId;
     @Column(name = "team_name")
     private String teamName;
-    //TODO doubt
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Site site;
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private ShiftTimings shiftTimings;
+    private LocalTime shiftStartAt;
+    private LocalTime shiftEndAt;
+    private String shiftTimings;
 
 }
 

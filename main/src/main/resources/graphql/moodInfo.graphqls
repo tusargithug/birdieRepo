@@ -16,8 +16,8 @@ type Query {
     getAllUnit:[Unit]
     getAllChapters:[Chapter]
     getLearnPath(input:UnitDto):[Unit]
-    getAllSitePagination(input:SiteDto):[Site]
-    getAllTeamPagination(input:TeamDto):[Team]
+    getAllSitePagination(input:SiteDto):PaginationResponse
+    getAllTeamPagination(input:TeamDto):PaginationResponse
     getAllSite:[Site]
     getAllTeam:[Team]
     getAllCountry:[MtCountry]
@@ -29,7 +29,7 @@ type Query {
     getAllCounsellor(input:CounsellorDto):[Counsellor]
     getAllVendor:[Vendor]
     getVendorById(id:ID):Vendor
-    getAllVendorPagination(input:VendorDto):[Vendor]
+    getAllVendorPagination(input:VendorDto):PaginationResponse
     getAllAssessment:[MtAssessment]
     getAssessmentById(id:ID!):MtAssessment
     getQuestionById(id:ID!):MtQuestion
@@ -51,7 +51,7 @@ type Query {
     getAllMoodSources:[MtMoodSource]
     getAllGroupDetails:[GroupDetails]
     getGroupById(id:ID):Groups
-    getAllMiniSessionPagination(input:MiniSessionDto):[MiniSession]
+    getAllMiniSessionPagination(input:MiniSessionDto):PaginationResponse
     getAllEnumTags:[TagType]
     getAllGroups:[Groups]
     getAllWorksheet:[MtWorksheet]
@@ -61,8 +61,11 @@ type Query {
     getAllMeditation:[MtMeditation]
     getMeditationById(id:ID!):MtMeditation
     getAllAppUserByAlerts(input:AppUserDto):[AppUser]
-    getAllAppUserPagination(input:AppUserDto):[AppUser]
-    previewAlertNotification(input:AppUserDto):RoleWiseCountResponse
+    getAllAppUserPagination(input:AppUserDto):PaginationResponse
+    getAllMeditationPagination(input:MeditationDto):PaginationResponse
+    getAllWorkSheetPagination(input:WorksheetDto):PaginationResponse
+    getAllChapterPagination(input:ChapterDto):PaginationResponse
+#    getAllMoodIntensitiesByMoodInfoId(id:ID!):[MtMoodIntensity]
 }
 
 type Mutation {
@@ -189,30 +192,30 @@ type UserAppointmentResponse{
 }
 
 input AppUserDto{
-    id:Int
-    email:String
-    userName:String
-    mobile:String
-    password:String
-    searchKey:String
-    isActive:Boolean
-    empId:String
-    roles:String
-    siteId:Int
-    dateOfJoining:String
-    alerts:Alerts
-    pageSize:Int
-    pageNumber:Int
-    addedOn:String
-    countryCode:String
-    gender:String
-    isTeamManager:Boolean
-    shiftStartAt:LocalTime
-    shiftEndAt:LocalTime
+     id:Int
+     email:String
+     userName:String
+     mobile:String
+     password:String
+     searchKey:String
+     isActive:Boolean
+     empId:String
+     roles:String
+     siteId:Int
+     dateOfJoining:String
+     alerts:Alerts
+     pageSize:Int
+     pageNumber:Int
+     addedOn:String
+     countryCode:String
+     gender:String
+     isTeamLeader:Boolean
+     shiftStartAt:LocalTime
+     shiftEndAt:LocalTime
     isTeamLeader:Boolean
     teamManagerIds:[ID]
     teamLeaderIds:[ID]
-
+    sortUserName:Boolean
 }
 enum Roles{
     NONE
@@ -224,6 +227,7 @@ enum Roles{
     DIRECTOR
     TEAM_MANAGER
     TEAM_LEADER
+    OP_STREAM
     SITE_MANAGER
 }
 
@@ -248,13 +252,22 @@ type AppUser{
 }
 
 type FileEntity{
-    fileId:ID!
-    contentType:String!
-    name:String!
-    fileType:String!
-    employees:[Course]
+     fileId:String
+     fileName:String
+     fileType:String
+     fileSize:Int
+     fileContentType:String
 }
-
+enum FileType{
+    VIDEO
+    IMAGE
+    DOCUMENT
+    PDF
+    AUDIO
+    ZIP
+    EMOJI
+    NONE
+}
 type ShiftTimings{
     id: ID!
     shiftName:String
@@ -335,27 +348,27 @@ enum Alerts{
     NONE
 }
 input CounsellorDto {
-    id:Int
-    educationalDetails:[String]
-    languages:[String]
-    siteId:Int
-    designation:String
-    bio:String
-    counsellorName:String
-    sortCounsellorName:Boolean
-    empId:String
-    emailId:String
-    mobileNumber:String
-    pageNumber:Int
-    pageSize:Int
-    addedOn:Boolean
-    searchKey:String
-    isActive:Boolean
-    shiftStartAt:LocalTime
-    shiftEndAt:LocalTime
-    shiftTimings:String
-    countryCode:String
-    gender:String
+     id:Int
+     educationalDetails:[String]
+     languages:[String]
+     siteId:Int
+     designation:String
+     bio:String
+     counsellorName:String
+     sortCounsellorName:Boolean
+     empId:String
+     emailId:String
+     mobileNumber:String
+     pageNumber:Int
+      pageSize:Int
+     addedOn:Boolean
+     searchKey:String
+     isActive:Boolean
+     shiftStartAt:String
+     shiftEndAt:String
+     shiftTimings:String
+     countryCode:String
+     gender:String
 }
 
 type Vendor{
@@ -550,8 +563,10 @@ enum TagType{
 }
 
 type MtWorksheet{
+    id:Int
     name:String
     description:String
+    file:FileEntity
     isActive:Boolean
 }
 
@@ -560,12 +575,20 @@ input WorksheetDto{
     name:String
     description:String
     isActive:Boolean
+    fileId:String
+    fileType:String
+    pageNumber:Int
+    pageSize:Int
+    sortName:Int
+    createdOn:Int
 }
 
 type MtPsychoEducation{
+    id:Int
     name:String
     description:String
     isActive:Boolean
+    file:FileEntity
 }
 
 input PsychoEducationDto{
@@ -573,12 +596,16 @@ input PsychoEducationDto{
     name:String
     description:String
     isActive:Boolean
+    fileId:String
 }
 
 type MtMeditation{
+    id:Int
     name:String
     meditationVideoLink:String
     isActive:Boolean
+    file:FileEntity
+    createdOn:String
 }
 
 input MeditationDto{
@@ -586,10 +613,30 @@ input MeditationDto{
     name:String
     meditationVideoLink:String
     isActive:Boolean
+    fileId:String
+    createdOn:String
+    sortName:Boolean
+    pageNumber:Int
+    pageSize:Int
+    fileType:String
+    searchKey:String
 }
 enum Gender{
     MALE
     FEMALE
     OTHERS
     NONE
+}
+
+type PaginationResponse{
+    siteList:[Site]
+    teamList:[Team]
+    vendorList:[Vendor]
+    appUserList:[AppUser]
+    miniSessionList:[MiniSession]
+    meditationList:[MtMeditation]
+    worksheetList:[MtWorksheet]
+    chapterList:[Chapter]
+    totalPages:Int
+    totalElements:Int
 }

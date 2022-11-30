@@ -33,7 +33,6 @@ public class LoggedInUser implements UserDetails {
     private String appUser;
 
     private String email;
-
     @JsonIgnore
     private String password;
 
@@ -41,11 +40,8 @@ public class LoggedInUser implements UserDetails {
         LoggedInUser loggedInUser=new LoggedInUser();
         loggedInUser.setId((loginData.get().getId()));
         loggedInUser.setContactNumber(loginData.get().getMobile());
-//        loggedInUser.setFirstName(loginData.get().getFirstName());
-//       loggedInUser.setLastName(loginData.get().getLastName());
        loggedInUser.setEmail(loginData.get().getEmail());
         loggedInUser.setPassword(loginData.get().getPassword());
-//        loggedInUser.setRole(loginData.get().getMtRoles());
         return loggedInUser;
     }
     @Override
