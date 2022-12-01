@@ -31,8 +31,4 @@ public class AssessmentDto {
     private Boolean isActive;
 
     private String dateOfPublishing;
-
-    private List<QuestionDto> questionDtoList;
-
-
 }

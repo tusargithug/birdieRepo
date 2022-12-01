@@ -23,12 +23,6 @@ public class AssessmentServiceImpl implements AssessmentService {
     @Autowired
     AssessmentRepo assessmentRepo;
 
-    @Autowired
-    QuestionRepo questionRepo;
-
-    @Autowired
-    OptionsRepo optionsRepo;
-
     @Override
     public List<MtAssessment> getAllAssessment() {
         List<MtAssessment> mtAssessmentList = assessmentRepo.findAll();

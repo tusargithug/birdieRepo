@@ -67,13 +67,6 @@ public class AppUserDto {
     private String shiftTimings;
 
     private Boolean isTeamManager;
-
-    private Boolean redAlert;
-
-    private Boolean greenAlert;
-
-    private Boolean orangeAlert;
-
     private List<Long> teamManagerIds;
 
     private List<Long> teamLeaderIds;

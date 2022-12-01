@@ -164,7 +164,7 @@ public class WorksheetServiceImpl implements WorksheetService {
             searchKey = searchKey + " " + worksheet.getDescription();
         }
         if (worksheet.getFile() != null) {
-            searchKey = searchKey + " " + worksheet.getFile();
+            searchKey = searchKey + " " + worksheet.getFile().getFileType();
         }
         return searchKey;
     }
