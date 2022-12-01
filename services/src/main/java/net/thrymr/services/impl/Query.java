@@ -225,6 +225,11 @@ public class Query implements GraphQLQueryResolver {
         return siteTeamAndShiftTimingsService.getAllShiftTimings();
     }
 
+    @QueryMapping(name = "getSiteById")
+    public Site getSiteById(@Argument Long id){
+        return siteTeamAndShiftTimingsService.getSiteById(id);
+    }
+
     @QueryMapping(name = "getCounsellorSlotById")
     public CounsellorSlot getCounsellorSlotById(@Argument Long id) {
         return counsellorSlotService.getCounsellorSlotById(id);

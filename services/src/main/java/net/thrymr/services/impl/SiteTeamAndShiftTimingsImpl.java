@@ -636,4 +636,17 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         }
         return new Team();
     }
+
+    @Override
+    public Site getSiteById(Long id) {
+        Site site = null;
+        if(Validator.isValid(id)){
+            Optional<Site> optionalSite = siteRepo.findById(id);
+            if(optionalSite.isPresent() && optionalSite.get().getIsActive().equals(Boolean.TRUE)){
+                site=optionalSite.get();
+                return site;
+            }
+        }
+        return new Site();
+    }
 }
