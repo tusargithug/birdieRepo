@@ -66,6 +66,7 @@ type Query {
     getAllChapterPagination(input:ChapterDto):PaginationResponse
 #    getAllMoodIntensitiesByMoodInfoId(id:ID!):[MtMoodIntensity]
     previewAlertNotification(input:AppUserDto):RoleWiseCountResponse
+    getTeamById(id:ID):Team
 }
 
 type Mutation {

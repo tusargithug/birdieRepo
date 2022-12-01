@@ -73,12 +73,12 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
 
     @Override
     public String updateTeam(TeamDto teamDto) {
-        Team team=null;
-        if(Validator.isValid(teamDto.getId())) {
+        Team team = null;
+        if (Validator.isValid(teamDto.getId())) {
             Optional<Team> teamId = teamRepo.findById(teamDto.getId());
             if (teamId.isPresent()) {
                 team = teamId.get();
-                if(Validator.isValid(teamDto.getTeamId())){
+                if (Validator.isValid(teamDto.getTeamId())) {
                     team.setTeamId(teamDto.getTeamId());
                 }
                 if (Validator.isValid(teamDto.getTeamName())) {
@@ -520,7 +520,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         if (Validator.isValid(request.getRoles()) && request.getRoles().equals(Roles.TEAM_LEADER.name())) {
             return appUserList.stream().filter(appUser -> appUser.getRoles().equals(Roles.TEAM_LEADER)).collect(Collectors.toList());
         }
-        if (Validator.isValid(request.getRoles()) &&request.getRoles().equals(Roles.TEAM_MANAGER.name())) {
+        if (Validator.isValid(request.getRoles()) && request.getRoles().equals(Roles.TEAM_MANAGER.name())) {
             return appUserList.stream().filter(appUser -> appUser.getRoles().equals(Roles.TEAM_MANAGER)).collect(Collectors.toList());
         }
         if (Validator.isValid(request.getRoles()) && request.getRoles().equals(Roles.DIRECTOR.name())) {
@@ -555,9 +555,9 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                     roleWiseCountResponse.setTeamLeaderCount(roleWiseCountResponse.getTeamLeaderCount() + 1);
                     appUser.setAlerts(Alerts.valueOf(request.getAlerts()));
                     teamMembers.setAppUser(appUser);
-                    if(Validator.isValid(request.getTeamId())){
-                        Optional<Team> optionalTeam=teamRepo.findById(request.getTeamId());
-                        if(optionalTeam.isPresent()){
+                    if (Validator.isValid(request.getTeamId())) {
+                        Optional<Team> optionalTeam = teamRepo.findById(request.getTeamId());
+                        if (optionalTeam.isPresent()) {
                             teamMembers.setTeam(optionalTeam.get());
                         }
                     }
@@ -566,9 +566,9 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                     roleWiseCountResponse.setTeamManagerCount(roleWiseCountResponse.getTeamManagerCount() + 1);
                     appUser.setAlerts(Alerts.valueOf(request.getAlerts()));
                     teamMembers.setAppUser(appUser);
-                    if(Validator.isValid(request.getTeamId())){
-                        Optional<Team> optionalTeam=teamRepo.findById(request.getTeamId());
-                        if(optionalTeam.isPresent()){
+                    if (Validator.isValid(request.getTeamId())) {
+                        Optional<Team> optionalTeam = teamRepo.findById(request.getTeamId());
+                        if (optionalTeam.isPresent()) {
                             teamMembers.setTeam(optionalTeam.get());
                         }
                     }
@@ -577,9 +577,9 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                     roleWiseCountResponse.setDirectorCount(roleWiseCountResponse.getDirectorCount() + 1);
                     appUser.setAlerts(Alerts.valueOf(request.getAlerts()));
                     teamMembers.setAppUser(appUser);
-                    if(Validator.isValid(request.getTeamId())){
-                        Optional<Team> optionalTeam=teamRepo.findById(request.getTeamId());
-                        if(optionalTeam.isPresent()){
+                    if (Validator.isValid(request.getTeamId())) {
+                        Optional<Team> optionalTeam = teamRepo.findById(request.getTeamId());
+                        if (optionalTeam.isPresent()) {
                             teamMembers.setTeam(optionalTeam.get());
                         }
                     }
@@ -588,9 +588,9 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                     roleWiseCountResponse.setAccountManagerCount(roleWiseCountResponse.getAccountManagerCount() + 1);
                     appUser.setAlerts(Alerts.valueOf(request.getAlerts()));
                     teamMembers.setAppUser(appUser);
-                    if(Validator.isValid(request.getTeamId())){
-                        Optional<Team> optionalTeam=teamRepo.findById(request.getTeamId());
-                        if(optionalTeam.isPresent()){
+                    if (Validator.isValid(request.getTeamId())) {
+                        Optional<Team> optionalTeam = teamRepo.findById(request.getTeamId());
+                        if (optionalTeam.isPresent()) {
                             teamMembers.setTeam(optionalTeam.get());
                         }
                     }
@@ -599,9 +599,9 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                     roleWiseCountResponse.setGeneralManagerCount(roleWiseCountResponse.getGeneralManagerCount() + 1);
                     appUser.setAlerts(Alerts.valueOf(request.getAlerts()));
                     teamMembers.setAppUser(appUser);
-                    if(Validator.isValid(request.getTeamId())){
-                        Optional<Team> optionalTeam=teamRepo.findById(request.getTeamId());
-                        if(optionalTeam.isPresent()){
+                    if (Validator.isValid(request.getTeamId())) {
+                        Optional<Team> optionalTeam = teamRepo.findById(request.getTeamId());
+                        if (optionalTeam.isPresent()) {
                             teamMembers.setTeam(optionalTeam.get());
                         }
                     }
@@ -610,9 +610,9 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                     roleWiseCountResponse.setSeniorManagerCount(roleWiseCountResponse.getSeniorManagerCount() + 1);
                     appUser.setAlerts(Alerts.valueOf(request.getAlerts()));
                     teamMembers.setAppUser(appUser);
-                    if(Validator.isValid(request.getTeamId())){
-                        Optional<Team> optionalTeam=teamRepo.findById(request.getTeamId());
-                        if(optionalTeam.isPresent()){
+                    if (Validator.isValid(request.getTeamId())) {
+                        Optional<Team> optionalTeam = teamRepo.findById(request.getTeamId());
+                        if (optionalTeam.isPresent()) {
                             teamMembers.setTeam(optionalTeam.get());
                         }
                     }
@@ -623,5 +623,18 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         }
 
         return roleWiseCountResponse;
+    }
+
+    @Override
+    public Team getTeamById(Long id) {
+        Team team;
+        if (Validator.isValid(id)) {
+            Optional<Team> optionalAppUser = teamRepo.findById(id);
+            if (optionalAppUser.isPresent() && optionalAppUser.get().getIsActive().equals(Boolean.TRUE)) {
+                team = optionalAppUser.get();
+                return team;
+            }
+        }
+        return new Team();
     }
 }

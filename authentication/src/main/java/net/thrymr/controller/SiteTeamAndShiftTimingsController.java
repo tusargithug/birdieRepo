@@ -4,7 +4,6 @@ import net.thrymr.dto.*;
 import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.model.AppUser;
 import net.thrymr.model.ShiftTimings;
-import net.thrymr.model.Site;
 import net.thrymr.model.Team;
 import net.thrymr.services.SiteTeamAndShiftTimingsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,4 +86,8 @@ public class SiteTeamAndShiftTimingsController {
         return siteTeamAndShiftTimingsService.previewAlertNotification(request);
     }
 
+    @QueryMapping("getTeamById")
+    public Team getTeamById(@Argument Long id) {
+        return siteTeamAndShiftTimingsService.getTeamById(id);
+    }
 }

@@ -403,4 +403,9 @@ public class Query implements GraphQLQueryResolver {
     public RoleWiseCountResponse previewAlertNotification(@Argument(name = "input") AppUserDto request)  {
         return siteTeamAndShiftTimingsService.previewAlertNotification(request);
     }
+
+    @QueryMapping("getTeamById")
+    public Team getTeamById(@Argument Long id) {
+        return siteTeamAndShiftTimingsService.getTeamById(id);
+    }
 }

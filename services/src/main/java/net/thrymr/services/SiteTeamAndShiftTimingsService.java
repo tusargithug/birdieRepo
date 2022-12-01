@@ -2,10 +2,7 @@ package net.thrymr.services;
 
 import net.thrymr.dto.*;
 import net.thrymr.dto.response.PaginationResponse;
-import net.thrymr.model.AppUser;
-import net.thrymr.model.ShiftTimings;
-import net.thrymr.model.Site;
-import net.thrymr.model.Team;
+import net.thrymr.model.*;
 
 import java.util.List;
 
@@ -39,4 +36,6 @@ public interface SiteTeamAndShiftTimingsService {
     List<AppUser> getAllAppUserByRoles(AppUserDto request);
 
     RoleWiseCountResponse previewAlertNotification(AppUserDto request);
+
+    Team getTeamById(Long id);
 }
