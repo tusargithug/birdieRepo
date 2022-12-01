@@ -259,7 +259,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             }
         } else {
             List<Site> siteList = siteRepo.findAll(siteSpecification);
-            paginationResponse.setSiteList(siteList);
+            paginationResponse.setSiteList(siteList.stream().filter(site -> site.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList()));
             return paginationResponse;
         }
         return new PaginationResponse();
@@ -419,7 +419,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             }
         } else {
             List<Team> teamList = teamRepo.findAll(teamSpecification);
-            paginationResponse.setTeamList(teamList);
+            paginationResponse.setTeamList(teamList.stream().filter(team -> team.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList()));
             return paginationResponse;
         }
         return new PaginationResponse();
