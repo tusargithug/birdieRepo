@@ -507,11 +507,10 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     public List<AppUser> getAllAppUserByRoles(AppUserDto request) {
         Specification<AppUser> appUserSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> addVendorPredicate = new ArrayList<>();
-            if (Validator.isValid(request.getSearchKey())) {
+            if (request.getSearchKey() != null && request.getSearchKey().isEmpty()) {
                 Predicate searchPredicate = criteriaBuilder.like(
                         criteriaBuilder.lower(root.get("searchKey")),
                         "%" + request.getSearchKey().toLowerCase() + "%");
-
                 addVendorPredicate.add(searchPredicate);
             }
             return criteriaBuilder.and(addVendorPredicate.toArray(new Predicate[0]));
