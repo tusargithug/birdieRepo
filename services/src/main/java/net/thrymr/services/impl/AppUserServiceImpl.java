@@ -33,11 +33,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.method.P;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.persistence.criteria.Predicate;
 import java.io.IOException;
 import java.text.ParseException;
@@ -70,6 +68,9 @@ public class AppUserServiceImpl implements AppUserService {
     TeamRepo teamRepo;
     @Autowired
     AppointmentRepo appointmentRepo;
+
+    @Autowired
+    FileRepo fileRepo;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -191,7 +192,14 @@ public class AppUserServiceImpl implements AppUserService {
         user.setShiftStartAt(DateUtils.toStringToLocalTime(request.getShiftStartAt(), Constants.TIME_FORMAT_12_HOURS));
         user.setShiftEndAt(DateUtils.toStringToLocalTime(request.getShiftEndAt(), Constants.TIME_FORMAT_12_HOURS));
         user.setShiftTimings(request.getShiftStartAt() + " - " + request.getShiftEndAt());
+        if (Validator.isValid(request.getPictureId())) {
+            Optional<FileEntity> optionalFileEntity = fileRepo.findByFileId(request.getPictureId());
+           if (optionalFileEntity.isPresent()) {
+               user.setUploadPicture(optionalFileEntity.get());
+           }
+        }
         user.setSearchKey(getAppUserSearchKey(user));
+
         appUserRepo.save(user);
         return "User Saved successfully";
     }
@@ -238,6 +246,12 @@ public class AppUserServiceImpl implements AppUserService {
                 }
                 if (Validator.isObjectValid(request.getShiftEndAt())) {
                     user.setShiftEndAt(DateUtils.toStringToLocalTime(request.getShiftEndAt(), Constants.TIME_FORMAT_12_HOURS));
+                }
+                if (Validator.isValid(request.getPictureId())) {
+                    Optional<FileEntity> optionalFileEntity = fileRepo.findByFileId(request.getPictureId());
+                    if (optionalFileEntity.isPresent()) {
+                        user.setUploadPicture(optionalFileEntity.get());
+                    }
                 }
                 user.setShiftTimings(request.getShiftStartAt() + " - " + request.getShiftEndAt());
                 appUserRepo.save(user);

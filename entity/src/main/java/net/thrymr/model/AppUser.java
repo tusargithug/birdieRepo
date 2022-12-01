@@ -66,4 +66,7 @@ public class AppUser extends BaseEntity {
     @Column(name="shiftTimings")
     private String shiftTimings;
 
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private FileEntity uploadPicture;
+
 }

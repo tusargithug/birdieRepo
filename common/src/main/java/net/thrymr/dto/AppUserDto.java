@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.thrymr.enums.Alerts;
 import java.util.List;
 
 
@@ -47,7 +46,7 @@ public class AppUserDto {
 
     private String dateOfJoining;
 
-    private Alerts alerts;
+    private String alerts;
 
     private Integer pageSize;
 
@@ -80,4 +79,5 @@ public class AppUserDto {
     private List<Long> teamLeaderIds;
     private Boolean sortUserName;
 
+    private String pictureId;
 }

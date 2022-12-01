@@ -2,12 +2,8 @@ package net.thrymr.services.impl;
 
 import net.thrymr.constant.Constants;
 import net.thrymr.dto.AssessmentDto;
-import net.thrymr.dto.OptionsDto;
-import net.thrymr.dto.QuestionDto;
 import net.thrymr.enums.FrequencyType;
 import net.thrymr.model.master.MtAssessment;
-import net.thrymr.model.master.MtOptions;
-import net.thrymr.model.master.MtQuestion;
 import net.thrymr.repository.AssessmentRepo;
 import net.thrymr.repository.OptionsRepo;
 import net.thrymr.repository.QuestionRepo;
@@ -44,56 +40,8 @@ public class AssessmentServiceImpl implements AssessmentService {
 
     @Override
     public String createAssessment(AssessmentDto request) throws ParseException {
-        MtAssessment mtAssessment = new MtAssessment();
-        if (Validator.isValid(request.getName())) {
-            mtAssessment.setName(request.getName());
-        }
-        mtAssessment.setDescription(request.getDescription());
-        if (Validator.isValid(request.getInstructions())) {
-            mtAssessment.setInstructions(request.getInstructions());
-        }
-        mtAssessment.setDateOfPublishing(DateUtils.toFormatStringToDate(request.getDateOfPublishing(), Constants.DATE_FORMAT));
-        mtAssessment.setFrequencyType(FrequencyType.valueOf(request.getFrequencyType()));
-        if (Validator.isValid(request.getHigh())) {
-            mtAssessment.setHigh(request.getHigh());
-        } else if (Validator.isValid(request.getModerate())) {
-            mtAssessment.setModerate(request.getModerate());
-        } else {
-            mtAssessment.setLow(request.getLow());
-        }
-        Set<MtQuestion> mtQuestionSet = new HashSet<>();
-        Set<MtOptions> mtOptionsSet = new HashSet<>();
-        if (Validator.isValid(request.getQuestionDtoList())) {
-            for (QuestionDto questionDto : request.getQuestionDtoList()) {
-                MtQuestion mtQuestion = new MtQuestion();
-                mtQuestion.setQuestion(questionDto.getQuestion());
-                mtQuestion.setSequence(questionDto.getSequence());
-                mtQuestionSet.add(mtQuestion);
-                for (OptionsDto optionsDto : questionDto.getOptionsDtoList()) {
-                    MtOptions mtOptions = new MtOptions();
-                    mtOptions.setTextAnswer(optionsDto.getTextAnswer());
-                    mtOptionsSet.add(mtOptions);
-                }
-                mtQuestion.setMtOptions(mtOptionsSet);
-                mtQuestionSet.add(mtQuestion);
-            }
-            mtAssessment.setQuestionList(mtQuestionSet);
-            mtAssessment = assessmentRepo.save(mtAssessment);
-            MtAssessment finalMtAssessment = mtAssessment;
-            mtQuestionSet.stream().map(o -> {
-                o.setAssessment(finalMtAssessment);
-                return null;
-            }).collect(Collectors.toSet());
-           mtQuestionSet = new HashSet<>(questionRepo.saveAll(mtQuestionSet));
-           for(MtQuestion question:mtQuestionSet){
-               for(MtOptions options:question.getMtOptions()){
-                   options.setQuestion(question);
-                   optionsRepo.save(options);
-               }
-               }
-
-           }
-
+        MtAssessment mtAssessment = dtoToAssessmentEntity(request);
+        assessmentRepo.save(dtoToAssessmentEntity(request));
         return "create Assessment successfully";
     }
 

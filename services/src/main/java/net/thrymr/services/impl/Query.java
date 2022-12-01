@@ -315,9 +315,9 @@ public class Query implements GraphQLQueryResolver {
         return appUserService.getAllEnumRoles();
     }
 
-    @QueryMapping(name = "getAllAppUserByAlerts")
-    public List<AppUser> getAllAppUserByAlerts(@Argument(name = "input") AppUserDto request) {
-        return siteTeamAndShiftTimingsService.getAllAppUserByAlerts(request);
+    @QueryMapping(name = "getAllAppUserByRoles")
+    public List<AppUser> getAllAppUserByRoles(@Argument(name = "input") AppUserDto request) {
+        return siteTeamAndShiftTimingsService.getAllAppUserByRoles(request);
     }
 
     @QueryMapping(name = "getAllAppUserPagination")

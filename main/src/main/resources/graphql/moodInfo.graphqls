@@ -61,12 +61,13 @@ type Query {
     getPaginationPsychoEducation(input:PsychoEducationDto):[MtPsychoEducation]
     getAllMeditation:[MtMeditation]
     getMeditationById(id:ID!):MtMeditation
-    getAllAppUserByAlerts(input:AppUserDto):[AppUser]
+    getAllAppUserByRoles(input:AppUserDto):[AppUser]
     getAllAppUserPagination(input:AppUserDto):PaginationResponse
     getAllMeditationPagination(input:MeditationDto):PaginationResponse
     getAllWorkSheetPagination(input:WorksheetDto):PaginationResponse
     getAllChapterPagination(input:ChapterDto):PaginationResponse
 #    getAllMoodIntensitiesByMoodInfoId(id:ID!):[MtMoodIntensity]
+    previewAlertNotification(input:AppUserDto):RoleWiseCountResponse
 }
 
 type Mutation {
@@ -198,25 +199,28 @@ input AppUserDto{
      userName:String
      mobile:String
      password:String
-     searchKey:String
+#     searchKey:String
      isActive:Boolean
      empId:String
      roles:String
      siteId:Int
      dateOfJoining:String
-     alerts:Alerts
+     alerts:String
      pageSize:Int
      pageNumber:Int
      addedOn:String
      countryCode:String
      gender:String
 #     isTeamLeader:Boolean
-     shiftStartAt:LocalTime
-     shiftEndAt:LocalTime
+     shiftStartAt:String
+     shiftEndAt:String
     isTeamLeader:Boolean
     teamManagerIds:[ID]
     teamLeaderIds:[ID]
     sortUserName:Boolean
+    pictureId:String
+    searchKey:String
+    teamId:Int
 }
 enum Roles{
     NONE
@@ -249,6 +253,8 @@ type AppUser{
     shiftStartAt:LocalTime
     shiftEndAt:LocalTime
     shiftTimings:String
+    uploadPicture:FileEntity
+    searchKey:String
 }
 
 type FileEntity{

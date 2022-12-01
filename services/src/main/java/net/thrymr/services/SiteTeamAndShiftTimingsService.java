@@ -38,7 +38,7 @@ public interface SiteTeamAndShiftTimingsService {
 
     List<ShiftTimings> getAllShiftTimings();
 
-    List<AppUser> getAllAppUserByAlerts(AppUserDto request);
+    List<AppUser> getAllAppUserByRoles(AppUserDto request);
 
     RoleWiseCountResponse previewAlertNotification(AppUserDto request);
 }

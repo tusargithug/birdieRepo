@@ -20,7 +20,6 @@ import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class CounsellorImpl implements CounsellorService {
@@ -187,7 +186,7 @@ public class CounsellorImpl implements CounsellorService {
         assert pageable != null;
         Page<Counsellor> counsellorObjectives = counsellorRepo.findAll(addCounsellorSpecification, pageable);
 
-        if (counsellorObjectives.getContent() != null) {
+        if (counsellorObjectives.getContent() != null ) {
             return new org.springframework.data.domain.PageImpl<>(counsellorObjectives.getContent(), pageable, 0l);
         }
         return new org.springframework.data.domain.PageImpl<>(new ArrayList<>(), pageable, 0l);
