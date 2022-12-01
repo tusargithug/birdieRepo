@@ -70,6 +70,7 @@ public class FileServiceImplementation implements FileService {
                 fileEntity.setFileType("ZIP");
             }
             fileEntity.setFileContentType(upload.getContentType());
+            fileEntity.setSearchKey(getFileEntitySearchKey(fileEntity));
             FileDocument fileDocument = new FileDocument();
             fileDocument.setFileEntity(fileEntity);
             fileDocumentRepo.save(fileDocument);
@@ -111,10 +112,36 @@ public class FileServiceImplementation implements FileService {
                 fileDetails = optionalFileDetails.get();
                 fileDetails.setIsActive(Boolean.FALSE);
                 fileDetails.setIsDeleted(Boolean.TRUE);
+                fileDetails.setSearchKey(getFileEntitySearchKey(fileDetails));
                 fileRepo.save(fileDetails);
             }
             return "file delete successfully";
         }
         return "this id not present in database";
     }
+
+    public String getFileEntitySearchKey(FileEntity fileEntity) {
+        String searchKey = "";
+        if (fileEntity.getFileId() != null) {
+            searchKey = searchKey + " " + fileEntity.getFileId();
+        }
+        if (fileEntity.getFileName() != null) {
+            searchKey = searchKey + " " + fileEntity.getFileName();
+        }
+        if (fileEntity.getFileType() != null) {
+            searchKey = searchKey + " " + fileEntity.getFileType();
+        }
+        if (fileEntity.getFileSize() != null) {
+            searchKey = searchKey + " " + fileEntity.getFileSize();
+        }
+        if (fileEntity.getFileContentType() != null) {
+            searchKey = searchKey + " " + fileEntity.getFileContentType();
+        }
+        if (fileEntity.getIsActive() != null) {
+            searchKey = searchKey + " " + fileEntity.getIsActive();
+        }
+        return searchKey;
+    }
+
+
 }

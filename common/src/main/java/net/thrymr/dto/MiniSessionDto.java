@@ -27,4 +27,6 @@ public class MiniSessionDto {
     private Integer pageSize;
 
     private Boolean sortMiniSessionName;
+
+    private String searchKey;
 }

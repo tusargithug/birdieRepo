@@ -1,6 +1,7 @@
 package net.thrymr.controller;
 
 import net.thrymr.dto.PsychoEducationDto;
+import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.model.master.MtPsychoEducation;
 import net.thrymr.services.PsychoEducationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +45,8 @@ public class PsychoEducationController {
     }
 
     @QueryMapping(name = "getPaginationPsychoEducation")
-    public Page<MtPsychoEducation> getPaginationPsychoEducation(@Argument(name="input") PsychoEducationDto request) {
-        return psychoEducationService.getPaginationPsychoEducation(request);
+    public PaginationResponse getPsychoEducationPagination(@Argument(name="input") PsychoEducationDto request) {
+        return psychoEducationService.getPsychoEducationPagination(request);
     }
 
 }

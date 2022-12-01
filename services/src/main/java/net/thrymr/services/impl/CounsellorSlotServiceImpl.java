@@ -116,9 +116,10 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
                         slot.setCounsellor(optionalCounsellorId.get());
                     }
                 }
-                if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE)) {
+                if (request.getIsActive() != null && request.getIsActive().equals(Boolean.TRUE)) {
                     slot.setIsActive(request.getIsActive());
                 }
+                slot.setSearchKey(getCounsellorSearchKey(slot));
                 counsellorSlots.add(slot);
             }
 
@@ -241,9 +242,10 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
                                 counsellorSlot.setCounsellor(optionalCounsellorId.get());
                             }
                         }
-                        if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
+                        if (request.getIsActive() != null && request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
                             counsellorSlot.setIsActive(request.getIsActive());
                         }
+                        counsellorSlot.setSearchKey(getCounsellorSearchKey(counsellorSlot));
                         counsellorSlots.add(counsellorSlot);
                         counsellorSlotRepo.saveAll(counsellorSlots);
                         return "slot rescheduled successfully";
@@ -266,6 +268,7 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
                 counsellorSlot.setIsActive(Boolean.FALSE);
                 counsellorSlot.setIsDeleted(Boolean.TRUE);
                 counsellorSlot.setSlotStatus(SlotStatus.DELETED);
+                counsellorSlot.setSearchKey(getCounsellorSearchKey(counsellorSlot));
                 counsellorSlotRepo.save(counsellorSlot);
             }
         } else {
@@ -273,5 +276,38 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
         }
         return "slot canceled successfully";
     }
+
+    public String getCounsellorSearchKey(CounsellorSlot counsellorSlot) {
+        String searchKey = "";
+        if (counsellorSlot.getStartTime() != null) {
+            searchKey = searchKey + " " + counsellorSlot.getStartTime();
+        }
+        if (counsellorSlot.getEndTime() != null) {
+            searchKey = searchKey + " " + counsellorSlot.getEndTime();
+        }
+        if (counsellorSlot.getSlotDt() != null) {
+            searchKey = searchKey + " " + counsellorSlot.getSlotDt();
+        }
+        if (counsellorSlot.getSlotShift() != null) {
+            searchKey = searchKey + " " + counsellorSlot.getSlotShift();
+        }
+        if (counsellorSlot.getDays() != null) {
+            searchKey = searchKey + " " + counsellorSlot.getDays();
+        }
+        if (counsellorSlot.getSlotStatus() != null) {
+            searchKey = searchKey + " " + counsellorSlot.getSlotStatus();
+        }
+        if (counsellorSlot.getAppUser() != null) {
+            searchKey = searchKey + " " + counsellorSlot.getAppUser();
+        }
+        if (counsellorSlot.getCounsellor() != null) {
+            searchKey = searchKey + " " + counsellorSlot.getCounsellor();
+        }
+        if (counsellorSlot.getIsActive() != null) {
+            searchKey = searchKey + " " + counsellorSlot.getIsActive();
+        }
+        return searchKey;
+    }
+
 }
 

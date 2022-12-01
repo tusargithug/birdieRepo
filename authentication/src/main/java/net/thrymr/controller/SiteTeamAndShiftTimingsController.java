@@ -71,15 +71,6 @@ public class SiteTeamAndShiftTimingsController {
         return siteTeamAndShiftTimingsService.getAllSitePagination(siteDto);
     }
 
-    @QueryMapping(name = "getAllTeam")
-    public List<Team> getAllTeam(){
-        List<Team> teamList= siteTeamAndShiftTimingsService.getAllTeam();
-        return teamList;
-    }
-    @QueryMapping(name = "getAllSite")
-    public List<Site> getAllSite(){
-        return siteTeamAndShiftTimingsService.getAllSite();
-    }
 
     @QueryMapping(name = "getAllShiftTimings")
     public List<ShiftTimings> getAllShiftTimings(){

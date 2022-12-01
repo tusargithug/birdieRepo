@@ -76,7 +76,7 @@ public class MoodSourceServiceImpl implements MoodSourceService {
                     mtMoodSourceList.add(mtMoodSource);
                     mtMoodSourceList = moodSourceRepo.saveAll(mtMoodSourceList);
                 } catch (Exception e) {
-                    logger.error("Exception{} " , e);
+                    logger.error("Exception{} ", e);
                     return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_SOURCE_IMPORT_FORMAT_FAILED"));
                 }
             }
@@ -186,6 +186,7 @@ public class MoodSourceServiceImpl implements MoodSourceService {
         if (Validator.isValid(request.getDescription())) {
             checkedIn.setDescription(request.getDescription());
         }
+        checkedIn.setSearchKey(getMoodSourceCheckedSearchKey(checkedIn));
         userMoodSourceCheckInRepo.save(checkedIn);
         return "Mood source update successfully";
     }
@@ -195,5 +196,20 @@ public class MoodSourceServiceImpl implements MoodSourceService {
         Optional<MtMoodSource> optionalMtMoodSource = moodSourceRepo.findById(id);
         optionalMtMoodSource.ifPresent(moodSourceRepo::delete);
         return "Source deleted successfully";
+    }
+
+
+    public String getMoodSourceCheckedSearchKey(UserMoodSourceCheckedIn userMoodSourceCheckedIn) {
+        String searchKey = "";
+        if (userMoodSourceCheckedIn.getDescription() != null) {
+            searchKey = searchKey + " " + userMoodSourceCheckedIn.getDescription();
+        }
+        if (userMoodSourceCheckedIn.getIsActive() != null) {
+            searchKey = searchKey + " " + userMoodSourceCheckedIn.getIsActive();
+        }
+        if (userMoodSourceCheckedIn.getAppUser() != null) {
+            searchKey = searchKey + " " + userMoodSourceCheckedIn.getAppUser();
+        }
+        return searchKey;
     }
 }

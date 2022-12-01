@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.thrymr.model.*;
 import net.thrymr.model.master.MtMeditation;
+import net.thrymr.model.master.MtPsychoEducation;
 import net.thrymr.model.master.MtWorksheet;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class PaginationResponse {
     private List<MtWorksheet> worksheetList=new ArrayList<>();
     private Set<Chapter> chapterList= new HashSet<>();
     private List<Unit> unitList = new ArrayList<>();
+    private List<MtPsychoEducation> psychoEducationList = new ArrayList<>();
     private int totalPages=0;
     private Long totalElements=0L;
 }

@@ -49,9 +49,9 @@ input RolesDto{
 input ChapterDto{
     id:Int
     chapterName:String
-    profilePictureId:String
+    profilePicture:String
     isActive:Boolean
-    videoId:String
+    video:String
     unitId:Int
     description:String
     pageNumber:Int
@@ -91,6 +91,7 @@ input SiteDto{
     id:Int
     siteName:String
     cityId:Int
+    cityIdList:[Int]
     countryId:Int
     regionId:Int
     status:Boolean
@@ -116,6 +117,7 @@ input TeamDto {
     shiftStartAt:String
     shiftEndAt:String
     shiftTimings:String
+    siteIds:[Int]
 }
 
 input UnitDto {
