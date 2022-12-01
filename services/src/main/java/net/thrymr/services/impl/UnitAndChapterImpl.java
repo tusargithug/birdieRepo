@@ -13,6 +13,7 @@ import net.thrymr.repository.FileRepo;
 import net.thrymr.repository.UnitRpo;
 import net.thrymr.services.UnitAndChapterServices;
 import net.thrymr.utils.Validator;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,10 +24,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -68,6 +66,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         if (dto.getIsActive() != null && dto.getIsActive().equals(Boolean.TRUE) || dto.getIsActive().equals(Boolean.FALSE)) {
             unit.setIsActive(dto.getIsActive());
         }
+        unit.setSearchKey(getUnitSearchKey(unit));
         return unit;
     }
 
@@ -112,6 +111,12 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
             if (unitDto.getChapterCount() != null) {
                 Predicate chapters = criteriaBuilder.and(root.get("chapters").in(unitDto.getChapterCount()));
                 addUnitPredicate.add(chapters);
+            }
+            if (Validator.isValid(unitDto.getSearchKey())) {
+                Predicate searchPredicate = criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get("searchKey")),
+                        "%" + unitDto.getSearchKey().toLowerCase() + "%");
+                addUnitPredicate.add(searchPredicate);
             }
             return criteriaBuilder.and(addUnitPredicate.toArray(new Predicate[0]));
         });
@@ -254,6 +259,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         if (dto.getIsActive() != null && dto.getIsActive().equals(Boolean.TRUE)) {
             unit.setIsActive(dto.getIsActive());
         }
+        unit.setSearchKey(getUnitSearchKey(unit));
         return unit;
     }
 

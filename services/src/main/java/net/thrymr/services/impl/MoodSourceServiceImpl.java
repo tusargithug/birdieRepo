@@ -3,14 +3,12 @@ package net.thrymr.services.impl;
 import net.thrymr.dto.MoodSourceDto;
 import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
 import net.thrymr.enums.Category;
-import net.thrymr.model.AppUser;
 import net.thrymr.model.UserMoodSourceCheckedIn;
 import net.thrymr.model.master.MtMoodSource;
 import net.thrymr.repository.MoodSourceRepo;
 import net.thrymr.repository.UserMoodSourceCheckInRepo;
 import net.thrymr.services.MoodSourceService;
 import net.thrymr.utils.ApiResponse;
-import net.thrymr.utils.CommonUtil;
 import net.thrymr.utils.Validator;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.util.NumberToTextConverter;
@@ -78,7 +76,7 @@ public class MoodSourceServiceImpl implements MoodSourceService {
                     mtMoodSourceList.add(mtMoodSource);
                     mtMoodSourceList = moodSourceRepo.saveAll(mtMoodSourceList);
                 } catch (Exception e) {
-                    logger.error("Exception{} " , e);
+                    logger.error("Exception{} ", e);
                     return new ApiResponse(HttpStatus.BAD_REQUEST, environment.getProperty("MOOD_SOURCE_IMPORT_FORMAT_FAILED"));
                 }
             }
@@ -188,6 +186,7 @@ public class MoodSourceServiceImpl implements MoodSourceService {
         if (Validator.isValid(request.getDescription())) {
             checkedIn.setDescription(request.getDescription());
         }
+        checkedIn.setSearchKey(getMoodSourceCheckedSearchKey(checkedIn));
         userMoodSourceCheckInRepo.save(checkedIn);
         return "Mood source update successfully";
     }
@@ -197,5 +196,20 @@ public class MoodSourceServiceImpl implements MoodSourceService {
         Optional<MtMoodSource> optionalMtMoodSource = moodSourceRepo.findById(id);
         optionalMtMoodSource.ifPresent(moodSourceRepo::delete);
         return "Source deleted successfully";
+    }
+
+
+    public String getMoodSourceCheckedSearchKey(UserMoodSourceCheckedIn userMoodSourceCheckedIn) {
+        String searchKey = "";
+        if (userMoodSourceCheckedIn.getDescription() != null) {
+            searchKey = searchKey + " " + userMoodSourceCheckedIn.getDescription();
+        }
+        if (userMoodSourceCheckedIn.getIsActive() != null) {
+            searchKey = searchKey + " " + userMoodSourceCheckedIn.getIsActive();
+        }
+        if (userMoodSourceCheckedIn.getAppUser() != null) {
+            searchKey = searchKey + " " + userMoodSourceCheckedIn.getAppUser();
+        }
+        return searchKey;
     }
 }

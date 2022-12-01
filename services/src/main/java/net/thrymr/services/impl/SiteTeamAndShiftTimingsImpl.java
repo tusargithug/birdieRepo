@@ -59,7 +59,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         team.setTeamName(teamDto.getTeamName());
         team.setShiftStartAt(DateUtils.toStringToLocalTime(teamDto.getShiftStartAt(), Constants.TIME_FORMAT_12_HOURS));
         team.setShiftEndAt(DateUtils.toStringToLocalTime(teamDto.getShiftEndAt(), Constants.TIME_FORMAT_12_HOURS));
-        team.setShiftTimings(teamDto.getShiftStartAt()+" - "+teamDto.getShiftEndAt());
+        team.setShiftTimings(teamDto.getShiftStartAt() + " - " + teamDto.getShiftEndAt());
         //Site
         if (teamDto.getSiteId() != null && siteRepo.existsById(teamDto.getSiteId())) {
             Optional<Site> optionalSite = siteRepo.findById(teamDto.getSiteId());
@@ -76,12 +76,12 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
 
     @Override
     public String updateTeam(TeamDto teamDto) {
-        Team team=null;
-        if(Validator.isValid(teamDto.getId())) {
+        Team team = null;
+        if (Validator.isValid(teamDto.getId())) {
             Optional<Team> teamId = teamRepo.findById(teamDto.getId());
             if (teamId.isPresent()) {
                 team = teamId.get();
-                if(Validator.isValid(teamDto.getTeamId())){
+                if (Validator.isValid(teamDto.getTeamId())) {
                     team.setTeamId(teamDto.getTeamId());
                 }
                 if (Validator.isValid(teamDto.getTeamName())) {
@@ -121,6 +121,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                 team = teamId.get();
                 team.setIsActive(Boolean.FALSE);
                 team.setIsDeleted(Boolean.TRUE);
+                team.setSearchKey(getTeamSearchKey(team));
                 teamRepo.save(team);
             }
             return "delete records successfully";
@@ -153,7 +154,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         if (siteDto.getStatus() != null && siteDto.getStatus().equals(Boolean.TRUE)) {
             site.setIsActive(siteDto.getStatus());
         }
-        site.setSearchKey(saveSiteSearchKey(site));
+        site.setSearchKey(getSiteSearchKey(site));
         siteRepo.save(site);
         return "site save successfully";
     }
@@ -191,7 +192,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             if (siteDto.getStatus().equals(Boolean.TRUE) || siteDto.getStatus().equals(Boolean.FALSE)) {
                 site.setIsActive(siteDto.getStatus());
             }
-
+            site.setSearchKey(getSiteSearchKey(site));
             siteRepo.save(site);
             return "site update successfully";
         }
@@ -313,6 +314,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         if (shiftTimingsDto.getStatus() != null && shiftTimingsDto.getStatus().equals(Boolean.TRUE)) {
             shiftTimings.setIsActive(shiftTimingsDto.getStatus());
         }
+        shiftTimings.setSearchKey(getSiteSearchKey(shiftTimings));
         shiftTimingsRepo.save(shiftTimings);
         return "shift timings save successfully";
     }
@@ -340,6 +342,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                 if (shiftTimingsDto.getStatus() != null && shiftTimingsDto.getStatus().equals(Boolean.TRUE) || shiftTimingsDto.getStatus().equals(Boolean.FALSE)) {
                     shiftTimings.setIsActive(shiftTimingsDto.getStatus());
                 }
+                shiftTimings.setSearchKey(getSiteSearchKey(shiftTimings));
                 shiftTimingsRepo.save(shiftTimings);
                 return "shift timings update successfully";
             }
@@ -355,6 +358,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             shiftTimings = shiftTimingsId.get();
             shiftTimings.setIsActive(Boolean.FALSE);
             shiftTimings.setIsDeleted(Boolean.TRUE);
+            shiftTimings.setSearchKey(getSiteSearchKey(shiftTimings));
             shiftTimingsRepo.save(shiftTimings);
             return "delete record successfully";
         }
@@ -391,8 +395,8 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                 Predicate isActive = criteriaBuilder.and(root.get("isActive").in(teamDto.getStatus()));
                 addTeamSpecification.add(isActive);
             }
-            if (Validator.isValid(teamDto.getSiteId())) {
-                Predicate shiftTimings = criteriaBuilder.and(root.get("site").in(teamDto.getSiteId()));
+            if (Validator.isValid(teamDto.getSiteIds())) {
+                Predicate shiftTimings = criteriaBuilder.and(root.get("site").in(teamDto.getSiteIds()));
                 addTeamSpecification.add(shiftTimings);
             }
             if (Validator.isValid(teamDto.getShiftTimings())) {
@@ -420,23 +424,6 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     }
 
 
-    public String getTeamSearchKey(Team team) {
-        String searchKey = "";
-        if (team.getSite() != null) {
-            searchKey = searchKey + " " + team.getSite();
-        }
-        if (team.getTeamId() != null) {
-            searchKey = searchKey + " " + team.getTeamId();
-        }
-        if (team.getTeamName() != null) {
-            searchKey = searchKey + " " + team.getTeamName();
-        }
-        if (team.getShiftTimings() != null) {
-            searchKey = searchKey + " " + team.getShiftTimings();
-        }
-        return searchKey;
-    }
-
     public String saveSiteSearchKey(Site site) {
         String searchKey = "";
         if (site.getRegion() != null) {
@@ -460,11 +447,84 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     @Override
     public List<AppUser> getAllAppUserByAlerts(AppUserDto request) {
         List<AppUser> appUserList = appUserRepo.findAll();
-        if (request.getIsTeamLeader()!= null && request.getIsTeamLeader().equals(Boolean.TRUE)  ) {
+        if (request.getIsTeamLeader() != null && request.getIsTeamLeader().equals(Boolean.TRUE)) {
             return appUserList.stream().filter(appUser -> appUser.getRoles().equals(Roles.TEAM_MANAGER) && appUser.getAlerts().equals(Alerts.RED_ALERT)).collect(Collectors.toList());
         }
 
         return new ArrayList<>();
     }
-}
 
+    public String getTeamSearchKey(Team team) {
+        String searchKey = "";
+        if (team.getTeamId() != null) {
+            searchKey = searchKey + " " + team.getTeamId();
+        }
+        if (team.getTeamName() != null) {
+            searchKey = searchKey + " " + team.getTeamName();
+        }
+        if (team.getSite() != null) {
+            searchKey = searchKey + " " + team.getSite();
+        }
+        if (team.getShiftStartAt() != null) {
+            searchKey = searchKey + " " + team.getShiftStartAt();
+        }
+        if (team.getShiftEndAt() != null) {
+            searchKey = searchKey + " " + team.getShiftEndAt();
+        }
+        if (team.getShiftTimings() != null) {
+            searchKey = searchKey + " " + team.getShiftTimings();
+        }
+        if (team.getIsActive() != null) {
+            searchKey = searchKey + " " + team.getIsActive();
+        }
+        return searchKey;
+    }
+
+    public String getSiteSearchKey(Site site) {
+        String searchKey = "";
+        if (site.getSiteId() != null) {
+            searchKey = searchKey + " " + site.getSiteId();
+        }
+        if (site.getSiteName() != null) {
+            searchKey = searchKey + " " + site.getSiteName();
+        }
+        if (site.getCity() != null) {
+            searchKey = searchKey + " " + site.getCity();
+        }
+        if (site.getCountry() != null) {
+            searchKey = searchKey + " " + site.getCountry();
+        }
+        if (site.getRegion() != null) {
+            searchKey = searchKey + " " + site.getRegion();
+        }
+        if (site.getIsActive() != null) {
+            searchKey = searchKey + " " + site.getIsActive();
+        }
+        return searchKey;
+    }
+
+    public String getSiteSearchKey(ShiftTimings shiftTimings) {
+        String searchKey = "";
+        if (shiftTimings.getShiftName() != null) {
+            searchKey = searchKey + " " + shiftTimings.getShiftName();
+        }
+        if (shiftTimings.getShiftStatAt() != null) {
+            searchKey = searchKey + " " + shiftTimings.getShiftStatAt();
+        }
+        if (shiftTimings.getShiftEndAt() != null) {
+            searchKey = searchKey + " " + shiftTimings.getShiftEndAt();
+        }
+        if (shiftTimings.getCounsellors() != null) {
+            searchKey = searchKey + " " + shiftTimings.getCounsellors();
+        }
+        if (shiftTimings.getSite() != null) {
+            searchKey = searchKey + " " + shiftTimings.getSite();
+        }
+        if (shiftTimings.getIsActive() != null) {
+            searchKey = searchKey + " " + shiftTimings.getIsActive();
+        }
+        return searchKey;
+    }
+
+
+}

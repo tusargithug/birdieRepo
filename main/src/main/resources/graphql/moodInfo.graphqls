@@ -466,6 +466,7 @@ input MiniSessionDto {
     pageNumber:Int
     pageSize:Int
     sortMiniSessionName:Boolean
+    searchKey:String
 }
 input MoodInfoDto{
     id:Int

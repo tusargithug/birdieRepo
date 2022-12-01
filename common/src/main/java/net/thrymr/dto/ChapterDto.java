@@ -11,8 +11,8 @@ public class ChapterDto {
     private Long id;
     private String chapterName;
     private String description;
-    private Long questionId;
     private Boolean isActive;
+    private Long questionId;
     private Long unitId;
     private Integer pageNumber;
     private Integer pageSize;

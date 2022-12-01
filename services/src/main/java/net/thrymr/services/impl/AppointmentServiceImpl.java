@@ -57,7 +57,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                 appointment.setDays(DayOfWeek.valueOf(detailsDto.getDayOfWeek()));
                 appointment.setSlotStatus(SlotStatus.valueOf(detailsDto.getSlotStatus()));
                 appointment.setSlotShift(SlotShift.getType(detailsDto.getSlotShift()));
-                if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE)) {
+                if (request.getIsActive() != null && request.getIsActive().equals(Boolean.TRUE)) {
                     appointment.setIsActive(detailsDto.getIsActive());
                 }
                 Date todayDate = new Date();
@@ -108,7 +108,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                         appointment.setCounsellor(optionalCounsellorSlot.get());
                     }
                 }
-
+                appointment.setSearchKey(getUserAppointmentSearchKey(appointment));
                 userAppointments.add(appointment);
 
             }
@@ -162,7 +162,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                         userAppointment.setDays(DayOfWeek.valueOf(detailsDto.getDayOfWeek()));
                         userAppointment.setSlotStatus(SlotStatus.valueOf(detailsDto.getSlotStatus()));
                         userAppointment.setSlotShift(SlotShift.getType(detailsDto.getSlotShift()));
-                        if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
+                        if (request.getIsActive() != null && request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
                             userAppointment.setIsActive(detailsDto.getIsActive());
                         }
                         Date todayDate = new Date();
@@ -195,7 +195,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                                 userAppointment.setCounsellor(optionalCounsellor.get());
                             }
                         }
-
+                        userAppointment.setSearchKey(getUserAppointmentSearchKey(userAppointment));
                         userAppointmentList.add(userAppointment);
                     }
                     appointmentRepo.saveAll(userAppointmentList);
@@ -213,4 +213,41 @@ public class AppointmentServiceImpl implements AppointmentService {
         List<UserAppointment> userAppointmentList = appointmentRepo.findAll();
         return userAppointmentList.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
     }
+
+    public String getUserAppointmentSearchKey(UserAppointment userAppointment) {
+        String searchKey = "";
+        if (userAppointment.getStartTime() != null) {
+            searchKey = searchKey + " " + userAppointment.getStartTime();
+        }
+        if (userAppointment.getEndTime() != null) {
+            searchKey = searchKey + " " + userAppointment.getEndTime();
+        }
+        if (userAppointment.getSlotDate() != null) {
+            searchKey = searchKey + " " + userAppointment.getSlotDate();
+        }
+        if (userAppointment.getSlotShift() != null) {
+            searchKey = searchKey + " " + userAppointment.getSlotShift();
+        }
+        if (userAppointment.getDays() != null) {
+            searchKey = searchKey + " " + userAppointment.getDays();
+        }
+        if (userAppointment.getSlotStatus() != null) {
+            searchKey = searchKey + " " + userAppointment.getSlotStatus();
+        }
+        if (userAppointment.getIsCurrentAppointment() != null) {
+            searchKey = searchKey + " " + userAppointment.getIsCurrentAppointment();
+        }
+        if (userAppointment.getIsActive() != null) {
+            searchKey = searchKey + " " + userAppointment.getIsActive();
+        }
+        if (userAppointment.getAppUser() != null) {
+            searchKey = searchKey + " " + userAppointment.getAppUser();
+        }
+        if (userAppointment.getCounsellor() != null) {
+            searchKey = searchKey + " " + userAppointment.getCounsellor();
+        }
+        return searchKey;
+    }
+
+
 }
