@@ -1,6 +1,7 @@
 package net.thrymr.services;
 
 import net.thrymr.dto.PsychoEducationDto;
+import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.model.master.MtPsychoEducation;
 import org.springframework.data.domain.Page;
 
@@ -18,5 +19,5 @@ public interface PsychoEducationService {
 
     String deletePsychoEducationById(Long id);
 
-    Page<MtPsychoEducation> getPaginationPsychoEducation(PsychoEducationDto request);
+    PaginationResponse getPsychoEducationPagination(PsychoEducationDto request);
 }

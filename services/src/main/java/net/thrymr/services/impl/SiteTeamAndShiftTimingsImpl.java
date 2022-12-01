@@ -111,14 +111,6 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         return "this id not in database";
     }
 
-    @Override
-    public List<Team> getAllTeam() {
-        List<Team> teamList = teamRepo.findAll();
-        if (!teamList.isEmpty()) {
-            return teamList.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
-        }
-        return new ArrayList<>();
-    }
 
     @Override
     public String deleteTeamById(Long id) {
@@ -208,15 +200,6 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     }
 
     @Override
-    public List<Site> getAllSite() {
-        List<Site> siteList = siteRepo.findAll();
-        if (!siteList.isEmpty()) {
-            return siteList.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
-        }
-        return new ArrayList<>();
-    }
-
-    @Override
     public PaginationResponse getAllSitePagination(SiteDto siteDto) {
         Pageable pageable = null;
         if (siteDto.getPageSize() != null && siteDto.getPageNumber() != null) {
@@ -244,8 +227,8 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                 Predicate isActive = criteriaBuilder.and(root.get("isActive").in(siteDto.getStatus()));
                 addSitePredicate.add(isActive);
             }
-            if (siteDto.getCityId() != null) {
-                Predicate city = criteriaBuilder.and(root.get("city").in(siteDto.getCityId()));
+            if (siteDto.getCityIdList() != null) {
+                Predicate city = criteriaBuilder.and(root.get("city").in(siteDto.getCityIdList()));
                 addSitePredicate.add(city);
             }
             if (siteDto.getCountry() != null) {
@@ -264,13 +247,18 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             }
             return criteriaBuilder.and(addSitePredicate.toArray(new Predicate[0]));
         });
-        Page<Site> siteObjective = siteRepo.findAll(siteSpecification, pageable);
-        System.out.println(siteObjective.getContent());
-        if (siteObjective.getContent() != null) {
-            PaginationResponse paginationResponse=new PaginationResponse();
-            paginationResponse.setSiteList(siteObjective.getContent());
-            paginationResponse.setTotalPages(siteObjective.getTotalPages());
-            paginationResponse.setTotalElements(siteObjective.getTotalElements());
+        PaginationResponse paginationResponse = new PaginationResponse();
+        if (siteDto.getPageSize() != null && siteDto.getPageNumber() != null) {
+            Page<Site> siteObjective = siteRepo.findAll(siteSpecification, pageable);
+            if (siteObjective.getContent() != null) {
+                paginationResponse.setSiteList(siteObjective.getContent());
+                paginationResponse.setTotalPages(siteObjective.getTotalPages());
+                paginationResponse.setTotalElements(siteObjective.getTotalElements());
+                return paginationResponse;
+            }
+        }else {
+            List<Site> siteList = siteRepo.findAll(siteSpecification);
+            paginationResponse.setSiteList(siteList);
             return paginationResponse;
         }
         return new PaginationResponse();
@@ -452,7 +440,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     public String saveSiteSearchKey(Site site) {
         String searchKey = "";
         if (site.getRegion() != null) {
-            searchKey = searchKey + " " + site.getRegion();
+            searchKey = searchKey + " " + site.getRegion().getRegionName();
         }
         if (site.getSiteId() != null) {
             searchKey = searchKey + " " + site.getSiteId();
@@ -461,9 +449,11 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             searchKey = searchKey + " " + site.getSiteName();
         }
         if (site.getCity() != null) {
-            searchKey = searchKey + " " + site.getCity();
+            searchKey = searchKey + " " + site.getCity().getCityName();
         }
-
+        if(site.getCountry() != null) {
+            searchKey = searchKey + " " + site.getCountry().getCountryName();
+        }
         return searchKey;
     }
 

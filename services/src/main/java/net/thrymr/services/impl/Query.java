@@ -169,22 +169,6 @@ public class Query implements GraphQLQueryResolver {
         return regionList;
     }
 
-    /*@QueryMapping("getAllTeam")
-    public List<Team> getAllTeam(TeamDto teamdto){
-        List<Team> teamList= siteTeamAndShiftTimingsService.getAllTeam(teamdto);
-        return teamList;
-    }*/
-    @QueryMapping("getAllTeam")
-    public List<Team> getAllTeam() {
-        //List<Team> teamList= siteTeamAndShiftTimingsService.getAllTeam();
-        return siteTeamAndShiftTimingsService.getAllTeam();
-    }
-
-    @QueryMapping("getAllSite")
-    public List<Site> getAllSite() {
-        return siteTeamAndShiftTimingsService.getAllSite();
-    }
-
     @QueryMapping("getAllUnit")
     public List<Unit> getAllUnit() {
         List<Unit> unitList = unitAndChapterServices.getAllUnit();
@@ -392,8 +376,8 @@ public class Query implements GraphQLQueryResolver {
     }
 
     @QueryMapping(name = "getPaginationPsychoEducation")
-    public Page<MtPsychoEducation> getPaginationPsychoEducation(@Argument(name = "input") PsychoEducationDto request) {
-        return psychoEducationService.getPaginationPsychoEducation(request);
+    public PaginationResponse getPsychoEducationPagination(@Argument(name = "input") PsychoEducationDto request) {
+        return psychoEducationService.getPsychoEducationPagination(request);
     }
 
     @QueryMapping("getAllMeditation")

@@ -91,6 +91,7 @@ input SiteDto{
     id:Int
     siteName:String
     cityId:Int
+    cityIdList:[Int]
     countryId:Int
     regionId:Int
     status:Boolean

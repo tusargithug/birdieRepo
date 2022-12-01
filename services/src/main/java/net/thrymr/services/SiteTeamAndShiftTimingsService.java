@@ -15,15 +15,11 @@ public interface SiteTeamAndShiftTimingsService {
 
     String updateTeam(TeamDto teamDto);
 
-    List<Team> getAllTeam();
-
     String deleteTeamById(Long id);
 
     String saveSite(SiteDto siteDto);
 
     String updateSite(SiteDto siteDto);
-
-    List<Site> getAllSite();
 
     String deleteSiteById(Long id);
 
