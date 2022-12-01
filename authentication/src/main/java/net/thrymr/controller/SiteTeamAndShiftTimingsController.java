@@ -8,7 +8,6 @@ import net.thrymr.model.Site;
 import net.thrymr.model.Team;
 import net.thrymr.services.SiteTeamAndShiftTimingsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -78,9 +77,14 @@ public class SiteTeamAndShiftTimingsController {
         return siteTeamAndShiftTimingsService.getAllShiftTimings();
     }
 
-    @QueryMapping(name="getAllAppUserByAlerts")
-    public List<AppUser> getAllAppUserByAlerts(@Argument(name = "input") AppUserDto request)  {
-        return siteTeamAndShiftTimingsService.getAllAppUserByAlerts(request);
+    @QueryMapping(name="getAllAppUserByRoles")
+    public List<AppUser> getAllAppUserByRoles(@Argument(name = "input") AppUserDto request)  {
+        return siteTeamAndShiftTimingsService.getAllAppUserByRoles(request);
+    }
+
+    @QueryMapping(name="previewAlertNotification")
+    public RoleWiseCountResponse previewAlertNotification(@Argument(name = "input") AppUserDto request)  {
+        return siteTeamAndShiftTimingsService.previewAlertNotification(request);
     }
 
 }

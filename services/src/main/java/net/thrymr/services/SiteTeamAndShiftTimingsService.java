@@ -6,7 +6,6 @@ import net.thrymr.model.AppUser;
 import net.thrymr.model.ShiftTimings;
 import net.thrymr.model.Site;
 import net.thrymr.model.Team;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -36,4 +35,8 @@ public interface SiteTeamAndShiftTimingsService {
     List<ShiftTimings> getAllShiftTimings();
 
     List<AppUser> getAllAppUserByAlerts(AppUserDto request);
+
+    List<AppUser> getAllAppUserByRoles(AppUserDto request);
+
+    RoleWiseCountResponse previewAlertNotification(AppUserDto request);
 }

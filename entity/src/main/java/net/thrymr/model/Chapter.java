@@ -9,7 +9,6 @@ import net.thrymr.model.master.MtQuestion;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Calendar;
 
 @Getter
 @Setter
@@ -25,6 +24,7 @@ public class Chapter extends  BaseEntity {
     @Column(name = "description",columnDefinition = "TEXT")
     private String description;
 
+    @JoinColumn(name = "video_token", unique = true)
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private FileEntity video;
 

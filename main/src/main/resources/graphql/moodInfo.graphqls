@@ -59,12 +59,13 @@ type Query {
     getPsychoEducationPagination(input:PsychoEducationDto):PaginationResponse
     getAllMeditation:[MtMeditation]
     getMeditationById(id:ID!):MtMeditation
-    getAllAppUserByAlerts(input:AppUserDto):[AppUser]
+    getAllAppUserByRoles(input:AppUserDto):[AppUser]
     getAllAppUserPagination(input:AppUserDto):PaginationResponse
     getAllMeditationPagination(input:MeditationDto):PaginationResponse
     getAllWorkSheetPagination(input:WorksheetDto):PaginationResponse
     getAllChapterPagination(input:ChapterDto):PaginationResponse
 #    getAllMoodIntensitiesByMoodInfoId(id:ID!):[MtMoodIntensity]
+    previewAlertNotification(input:AppUserDto):RoleWiseCountResponse
 }
 
 type Mutation {
@@ -109,7 +110,7 @@ type Mutation {
     updateCityById(input:CityDto):String!
     deleteCityById(id:ID):String!
     saveRegion(input:RegionDto):String!
-    #uploadRegionData(file:Upload):String!
+    #uploadRegionData(file:Upload!):String!
     updateRegionById(input:RegionDto):String!
     deleteRegionById(id:ID):String!
     createCounsellorSlot(input:TimeSlotDto):String!
@@ -144,6 +145,7 @@ type Mutation {
     updateGroupById(input:GroupsDto):String!
     saveGroupDetails(input:GroupsDto):String!
     saveFileDetails(input:FileDetailsDto):String!
+    uploadFile(file: Upload): String!
     createWorksheet(input:WorksheetDto):String!
     updateWorksheetById(input:WorksheetDto):String!
     deleteWorksheetById(id:ID!):String!
@@ -190,27 +192,33 @@ type UserAppointmentResponse{
 }
 
 input AppUserDto{
-    id:Int
-    email:String
-    userName:String
-    mobile:String
-    password:String
-    searchKey:String
-    isActive:Boolean
-    empId:String
-    roles:String
-    siteId:Int
-    dateOfJoining:String
-    alerts:Alerts
-    pageSize:Int
-    pageNumber:Int
-    addedOn:String
-    countryCode:String
-    gender:String
+     id:Int
+     email:String
+     userName:String
+     mobile:String
+     password:String
+#     searchKey:String
+     isActive:Boolean
+     empId:String
+     roles:String
+     siteId:Int
+     dateOfJoining:String
+     alerts:String
+     pageSize:Int
+     pageNumber:Int
+     addedOn:String
+     countryCode:String
+     gender:String
+#     isTeamLeader:Boolean
+     shiftStartAt:String
+     shiftEndAt:String
     isTeamLeader:Boolean
-    shiftStartAt:String
-    shiftEndAt:String
+    teamManagerIds:[ID]
+    teamLeaderIds:[ID]
     sortUserName:Boolean
+    pictureId:String
+    searchKey:String
+    teamId:Int
 }
 enum Roles{
     NONE
@@ -222,7 +230,6 @@ enum Roles{
     DIRECTOR
     TEAM_MANAGER
     TEAM_LEADER
-    OP_STREAM
     SITE_MANAGER
 }
 
@@ -244,6 +251,8 @@ type AppUser{
     shiftStartAt:LocalTime
     shiftEndAt:LocalTime
     shiftTimings:String
+    uploadPicture:FileEntity
+    searchKey:String
 }
 
 type FileEntity{
@@ -458,6 +467,14 @@ input FileDetailsDto{
     groupId:Int
 }
 
+type RoleWiseCountResponse{
+    teamLeaderCount:Int
+    teamManagerCount:Int
+    directorCount:Int
+    seniorManagerCount:Int
+    accountManagerCount:Int
+    generalManagerCount:Int
+}
 input MiniSessionDto {
     id:Int
     tags:[String]

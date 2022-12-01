@@ -10,7 +10,6 @@ import net.thrymr.services.AssessmentService;
 import net.thrymr.services.RoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.graphql.data.method.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 import java.text.ParseException;

@@ -41,6 +41,7 @@ public class CategoryServiceImpl implements CategoryService {
         if (request.getIsActive() != null && request.getIsActive().equals(Boolean.TRUE)) {
             category.setIsActive(request.getIsActive());
         }
+        category.setSearchKey(getAppUserSearchKey(category));
         categoryRepo.save(category);
         return "Course Created successfully";
     }
@@ -73,6 +74,22 @@ public class CategoryServiceImpl implements CategoryService {
         return "update category successfully";
     }
 
+    public String getAppUserSearchKey(Category category) {
+        String searchKey = "";
+        if (category.getName() != null) {
+            searchKey = searchKey + " " + category.getName();
+        }
+        if (category.getDescription() != null) {
+            searchKey = searchKey + " " + category.getDescription();
+        }
+        if (category.getCourses() != null) {
+            searchKey = searchKey + " " + category.getCourses();
+        }
+        if (category.getSequence() != null) {
+            searchKey = searchKey + " " + category.getSequence();
+        }
+        return searchKey;
+    }
     @Override
     public List<Category> getAllCategory() {
         List<Category> categoryList = categoryRepo.findAll();

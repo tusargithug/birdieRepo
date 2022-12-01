@@ -8,7 +8,6 @@ import net.thrymr.enums.TagType;
 import net.thrymr.model.GroupDetails;
 import net.thrymr.model.Groups;
 import net.thrymr.model.MiniSession;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
 

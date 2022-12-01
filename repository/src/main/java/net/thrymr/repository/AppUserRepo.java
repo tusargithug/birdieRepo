@@ -19,4 +19,6 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> , JpaSpecifica
 	Optional<AppUser> findByEmail(String email);
 
 	List<AppUser> findAllByAlertsAndRolesIn(Alerts alert, List<Roles> appUserList);
+
+    List<AppUser> findAllByRolesIn(List<Long> teamLeaderIds);
 }

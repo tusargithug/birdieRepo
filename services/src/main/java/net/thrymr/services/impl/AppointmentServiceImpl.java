@@ -57,7 +57,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                 appointment.setDays(DayOfWeek.valueOf(detailsDto.getDayOfWeek()));
                 appointment.setSlotStatus(SlotStatus.valueOf(detailsDto.getSlotStatus()));
                 appointment.setSlotShift(SlotShift.getType(detailsDto.getSlotShift()));
-                if (request.getIsActive() != null && request.getIsActive().equals(Boolean.TRUE)) {
+                if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE)) {
                     appointment.setIsActive(detailsDto.getIsActive());
                 }
                 Date todayDate = new Date();

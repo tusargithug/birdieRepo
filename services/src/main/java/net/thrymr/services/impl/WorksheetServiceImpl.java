@@ -2,14 +2,11 @@ package net.thrymr.services.impl;
 import net.thrymr.dto.WorksheetDto;
 import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.model.FileEntity;
-import net.thrymr.model.master.MtMeditation;
 import net.thrymr.model.master.MtWorksheet;
-import net.thrymr.repository.FileRepo;
 import net.thrymr.repository.WorksheetRepo;
 import net.thrymr.services.WorksheetService;
 import net.thrymr.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,10 +14,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.Join;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import java.util.stream.Collectors;
 
@@ -28,9 +25,7 @@ import java.util.stream.Collectors;
 public class WorksheetServiceImpl implements WorksheetService {
 
     @Autowired
-    WorksheetRepo worksheetRepo;
-    @Autowired
-    FileRepo fileRepo;
+    private WorksheetRepo worksheetRepo;
 
 
     @Override
@@ -78,12 +73,6 @@ public class WorksheetServiceImpl implements WorksheetService {
                 }
                 if (request.getIsActive() != null) {
                     mtWorksheet.setIsActive(request.getIsActive());
-                }
-                if (Validator.isValid(request.getFileId())) {
-                    Optional<FileEntity> fileEntity = fileRepo.findByFileId(request.getFileId());
-                    if (fileEntity.isPresent()) {
-                        mtWorksheet.setFile(fileEntity.get());
-                    }
                 }
                 worksheetRepo.save(mtWorksheet);
                 return "Worksheet updated successfully";
@@ -162,12 +151,21 @@ public class WorksheetServiceImpl implements WorksheetService {
         mtWorksheet.setName(request.getName());
         mtWorksheet.setDescription(request.getDescription());
         mtWorksheet.setIsActive(request.getIsActive());
-        if (Validator.isValid(request.getFileId())) {
-            Optional<FileEntity> fileEntity = fileRepo.findByFileId(request.getFileId());
-            if (fileEntity.isPresent()) {
-                mtWorksheet.setFile(fileEntity.get());
-            }
-        }
+
         return mtWorksheet;
+    }
+
+    public String getAppUserSearchKey(MtWorksheet worksheet) {
+        String searchKey = "";
+        if (worksheet.getName() != null) {
+            searchKey = searchKey + " " + worksheet.getName();
+        }
+        if (worksheet.getDescription() != null) {
+            searchKey = searchKey + " " + worksheet.getDescription();
+        }
+        if (worksheet.getFile() != null) {
+            searchKey = searchKey + " " + worksheet.getFile().getFileType();
+        }
+        return searchKey;
     }
 }

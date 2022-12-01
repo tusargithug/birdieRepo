@@ -92,6 +92,7 @@ public class PsychoEducationServiceImpl implements PsychoEducationService {
                         mtPsychoEducation.setFile(fileEntity.get());
                     }
                 }
+                mtPsychoEducation.setSearchKey(getAppUserSearchKey(mtPsychoEducation));
                 psychoEducationRepo.save(mtPsychoEducation);
                 return "Psycho Education updated successfully";
             }
@@ -173,7 +174,21 @@ public class PsychoEducationServiceImpl implements PsychoEducationService {
                 mtPsychoEducation.setFile(fileEntity.get());
             }
         }
-
+        mtPsychoEducation.setSearchKey(getAppUserSearchKey(mtPsychoEducation));
         return mtPsychoEducation;
+    }
+
+    public String getAppUserSearchKey(MtPsychoEducation psychoEducation) {
+        String searchKey = "";
+        if (psychoEducation.getName() != null) {
+            searchKey = searchKey + " " + psychoEducation.getName();
+        }
+        if (psychoEducation.getDescription() != null) {
+            searchKey = searchKey + " " + psychoEducation.getDescription();
+        }
+        if (psychoEducation.getFile() != null) {
+            searchKey = searchKey + " " + psychoEducation.getFile();
+        }
+        return searchKey;
     }
 }
