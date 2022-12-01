@@ -507,7 +507,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     public List<AppUser> getAllAppUserByRoles(AppUserDto request) {
         Specification<AppUser> appUserSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> addVendorPredicate = new ArrayList<>();
-            if (request.getSearchKey() != null && request.getSearchKey().isEmpty()) {
+            if (request.getSearchKey() != null && !request.getSearchKey().isEmpty()) {
                 Predicate searchPredicate = criteriaBuilder.like(
                         criteriaBuilder.lower(root.get("searchKey")),
                         "%" + request.getSearchKey().toLowerCase() + "%");
@@ -516,23 +516,23 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             return criteriaBuilder.and(addVendorPredicate.toArray(new Predicate[0]));
         });
         List<AppUser> appUserList = appUserRepo.findAll(appUserSpecification);
-        if (Validator.isValid(request.getRoles()) && request.getRoles().equals(Roles.TEAM_LEADER.name())) {
-            return appUserList.stream().filter(appUser -> appUser.getRoles().equals(Roles.TEAM_LEADER)).collect(Collectors.toList());
+        if (Validator.isValid(request.getRoles()) && Roles.roles(request.getRoles()).equals(Roles.TEAM_LEADER)) {
+            return appUserList.stream().filter(appUser -> (appUser.getRoles()!=null && appUser.getRoles().equals(Roles.TEAM_LEADER))).collect(Collectors.toList());
         }
-        if (Validator.isValid(request.getRoles()) && request.getRoles().equals(Roles.TEAM_MANAGER.name())) {
-            return appUserList.stream().filter(appUser -> appUser.getRoles().equals(Roles.TEAM_MANAGER)).collect(Collectors.toList());
+        if (Validator.isValid(request.getRoles()) && Roles.roles(request.getRoles()).equals(Roles.TEAM_MANAGER)) {
+            return appUserList.stream().filter(appUser -> (appUser.getRoles()!=null && appUser.getRoles().equals(Roles.TEAM_MANAGER))).collect(Collectors.toList());
         }
-        if (Validator.isValid(request.getRoles()) && request.getRoles().equals(Roles.DIRECTOR.name())) {
-            return appUserList.stream().filter(appUser -> appUser.getRoles().equals(Roles.DIRECTOR)).collect(Collectors.toList());
+        if (Validator.isValid(request.getRoles()) && Roles.roles(request.getRoles()).equals(Roles.DIRECTOR)) {
+            return appUserList.stream().filter(appUser -> (appUser.getRoles()!=null && appUser.getRoles().equals(Roles.DIRECTOR))).collect(Collectors.toList());
         }
-        if (Validator.isValid(request.getRoles()) && request.getRoles().equals(Roles.ACCOUNT_MANAGER.name())) {
-            return appUserList.stream().filter(appUser -> appUser.getRoles().equals(Roles.ACCOUNT_MANAGER)).collect(Collectors.toList());
+        if (Validator.isValid(request.getRoles()) && Roles.roles(request.getRoles()).equals(Roles.ACCOUNT_MANAGER)) {
+            return appUserList.stream().filter(appUser -> (appUser.getRoles()!=null && appUser.getRoles().equals(Roles.ACCOUNT_MANAGER))).collect(Collectors.toList());
         }
-        if (Validator.isValid(request.getRoles()) && request.getRoles().equals(Roles.GENERAL_MANAGER.name())) {
-            return appUserList.stream().filter(appUser -> appUser.getRoles().equals(Roles.GENERAL_MANAGER)).collect(Collectors.toList());
+        if (Validator.isValid(request.getRoles()) && Roles.roles(request.getRoles()).equals(Roles.GENERAL_MANAGER)) {
+            return appUserList.stream().filter(appUser -> (appUser.getRoles()!=null && appUser.getRoles().equals(Roles.GENERAL_MANAGER))).collect(Collectors.toList());
         }
-        if (Validator.isValid(request.getRoles()) && request.getRoles().equals(Roles.SENIOR_MANAGER.name())) {
-            return appUserList.stream().filter(appUser -> appUser.getRoles().equals(Roles.SENIOR_MANAGER)).collect(Collectors.toList());
+        if (Validator.isValid(request.getRoles()) && Roles.roles(request.getRoles()).equals(Roles.SENIOR_MANAGER)) {
+            return appUserList.stream().filter(appUser -> (appUser.getRoles()!=null && appUser.getRoles().equals(Roles.SENIOR_MANAGER))).collect(Collectors.toList());
         }
         return new ArrayList<>();
     }
@@ -635,5 +635,18 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             }
         }
         return new Team();
+    }
+
+    @Override
+    public Site getSiteById(Long id) {
+        Site site = null;
+        if(Validator.isValid(id)){
+            Optional<Site> optionalSite = siteRepo.findById(id);
+            if(optionalSite.isPresent() && optionalSite.get().getIsActive().equals(Boolean.TRUE)){
+                site=optionalSite.get();
+                return site;
+            }
+        }
+        return new Site();
     }
 }

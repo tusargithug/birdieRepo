@@ -4,6 +4,7 @@ import net.thrymr.dto.*;
 import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.model.AppUser;
 import net.thrymr.model.ShiftTimings;
+import net.thrymr.model.Site;
 import net.thrymr.model.Team;
 import net.thrymr.services.SiteTeamAndShiftTimingsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,11 @@ public class SiteTeamAndShiftTimingsController {
     @MutationMapping(name="updateSite")
     public String updateSite(@Argument(name = "input")SiteDto siteDto){
         return siteTeamAndShiftTimingsService.updateSite(siteDto);
+    }
+
+    @QueryMapping(name = "getSiteById")
+    public Site getSiteById(@Argument Long id){
+        return siteTeamAndShiftTimingsService.getSiteById(id);
     }
     @MutationMapping(name="deleteSiteById")
     public String deleteSiteById(@Argument Long id){

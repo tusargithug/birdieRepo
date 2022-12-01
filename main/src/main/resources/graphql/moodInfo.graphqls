@@ -67,6 +67,7 @@ type Query {
 #    getAllMoodIntensitiesByMoodInfoId(id:ID!):[MtMoodIntensity]
     previewAlertNotification(input:AppUserDto):RoleWiseCountResponse
     getTeamById(id:ID):Team
+    getSiteById(id:ID):Site
 }
 
 type Mutation {

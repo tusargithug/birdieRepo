@@ -38,4 +38,6 @@ public interface SiteTeamAndShiftTimingsService {
     RoleWiseCountResponse previewAlertNotification(AppUserDto request);
 
     Team getTeamById(Long id);
+
+    Site getSiteById(Long id);
 }
