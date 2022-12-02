@@ -44,11 +44,4 @@ public class CounsellorSlot extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private AppUser appUser;
 
-//    private final ObjectMapper objectMapper = new ObjectMapper()
-//            .registerModule(new ParameterNamesModule())
-//            .registerModule(new Jdk8Module())
-//            .registerModule(new JavaTimeModule());
-//
-//    CounsellorSlot input = objectMapper
-//            .convertValue(dataFetchingEnvironment.getArgument("input"), CounsellorSlot.class);
 }
