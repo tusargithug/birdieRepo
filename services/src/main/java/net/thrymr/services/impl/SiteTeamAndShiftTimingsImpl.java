@@ -22,6 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
@@ -237,6 +238,8 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                 Predicate region = criteriaBuilder.and(root.get("region").in(siteDto.getRegion()));
                 addSitePredicate.add(region);
             }
+            Predicate isDeletedPredicate = criteriaBuilder.equal(root.get("isDeleted"), Boolean.FALSE);
+            addSitePredicate.add(isDeletedPredicate);
             if (Validator.isValid(siteDto.getSearchKey())) {
                 Predicate searchPredicate = criteriaBuilder.like(
                         criteriaBuilder.lower(root.get("searchKey")),
@@ -249,7 +252,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         if (siteDto.getPageSize() != null && siteDto.getPageNumber() != null) {
             Page<Site> siteObjective = siteRepo.findAll(siteSpecification, pageable);
             if (siteObjective.getContent() != null) {
-                paginationResponse.setSiteList(siteObjective.stream().filter(site -> site.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList()));
+                paginationResponse.setSiteList(siteObjective.getContent());
                 paginationResponse.setTotalPages(siteObjective.getTotalPages());
                 paginationResponse.setTotalElements(siteObjective.getTotalElements());
                 return paginationResponse;
@@ -397,6 +400,8 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                 Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(teamDto.getShiftTimings()));
                 addTeamSpecification.add(shiftTimings);
             }
+            Predicate isDeletedPredicate = criteriaBuilder.equal(root.get("isDeleted"), Boolean.FALSE);
+            addTeamSpecification.add(isDeletedPredicate);
             if (Validator.isValid(teamDto.getSearchKey())) {
                 Predicate searchPredicate = criteriaBuilder.like(
                         criteriaBuilder.lower(root.get("searchKey")),
@@ -409,7 +414,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         if (teamDto.getPageSize() != null && teamDto.getPageNumber() != null) {
             Page<Team> teamObjective = teamRepo.findAll(teamSpecification, pageable);
             if (teamObjective.getContent() != null) {
-                paginationResponse.setTeamList(teamObjective.stream().filter(team -> team.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList()));
+                paginationResponse.setTeamList(teamObjective.getContent());
                 paginationResponse.setTotalPages(teamObjective.getTotalPages());
                 paginationResponse.setTotalElements(teamObjective.getTotalElements());
                 return paginationResponse;
