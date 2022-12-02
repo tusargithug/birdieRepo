@@ -249,14 +249,14 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         if (siteDto.getPageSize() != null && siteDto.getPageNumber() != null) {
             Page<Site> siteObjective = siteRepo.findAll(siteSpecification, pageable);
             if (siteObjective.getContent() != null) {
-                paginationResponse.setSiteList(siteObjective.getContent());
+                paginationResponse.setSiteList(siteObjective.stream().filter(site -> site.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList()));
                 paginationResponse.setTotalPages(siteObjective.getTotalPages());
                 paginationResponse.setTotalElements(siteObjective.getTotalElements());
                 return paginationResponse;
             }
         } else {
             List<Site> siteList = siteRepo.findAll(siteSpecification);
-            paginationResponse.setSiteList(siteList.stream().filter(site -> site.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList()));
+            paginationResponse.setSiteList(siteList.stream().filter(site -> site.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList()));
             return paginationResponse;
         }
         return new PaginationResponse();
@@ -409,14 +409,14 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         if (teamDto.getPageSize() != null && teamDto.getPageNumber() != null) {
             Page<Team> teamObjective = teamRepo.findAll(teamSpecification, pageable);
             if (teamObjective.getContent() != null) {
-                paginationResponse.setTeamList(teamObjective.getContent());
+                paginationResponse.setTeamList(teamObjective.stream().filter(team -> team.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList()));
                 paginationResponse.setTotalPages(teamObjective.getTotalPages());
                 paginationResponse.setTotalElements(teamObjective.getTotalElements());
                 return paginationResponse;
             }
         } else {
             List<Team> teamList = teamRepo.findAll(teamSpecification);
-            paginationResponse.setTeamList(teamList.stream().filter(team -> team.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList()));
+            paginationResponse.setTeamList(teamList.stream().filter(team -> team.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList()));
             return paginationResponse;
         }
         return new PaginationResponse();
@@ -441,16 +441,6 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             searchKey = searchKey + " " + site.getCountry().getCountryName();
         }
         return searchKey;
-    }
-
-    @Override
-    public List<AppUser> getAllAppUserByAlerts(AppUserDto request) {
-        List<AppUser> appUserList = appUserRepo.findAll();
-        if (request.getIsTeamLeader() != null && request.getIsTeamLeader().equals(Boolean.TRUE)) {
-            return appUserList.stream().filter(appUser -> appUser.getRoles().equals(Roles.TEAM_MANAGER) && appUser.getAlerts().equals(Alerts.RED_ALERT)).collect(Collectors.toList());
-        }
-
-        return new ArrayList<>();
     }
 
     public String getTeamSearchKey(Team team) {
@@ -517,22 +507,22 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         });
         List<AppUser> appUserList = appUserRepo.findAll(appUserSpecification);
         if (Validator.isValid(request.getRoles()) && Roles.roles(request.getRoles()).equals(Roles.TEAM_LEADER)) {
-            return appUserList.stream().filter(appUser -> (appUser.getRoles()!=null && appUser.getRoles().equals(Roles.TEAM_LEADER))).collect(Collectors.toList());
+            return appUserList.stream().filter(appUser -> (appUser.getRoles() != null && appUser.getRoles().equals(Roles.TEAM_LEADER))).collect(Collectors.toList());
         }
         if (Validator.isValid(request.getRoles()) && Roles.roles(request.getRoles()).equals(Roles.TEAM_MANAGER)) {
-            return appUserList.stream().filter(appUser -> (appUser.getRoles()!=null && appUser.getRoles().equals(Roles.TEAM_MANAGER))).collect(Collectors.toList());
+            return appUserList.stream().filter(appUser -> (appUser.getRoles() != null && appUser.getRoles().equals(Roles.TEAM_MANAGER))).collect(Collectors.toList());
         }
         if (Validator.isValid(request.getRoles()) && Roles.roles(request.getRoles()).equals(Roles.DIRECTOR)) {
-            return appUserList.stream().filter(appUser -> (appUser.getRoles()!=null && appUser.getRoles().equals(Roles.DIRECTOR))).collect(Collectors.toList());
+            return appUserList.stream().filter(appUser -> (appUser.getRoles() != null && appUser.getRoles().equals(Roles.DIRECTOR))).collect(Collectors.toList());
         }
         if (Validator.isValid(request.getRoles()) && Roles.roles(request.getRoles()).equals(Roles.ACCOUNT_MANAGER)) {
-            return appUserList.stream().filter(appUser -> (appUser.getRoles()!=null && appUser.getRoles().equals(Roles.ACCOUNT_MANAGER))).collect(Collectors.toList());
+            return appUserList.stream().filter(appUser -> (appUser.getRoles() != null && appUser.getRoles().equals(Roles.ACCOUNT_MANAGER))).collect(Collectors.toList());
         }
         if (Validator.isValid(request.getRoles()) && Roles.roles(request.getRoles()).equals(Roles.GENERAL_MANAGER)) {
-            return appUserList.stream().filter(appUser -> (appUser.getRoles()!=null && appUser.getRoles().equals(Roles.GENERAL_MANAGER))).collect(Collectors.toList());
+            return appUserList.stream().filter(appUser -> (appUser.getRoles() != null && appUser.getRoles().equals(Roles.GENERAL_MANAGER))).collect(Collectors.toList());
         }
         if (Validator.isValid(request.getRoles()) && Roles.roles(request.getRoles()).equals(Roles.SENIOR_MANAGER)) {
-            return appUserList.stream().filter(appUser -> (appUser.getRoles()!=null && appUser.getRoles().equals(Roles.SENIOR_MANAGER))).collect(Collectors.toList());
+            return appUserList.stream().filter(appUser -> (appUser.getRoles() != null && appUser.getRoles().equals(Roles.SENIOR_MANAGER))).collect(Collectors.toList());
         }
         return new ArrayList<>();
     }
@@ -629,7 +619,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         Team team;
         if (Validator.isValid(id)) {
             Optional<Team> optionalAppUser = teamRepo.findById(id);
-            if (optionalAppUser.isPresent() && optionalAppUser.get().getIsActive().equals(Boolean.TRUE)) {
+            if (optionalAppUser.isPresent() && optionalAppUser.get().getIsDeleted().equals(Boolean.FALSE)) {
                 team = optionalAppUser.get();
                 return team;
             }
@@ -640,10 +630,10 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     @Override
     public Site getSiteById(Long id) {
         Site site = null;
-        if(Validator.isValid(id)){
+        if (Validator.isValid(id)) {
             Optional<Site> optionalSite = siteRepo.findById(id);
-            if(optionalSite.isPresent() && optionalSite.get().getIsActive().equals(Boolean.TRUE)){
-                site=optionalSite.get();
+            if (optionalSite.isPresent() && optionalSite.get().getIsDeleted().equals(Boolean.FALSE)) {
+                site = optionalSite.get();
                 return site;
             }
         }
