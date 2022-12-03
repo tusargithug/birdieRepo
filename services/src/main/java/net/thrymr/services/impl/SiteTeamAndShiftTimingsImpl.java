@@ -204,6 +204,9 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         if (siteDto.getPageSize() != null && siteDto.getPageNumber() != null) {
             pageable = PageRequest.of(siteDto.getPageNumber(), siteDto.getPageSize());
         }
+        if (siteDto.getPageSize() != null && siteDto.getPageNumber() != null) {
+            pageable = PageRequest.of(siteDto.getPageNumber(), siteDto.getPageSize(), Sort.Direction.DESC, "createdOn");
+        }
         if (siteDto.getSortSiteName() != null && siteDto.getSortSiteName().equals(Boolean.TRUE)) {
             pageable = PageRequest.of(siteDto.getPageNumber(), siteDto.getPageSize(), Sort.Direction.ASC, "siteName");
         } else if (siteDto.getSortSiteName() != null && siteDto.getSortSiteName().equals(Boolean.FALSE)) {
@@ -240,6 +243,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             }
             Predicate isDeletedPredicate = criteriaBuilder.equal(root.get("isDeleted"), Boolean.FALSE);
             addSitePredicate.add(isDeletedPredicate);
+
             if (Validator.isValid(siteDto.getSearchKey())) {
                 Predicate searchPredicate = criteriaBuilder.like(
                         criteriaBuilder.lower(root.get("searchKey")),
@@ -368,6 +372,9 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         Pageable pageable = null;
         if (teamDto.getPageSize() != null && teamDto.getPageNumber() != null) {
             pageable = PageRequest.of(teamDto.getPageNumber(), teamDto.getPageSize());
+        }
+        if (teamDto.getPageSize() != null && teamDto.getPageNumber() != null) {
+            pageable = PageRequest.of(teamDto.getPageNumber(), teamDto.getPageSize(), Sort.Direction.DESC, "createdOn");
         }
         if (teamDto.getSortTeamName() != null && teamDto.getSortTeamName().equals(Boolean.TRUE)) {
             pageable = PageRequest.of(teamDto.getPageNumber(), teamDto.getPageSize(), Sort.Direction.ASC, "teamName");

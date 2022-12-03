@@ -654,3 +654,9 @@ type PaginationResponse{
     totalPages:Int
     totalElements:Int
 }
+
+type MapEntry {
+    key: String!
+    value: [Object!]
+}
+scalar Object
