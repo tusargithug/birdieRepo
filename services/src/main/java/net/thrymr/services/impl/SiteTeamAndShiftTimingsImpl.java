@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -639,6 +640,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         return new Team();
     }
 
+
     @Override
     public Site getSiteById(Long id) {
         Site site = null;
@@ -650,5 +652,11 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             }
         }
         return new Site();
+    }
+
+    @Override
+    public List<Alerts> getAllEnumAlerts() {
+        List<Alerts> alertsList = Arrays.asList(Alerts.NONE,Alerts.RED_ALERT,Alerts.ORANGE_ALERT,Alerts.GREEN_ALERT);
+        return alertsList;
     }
 }

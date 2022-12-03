@@ -5,6 +5,7 @@ import net.thrymr.FileDocument;
 import net.thrymr.dto.*;
 import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.dto.response.UserAppointmentResponse;
+import net.thrymr.enums.Alerts;
 import net.thrymr.enums.Roles;
 import net.thrymr.enums.TagType;
 import net.thrymr.model.*;
@@ -412,5 +413,10 @@ public class Query implements GraphQLQueryResolver {
     @QueryMapping("getTeamById")
     public Team getTeamById(@Argument Long id) {
         return siteTeamAndShiftTimingsService.getTeamById(id);
+    }
+
+    @QueryMapping("getAllEnumAlerts")
+    public List<Alerts> getAllEnumAlerts(){
+        return siteTeamAndShiftTimingsService.getAllEnumAlerts();
     }
 }
