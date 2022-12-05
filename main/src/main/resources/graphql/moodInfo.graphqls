@@ -67,6 +67,8 @@ type Query {
 #    getAllMoodIntensitiesByMoodInfoId(id:ID!):[MtMoodIntensity]
     previewAlertNotification(input:AppUserDto):RoleWiseCountResponse
     getTeamById(id:ID):Team
+    getAllFileDetails:[FileDetails]
+    getAllFileDetailsByType:[GetFileDetails]
 }
 
 type Mutation {
@@ -440,6 +442,15 @@ type FileDetails{
     fileId:String
     fileName:String
     fileContentType:String
+}
+type AllElements{
+    fileType:String
+    fileDetailsList:[FileDetails]
+}
+
+type GetFileDetails{
+    fileType:String
+    fileDetailsList:[FileDetails]
 }
 input GroupsDto{
     id:Int

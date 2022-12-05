@@ -5,6 +5,7 @@ import net.thrymr.dto.GroupsDto;
 import net.thrymr.dto.MiniSessionDto;
 import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.enums.TagType;
+import net.thrymr.model.FileDetails;
 import net.thrymr.model.GroupDetails;
 import net.thrymr.model.Groups;
 import net.thrymr.model.MiniSession;
@@ -69,6 +70,16 @@ public class MiniSessionController {
     @QueryMapping(name = "getAllGroupDetails")
     public List<GroupDetails> getAllGroupDetails() {
         return miniSessionService.getAllGroupDetails();
+    }
+
+    @QueryMapping(name = "getAllFileDetails")
+    public List<FileDetails> getAllFileDetails() {
+        return miniSessionService.getAllFileDetails();
+    }
+
+    @QueryMapping(name = "getAllFileDetailsByType")
+    public List<FileDetailsDto> getAllFileDetailsByType() {
+        return miniSessionService.getAllFileDetailsByType();
     }
 
     @MutationMapping(name = "updateGroupById")

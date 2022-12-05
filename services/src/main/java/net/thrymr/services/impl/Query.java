@@ -345,6 +345,16 @@ public class Query implements GraphQLQueryResolver {
         return miniSessionService.getAllGroupDetails();
     }
 
+    @QueryMapping(name = "getAllFileDetails")
+    public List<FileDetails> getAllFileDetails() {
+        return miniSessionService.getAllFileDetails();
+    }
+
+    @QueryMapping(name = "getAllFileDetailsByType")
+    public List<FileDetailsDto> getAllFileDetailsByType() {
+        return miniSessionService.getAllFileDetailsByType();
+    }
+
     @QueryMapping(name = "getGroupById")
     public Groups getGroupById(@Argument Long id) {
         return miniSessionService.getGroupById(id);

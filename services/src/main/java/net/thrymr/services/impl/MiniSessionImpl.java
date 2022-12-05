@@ -14,7 +14,6 @@ import net.thrymr.model.*;
 import net.thrymr.repository.*;
 import net.thrymr.services.MiniSessionService;
 import net.thrymr.utils.Validator;
-import org.apache.poi.sl.draw.geom.GuideIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,7 +24,10 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
 
 @Service
 public class MiniSessionImpl implements MiniSessionService {
@@ -235,6 +237,35 @@ public class MiniSessionImpl implements MiniSessionService {
     }
 
     @Override
+    public List<FileDetails> getAllFileDetails() {
+        List<FileDetails> fileDetailsList = fileDetailsRepo.findAll();
+        if (!fileDetailsList.isEmpty()) {
+            return fileDetailsList.stream().filter(fileDetails -> fileDetails.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<FileDetailsDto> getAllFileDetailsByType() {
+        List<FileDetails> fileDetailsList = fileDetailsRepo.findAll();
+
+        Map<FileType, List<FileDetails>> fileds = fileDetailsList.stream().collect(groupingBy(FileDetails::getFileContentType));
+
+        List<FileDetailsDto> fileDetailsDtoList = new ArrayList<>();
+        fileds.forEach(new BiConsumer<FileType, List<FileDetails>>() {
+            @Override
+            public void accept(FileType fileType, List<FileDetails> fileDetails) {
+                fileDetailsDtoList.add(new FileDetailsDto(fileType, fileDetails));
+            }
+        });
+
+        if (!fileDetailsDtoList.isEmpty()) {
+            return fileDetailsDtoList;
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
     public PaginationResponse getAllMiniSessionPagination(MiniSessionDto request) {
         Pageable pageable = null;
         if (request.getPageSize() != null) {
@@ -274,7 +305,7 @@ public class MiniSessionImpl implements MiniSessionService {
 
         Page<MiniSession> miniSessionsObjective = miniSessionRepo.findAll(miniSessionSpecification, pageable);
         if (miniSessionsObjective.getContent() != null) {
-            PaginationResponse paginationResponse=new PaginationResponse();
+            PaginationResponse paginationResponse = new PaginationResponse();
             paginationResponse.setMiniSessionList(miniSessionsObjective.getContent());
             paginationResponse.setTotalPages(miniSessionsObjective.getTotalPages());
             paginationResponse.setTotalElements(miniSessionsObjective.getTotalElements());
