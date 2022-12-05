@@ -404,8 +404,8 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                 Predicate shiftTimings = criteriaBuilder.and(root.get("site").in(teamDto.getSiteIds()));
                 addTeamSpecification.add(shiftTimings);
             }
-            if (Validator.isValid(teamDto.getShiftTimings())) {
-                Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(teamDto.getShiftTimings()));
+            if (Validator.isValid(teamDto.getShiftTimingsList())) {
+                Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(teamDto.getShiftTimingsList()));
                 addTeamSpecification.add(shiftTimings);
             }
             Predicate isDeletedPredicate = criteriaBuilder.equal(root.get("isDeleted"), Boolean.FALSE);
