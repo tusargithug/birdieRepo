@@ -502,6 +502,9 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         if (site.getIsActive() != null) {
             searchKey = searchKey + " " + site.getIsActive();
         }
+        if (site.getCountry() != null) {
+            searchKey = searchKey + " " + site.getCountry().getCountryName();
+        }
         return searchKey;
     }
 
