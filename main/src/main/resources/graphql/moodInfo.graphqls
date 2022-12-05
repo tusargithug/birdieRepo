@@ -68,6 +68,7 @@ type Query {
     previewAlertNotification(input:AppUserDto):RoleWiseCountResponse
     getTeamById(id:ID):Team
     getSiteById(id:ID):Site
+    getAllEnumAlerts:[Alerts]
 }
 
 type Mutation {

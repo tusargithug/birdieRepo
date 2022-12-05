@@ -2,6 +2,7 @@ package net.thrymr.services;
 
 import net.thrymr.dto.*;
 import net.thrymr.dto.response.PaginationResponse;
+import net.thrymr.enums.Alerts;
 import net.thrymr.model.*;
 
 import java.util.List;
@@ -38,4 +39,6 @@ public interface SiteTeamAndShiftTimingsService {
     Team getTeamById(Long id);
 
     Site getSiteById(Long id);
+
+    List<Alerts> getAllEnumAlerts();
 }
