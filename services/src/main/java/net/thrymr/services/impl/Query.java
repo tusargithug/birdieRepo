@@ -419,4 +419,17 @@ public class Query implements GraphQLQueryResolver {
     public List<Alerts> getAllEnumAlerts(){
         return siteTeamAndShiftTimingsService.getAllEnumAlerts();
     }
+
+    @QueryMapping("getRegionById")
+    public MtRegion getRegionById(@Argument Long id) {
+        return cityCountyAndRegionService.getRegionById(id);
+    }
+    @QueryMapping("getCountryById")
+    public MtCountry getCountryById(@Argument Long id) {
+        return cityCountyAndRegionService.getCountryById(id);
+    }
+    @QueryMapping("getCityById")
+    public MtCity getCityById(@Argument Long id) {
+        return cityCountyAndRegionService.getCityById(id);
+    }
 }

@@ -36,6 +36,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.persistence.criteria.Predicate;
 import java.io.IOException;
 import java.text.ParseException;
@@ -108,33 +109,48 @@ public class AppUserServiceImpl implements AppUserService {
                     try {
                         row = worksheet.getRow(index);
                         AppUser appUser = new AppUser();
-                        if (row.getCell(1) != null) {
-                            appUser.setEmpId(getCellValue(row.getCell(1)));
+                        if (row.getCell(9) != null) {
+                            appUser.setEmpId(getCellValue(row.getCell(9)));
                         }
-                        if (row.getCell(2) != null) {
-                            appUser.setUserName(getCellValue(row.getCell(2)));
+                        if (row.getCell(10) != null) {
+                            appUser.setUserName(getCellValue(row.getCell(10)));
                         }
-                        if (row.getCell(3) != null) {
-                            appUser.setMobile(getCellValue(row.getCell(3)));
+                        if (row.getCell(11) != null) {
+                            appUser.setMobile(getCellValue(row.getCell(11)));
                         }
-                        if (row.getCell(4) != null) {
-                            appUser.setEmail(getCellValue(row.getCell(4)));
+                        if (row.getCell(12) != null) {
+                            appUser.setEmail(getCellValue(row.getCell(12)));
                         }
-                        if (row.getCell(5) != null) {
-                            appUser.setDateOfJoining(DateUtils.toFormatStringToDate(getCellValue(row.getCell(5)), Constants.DATE_FORMAT));
+                        if (row.getCell(13) != null) {
+                            appUser.setDateOfJoining(DateUtils.toFormatStringToDate(getCellValue(row.getCell(13)), Constants.DATE_FORMAT));
                         }
 
-                        if (row.getCell(6) != null) {
-                            Optional<Site> optionalSite = siteRepo.findById(Long.valueOf(getCellValue(row.getCell(6))));
+                        if (row.getCell(14) != null) {
+                            Optional<Site> optionalSite = siteRepo.findById(Long.valueOf(getCellValue(row.getCell(14))));
                             optionalSite.ifPresent(appUser::setSite);
                         }
-                        if (row.getCell(7) != null) {
-                            appUser.setAlerts(Alerts.valueOf(getCellValue(row.getCell(7))));
+                        if (row.getCell(15) != null) {
+                            appUser.setAlerts(Alerts.valueOf(getCellValue(row.getCell(15))));
                         }
-                        if (row.getCell(8) != null) {
-                            appUser.setRoles(Roles.valueOf(getCellValue(row.getCell(8))));
+                        if (row.getCell(16) != null) {
+                            appUser.setRoles(Roles.valueOf(getCellValue(row.getCell(16))));
                         }
-                        getAppUserSearchKey(appUser);
+                        if (row.getCell(17) != null) {
+                            appUser.setShiftEndAt(DateUtils.toStringToLocalTime(getCellValue(row.getCell(17)), Constants.TIME_FORMAT_12_HOURS));
+                        }
+                        if (row.getCell(18) != null) {
+                            appUser.setShiftEndAt(DateUtils.toStringToLocalTime(getCellValue(row.getCell(18)), Constants.TIME_FORMAT_12_HOURS));
+                        }
+                        if (row.getCell(19) != null) {
+                            appUser.setCountryCode(getCellValue(row.getCell(19)));
+                        }
+                        if (row.getCell(20) != null) {
+                            Optional<FileEntity> optionalFileEntity = fileRepo.findById(Long.valueOf(getCellValue(row.getCell(20))));
+                            optionalFileEntity.ifPresent(appUser::setUploadPicture);
+                        }
+                            appUser.setSearchKey(getAppUserSearchKey(appUser));
+
+                            getAppUserSearchKey(appUser);
                         appUsers.add(appUser);
                     } catch (Exception e) {
                         logger.error("Exception{} ", e);
@@ -194,9 +210,9 @@ public class AppUserServiceImpl implements AppUserService {
         user.setShiftTimings(request.getShiftStartAt() + " - " + request.getShiftEndAt());
         if (Validator.isValid(request.getPictureId())) {
             Optional<FileEntity> optionalFileEntity = fileRepo.findByFileId(request.getPictureId());
-           if (optionalFileEntity.isPresent()) {
-               user.setUploadPicture(optionalFileEntity.get());
-           }
+            if (optionalFileEntity.isPresent()) {
+                user.setUploadPicture(optionalFileEntity.get());
+            }
         }
         user.setSearchKey(getAppUserSearchKey(user));
 
@@ -379,7 +395,7 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public PaginationResponse getAllAppUserPagination(AppUserDto response) {
-        Pageable pageable=null;
+        Pageable pageable = null;
         if (Validator.isValid(response.getPageSize())) {
             pageable = PageRequest.of(response.getPageNumber(), response.getPageSize());
         }
@@ -430,7 +446,7 @@ public class AppUserServiceImpl implements AppUserService {
         });
         Page<AppUser> appUserObjectives = appUserRepo.findAll(appUserSpecification, pageable);
         if (appUserObjectives.getContent() != null) {
-            PaginationResponse paginationResponse=new PaginationResponse();
+            PaginationResponse paginationResponse = new PaginationResponse();
             paginationResponse.setAppUserList(appUserObjectives.getContent());
             paginationResponse.setTotalPages(appUserObjectives.getTotalPages());
             paginationResponse.setTotalElements(appUserObjectives.getTotalElements());
@@ -453,32 +469,35 @@ public class AppUserServiceImpl implements AppUserService {
         if (appUser.getShiftTimings() != null) {
             searchKey = searchKey + " " + appUser.getShiftTimings();
         }
-        if(appUser.getIsActive() != null){
+        if (appUser.getIsActive() != null) {
             searchKey = searchKey + " " + appUser.getIsActive();
         }
-        if(appUser.getCreatedOn() != null){
+        if (appUser.getCreatedOn() != null) {
             searchKey = searchKey + " " + appUser.getCreatedOn();
         }
-        if(appUser.getEmpId() != null){
+        if (appUser.getEmpId() != null) {
             searchKey = searchKey + " " + appUser.getEmpId();
         }
-        if(appUser.getEmail() != null){
+        if (appUser.getEmail() != null) {
             searchKey = searchKey + " " + appUser.getEmail();
         }
-        if(appUser.getDateOfJoining() != null){
+        if (appUser.getDateOfJoining() != null) {
             searchKey = searchKey + " " + appUser.getDateOfJoining();
         }
-        if(appUser.getShiftEndAt() != null){
+        if (appUser.getShiftEndAt() != null) {
             searchKey = searchKey + " " + appUser.getShiftEndAt();
         }
-        if(appUser.getIsActive() != null){
+        if (appUser.getIsActive() != null) {
             searchKey = searchKey + " " + appUser.getShiftEndAt();
         }
-        if(appUser.getMobile() != null){
-            searchKey = searchKey +" "+ appUser.getUserName();
+        if (appUser.getMobile() != null) {
+            searchKey = searchKey + " " + appUser.getUserName();
         }
-        if(appUser.getCountryCode() != null){
-            searchKey = searchKey +" "+appUser.getCountryCode();
+        if (appUser.getCountryCode() != null) {
+            searchKey = searchKey + " " + appUser.getCountryCode();
+        }
+        if (appUser.getSite() != null) {
+            searchKey = searchKey + " " + appUser.getSite().getSiteName();
         }
         return searchKey;
     }
