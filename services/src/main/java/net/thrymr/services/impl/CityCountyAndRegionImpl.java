@@ -12,6 +12,7 @@ import net.thrymr.repository.RegionRepo;
 import net.thrymr.repository.SiteRepo;
 import net.thrymr.services.CityCountyAndRegionService;
 import net.thrymr.utils.Validator;
+import org.apache.poi.sl.draw.geom.GuideIf;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -64,6 +65,12 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
             }
             if(Validator.isValid(countryDto.getCountryCode())) {
                 mtCountry.setCountryCode(countryDto.getCountryCode());
+            }
+            if(Validator.isValid(countryDto.getRegionId())) {
+                Optional<MtRegion> regionOptional= regionRepo.findById(countryDto.getRegionId());
+                if(regionOptional.isPresent()){
+                    mtCountry.setRegion(regionOptional.get());
+                }
             }
             mtCountry.setSearchKey(getCountrySearchKey(mtCountry));
             countryRepo.save(mtCountry);
@@ -377,6 +384,44 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
             return "REGION.IMPORT.SUCCESS";
         }
         return  "REGION.IMPORT.FAILED";
+    }
+
+    @Override
+    public MtRegion getRegionById(Long id) {
+        MtRegion mtRegion= null;
+        if(Validator.isValid(id)){
+            Optional<MtRegion> optionalMtRegion= regionRepo.findById(id);
+            if(optionalMtRegion.isPresent() && optionalMtRegion.get().getIsDeleted().equals(Boolean.FALSE)){
+                mtRegion = optionalMtRegion.get();
+                return mtRegion;
+            }
+        }
+        return new MtRegion();
+    }
+
+    @Override
+    public MtCountry getCountryById(Long id) {
+        MtCountry mtCountry = null;
+        if (Validator.isValid(id)) {
+            Optional<MtCountry> optionalMtCountry = countryRepo.findById(id);
+            if (optionalMtCountry.isPresent() && optionalMtCountry.get().getIsDeleted().equals(Boolean.FALSE)) {
+                mtCountry = optionalMtCountry.get();
+                return mtCountry;
+            }
+        }
+        return new MtCountry();
+    }
+        @Override
+    public MtCity getCityById(Long id) {
+        MtCity mtCity = null;
+        if(Validator.isValid(id)){
+            Optional<MtCity> optionalMtCity = cityRepo.findById(id);
+            if(optionalMtCity.isPresent() && optionalMtCity.get().getIsDeleted().equals(Boolean.FALSE)){
+                mtCity = optionalMtCity.get();
+                return mtCity;
+            }
+        }
+        return new MtCity();
     }
 
     private String getCellValue(XSSFCell cell) {

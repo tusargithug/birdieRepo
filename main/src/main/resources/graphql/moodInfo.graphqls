@@ -69,6 +69,9 @@ type Query {
     getTeamById(id:ID):Team
     getSiteById(id:ID):Site
     getAllEnumAlerts:[Alerts]
+    getRegionById(id:ID):MtRegion
+    getCountryById(id:ID):MtCountry
+    getCityById(id:ID):MtCity
 }
 
 type Mutation {
@@ -113,7 +116,7 @@ type Mutation {
     updateCityById(input:CityDto):String!
     deleteCityById(id:ID):String!
     saveRegion(input:RegionDto):String!
-    #uploadRegionData(file:Upload!):String!
+    uploadRegionData(file:Upload!):String!
     updateRegionById(input:RegionDto):String!
     deleteRegionById(id:ID):String!
     createCounsellorSlot(input:TimeSlotDto):String!
