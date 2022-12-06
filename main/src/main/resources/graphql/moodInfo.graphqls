@@ -161,6 +161,7 @@ type Mutation {
     createMeditation(input:MeditationDto):String!
     updateMeditationById(input:MeditationDto):String!
     deleteMeditationById(id:ID!):String!
+    saveCounsellorEmployeeInfo(input:CounsellorEmployeeDto):String!
 }
 
 scalar Upload
@@ -225,6 +226,9 @@ input AppUserDto{
     pictureId:String
     searchKey:String
     teamId:Int
+    alertList:[String]
+    shiftTimingsList:[String]
+    counsellorId:Int
 }
 enum Roles{
     NONE
@@ -513,6 +517,10 @@ type UserMoodCheckIn{
     mtMoodIntensity:MtMoodIntensity
     description:String
 }
+type CounsellorEmployee{
+    counsellor:Counsellor
+    appUser:AppUser
+}
 type MtMoodSource{
     name:String
     description:String
@@ -637,6 +645,12 @@ input MeditationDto{
     fileType:String
     searchKey:String
 }
+
+input CounsellorEmployeeDto{
+    id:Int
+    appUserId:Int
+    counsellorId:Int
+}
 enum Gender{
     MALE
     FEMALE
@@ -657,6 +671,7 @@ type PaginationResponse{
     unitList:[Unit]
     totalPages:Int
     totalElements:Int
+    counsellorEmployeeList:[CounsellorEmployee]
 }
 
 type MapEntry {

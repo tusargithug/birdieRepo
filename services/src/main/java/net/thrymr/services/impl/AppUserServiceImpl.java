@@ -73,6 +73,11 @@ public class AppUserServiceImpl implements AppUserService {
     @Autowired
     FileRepo fileRepo;
 
+    @Autowired
+    CounsellorRepo counsellorRepo;
+
+    @Autowired
+    CounsellorEmployeeRepo counsellorEmployeeRepo;
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
@@ -393,6 +398,66 @@ public class AppUserServiceImpl implements AppUserService {
         return new UserAppointmentResponse();
     }
 
+//    @Override
+//    public PaginationResponse getAllAppUserPagination(AppUserDto response) {
+//        Pageable pageable = null;
+//        if (Validator.isValid(response.getPageSize())) {
+//            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize());
+//        }
+//        if (response.getSortUserName() != null && response.getSortUserName().equals(Boolean.TRUE)) {
+//            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.ASC, "userName");
+//        } else if (response.getSortUserName() != null && response.getSortUserName().equals(Boolean.FALSE)) {
+//            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.DESC, "userName");
+//        }
+//
+//        Specification<CounsellorEmployee> appUserSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
+//            List<Predicate> addVendorPredicate = new ArrayList<>();
+//            Join<CounsellorEmployee, AppUser> appUserJoin = root.join("appUser");
+//            Join<CounsellorEmployee, Counsellor> counsellorJoin = root.join("counsellor");
+//            if (response.getUserName() != null) {
+//                Predicate userName = criteriaBuilder.and(appUserJoin.get("userName").in(response.getUserName()));
+//                addVendorPredicate.add(userName);
+//            }
+//            if (response.getEmpId() != null && !response.getEmpId().isEmpty()) {
+//                Predicate empId = criteriaBuilder.and(appUserJoin.get("empId").in(response.getEmpId()));
+//                addVendorPredicate.add(empId);
+//            }
+//            if (response.getRoles() != null) {
+//                Predicate roles = criteriaBuilder.and(appUserJoin.get("roles").in(response.getRoles()));
+//                addVendorPredicate.add(roles);
+//            }
+//            if (response.getAlertList() != null && !response.getAlertList().isEmpty()) {
+//                Predicate alerts = criteriaBuilder.and(appUserJoin.get("alerts").in(response.getAlertList()));
+//                addVendorPredicate.add(alerts);
+//            }
+//
+//            if (response.getCounsellorId() != null) {
+//                Predicate counsellorName = criteriaBuilder.and(counsellorJoin.get("id").in(response.getCounsellorId()));
+//                addVendorPredicate.add(counsellorName);
+//            }
+//            if (response.getShiftTimingsList() != null && !response.getShiftTimingsList().isEmpty()) {
+//                Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(response.getShiftTimingsList()));
+//                addVendorPredicate.add(shiftTimings);
+//            }
+//            if (Validator.isValid(response.getSearchKey())) {
+//                Predicate searchPredicate = criteriaBuilder.like(
+//                        criteriaBuilder.lower(root.get("searchKey")),
+//                        "%" + response.getSearchKey().toLowerCase() + "%");
+//                addVendorPredicate.add(searchPredicate);
+//            }
+//            return criteriaBuilder.and(addVendorPredicate.toArray(new Predicate[0]));
+//        });
+//        Page<CounsellorEmployee> appUserObjectives = counsellorEmployeeRepo.findAll(appUserSpecification, pageable);
+//        if (appUserObjectives.getContent() != null) {
+//            PaginationResponse paginationResponse = new PaginationResponse();
+//            paginationResponse.setCounsellorEmployeeList(appUserObjectives.getContent());
+//            paginationResponse.setTotalPages(appUserObjectives.getTotalPages());
+//            paginationResponse.setTotalElements(appUserObjectives.getTotalElements());
+//            return paginationResponse;
+//        }
+//        return new PaginationResponse();
+//    }
+
     @Override
     public PaginationResponse getAllAppUserPagination(AppUserDto response) {
         Pageable pageable = null;
@@ -419,21 +484,17 @@ public class AppUserServiceImpl implements AppUserService {
                 Predicate roles = criteriaBuilder.and(root.get("roles").in(response.getRoles()));
                 addVendorPredicate.add(roles);
             }
-            if (response.getAlerts() != null) {
-                Predicate alerts = criteriaBuilder.and(root.get("alerts").in(response.getAlerts()));
+            if (response.getAlertList() != null && !response.getAlertList().isEmpty()) {
+                Predicate alerts = criteriaBuilder.and(root.get("alerts").in(response.getAlertList()));
                 addVendorPredicate.add(alerts);
-            }
-            if (response.getTeamId() != null) {
-                Predicate teamId = criteriaBuilder.and(root.get("team").in(response.getTeamId()));
-                addVendorPredicate.add(teamId);
             }
 
             if (response.getRoles() != null && response.getRoles().equalsIgnoreCase(Roles.COUNSELLOR.toString())) {
                 Predicate roles = criteriaBuilder.and(root.get("counsellorName").in(response.getCounsellorId()));
                 addVendorPredicate.add(roles);
             }
-            if (response.getShiftTimings() != null) {
-                Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(response.getShiftTimings()));
+            if (response.getShiftTimingsList() != null && !response.getShiftTimingsList().isEmpty()) {
+                Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(response.getShiftTimingsList()));
                 addVendorPredicate.add(shiftTimings);
             }
             if (Validator.isValid(response.getSearchKey())) {
@@ -453,6 +514,26 @@ public class AppUserServiceImpl implements AppUserService {
             return paginationResponse;
         }
         return new PaginationResponse();
+    }
+
+    @Override
+    public String saveCounsellorEmployeeInfo(CounsellorEmployeeDto request) {
+        CounsellorEmployee counsellorEmployee = new CounsellorEmployee();
+        if (Validator.isValid(request.getAppUserId())) {
+            Optional<AppUser> optionalAppUser= appUserRepo.findById(request.getAppUserId());
+            if(optionalAppUser.isPresent()) {
+                counsellorEmployee.setAppUser(optionalAppUser.get());
+            }
+        }
+        if(Validator.isValid(request.getCounsellorId())) {
+            Optional<Counsellor> counsellorOptional = counsellorRepo.findById(request.getCounsellorId());
+            if (counsellorOptional.isPresent()) {
+                counsellorEmployee.setCounsellor(counsellorOptional.get());
+
+            }
+        }
+        counsellorEmployeeRepo.save(counsellorEmployee);
+        return "counsellor employee information saved successfully";
     }
 
     public String getAppUserSearchKey(AppUser appUser) {
