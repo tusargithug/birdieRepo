@@ -17,4 +17,5 @@ public class PsychoEducationDto {
     private Integer pageNumber;
     private Integer pageSize;
     private Boolean sortPsychoEducationName;
+    private String createdOn;
 }

@@ -5,17 +5,15 @@ import net.thrymr.dto.AssessmentDto;
 import net.thrymr.enums.FrequencyType;
 import net.thrymr.model.master.MtAssessment;
 import net.thrymr.repository.AssessmentRepo;
+import net.thrymr.repository.OptionsRepo;
+import net.thrymr.repository.QuestionRepo;
 import net.thrymr.services.AssessmentService;
 import net.thrymr.utils.DateUtils;
 import net.thrymr.utils.Validator;
-import org.apache.poi.sl.draw.geom.GuideIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,6 +56,7 @@ public class AssessmentServiceImpl implements AssessmentService {
         if (request.getIsActive() != null && request.getIsActive().equals(Boolean.TRUE)) {
             assessment.setIsActive(request.getIsActive());
         }
+        assessment.setSearchKey(getAppUserSearchKey(assessment));
         return assessment;
     }
 
@@ -95,6 +94,7 @@ public class AssessmentServiceImpl implements AssessmentService {
                 if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
                     assessment.setIsActive(request.getIsActive());
                 }
+                assessment.setSearchKey(getAppUserSearchKey(assessment));
                 assessmentRepo.save(assessment);
                 return "Assessment update successfully";
             }
@@ -130,4 +130,38 @@ public class AssessmentServiceImpl implements AssessmentService {
         return new MtAssessment();
     }
 
+    public String getAppUserSearchKey(MtAssessment mtAssessment) {
+        String searchKey = "";
+        if (mtAssessment.getName() != null) {
+            searchKey = searchKey + " " + mtAssessment.getName();
+        }
+        if (mtAssessment.getDescription() != null) {
+            searchKey = searchKey + " " + mtAssessment.getDescription();
+        }
+        if (mtAssessment.getCourses() != null) {
+            searchKey = searchKey + " " + mtAssessment.getCourses();
+        }
+        if (mtAssessment.getInstructions() != null) {
+            searchKey = searchKey + " " + mtAssessment.getInstructions();
+        }
+        if (mtAssessment.getFrequencyType() != null) {
+            searchKey = searchKey + " " + mtAssessment.getFrequencyType();
+        }
+        if (mtAssessment.getHigh() != null) {
+            searchKey = searchKey + " " + mtAssessment.getHigh();
+        }
+        if (mtAssessment.getModerate() != null) {
+            searchKey = searchKey + " " + mtAssessment.getModerate();
+        }
+        if (mtAssessment.getLow() != null) {
+            searchKey = searchKey + " " + mtAssessment.getLow();
+        }
+        if (mtAssessment.getDateOfPublishing() != null) {
+            searchKey = searchKey + " " + mtAssessment.getDateOfPublishing();
+        }
+        if (mtAssessment.getQuestionList() != null) {
+            searchKey = searchKey + " " + mtAssessment.getQuestionList();
+        }
+        return searchKey;
+    }
 }

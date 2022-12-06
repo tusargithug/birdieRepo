@@ -213,6 +213,7 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
                     }
                 }
                 userMoodCheckIn.setDescription(request.getDescription());
+                userMoodCheckIn.setSearchKey(getUserMoodCheckedSearchKey(userMoodCheckIn));
                 userMoodCheckInRepo.save(userMoodCheckIn);
             }
             return "User mood updated successfully";
@@ -264,8 +265,34 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
             }
         }
         userMoodCheckIn.setDescription(request.getDescription());
+        userMoodCheckIn.setSearchKey(getUserMoodCheckedSearchKey(userMoodCheckIn));
         userMoodCheckInRepo.save(userMoodCheckIn);
         return "create mood checking details";
     }
-}
 
+
+    public String getUserMoodCheckedSearchKey(UserMoodCheckIn userMoodCheckIn) {
+        String searchKey = "";
+        if (userMoodCheckIn.getDescription() != null) {
+            searchKey = searchKey + " " + userMoodCheckIn.getDescription();
+        }
+        if (userMoodCheckIn.getIsActive() != null) {
+            searchKey = searchKey + " " + userMoodCheckIn.getIsActive();
+        }
+        if (userMoodCheckIn.getAppUser() != null) {
+            searchKey = searchKey + " " + userMoodCheckIn.getAppUser();
+        }
+        if (userMoodCheckIn.getMtMoodInfo() != null) {
+            searchKey = searchKey + " " + userMoodCheckIn.getMtMoodInfo();
+        }
+        if (userMoodCheckIn.getUserMoodSourceCheckedIn() != null) {
+            searchKey = searchKey + " " + userMoodCheckIn.getUserMoodSourceCheckedIn();
+        }
+        if (userMoodCheckIn.getMtMoodIntensity() != null) {
+            searchKey = searchKey + " " + userMoodCheckIn.getMtMoodIntensity();
+        }
+
+        return searchKey;
+    }
+
+}

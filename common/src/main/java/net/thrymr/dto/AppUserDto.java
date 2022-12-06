@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.thrymr.enums.Alerts;
 
-import java.time.LocalTime;
+import java.util.List;
 
 
 @Setter
@@ -48,7 +48,7 @@ public class AppUserDto {
 
     private String dateOfJoining;
 
-    private Alerts alerts;
+    private String alerts;
 
     private Integer pageSize;
 
@@ -68,5 +68,14 @@ public class AppUserDto {
     private String shiftEndAt;
     private String shiftTimings;
 
+    private Boolean isTeamManager;
+    private List<Long> teamManagerIds;
+
+    private List<Long> teamLeaderIds;
     private Boolean sortUserName;
+
+    private String pictureId;
+
+    private List<Alerts> alertList;
+    private List<String> shiftTimingsList;
 }

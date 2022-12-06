@@ -312,7 +312,7 @@ public class MutationResolver implements GraphQLMutationResolver {
     }
 
     @MutationMapping(name = "uploadRegionData")
-    public String uploadRegionData(@Argument MultipartFile file) {
+    public String uploadRegionData(@Argument(name = "file") MultipartFile file) {
         return cityCountyAndRegionService.uploadRegionData(file);
     }
 
@@ -547,6 +547,11 @@ public class MutationResolver implements GraphQLMutationResolver {
         return meditationService.deleteMeditationById(id);
     }
 
+    @MutationMapping(name = "saveCounsellorEmployeeInfo")
+    public String saveCounsellorEmployeeInfo(@Argument(name = "input") CounsellorEmployeeDto request) {
+        return appUserService.saveCounsellorEmployeeInfo(request);
+
+    }
 }
 
 

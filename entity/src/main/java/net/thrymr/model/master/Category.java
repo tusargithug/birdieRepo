@@ -29,7 +29,7 @@ public class Category extends BaseEntity{
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "category")
 	private Set<Course> courses = new HashSet<>();
 	
-	private int sequence;
+	private Integer sequence;
 	
 
 }

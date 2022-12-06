@@ -43,4 +43,10 @@ public interface CityCountyAndRegionService {
     String uploadCityData(MultipartFile file);
 
     String uploadRegionData(MultipartFile file);
+
+    MtRegion getRegionById(Long id);
+
+    MtCountry getCountryById(Long id);
+
+    MtCity getCityById(Long id);
 }

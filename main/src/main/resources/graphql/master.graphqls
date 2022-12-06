@@ -49,9 +49,9 @@ input RolesDto{
 input ChapterDto{
     id:Int
     chapterName:String
-    profilePictureId:String
+    profilePicture:String
     isActive:Boolean
-    videoId:String
+    video:String
     unitId:Int
     description:String
     pageNumber:Int
@@ -91,6 +91,7 @@ input SiteDto{
     id:Int
     siteName:String
     cityId:Int
+    cityIdList:[Int]
     countryId:Int
     regionId:Int
     status:Boolean
@@ -116,6 +117,8 @@ input TeamDto {
     shiftStartAt:String
     shiftEndAt:String
     shiftTimings:String
+    shiftTimingsList:[String]
+    siteIds:[Int]
 }
 
 input UnitDto {
@@ -269,6 +272,7 @@ input AssessmentDto{
     low:String
     isActive:Boolean
     dateOfPublishing:String
+    questionDtoList:[QuestionDto]
 }
 enum FrequencyType{
     NONE
@@ -285,6 +289,7 @@ input QuestionDto {
     questionCalType:String
     Sequence:Int
     isActive:Boolean
+    optionsDtoList:[OptionsDto]
 }
 input OptionsDto{
     id:Int

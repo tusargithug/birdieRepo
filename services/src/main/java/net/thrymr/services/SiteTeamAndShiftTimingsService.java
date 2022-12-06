@@ -2,11 +2,8 @@ package net.thrymr.services;
 
 import net.thrymr.dto.*;
 import net.thrymr.dto.response.PaginationResponse;
-import net.thrymr.model.AppUser;
-import net.thrymr.model.ShiftTimings;
-import net.thrymr.model.Site;
-import net.thrymr.model.Team;
-import org.springframework.data.domain.Page;
+import net.thrymr.enums.Alerts;
+import net.thrymr.model.*;
 
 import java.util.List;
 
@@ -15,15 +12,11 @@ public interface SiteTeamAndShiftTimingsService {
 
     String updateTeam(TeamDto teamDto);
 
-    List<Team> getAllTeam();
-
     String deleteTeamById(Long id);
 
     String saveSite(SiteDto siteDto);
 
     String updateSite(SiteDto siteDto);
-
-    List<Site> getAllSite();
 
     String deleteSiteById(Long id);
 
@@ -39,5 +32,13 @@ public interface SiteTeamAndShiftTimingsService {
 
     List<ShiftTimings> getAllShiftTimings();
 
-    List<AppUser> getAllAppUserByAlerts(AppUserDto request);
+    List<AppUser> getAllAppUserByRoles(AppUserDto request);
+
+    RoleWiseCountResponse previewAlertNotification(AppUserDto request);
+
+    Team getTeamById(Long id);
+
+    Site getSiteById(Long id);
+
+    List<Alerts> getAllEnumAlerts();
 }

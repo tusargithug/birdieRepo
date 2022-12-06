@@ -3,12 +3,6 @@ package net.thrymr.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.thrymr.enums.FrequencyType;
-import net.thrymr.model.master.MtOptions;
-import net.thrymr.model.master.MtQuestion;
-
-import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Setter

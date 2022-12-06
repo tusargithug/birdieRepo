@@ -1,7 +1,6 @@
 package net.thrymr.services;
 
 import net.thrymr.dto.CounsellorDto;
-import net.thrymr.model.AppUser;
 import net.thrymr.model.Counsellor;
 import org.springframework.data.domain.Page;
 

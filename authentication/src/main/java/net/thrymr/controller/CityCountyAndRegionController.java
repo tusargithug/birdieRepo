@@ -99,6 +99,20 @@ public class CityCountyAndRegionController {
         return regionList;
     }
 
+    @QueryMapping("getRegionById")
+    public MtRegion getRegionById(@Argument Long id) {
+         return cityCountyAndRegionService.getRegionById(id);
+    }
+
+    @QueryMapping("getCountryById")
+    public MtCountry getCountryById(@Argument Long id) {
+        return cityCountyAndRegionService.getCountryById(id);
+    }
+    @QueryMapping("getCityById")
+    public MtCity getCityById(@Argument Long id) {
+        return cityCountyAndRegionService.getCityById(id);
+    }
+
     /*@PostMapping("/upload-excel-region-data")
     public ResponseEntity<ApiResponse> uploadRegionData(@RequestBody MultipartFile file) {
         ApiResponse apiResponse=cityCountyAndRegionService.uploadRegionData(file);
@@ -129,7 +143,7 @@ public class CityCountyAndRegionController {
     }*/
 
     @MutationMapping(name = "uploadRegionData")
-    public String uploadRegionData(@RequestParam MultipartFile file) {
+    public String uploadRegionData(@Argument(name = "file") MultipartFile file) {
         return cityCountyAndRegionService.uploadRegionData(file);
     }
 

@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,5 +22,7 @@ public class TeamDto {
     private String shiftStartAt;
     private String shiftEndAt;
     private String shiftTimings;
+    private List<Long> siteIds;
+    private List<String> shiftTimingsList;
 
 }

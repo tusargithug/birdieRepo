@@ -1,5 +1,6 @@
 package net.thrymr.controller;
 import net.thrymr.dto.AppUserDto;
+import net.thrymr.dto.CounsellorEmployeeDto;
 import net.thrymr.dto.UserCourseDto;
 import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.dto.response.UserAppointmentResponse;
@@ -10,7 +11,6 @@ import net.thrymr.services.AssessmentService;
 import net.thrymr.services.RoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.graphql.data.method.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 import java.text.ParseException;
@@ -80,5 +80,11 @@ public class AppUserController {
     @QueryMapping(name = "getAllAppUserPagination")
     public PaginationResponse getAllAppUserPagination(@Argument(name = "input") AppUserDto request) {
         return appUserService.getAllAppUserPagination(request);
+    }
+
+    @MutationMapping(name = "saveCounsellorEmployeeInfo")
+    public String saveCounsellorEmployeeInfo(@Argument(name = "input") CounsellorEmployeeDto request) {
+        return appUserService.saveCounsellorEmployeeInfo(request);
+
     }
 }

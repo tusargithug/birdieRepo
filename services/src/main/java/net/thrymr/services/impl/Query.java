@@ -5,6 +5,7 @@ import net.thrymr.FileDocument;
 import net.thrymr.dto.*;
 import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.dto.response.UserAppointmentResponse;
+import net.thrymr.enums.Alerts;
 import net.thrymr.enums.Roles;
 import net.thrymr.enums.TagType;
 import net.thrymr.model.*;
@@ -169,22 +170,6 @@ public class Query implements GraphQLQueryResolver {
         return regionList;
     }
 
-    /*@QueryMapping("getAllTeam")
-    public List<Team> getAllTeam(TeamDto teamdto){
-        List<Team> teamList= siteTeamAndShiftTimingsService.getAllTeam(teamdto);
-        return teamList;
-    }*/
-    @QueryMapping("getAllTeam")
-    public List<Team> getAllTeam() {
-        //List<Team> teamList= siteTeamAndShiftTimingsService.getAllTeam();
-        return siteTeamAndShiftTimingsService.getAllTeam();
-    }
-
-    @QueryMapping("getAllSite")
-    public List<Site> getAllSite() {
-        return siteTeamAndShiftTimingsService.getAllSite();
-    }
-
     @QueryMapping("getAllUnit")
     public List<Unit> getAllUnit() {
         List<Unit> unitList = unitAndChapterServices.getAllUnit();
@@ -239,6 +224,11 @@ public class Query implements GraphQLQueryResolver {
     @QueryMapping(name = "getAllShiftTimings")
     public List<ShiftTimings> getAllShiftTimings() {
         return siteTeamAndShiftTimingsService.getAllShiftTimings();
+    }
+
+    @QueryMapping(name = "getSiteById")
+    public Site getSiteById(@Argument Long id){
+        return siteTeamAndShiftTimingsService.getSiteById(id);
     }
 
     @QueryMapping(name = "getCounsellorSlotById")
@@ -315,9 +305,9 @@ public class Query implements GraphQLQueryResolver {
         return appUserService.getAllEnumRoles();
     }
 
-    @QueryMapping(name = "getAllAppUserByAlerts")
-    public List<AppUser> getAllAppUserByAlerts(@Argument(name = "input") AppUserDto request) {
-        return siteTeamAndShiftTimingsService.getAllAppUserByAlerts(request);
+    @QueryMapping(name = "getAllAppUserByRoles")
+    public List<AppUser> getAllAppUserByRoles(@Argument(name = "input") AppUserDto request) {
+        return siteTeamAndShiftTimingsService.getAllAppUserByRoles(request);
     }
 
     @QueryMapping(name = "getAllAppUserPagination")
@@ -392,8 +382,8 @@ public class Query implements GraphQLQueryResolver {
     }
 
     @QueryMapping(name = "getPaginationPsychoEducation")
-    public Page<MtPsychoEducation> getPaginationPsychoEducation(@Argument(name = "input") PsychoEducationDto request) {
-        return psychoEducationService.getPaginationPsychoEducation(request);
+    public PaginationResponse getPsychoEducationPagination(@Argument(name = "input") PsychoEducationDto request) {
+        return psychoEducationService.getPsychoEducationPagination(request);
     }
 
     @QueryMapping("getAllMeditation")
@@ -413,5 +403,33 @@ public class Query implements GraphQLQueryResolver {
     @QueryMapping("getAllChapterPagination")
     public PaginationResponse getAllChapterPagination(@Argument(name = "input") ChapterDto response){
         return unitAndChapterServices.getAllChapterPagination(response);
+    }
+
+    @QueryMapping(name="previewAlertNotification")
+    public RoleWiseCountResponse previewAlertNotification(@Argument(name = "input") AppUserDto request)  {
+        return siteTeamAndShiftTimingsService.previewAlertNotification(request);
+    }
+
+    @QueryMapping("getTeamById")
+    public Team getTeamById(@Argument Long id) {
+        return siteTeamAndShiftTimingsService.getTeamById(id);
+    }
+
+    @QueryMapping("getAllEnumAlerts")
+    public List<Alerts> getAllEnumAlerts(){
+        return siteTeamAndShiftTimingsService.getAllEnumAlerts();
+    }
+
+    @QueryMapping("getRegionById")
+    public MtRegion getRegionById(@Argument Long id) {
+        return cityCountyAndRegionService.getRegionById(id);
+    }
+    @QueryMapping("getCountryById")
+    public MtCountry getCountryById(@Argument Long id) {
+        return cityCountyAndRegionService.getCountryById(id);
+    }
+    @QueryMapping("getCityById")
+    public MtCity getCityById(@Argument Long id) {
+        return cityCountyAndRegionService.getCityById(id);
     }
 }

@@ -47,6 +47,7 @@ public class CourseServiceImpl implements CourseService {
                 if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
                     course.setIsActive(request.getIsActive());
                 }
+                course.setSearchKey(getAppUserSearchKey(course));
                 courseRepo.save(course);
             }
             return "update course successfully";
@@ -71,10 +72,37 @@ public class CourseServiceImpl implements CourseService {
         if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE)) {
             course.setIsActive(request.getIsActive());
         }
+        course.setSearchKey(getAppUserSearchKey(course));
         courseRepo.save(course);
         return "Course Created successfully";
     }
 
+
+    public String getAppUserSearchKey(Course course) {
+        String searchKey = "";
+        if (course.getCode() != null) {
+            searchKey = searchKey + " " + course.getCode();
+        }
+        if (course.getName() != null) {
+            searchKey = searchKey + " " + course.getName();
+        }
+        if (course.getCategory() != null) {
+            searchKey = searchKey + " " + course.getCategory();
+        }
+        if (course.getAssignments() != null) {
+            searchKey = searchKey + " " + course.getAssignments();
+        }
+        if(course.getDescription() != null){
+            searchKey = searchKey + " " + course.getDescription();
+        }
+        if(course.getCategory() != null){
+            searchKey = searchKey + " " + course.getCategory();
+        }
+        if (course.getContent() != null)  {
+            searchKey = searchKey + " " + course.getContent();
+        }
+        return searchKey;
+    }
     @Override
     public List<Course> getAllCourse() {
         List<Course> courseList = courseRepo.findAll();

@@ -1,6 +1,5 @@
 package net.thrymr.controller;
 import net.thrymr.dto.CounsellorDto;
-import net.thrymr.model.AppUser;
 import net.thrymr.model.Counsellor;
 import net.thrymr.services.CounsellorService;
 import org.springframework.beans.factory.annotation.Autowired;

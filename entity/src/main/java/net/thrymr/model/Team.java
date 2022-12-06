@@ -6,7 +6,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalTime;
-import java.util.List;
 
 
 @Getter
@@ -15,7 +14,7 @@ import java.util.List;
 @Entity
 @Table(name = "team")
 public class Team extends BaseEntity {
-    @Column(name = "team_id")
+    @Column(name = "team_id",unique = true)
     private String teamId;
     @Column(name = "team_name")
     private String teamName;

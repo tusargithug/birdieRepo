@@ -1,6 +1,7 @@
 package net.thrymr.services.impl;
 
 import net.thrymr.dto.PsychoEducationDto;
+import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.model.FileEntity;
 import net.thrymr.model.Site;
 import net.thrymr.model.Vendor;
@@ -91,6 +92,7 @@ public class PsychoEducationServiceImpl implements PsychoEducationService {
                         mtPsychoEducation.setFile(fileEntity.get());
                     }
                 }
+                mtPsychoEducation.setSearchKey(getAppUserSearchKey(mtPsychoEducation));
                 psychoEducationRepo.save(mtPsychoEducation);
                 return "Psycho Education updated successfully";
             }
@@ -116,7 +118,7 @@ public class PsychoEducationServiceImpl implements PsychoEducationService {
     }
 
     @Override
-    public Page<MtPsychoEducation> getPaginationPsychoEducation(PsychoEducationDto request) {
+    public PaginationResponse getPsychoEducationPagination(PsychoEducationDto request) {
 
         Pageable pageable = null;
         if (Validator.isValid(request.getPageSize())) {
@@ -136,6 +138,10 @@ public class PsychoEducationServiceImpl implements PsychoEducationService {
                 Predicate name = criteriaBuilder.and(root.get("name").in(request.getName()));
                 addPsyEducationPredicate.add(name);
             }
+            if(request.getCreatedOn() != null) {
+                Predicate createdOn=criteriaBuilder.and(root.get("createdOn").in(request.getCreatedOn()));
+                addPsyEducationPredicate.add(createdOn);
+            }
 
             if (request.getFileId()!=null && !request.getFileId().isEmpty()) {
                 Predicate file = criteriaBuilder.and(fileJoin.get("fileType").in(request.getFileId()));
@@ -144,12 +150,16 @@ public class PsychoEducationServiceImpl implements PsychoEducationService {
             return criteriaBuilder.and(addPsyEducationPredicate.toArray(new Predicate[0]));
         });
 
-        Page<MtPsychoEducation> psychoEducationPage = psychoEducationRepo.findAll(addPsychoEducationSpecification, pageable);
+        Page<MtPsychoEducation> psychoEducationObject = psychoEducationRepo.findAll(addPsychoEducationSpecification, pageable);
 
-        if (psychoEducationPage.getContent() != null) {
-            return new org.springframework.data.domain.PageImpl<>(psychoEducationPage.getContent(), pageable, 0l);
+        if (psychoEducationObject.getContent() != null) {
+            PaginationResponse paginationResponse = new PaginationResponse();
+            paginationResponse.setPsychoEducationList(psychoEducationObject.getContent());
+            paginationResponse.setTotalPages(psychoEducationObject.getTotalPages());
+            paginationResponse.setTotalElements(paginationResponse.getTotalElements());
+            return paginationResponse;
         }
-        return new org.springframework.data.domain.PageImpl<>(new ArrayList<>(), pageable, 0l);
+        return new PaginationResponse();
 
     }
 
@@ -164,7 +174,21 @@ public class PsychoEducationServiceImpl implements PsychoEducationService {
                 mtPsychoEducation.setFile(fileEntity.get());
             }
         }
-
+        mtPsychoEducation.setSearchKey(getAppUserSearchKey(mtPsychoEducation));
         return mtPsychoEducation;
+    }
+
+    public String getAppUserSearchKey(MtPsychoEducation psychoEducation) {
+        String searchKey = "";
+        if (psychoEducation.getName() != null) {
+            searchKey = searchKey + " " + psychoEducation.getName();
+        }
+        if (psychoEducation.getDescription() != null) {
+            searchKey = searchKey + " " + psychoEducation.getDescription();
+        }
+        if (psychoEducation.getFile() != null) {
+            searchKey = searchKey + " " + psychoEducation.getFile();
+        }
+        return searchKey;
     }
 }

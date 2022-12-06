@@ -1,7 +1,6 @@
 package net.thrymr;
 
 import lombok.*;
-import net.thrymr.model.FileDetails;
 import net.thrymr.model.FileEntity;
 import org.springframework.data.mongodb.core.mapping.Document;
 

@@ -16,11 +16,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class CounsellorImpl implements CounsellorService {
@@ -47,8 +47,8 @@ public class CounsellorImpl implements CounsellorService {
         counsellor.setLanguages(request.getLanguages());
         counsellor.setBio(request.getBio());
         counsellor.setShiftStartAt(DateUtils.toStringToLocalTime(request.getShiftStartAt(), Constants.TIME_FORMAT_12_HOURS));
-        counsellor.setShiftEndAt(DateUtils.toStringToLocalTime(request.getShiftEndAt(),Constants.TIME_FORMAT_12_HOURS));
-        counsellor.setShiftTimings(request.getShiftStartAt()+" - "+request.getShiftEndAt());
+        counsellor.setShiftEndAt(DateUtils.toStringToLocalTime(request.getShiftEndAt(), Constants.TIME_FORMAT_12_HOURS));
+        counsellor.setShiftTimings(request.getShiftStartAt() + " - " + request.getShiftEndAt());
         if (Validator.isValid(request.getDesignation()) && request.getDesignation().equals("COUNSELLOR")) {
             counsellor.setDesignation(Roles.valueOf(request.getDesignation()));
         }
@@ -61,6 +61,7 @@ public class CounsellorImpl implements CounsellorService {
                 counsellor.setSite(optionalSite.get());
             }
         }
+        counsellor.setSearchKey(getCounsellorSearchKey(counsellor));
         counsellorRepo.save(counsellor);
         return "counsellor create successfully";
     }
@@ -93,22 +94,22 @@ public class CounsellorImpl implements CounsellorService {
                 if (Validator.isValid(request.getDesignation()) && request.getDesignation().equals("COUNSELLOR")) {
                     counsellor.setDesignation(Roles.valueOf(request.getDesignation()));
                 }
-                if(Validator.isValid(request.getCountryCode())){
+                if (Validator.isValid(request.getCountryCode())) {
                     counsellor.setCountryCode(request.getCountryCode());
                 }
                 if (Validator.isValid(request.getMobileNumber())) {
                     counsellor.setMobileNumber(request.getMobileNumber());
                 }
-                if(request.getShiftStartAt() != null) {
+                if (request.getShiftStartAt() != null) {
                     counsellor.setShiftStartAt(DateUtils.toStringToLocalTime(request.getShiftStartAt(), Constants.TIME_FORMAT_12_HOURS));
                 }
-                if(request.getShiftEndAt() != null) {
-                    counsellor.setShiftEndAt(DateUtils.toStringToLocalTime(request.getShiftEndAt(),Constants.TIME_FORMAT_12_HOURS));
+                if (request.getShiftEndAt() != null) {
+                    counsellor.setShiftEndAt(DateUtils.toStringToLocalTime(request.getShiftEndAt(), Constants.TIME_FORMAT_12_HOURS));
                 }
-                if(request.getShiftStartAt() != null && request.getShiftEndAt() != null){
-                    counsellor.setShiftTimings(request.getShiftStartAt()+" - "+request.getShiftEndAt());
+                if (request.getShiftStartAt() != null && request.getShiftEndAt() != null) {
+                    counsellor.setShiftTimings(request.getShiftStartAt() + " - " + request.getShiftEndAt());
                 }
-                if(Validator.isValid(request.getGender())){
+                if (Validator.isValid(request.getGender())) {
                     counsellor.setGender(Gender.valueOf(request.getGender()));
                 }
                 if (Validator.isValid(request.getSiteId())) {
@@ -117,6 +118,7 @@ public class CounsellorImpl implements CounsellorService {
                         counsellor.setSite(optionalSite.get());
                     }
                 }
+                counsellor.setSearchKey(getCounsellorSearchKey(counsellor));
                 counsellorRepo.save(counsellor);
                 return "counsellor update successfully";
             }
@@ -132,6 +134,8 @@ public class CounsellorImpl implements CounsellorService {
             counsellor = optionalCounsellor.get();
             counsellor.setIsDeleted(Boolean.TRUE);
             counsellor.setIsActive(Boolean.FALSE);
+            counsellor.setSearchKey(getCounsellorSearchKey(counsellor));
+            counsellorRepo.save(counsellor);
         }
         return "counsellor delete successfully";
     }
@@ -144,7 +148,7 @@ public class CounsellorImpl implements CounsellorService {
         }
         if (response.getSortCounsellorName() != null && response.getSortCounsellorName().equals(Boolean.TRUE)) {
             pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.ASC, "counsellorName");
-        }else if(response.getSortCounsellorName() != null && response.getSortCounsellorName().equals(Boolean.FALSE)){
+        } else if (response.getSortCounsellorName() != null && response.getSortCounsellorName().equals(Boolean.FALSE)) {
             pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.DESC, "counsellorName");
         }
         //filters
@@ -171,8 +175,8 @@ public class CounsellorImpl implements CounsellorService {
                 addCounsellorPredicate.add(site);
             }
 
-            if(response.getShiftTimings() != null){
-                Predicate shiftTimings= criteriaBuilder.and(root.get("shiftTimings").in(response.getShiftTimings()));
+            if (response.getShiftTimings() != null) {
+                Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(response.getShiftTimings()));
                 addCounsellorPredicate.add(shiftTimings);
             }
 
@@ -187,7 +191,7 @@ public class CounsellorImpl implements CounsellorService {
         assert pageable != null;
         Page<Counsellor> counsellorObjectives = counsellorRepo.findAll(addCounsellorSpecification, pageable);
 
-        if (counsellorObjectives.getContent() != null) {
+        if (counsellorObjectives.getContent() != null ) {
             return new org.springframework.data.domain.PageImpl<>(counsellorObjectives.getContent(), pageable, 0l);
         }
         return new org.springframework.data.domain.PageImpl<>(new ArrayList<>(), pageable, 0l);
@@ -203,5 +207,47 @@ public class CounsellorImpl implements CounsellorService {
         }
         return new Counsellor();
     }
+
+    public String getCounsellorSearchKey(Counsellor counsellor) {
+        String searchKey = "";
+        if (counsellor.getCounsellorName() != null) {
+            searchKey = searchKey + " " + counsellor.getCounsellorName();
+        }
+        if (counsellor.getEmpId() != null) {
+            searchKey = searchKey + " " + counsellor.getEmpId();
+        }
+        if (counsellor.getEmailId() != null) {
+            searchKey = searchKey + " " + counsellor.getEmailId();
+        }
+        if (counsellor.getCountryCode() != null) {
+            searchKey = searchKey + " " + counsellor.getCountryCode();
+        }
+        if (counsellor.getMobileNumber() != null) {
+            searchKey = searchKey + " " + counsellor.getMobileNumber();
+        }
+        if (counsellor.getDesignation() != null) {
+            searchKey = searchKey + " " + counsellor.getDesignation();
+        }
+        if (counsellor.getShiftStartAt() != null) {
+            searchKey = searchKey + " " + counsellor.getShiftStartAt();
+        }
+        if (counsellor.getShiftEndAt() != null) {
+            searchKey = searchKey + " " + counsellor.getShiftEndAt();
+        }
+        if (counsellor.getShiftTimings() != null) {
+            searchKey = searchKey + " " + counsellor.getShiftTimings();
+        }
+        if (counsellor.getBio() != null) {
+            searchKey = searchKey + " " + counsellor.getBio();
+        }
+        if (counsellor.getGender() != null) {
+            searchKey = searchKey + " " + counsellor.getGender();
+        }
+        if (counsellor.getIsActive() != null) {
+            searchKey = searchKey + " " + counsellor.getIsActive();
+        }
+        return searchKey;
+    }
+
 
 }

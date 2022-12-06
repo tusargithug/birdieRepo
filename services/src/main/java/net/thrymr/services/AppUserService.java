@@ -1,12 +1,12 @@
 package net.thrymr.services;
 import net.thrymr.dto.AppUserDto;
+import net.thrymr.dto.CounsellorEmployeeDto;
 import net.thrymr.dto.UserCourseDto;
 import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.dto.response.UserAppointmentResponse;
 import net.thrymr.enums.Roles;
 import net.thrymr.model.AppUser;
 import net.thrymr.utils.ApiResponse;
-import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
@@ -34,4 +34,5 @@ public interface AppUserService {
 
     PaginationResponse getAllAppUserPagination(AppUserDto response);
 
+    String saveCounsellorEmployeeInfo(CounsellorEmployeeDto request);
 }

@@ -11,8 +11,8 @@ import net.thrymr.repository.CountryRepo;
 import net.thrymr.repository.RegionRepo;
 import net.thrymr.repository.SiteRepo;
 import net.thrymr.services.CityCountyAndRegionService;
-import net.thrymr.utils.ApiResponse;
 import net.thrymr.utils.Validator;
+import org.apache.poi.sl.draw.geom.GuideIf;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -20,7 +20,6 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -50,9 +49,9 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
         if(mtRegionId.isPresent()) {
             mtCountry.setRegion(mtRegionId.get());
         }
-
-       countryRepo.save(mtCountry);
-       return "Country saved successfully";
+        mtCountry.setSearchKey(getCountrySearchKey(mtCountry));
+        countryRepo.save(mtCountry);
+        return "Country saved successfully";
     }
 
     @Override
@@ -67,11 +66,33 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
             if(Validator.isValid(countryDto.getCountryCode())) {
                 mtCountry.setCountryCode(countryDto.getCountryCode());
             }
+            if(Validator.isValid(countryDto.getRegionId())) {
+                Optional<MtRegion> regionOptional= regionRepo.findById(countryDto.getRegionId());
+                if(regionOptional.isPresent()){
+                    mtCountry.setRegion(regionOptional.get());
+                }
+            }
+            mtCountry.setSearchKey(getCountrySearchKey(mtCountry));
             countryRepo.save(mtCountry);
             return "Country update successfully";
         }
         return "this id not in database";
 
+    }
+
+
+    public String getAppUserSearchKey(MtCity mtCity) {
+        String searchKey = "";
+        if (mtCity.getCityName() != null) {
+            searchKey = searchKey + " " + mtCity.getCityName();
+        }
+        if (mtCity.getCountry() != null) {
+            searchKey = searchKey + " " + mtCity.getCountry();
+        }
+        if (mtCity.getSites() != null) {
+            searchKey = searchKey + " " + mtCity.getSites();
+        }
+        return searchKey;
     }
 
     @Override
@@ -96,6 +117,22 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
         return "this id not in database";
     }
 
+    public String getCountrySearchKey(MtCountry country) {
+        String searchKey = "";
+        if (country.getCountryName() != null) {
+            searchKey = searchKey + " " + country.getCountryName();
+        }
+        if (country.getCountryCode() != null) {
+            searchKey = searchKey + " " + country.getCountryCode();
+        }
+        if (country.getRegion() != null) {
+            searchKey = searchKey + " " + country.getRegion();
+        }
+        if (country.getCities() != null) {
+            searchKey = searchKey + " " + country.getCities();
+        }
+        return searchKey;
+    }
 
     @Override
     public String saveCity(CityDto cityDto) {
@@ -105,10 +142,24 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
         if(mtCountryId.isPresent()) {
             mtCity.setCountry(mtCountryId.get());
         }
+        mtCity.setSearchKey(getAppUserSearchKey(mtCity));
         cityRepo.save(mtCity);
         return "City saved successfully";
     }
 
+    public String getRegionSearchKey(MtRegion region) {
+        String searchKey = "";
+        if (region.getRegionName() != null) {
+            searchKey = searchKey + " " + region.getRegionName();
+        }
+        if (region.getMtCountry() != null) {
+            searchKey = searchKey + " " + region.getMtCountry();
+        }
+        if (region.getSite() != null) {
+            searchKey = searchKey + " " + region.getSite();
+        }
+         return searchKey;
+    }
     @Override
     public String updateCityById(CityDto cityDto) {
         Optional<MtCity> mtCityId=cityRepo.findById(cityDto.getId());
@@ -119,7 +170,8 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
                 mtCity.setCityName(cityDto.getCityName());
                 cityRepo.save(mtCity);
             }
-           return  "City update successfully";
+            mtCity.setSearchKey(getAppUserSearchKey(mtCity));
+            return "City update successfully";
         }
         return "this id not in data base";
     }
@@ -152,6 +204,7 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
     public String saveRegion(RegionDto regionDto) {
         MtRegion mtRegion=new MtRegion();
         mtRegion.setRegionName(regionDto.getRegionName());
+        mtRegion.setSearchKey(getRegionSearchKey(mtRegion));
         regionRepo.save(mtRegion);
         return "Region saved successfully";
     }
@@ -165,6 +218,7 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
             if(Validator.isValid(regionDto.getId())) {
                 mtRegion.setRegionName(regionDto.getRegionName());
             }
+            mtRegion.setSearchKey(getRegionSearchKey(mtRegion));
             regionRepo.save(mtRegion);
             return "region update successfully";
         }
@@ -330,6 +384,44 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
             return "REGION.IMPORT.SUCCESS";
         }
         return  "REGION.IMPORT.FAILED";
+    }
+
+    @Override
+    public MtRegion getRegionById(Long id) {
+        MtRegion mtRegion= null;
+        if(Validator.isValid(id)){
+            Optional<MtRegion> optionalMtRegion= regionRepo.findById(id);
+            if(optionalMtRegion.isPresent() && optionalMtRegion.get().getIsDeleted().equals(Boolean.FALSE)){
+                mtRegion = optionalMtRegion.get();
+                return mtRegion;
+            }
+        }
+        return new MtRegion();
+    }
+
+    @Override
+    public MtCountry getCountryById(Long id) {
+        MtCountry mtCountry = null;
+        if (Validator.isValid(id)) {
+            Optional<MtCountry> optionalMtCountry = countryRepo.findById(id);
+            if (optionalMtCountry.isPresent() && optionalMtCountry.get().getIsDeleted().equals(Boolean.FALSE)) {
+                mtCountry = optionalMtCountry.get();
+                return mtCountry;
+            }
+        }
+        return new MtCountry();
+    }
+        @Override
+    public MtCity getCityById(Long id) {
+        MtCity mtCity = null;
+        if(Validator.isValid(id)){
+            Optional<MtCity> optionalMtCity = cityRepo.findById(id);
+            if(optionalMtCity.isPresent() && optionalMtCity.get().getIsDeleted().equals(Boolean.FALSE)){
+                mtCity = optionalMtCity.get();
+                return mtCity;
+            }
+        }
+        return new MtCity();
     }
 
     private String getCellValue(XSSFCell cell) {

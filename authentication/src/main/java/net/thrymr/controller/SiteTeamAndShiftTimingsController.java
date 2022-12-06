@@ -2,13 +2,13 @@ package net.thrymr.controller;
 
 import net.thrymr.dto.*;
 import net.thrymr.dto.response.PaginationResponse;
+import net.thrymr.enums.Alerts;
 import net.thrymr.model.AppUser;
 import net.thrymr.model.ShiftTimings;
 import net.thrymr.model.Site;
 import net.thrymr.model.Team;
 import net.thrymr.services.SiteTeamAndShiftTimingsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -44,6 +44,11 @@ public class SiteTeamAndShiftTimingsController {
     public String updateSite(@Argument(name = "input")SiteDto siteDto){
         return siteTeamAndShiftTimingsService.updateSite(siteDto);
     }
+
+    @QueryMapping(name = "getSiteById")
+    public Site getSiteById(@Argument Long id){
+        return siteTeamAndShiftTimingsService.getSiteById(id);
+    }
     @MutationMapping(name="deleteSiteById")
     public String deleteSiteById(@Argument Long id){
         return siteTeamAndShiftTimingsService.deleteSiteById(id);
@@ -72,24 +77,28 @@ public class SiteTeamAndShiftTimingsController {
         return siteTeamAndShiftTimingsService.getAllSitePagination(siteDto);
     }
 
-    @QueryMapping(name = "getAllTeam")
-    public List<Team> getAllTeam(){
-        List<Team> teamList= siteTeamAndShiftTimingsService.getAllTeam();
-        return teamList;
-    }
-    @QueryMapping(name = "getAllSite")
-    public List<Site> getAllSite(){
-        return siteTeamAndShiftTimingsService.getAllSite();
-    }
 
     @QueryMapping(name = "getAllShiftTimings")
     public List<ShiftTimings> getAllShiftTimings(){
         return siteTeamAndShiftTimingsService.getAllShiftTimings();
     }
 
-    @QueryMapping(name="getAllAppUserByAlerts")
-    public List<AppUser> getAllAppUserByAlerts(@Argument(name = "input") AppUserDto request)  {
-        return siteTeamAndShiftTimingsService.getAllAppUserByAlerts(request);
+    @QueryMapping(name="getAllAppUserByRoles")
+    public List<AppUser> getAllAppUserByRoles(@Argument(name = "input") AppUserDto request)  {
+        return siteTeamAndShiftTimingsService.getAllAppUserByRoles(request);
     }
 
+    @QueryMapping(name="previewAlertNotification")
+    public RoleWiseCountResponse previewAlertNotification(@Argument(name = "input") AppUserDto request)  {
+        return siteTeamAndShiftTimingsService.previewAlertNotification(request);
+    }
+
+    @QueryMapping("getTeamById")
+    public Team getTeamById(@Argument Long id) {
+        return siteTeamAndShiftTimingsService.getTeamById(id);
+    }
+    @QueryMapping("getAllEnumAlerts")
+    public List<Alerts> getAllEnumAlerts(){
+        return siteTeamAndShiftTimingsService.getAllEnumAlerts();
+    }
 }

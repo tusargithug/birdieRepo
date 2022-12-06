@@ -5,26 +5,21 @@ import com.mongodb.DBObject;
 import com.mongodb.client.gridfs.model.GridFSFile;
 import net.thrymr.FileDocument;
 import net.thrymr.FileDocumentRepo;
-import net.thrymr.model.FileDetails;
 import net.thrymr.model.FileEntity;
 import net.thrymr.model.Groups;
 import net.thrymr.repository.FileRepo;
 import net.thrymr.repository.GroupRepo;
 import net.thrymr.services.FileService;
-import net.thrymr.utils.Validator;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 
 @Service
@@ -75,6 +70,7 @@ public class FileServiceImplementation implements FileService {
                 fileEntity.setFileType("ZIP");
             }
             fileEntity.setFileContentType(upload.getContentType());
+            fileEntity.setSearchKey(getFileEntitySearchKey(fileEntity));
             FileDocument fileDocument = new FileDocument();
             fileDocument.setFileEntity(fileEntity);
             fileDocumentRepo.save(fileDocument);
@@ -116,10 +112,36 @@ public class FileServiceImplementation implements FileService {
                 fileDetails = optionalFileDetails.get();
                 fileDetails.setIsActive(Boolean.FALSE);
                 fileDetails.setIsDeleted(Boolean.TRUE);
+                fileDetails.setSearchKey(getFileEntitySearchKey(fileDetails));
                 fileRepo.save(fileDetails);
             }
             return "file delete successfully";
         }
         return "this id not present in database";
     }
+
+    public String getFileEntitySearchKey(FileEntity fileEntity) {
+        String searchKey = "";
+        if (fileEntity.getFileId() != null) {
+            searchKey = searchKey + " " + fileEntity.getFileId();
+        }
+        if (fileEntity.getFileName() != null) {
+            searchKey = searchKey + " " + fileEntity.getFileName();
+        }
+        if (fileEntity.getFileType() != null) {
+            searchKey = searchKey + " " + fileEntity.getFileType();
+        }
+        if (fileEntity.getFileSize() != null) {
+            searchKey = searchKey + " " + fileEntity.getFileSize();
+        }
+        if (fileEntity.getFileContentType() != null) {
+            searchKey = searchKey + " " + fileEntity.getFileContentType();
+        }
+        if (fileEntity.getIsActive() != null) {
+            searchKey = searchKey + " " + fileEntity.getIsActive();
+        }
+        return searchKey;
+    }
+
+
 }
