@@ -24,7 +24,7 @@ type Query {
     getCounsellorSlot:[CounsellorSlot]
     getAllShiftTimings:[ShiftTimings]
     getCounsellorSlotById(id:ID!):CounsellorSlot
-    getAllCounsellor(input:CounsellorDto):[Counsellor]
+    getAllCounsellorPagination(input:CounsellorDto):PaginationResponse
     getAllVendor:[Vendor]
     getVendorById(id:ID):Vendor
     getAllVendorPagination(input:VendorDto):PaginationResponse
@@ -378,6 +378,7 @@ input CounsellorDto {
      shiftTimings:String
      countryCode:String
      gender:String
+     isCreatedOn:Boolean
 }
 
 type Vendor{
@@ -663,8 +664,10 @@ type PaginationResponse{
     chapterList:[Chapter]
     psychoEducationList:[MtPsychoEducation]
     unitList:[Unit]
+    counsellorList:[Counsellor]
     totalPages:Int
     totalElements:Int
+
 }
 
 type MapEntry {

@@ -1,6 +1,7 @@
 package net.thrymr.services;
 
 import net.thrymr.dto.CounsellorDto;
+import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.model.Counsellor;
 import org.springframework.data.domain.Page;
 
@@ -13,7 +14,7 @@ public interface CounsellorService {
 
     String deleteCounsellorById(Long id);
 
-    Page<Counsellor> getAllCounsellor(CounsellorDto response);
+    PaginationResponse getAllCounsellorPagination(CounsellorDto response);
 
     Counsellor getCounsellorById(Long id);
 }

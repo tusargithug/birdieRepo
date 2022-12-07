@@ -2,6 +2,7 @@ package net.thrymr.services.impl;
 
 import net.thrymr.constant.Constants;
 import net.thrymr.dto.CounsellorDto;
+import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.enums.Gender;
 import net.thrymr.enums.Roles;
 import net.thrymr.model.*;
@@ -21,6 +22,7 @@ import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CounsellorImpl implements CounsellorService {
@@ -136,15 +138,19 @@ public class CounsellorImpl implements CounsellorService {
             counsellor.setIsActive(Boolean.FALSE);
             counsellor.setSearchKey(getCounsellorSearchKey(counsellor));
             counsellorRepo.save(counsellor);
+            return "counsellor delete successfully";
         }
-        return "counsellor delete successfully";
+        return "this id not in database";
     }
 
     @Override
-    public Page<Counsellor> getAllCounsellor(CounsellorDto response) {
+    public PaginationResponse getAllCounsellorPagination(CounsellorDto response) {
         Pageable pageable = null;
-        if (response.getPageSize() != null) {
+        if (response.getPageSize() != null && response.getPageNumber() != null) {
             pageable = PageRequest.of(response.getPageNumber(), response.getPageSize());
+        }
+        if (response.getPageSize() != null && response.getPageNumber() != null) {
+            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.DESC, "createdOn");
         }
         if (response.getSortCounsellorName() != null && response.getSortCounsellorName().equals(Boolean.TRUE)) {
             pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.ASC, "counsellorName");
@@ -188,13 +194,22 @@ public class CounsellorImpl implements CounsellorService {
             }
             return criteriaBuilder.and(addCounsellorPredicate.toArray(new Predicate[0]));
         });
-        assert pageable != null;
-        Page<Counsellor> counsellorObjectives = counsellorRepo.findAll(addCounsellorSpecification, pageable);
-
-        if (counsellorObjectives.getContent() != null ) {
-            return new org.springframework.data.domain.PageImpl<>(counsellorObjectives.getContent(), pageable, 0l);
+        PaginationResponse paginationResponse = new PaginationResponse();
+        if (response.getPageSize() != null && response.getPageNumber() != null) {
+            Page<Counsellor> councellorObjective = counsellorRepo.findAll(addCounsellorSpecification, pageable);
+            if (councellorObjective.getContent() != null) {
+                paginationResponse.setCounsellorList(councellorObjective.getContent());
+                paginationResponse.setTotalPages(councellorObjective.getTotalPages());
+                paginationResponse.setTotalElements(councellorObjective.getTotalElements());
+                return paginationResponse;
+            }
+        } else {
+            List<Counsellor> counsellorList = counsellorRepo.findAll(addCounsellorSpecification);
+            paginationResponse.setCounsellorList(counsellorList.stream().filter(counsellor -> counsellor.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList()));
+            return paginationResponse;
         }
-        return new org.springframework.data.domain.PageImpl<>(new ArrayList<>(), pageable, 0l);
+
+        return new PaginationResponse();
     }
 
     @Override
