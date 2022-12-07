@@ -11,15 +11,15 @@ import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 public class TeamMembersController {
     @Autowired
     TeamMembersService teamMembersService;
-
-    @MutationMapping(name = "saveTeamMembers")
-    public String saveTeamMembers(@Argument(name = "input") TeamMembersDto request) {
-        return teamMembersService.saveTeamMembers(request);
+    @MutationMapping(name = "addEmployeeToTeam")
+    public String addEmployeeToTeam(@Argument (name = "input") TeamMembersDto request) {
+        return teamMembersService.addEmployeeToTeam(request);
     }
 
     @MutationMapping(name = "updateTeamMemberById")
@@ -28,7 +28,7 @@ public class TeamMembersController {
     }
 
     @QueryMapping(name="getTeamMemberById")
-    public TeamMembers getTeamMemberById(@Argument Long id){
+    public Set<TeamMembers> getTeamMemberById(@Argument Long id){
         return teamMembersService.getTeamMemberById(id);
     }
 

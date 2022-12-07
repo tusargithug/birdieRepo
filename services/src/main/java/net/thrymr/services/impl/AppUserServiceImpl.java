@@ -220,7 +220,6 @@ public class AppUserServiceImpl implements AppUserService {
             }
         }
         user.setSearchKey(getAppUserSearchKey(user));
-
         appUserRepo.save(user);
         return "User Saved successfully";
     }
@@ -347,15 +346,6 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public List<AppUser> getAllAppUsers() {
-        List<AppUser> appUserList = appUserRepo.findAll();
-        if (!appUserList.isEmpty()) {
-            return appUserList.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
-        }
-        return new ArrayList<>();
-    }
-
-    @Override
     public List<Roles> getAllEnumRoles() {
         List<Roles> rolesList = Arrays.asList(Roles.ADMIN, Roles.COUNSELLOR, Roles.DIRECTOR, Roles.EMPLOYEE, Roles.NONE, Roles.TEAM_LEADER, Roles.TEAM_MANAGER, Roles.VENDOR
                 , Roles.WELL_BEING_MANGER, Roles.SITE_MANAGER);
@@ -399,50 +389,50 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
 //    @Override
-//    public PaginationResponse getAllAppUserPagination(AppUserDto response) {
+//    public PaginationResponse getAllAppUserPagination(AppUserDto request) {
 //        Pageable pageable = null;
-//        if (Validator.isValid(response.getPageSize())) {
-//            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize());
+//        if (Validator.isValid(request.getPageSize())) {
+//            pageable = PageRequest.of(request.getPageNumber(), request.getPageSize());
 //        }
-//        if (response.getSortUserName() != null && response.getSortUserName().equals(Boolean.TRUE)) {
-//            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.ASC, "userName");
-//        } else if (response.getSortUserName() != null && response.getSortUserName().equals(Boolean.FALSE)) {
-//            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.DESC, "userName");
+//        if (request.getSortUserName() != null && request.getSortUserName().equals(Boolean.TRUE)) {
+//            pageable = PageRequest.of(request.getPageNumber(), request.getPageSize(), Sort.Direction.ASC, "userName");
+//        } else if (request.getSortUserName() != null && request.getSortUserName().equals(Boolean.FALSE)) {
+//            pageable = PageRequest.of(request.getPageNumber(), request.getPageSize(), Sort.Direction.DESC, "userName");
 //        }
 //
 //        Specification<CounsellorEmployee> appUserSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
 //            List<Predicate> addVendorPredicate = new ArrayList<>();
 //            Join<CounsellorEmployee, AppUser> appUserJoin = root.join("appUser");
 //            Join<CounsellorEmployee, Counsellor> counsellorJoin = root.join("counsellor");
-//            if (response.getUserName() != null) {
-//                Predicate userName = criteriaBuilder.and(appUserJoin.get("userName").in(response.getUserName()));
+//            if (request.getUserName() != null) {
+//                Predicate userName = criteriaBuilder.and(appUserJoin.get("userName").in(request.getUserName()));
 //                addVendorPredicate.add(userName);
 //            }
-//            if (response.getEmpId() != null && !response.getEmpId().isEmpty()) {
-//                Predicate empId = criteriaBuilder.and(appUserJoin.get("empId").in(response.getEmpId()));
+//            if (request.getEmpId() != null && !request.getEmpId().isEmpty()) {
+//                Predicate empId = criteriaBuilder.and(appUserJoin.get("empId").in(request.getEmpId()));
 //                addVendorPredicate.add(empId);
 //            }
-//            if (response.getRoles() != null) {
-//                Predicate roles = criteriaBuilder.and(appUserJoin.get("roles").in(response.getRoles()));
+//            if (request.getRoles() != null) {
+//                Predicate roles = criteriaBuilder.and(appUserJoin.get("roles").in(request.getRoles()));
 //                addVendorPredicate.add(roles);
 //            }
-//            if (response.getAlertList() != null && !response.getAlertList().isEmpty()) {
-//                Predicate alerts = criteriaBuilder.and(appUserJoin.get("alerts").in(response.getAlertList()));
+//            if (request.getAlertList() != null && !request.getAlertList().isEmpty()) {
+//                Predicate alerts = criteriaBuilder.and(appUserJoin.get("alerts").in(request.getAlertList()));
 //                addVendorPredicate.add(alerts);
 //            }
 //
-//            if (response.getCounsellorId() != null) {
-//                Predicate counsellorName = criteriaBuilder.and(counsellorJoin.get("id").in(response.getCounsellorId()));
+//            if (request.getCounsellorId() != null) {
+//                Predicate counsellorName = criteriaBuilder.and(counsellorJoin.get("id").in(request.getCounsellorId()));
 //                addVendorPredicate.add(counsellorName);
 //            }
-//            if (response.getShiftTimingsList() != null && !response.getShiftTimingsList().isEmpty()) {
-//                Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(response.getShiftTimingsList()));
+//            if (request.getShiftTimingsList() != null && !request.getShiftTimingsList().isEmpty()) {
+//                Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(request.getShiftTimingsList()));
 //                addVendorPredicate.add(shiftTimings);
 //            }
-//            if (Validator.isValid(response.getSearchKey())) {
+//            if (Validator.isValid(request.getSearchKey())) {
 //                Predicate searchPredicate = criteriaBuilder.like(
 //                        criteriaBuilder.lower(root.get("searchKey")),
-//                        "%" + response.getSearchKey().toLowerCase() + "%");
+//                        "%" + request.getSearchKey().toLowerCase() + "%");
 //                addVendorPredicate.add(searchPredicate);
 //            }
 //            return criteriaBuilder.and(addVendorPredicate.toArray(new Predicate[0]));
@@ -459,58 +449,67 @@ public class AppUserServiceImpl implements AppUserService {
 //    }
 
     @Override
-    public PaginationResponse getAllAppUserPagination(AppUserDto response) {
+    public PaginationResponse getAllAppUserPagination(AppUserDto request) {
         Pageable pageable = null;
-        if (Validator.isValid(response.getPageSize())) {
-            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize());
+        if (request.getPageSize() != null && request.getPageNumber() != null) {
+            pageable = PageRequest.of(request.getPageNumber(), request.getPageSize());
         }
-        if (response.getSortUserName() != null && response.getSortUserName().equals(Boolean.TRUE)) {
-            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.ASC, "userName");
-        } else if (response.getSortUserName() != null && response.getSortUserName().equals(Boolean.FALSE)) {
-            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.DESC, "userName");
+        if (request.getPageSize() != null && request.getPageNumber() != null) {
+            pageable = PageRequest.of(request.getPageNumber(), request.getPageSize(), Sort.Direction.DESC, "createdOn");
+        }
+        if (request.getSortUserName() != null && request.getSortUserName().equals(Boolean.TRUE)) {
+            pageable = PageRequest.of(request.getPageNumber(), request.getPageSize(), Sort.Direction.ASC, "userName");
+        } else if (request.getSortUserName() != null && request.getSortUserName().equals(Boolean.FALSE)) {
+            pageable = PageRequest.of(request.getPageNumber(), request.getPageSize(), Sort.Direction.DESC, "userName");
         }
 
         Specification<AppUser> appUserSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> addVendorPredicate = new ArrayList<>();
-            if (response.getUserName() != null) {
-                Predicate userName = criteriaBuilder.and(root.get("userName").in(response.getUserName()));
+            if (request.getUserName() != null) {
+                Predicate userName = criteriaBuilder.and(root.get("userName").in(request.getUserName()));
                 addVendorPredicate.add(userName);
             }
-            if (response.getEmpId() != null && !response.getEmpId().isEmpty()) {
-                Predicate empId = criteriaBuilder.and(root.get("empId").in(response.getEmpId()));
+            if (request.getEmpId() != null && !request.getEmpId().isEmpty()) {
+                Predicate empId = criteriaBuilder.and(root.get("empId").in(request.getEmpId()));
                 addVendorPredicate.add(empId);
             }
-            if (response.getRoles() != null) {
-                Predicate roles = criteriaBuilder.and(root.get("roles").in(response.getRoles()));
+            if (request.getRoles() != null && request.getRoles().isEmpty()) {
+                Predicate roles = criteriaBuilder.and(root.get("roles").in(request.getRoles()));
                 addVendorPredicate.add(roles);
             }
-            if (response.getAlertList() != null && !response.getAlertList().isEmpty()) {
-                Predicate alerts = criteriaBuilder.and(root.get("alerts").in(response.getAlertList()));
+            if (request.getAlertList() != null && !request.getAlertList().isEmpty()) {
+                Predicate alerts = criteriaBuilder.and(root.get("alerts").in(request.getAlertList()));
                 addVendorPredicate.add(alerts);
             }
 
-            if (response.getRoles() != null && response.getRoles().equalsIgnoreCase(Roles.COUNSELLOR.toString())) {
-                Predicate roles = criteriaBuilder.and(root.get("counsellorName").in(response.getCounsellorId()));
+            if (request.getRoles() != null && request.getRoles().equalsIgnoreCase(Roles.COUNSELLOR.toString())) {
+                Predicate roles = criteriaBuilder.and(root.get("counsellorName").in(request.getCounsellorId()));
                 addVendorPredicate.add(roles);
             }
-            if (response.getShiftTimingsList() != null && !response.getShiftTimingsList().isEmpty()) {
-                Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(response.getShiftTimingsList()));
+            if (request.getShiftTimingsList() != null && !request.getShiftTimingsList().isEmpty()) {
+                Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(request.getShiftTimingsList()));
                 addVendorPredicate.add(shiftTimings);
             }
-            if (Validator.isValid(response.getSearchKey())) {
+            if (Validator.isValid(request.getSearchKey())) {
                 Predicate searchPredicate = criteriaBuilder.like(
                         criteriaBuilder.lower(root.get("searchKey")),
-                        "%" + response.getSearchKey().toLowerCase() + "%");
+                        "%" + request.getSearchKey().toLowerCase() + "%");
                 addVendorPredicate.add(searchPredicate);
             }
             return criteriaBuilder.and(addVendorPredicate.toArray(new Predicate[0]));
         });
-        Page<AppUser> appUserObjectives = appUserRepo.findAll(appUserSpecification, pageable);
-        if (appUserObjectives.getContent() != null) {
-            PaginationResponse paginationResponse = new PaginationResponse();
-            paginationResponse.setAppUserList(appUserObjectives.getContent());
-            paginationResponse.setTotalPages(appUserObjectives.getTotalPages());
-            paginationResponse.setTotalElements(appUserObjectives.getTotalElements());
+        PaginationResponse paginationResponse = new PaginationResponse();
+        if (request.getPageSize() != null && request.getPageNumber() != null) {
+            Page<AppUser> appUserObjectives = appUserRepo.findAll(appUserSpecification, pageable);
+            if (appUserObjectives.getContent() != null) {
+                paginationResponse.setAppUserList(appUserObjectives.getContent());
+                paginationResponse.setTotalPages(appUserObjectives.getTotalPages());
+                paginationResponse.setTotalElements(appUserObjectives.getTotalElements());
+                return paginationResponse;
+            }
+        } else {
+            List<AppUser> appUserList = appUserRepo.findAll(appUserSpecification);
+            paginationResponse.setAppUserList(appUserList.stream().filter(team -> team.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList()));
             return paginationResponse;
         }
         return new PaginationResponse();

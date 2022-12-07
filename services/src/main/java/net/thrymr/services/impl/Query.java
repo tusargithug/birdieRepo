@@ -22,6 +22,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class Query implements GraphQLQueryResolver {
@@ -84,7 +85,8 @@ public class Query implements GraphQLQueryResolver {
 
     @Autowired
     MeditationService meditationService;
-
+    @Autowired
+    TeamMembersService teamMembersService;
 
     @QueryMapping(name = "getMoodSourceById")
     public MtMoodSource getMoodSourceById(@Argument Long id) {
@@ -122,14 +124,6 @@ public class Query implements GraphQLQueryResolver {
         return appUserService.getAppUserById(id);
 
     }
-
-    // get all Users
-    @QueryMapping("getAllAppUsers")
-    public List<AppUser> getAllAppUsers() throws ParseException {
-        return appUserService.getAllAppUsers();
-
-    }
-
 
     @QueryMapping("getAllMtRoles")
     public List<MtRoles> getAllMtRoles() {
@@ -431,5 +425,14 @@ public class Query implements GraphQLQueryResolver {
     @QueryMapping("getCityById")
     public MtCity getCityById(@Argument Long id) {
         return cityCountyAndRegionService.getCityById(id);
+    }
+
+    @QueryMapping(name="getAllTeamMember")
+    public List<TeamMembers> getAllTeamMember(){
+        return teamMembersService.getAllTeamMember();
+    }
+    @QueryMapping(name="getTeamMemberById")
+    public Set<TeamMembers> getTeamMemberById(@Argument Long id){
+        return teamMembersService.getTeamMemberById(id);
     }
 }

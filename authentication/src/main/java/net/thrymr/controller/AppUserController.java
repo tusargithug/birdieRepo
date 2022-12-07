@@ -39,12 +39,6 @@ public class AppUserController {
 
     }
 
-    // get all Users
-    @QueryMapping("getAllAppUsers")
-    public List<AppUser> getAllAppUsers() throws ParseException {
-        return appUserService. getAllAppUsers();
-    }
-
     @MutationMapping(name = "createAppUser")
     public String createAppUser(@Argument(name = "input") AppUserDto request) throws ParseException {
         return appUserService.createAppUser(request);

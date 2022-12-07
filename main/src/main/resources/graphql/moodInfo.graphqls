@@ -8,7 +8,6 @@ type Query {
     getAllMoodInfo:[MtMoodInfo]
     getAllMoodIntensities:[MtMoodIntensity]
     getAppUserById(id:ID):AppUser
-    getAllAppUsers:[AppUser]
     mtRoleById(id:ID):MtRoles
     getAllMtRoles:[MtRoles]
     getAllCategory:[Category]
@@ -72,6 +71,8 @@ type Query {
     getRegionById(id:ID):MtRegion
     getCountryById(id:ID):MtCountry
     getCityById(id:ID):MtCity
+    getTeamMemberById(id:ID):[TeamMembers]
+    getAllTeamMember:[TeamMembers]
 }
 
 type Mutation {
@@ -162,6 +163,8 @@ type Mutation {
     updateMeditationById(input:MeditationDto):String!
     deleteMeditationById(id:ID!):String!
     saveCounsellorEmployeeInfo(input:CounsellorEmployeeDto):String!
+    addEmployeeToTeam(input:TeamMembersDto):String!
+    updateTeamMemberById(input:TeamMembersDto):String!
 }
 
 scalar Upload
@@ -199,29 +202,26 @@ type UserAppointmentResponse{
 }
 
 input AppUserDto{
-     id:Int
-     email:String
-     userName:String
-     mobile:String
-     password:String
-#     searchKey:String
-     isActive:Boolean
-     empId:String
-     roles:String
-     siteId:Int
-     dateOfJoining:String
-     alerts:String
-     pageSize:Int
-     pageNumber:Int
-     addedOn:String
-     countryCode:String
-     gender:String
-#     isTeamLeader:Boolean
-     shiftStartAt:String
-     shiftEndAt:String
+    id:Int
+    email:String
+    userName:String
+    mobile:String
+    password:String
+    isActive:Boolean
+    empId:String
+    roles:String
+    siteId:Int
+    dateOfJoining:String
+    alerts:String
+    pageSize:Int
+    pageNumber:Int
+    addedOn:String
+    countryCode:String
+    gender:String
+    shiftStartAt:String
+    shiftEndAt:String
     isTeamLeader:Boolean
-    teamManagerIds:[ID]
-    teamLeaderIds:[ID]
+    appUserIdList:[ID]
     sortUserName:Boolean
     pictureId:String
     searchKey:String
@@ -674,8 +674,14 @@ type PaginationResponse{
     counsellorEmployeeList:[CounsellorEmployee]
 }
 
-type MapEntry {
-    key: String!
-    value: [Object!]
+input TeamMembersDto {
+    id:Int
+    appUserIdList:[Int]
+    teamId:Int
+    alerts:String
 }
-scalar Object
+
+type TeamMembers {
+    team:Team
+    appUser:AppUser
+}
