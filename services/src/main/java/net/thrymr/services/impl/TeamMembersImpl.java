@@ -34,7 +34,7 @@ public class TeamMembersImpl implements TeamMembersService {
             List<AppUser> appUserList = appUserRepo.findAllById(request.getAppUserIdList());
             for (AppUser appUser : appUserList) {
                 TeamMembers teamMembers = new TeamMembers();
-                if (Validator.isValid(String.valueOf(request.getAlerts()))) {
+                if (request.getAlerts() != null && !request.getAlerts().isEmpty()) {
                     if (appUser.getRoles().equals(Roles.TEAM_LEADER)) {
                         appUser.setAlerts(Alerts.valueOf(request.getAlerts()));
                         teamMembers.setAppUser(appUser);
