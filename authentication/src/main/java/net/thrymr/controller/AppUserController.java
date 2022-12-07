@@ -1,5 +1,6 @@
 package net.thrymr.controller;
 import net.thrymr.dto.AppUserDto;
+import net.thrymr.dto.CounsellorEmployeeDto;
 import net.thrymr.dto.UserCourseDto;
 import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.dto.response.UserAppointmentResponse;
@@ -79,5 +80,11 @@ public class AppUserController {
     @QueryMapping(name = "getAllAppUserPagination")
     public PaginationResponse getAllAppUserPagination(@Argument(name = "input") AppUserDto request) {
         return appUserService.getAllAppUserPagination(request);
+    }
+
+    @MutationMapping(name = "saveCounsellorEmployeeInfo")
+    public String saveCounsellorEmployeeInfo(@Argument(name = "input") CounsellorEmployeeDto request) {
+        return appUserService.saveCounsellorEmployeeInfo(request);
+
     }
 }

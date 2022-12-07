@@ -1,5 +1,6 @@
 package net.thrymr.services;
 import net.thrymr.dto.AppUserDto;
+import net.thrymr.dto.CounsellorEmployeeDto;
 import net.thrymr.dto.UserCourseDto;
 import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.dto.response.UserAppointmentResponse;
@@ -33,4 +34,5 @@ public interface AppUserService {
 
     PaginationResponse getAllAppUserPagination(AppUserDto response);
 
+    String saveCounsellorEmployeeInfo(CounsellorEmployeeDto request);
 }

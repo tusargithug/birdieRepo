@@ -547,6 +547,11 @@ public class MutationResolver implements GraphQLMutationResolver {
         return meditationService.deleteMeditationById(id);
     }
 
+    @MutationMapping(name = "saveCounsellorEmployeeInfo")
+    public String saveCounsellorEmployeeInfo(@Argument(name = "input") CounsellorEmployeeDto request) {
+        return appUserService.saveCounsellorEmployeeInfo(request);
+
+    }
 }
 
 

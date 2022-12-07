@@ -26,6 +26,7 @@ public class PaginationResponse {
     private List<MtWorksheet> worksheetList=new ArrayList<>();
     private Set<Chapter> chapterList= new HashSet<>();
     private List<Unit> unitList = new ArrayList<>();
+    private List<CounsellorEmployee> counsellorEmployeeList = new ArrayList<>();
     private List<MtPsychoEducation> psychoEducationList = new ArrayList<>();
     private int totalPages=0;
     private Long totalElements=0L;
