@@ -23,5 +23,6 @@ public class TeamDto {
     private String shiftEndAt;
     private String shiftTimings;
     private List<Long> siteIds;
+    private List<String> shiftTimingsList;
 
 }

@@ -18,7 +18,5 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> , JpaSpecifica
 	Optional<AppUser> findByMobileAndIsActiveAndIsDeleted(String mobile, Boolean aTrue, Boolean aFalse);
 	Optional<AppUser> findByEmail(String email);
 
-	List<AppUser> findAllByAlertsAndRolesIn(Alerts alert, List<Roles> appUserList);
-
-    List<AppUser> findAllByRolesIn(List<Long> teamLeaderIds);
+    List<AppUser> findAllByIdIn(List<Long> appUserIdList);
 }

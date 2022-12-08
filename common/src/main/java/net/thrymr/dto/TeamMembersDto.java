@@ -4,11 +4,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
 public class TeamMembersDto {
     private Long id;
-    private Long appUserId;
+    private List<Long> appUserIdList=new ArrayList<>();
     private Long teamId;
+    private String alerts;
 }

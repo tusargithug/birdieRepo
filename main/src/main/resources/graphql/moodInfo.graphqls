@@ -71,6 +71,11 @@ type Query {
     getAllFileDetailsByType:[GetFileDetails]
     getSiteById(id:ID):Site
     getAllEnumAlerts:[Alerts]
+    getRegionById(id:ID):MtRegion
+    getCountryById(id:ID):MtCountry
+    getCityById(id:ID):MtCity
+    getTeamMemberById(id:ID):[TeamMembers]
+    getAllTeamMember:[TeamMembers]
 }
 
 type Mutation {
@@ -115,7 +120,7 @@ type Mutation {
     updateCityById(input:CityDto):String!
     deleteCityById(id:ID):String!
     saveRegion(input:RegionDto):String!
-    #uploadRegionData(file:Upload!):String!
+    uploadRegionData(file:Upload!):String!
     updateRegionById(input:RegionDto):String!
     deleteRegionById(id:ID):String!
     createCounsellorSlot(input:TimeSlotDto):String!
@@ -160,6 +165,9 @@ type Mutation {
     createMeditation(input:MeditationDto):String!
     updateMeditationById(input:MeditationDto):String!
     deleteMeditationById(id:ID!):String!
+    saveCounsellorEmployeeInfo(input:CounsellorEmployeeDto):String!
+    addEmployeeToTeam(input:TeamMembersDto):String!
+    updateTeamMemberById(input:TeamMembersDto):String!
 }
 
 scalar Upload
@@ -197,33 +205,33 @@ type UserAppointmentResponse{
 }
 
 input AppUserDto{
-     id:Int
-     email:String
-     userName:String
-     mobile:String
-     password:String
-#     searchKey:String
-     isActive:Boolean
-     empId:String
-     roles:String
-     siteId:Int
-     dateOfJoining:String
-     alerts:String
-     pageSize:Int
-     pageNumber:Int
-     addedOn:String
-     countryCode:String
-     gender:String
-#     isTeamLeader:Boolean
-     shiftStartAt:String
-     shiftEndAt:String
+    id:Int
+    email:String
+    userName:String
+    mobile:String
+    password:String
+    isActive:Boolean
+    empId:String
+    roles:String
+    siteId:Int
+    dateOfJoining:String
+    alerts:String
+    pageSize:Int
+    pageNumber:Int
+    addedOn:String
+    countryCode:String
+    gender:String
+    shiftStartAt:String
+    shiftEndAt:String
     isTeamLeader:Boolean
-    teamManagerIds:[ID]
-    teamLeaderIds:[ID]
+    appUserIdList:[ID]
     sortUserName:Boolean
     pictureId:String
     searchKey:String
     teamId:Int
+    alertList:[String]
+    shiftTimingsList:[String]
+    counsellorId:Int
 }
 enum Roles{
     NONE
@@ -522,6 +530,10 @@ type UserMoodCheckIn{
     mtMoodIntensity:MtMoodIntensity
     description:String
 }
+type CounsellorEmployee{
+    counsellor:Counsellor
+    appUser:AppUser
+}
 type MtMoodSource{
     name:String
     description:String
@@ -646,6 +658,12 @@ input MeditationDto{
     fileType:String
     searchKey:String
 }
+
+input CounsellorEmployeeDto{
+    id:Int
+    appUserId:Int
+    counsellorId:Int
+}
 enum Gender{
     MALE
     FEMALE
@@ -667,11 +685,18 @@ type PaginationResponse{
     counsellorList:[Counsellor]
     totalPages:Int
     totalElements:Int
+    counsellorEmployeeList:[CounsellorEmployee]
+}
+
+input TeamMembersDto {
+    id:Int
+    appUserIdList:[Int]
+    teamId:Int
+    alerts:String
 
 }
 
-type MapEntry {
-    key: String!
-    value: [Object!]
+type TeamMembers {
+    team:Team
+    appUser:AppUser
 }
-scalar Object

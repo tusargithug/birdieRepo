@@ -1,5 +1,6 @@
 package net.thrymr.services;
 import net.thrymr.dto.AppUserDto;
+import net.thrymr.dto.CounsellorEmployeeDto;
 import net.thrymr.dto.UserCourseDto;
 import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.dto.response.UserAppointmentResponse;
@@ -25,12 +26,11 @@ public interface AppUserService {
 
     String createUserCourse(UserCourseDto request) throws ParseException;
 
-    List<AppUser> getAllAppUsers() throws ParseException;
-
     List<Roles> getAllEnumRoles();
 
     UserAppointmentResponse getUserAppointmentCountById(Long id);
 
     PaginationResponse getAllAppUserPagination(AppUserDto response);
 
+    String saveCounsellorEmployeeInfo(CounsellorEmployeeDto request);
 }

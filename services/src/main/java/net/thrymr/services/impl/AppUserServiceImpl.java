@@ -36,6 +36,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.persistence.criteria.Predicate;
 import java.io.IOException;
 import java.text.ParseException;
@@ -72,6 +73,11 @@ public class AppUserServiceImpl implements AppUserService {
     @Autowired
     FileRepo fileRepo;
 
+    @Autowired
+    CounsellorRepo counsellorRepo;
+
+    @Autowired
+    CounsellorEmployeeRepo counsellorEmployeeRepo;
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
@@ -108,33 +114,48 @@ public class AppUserServiceImpl implements AppUserService {
                     try {
                         row = worksheet.getRow(index);
                         AppUser appUser = new AppUser();
-                        if (row.getCell(1) != null) {
-                            appUser.setEmpId(getCellValue(row.getCell(1)));
+                        if (row.getCell(9) != null) {
+                            appUser.setEmpId(getCellValue(row.getCell(9)));
                         }
-                        if (row.getCell(2) != null) {
-                            appUser.setUserName(getCellValue(row.getCell(2)));
+                        if (row.getCell(10) != null) {
+                            appUser.setUserName(getCellValue(row.getCell(10)));
                         }
-                        if (row.getCell(3) != null) {
-                            appUser.setMobile(getCellValue(row.getCell(3)));
+                        if (row.getCell(11) != null) {
+                            appUser.setMobile(getCellValue(row.getCell(11)));
                         }
-                        if (row.getCell(4) != null) {
-                            appUser.setEmail(getCellValue(row.getCell(4)));
+                        if (row.getCell(12) != null) {
+                            appUser.setEmail(getCellValue(row.getCell(12)));
                         }
-                        if (row.getCell(5) != null) {
-                            appUser.setDateOfJoining(DateUtils.toFormatStringToDate(getCellValue(row.getCell(5)), Constants.DATE_FORMAT));
+                        if (row.getCell(13) != null) {
+                            appUser.setDateOfJoining(DateUtils.toFormatStringToDate(getCellValue(row.getCell(13)), Constants.DATE_FORMAT));
                         }
 
-                        if (row.getCell(6) != null) {
-                            Optional<Site> optionalSite = siteRepo.findById(Long.valueOf(getCellValue(row.getCell(6))));
+                        if (row.getCell(14) != null) {
+                            Optional<Site> optionalSite = siteRepo.findById(Long.valueOf(getCellValue(row.getCell(14))));
                             optionalSite.ifPresent(appUser::setSite);
                         }
-                        if (row.getCell(7) != null) {
-                            appUser.setAlerts(Alerts.valueOf(getCellValue(row.getCell(7))));
+                        if (row.getCell(15) != null) {
+                            appUser.setAlerts(Alerts.valueOf(getCellValue(row.getCell(15))));
                         }
-                        if (row.getCell(8) != null) {
-                            appUser.setRoles(Roles.valueOf(getCellValue(row.getCell(8))));
+                        if (row.getCell(16) != null) {
+                            appUser.setRoles(Roles.valueOf(getCellValue(row.getCell(16))));
                         }
-                        getAppUserSearchKey(appUser);
+                        if (row.getCell(17) != null) {
+                            appUser.setShiftEndAt(DateUtils.toStringToLocalTime(getCellValue(row.getCell(17)), Constants.TIME_FORMAT_12_HOURS));
+                        }
+                        if (row.getCell(18) != null) {
+                            appUser.setShiftEndAt(DateUtils.toStringToLocalTime(getCellValue(row.getCell(18)), Constants.TIME_FORMAT_12_HOURS));
+                        }
+                        if (row.getCell(19) != null) {
+                            appUser.setCountryCode(getCellValue(row.getCell(19)));
+                        }
+                        if (row.getCell(20) != null) {
+                            Optional<FileEntity> optionalFileEntity = fileRepo.findById(Long.valueOf(getCellValue(row.getCell(20))));
+                            optionalFileEntity.ifPresent(appUser::setUploadPicture);
+                        }
+                            appUser.setSearchKey(getAppUserSearchKey(appUser));
+
+                            getAppUserSearchKey(appUser);
                         appUsers.add(appUser);
                     } catch (Exception e) {
                         logger.error("Exception{} ", e);
@@ -194,12 +215,11 @@ public class AppUserServiceImpl implements AppUserService {
         user.setShiftTimings(request.getShiftStartAt() + " - " + request.getShiftEndAt());
         if (Validator.isValid(request.getPictureId())) {
             Optional<FileEntity> optionalFileEntity = fileRepo.findByFileId(request.getPictureId());
-           if (optionalFileEntity.isPresent()) {
-               user.setUploadPicture(optionalFileEntity.get());
-           }
+            if (optionalFileEntity.isPresent()) {
+                user.setUploadPicture(optionalFileEntity.get());
+            }
         }
         user.setSearchKey(getAppUserSearchKey(user));
-
         appUserRepo.save(user);
         return "User Saved successfully";
     }
@@ -326,15 +346,6 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public List<AppUser> getAllAppUsers() {
-        List<AppUser> appUserList = appUserRepo.findAll();
-        if (!appUserList.isEmpty()) {
-            return appUserList.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
-        }
-        return new ArrayList<>();
-    }
-
-    @Override
     public List<Roles> getAllEnumRoles() {
         List<Roles> rolesList = Arrays.asList(Roles.ADMIN, Roles.COUNSELLOR, Roles.DIRECTOR, Roles.EMPLOYEE, Roles.NONE, Roles.TEAM_LEADER, Roles.TEAM_MANAGER, Roles.VENDOR
                 , Roles.WELL_BEING_MANGER, Roles.SITE_MANAGER);
@@ -377,66 +388,151 @@ public class AppUserServiceImpl implements AppUserService {
         return new UserAppointmentResponse();
     }
 
+//    @Override
+//    public PaginationResponse getAllAppUserPagination(AppUserDto request) {
+//        Pageable pageable = null;
+//        if (Validator.isValid(request.getPageSize())) {
+//            pageable = PageRequest.of(request.getPageNumber(), request.getPageSize());
+//        }
+//        if (request.getSortUserName() != null && request.getSortUserName().equals(Boolean.TRUE)) {
+//            pageable = PageRequest.of(request.getPageNumber(), request.getPageSize(), Sort.Direction.ASC, "userName");
+//        } else if (request.getSortUserName() != null && request.getSortUserName().equals(Boolean.FALSE)) {
+//            pageable = PageRequest.of(request.getPageNumber(), request.getPageSize(), Sort.Direction.DESC, "userName");
+//        }
+//
+//        Specification<CounsellorEmployee> appUserSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
+//            List<Predicate> addVendorPredicate = new ArrayList<>();
+//            Join<CounsellorEmployee, AppUser> appUserJoin = root.join("appUser");
+//            Join<CounsellorEmployee, Counsellor> counsellorJoin = root.join("counsellor");
+//            if (request.getUserName() != null) {
+//                Predicate userName = criteriaBuilder.and(appUserJoin.get("userName").in(request.getUserName()));
+//                addVendorPredicate.add(userName);
+//            }
+//            if (request.getEmpId() != null && !request.getEmpId().isEmpty()) {
+//                Predicate empId = criteriaBuilder.and(appUserJoin.get("empId").in(request.getEmpId()));
+//                addVendorPredicate.add(empId);
+//            }
+//            if (request.getRoles() != null) {
+//                Predicate roles = criteriaBuilder.and(appUserJoin.get("roles").in(request.getRoles()));
+//                addVendorPredicate.add(roles);
+//            }
+//            if (request.getAlertList() != null && !request.getAlertList().isEmpty()) {
+//                Predicate alerts = criteriaBuilder.and(appUserJoin.get("alerts").in(request.getAlertList()));
+//                addVendorPredicate.add(alerts);
+//            }
+//
+//            if (request.getCounsellorId() != null) {
+//                Predicate counsellorName = criteriaBuilder.and(counsellorJoin.get("id").in(request.getCounsellorId()));
+//                addVendorPredicate.add(counsellorName);
+//            }
+//            if (request.getShiftTimingsList() != null && !request.getShiftTimingsList().isEmpty()) {
+//                Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(request.getShiftTimingsList()));
+//                addVendorPredicate.add(shiftTimings);
+//            }
+//            if (Validator.isValid(request.getSearchKey())) {
+//                Predicate searchPredicate = criteriaBuilder.like(
+//                        criteriaBuilder.lower(root.get("searchKey")),
+//                        "%" + request.getSearchKey().toLowerCase() + "%");
+//                addVendorPredicate.add(searchPredicate);
+//            }
+//            return criteriaBuilder.and(addVendorPredicate.toArray(new Predicate[0]));
+//        });
+//        Page<CounsellorEmployee> appUserObjectives = counsellorEmployeeRepo.findAll(appUserSpecification, pageable);
+//        if (appUserObjectives.getContent() != null) {
+//            PaginationResponse paginationResponse = new PaginationResponse();
+//            paginationResponse.setCounsellorEmployeeList(appUserObjectives.getContent());
+//            paginationResponse.setTotalPages(appUserObjectives.getTotalPages());
+//            paginationResponse.setTotalElements(appUserObjectives.getTotalElements());
+//            return paginationResponse;
+//        }
+//        return new PaginationResponse();
+//    }
+
     @Override
-    public PaginationResponse getAllAppUserPagination(AppUserDto response) {
-        Pageable pageable=null;
-        if (Validator.isValid(response.getPageSize())) {
-            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize());
+    public PaginationResponse getAllAppUserPagination(AppUserDto request) {
+        Pageable pageable = null;
+        if (request.getPageSize() != null && request.getPageNumber() != null) {
+            pageable = PageRequest.of(request.getPageNumber(), request.getPageSize());
         }
-        if (response.getSortUserName() != null && response.getSortUserName().equals(Boolean.TRUE)) {
-            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.ASC, "userName");
-        } else if (response.getSortUserName() != null && response.getSortUserName().equals(Boolean.FALSE)) {
-            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.DESC, "userName");
+        if (request.getPageSize() != null && request.getPageNumber() != null) {
+            pageable = PageRequest.of(request.getPageNumber(), request.getPageSize(), Sort.Direction.DESC, "createdOn");
+        }
+        if (request.getSortUserName() != null && request.getSortUserName().equals(Boolean.TRUE)) {
+            pageable = PageRequest.of(request.getPageNumber(), request.getPageSize(), Sort.Direction.ASC, "userName");
+        } else if (request.getSortUserName() != null && request.getSortUserName().equals(Boolean.FALSE)) {
+            pageable = PageRequest.of(request.getPageNumber(), request.getPageSize(), Sort.Direction.DESC, "userName");
         }
 
         Specification<AppUser> appUserSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> addVendorPredicate = new ArrayList<>();
-            if (response.getUserName() != null) {
-                Predicate userName = criteriaBuilder.and(root.get("userName").in(response.getUserName()));
+            if (request.getUserName() != null) {
+                Predicate userName = criteriaBuilder.and(root.get("userName").in(request.getUserName()));
                 addVendorPredicate.add(userName);
             }
-            if (response.getEmpId() != null && !response.getEmpId().isEmpty()) {
-                Predicate empId = criteriaBuilder.and(root.get("empId").in(response.getEmpId()));
+            if (request.getEmpId() != null && !request.getEmpId().isEmpty()) {
+                Predicate empId = criteriaBuilder.and(root.get("empId").in(request.getEmpId()));
                 addVendorPredicate.add(empId);
             }
-            if (response.getRoles() != null) {
-                Predicate roles = criteriaBuilder.and(root.get("roles").in(response.getRoles()));
+            if (request.getRoles() != null && request.getRoles().isEmpty()) {
+                Predicate roles = criteriaBuilder.and(root.get("roles").in(request.getRoles()));
                 addVendorPredicate.add(roles);
             }
-            if (response.getAlerts() != null) {
-                Predicate alerts = criteriaBuilder.and(root.get("alerts").in(response.getAlerts()));
+            if (request.getAlertList() != null && !request.getAlertList().isEmpty()) {
+                Predicate alerts = criteriaBuilder.and(root.get("alerts").in(request.getAlertList()));
                 addVendorPredicate.add(alerts);
             }
-            if (response.getTeamId() != null) {
-                Predicate teamId = criteriaBuilder.and(root.get("team").in(response.getTeamId()));
-                addVendorPredicate.add(teamId);
-            }
 
-            if (response.getRoles() != null && response.getRoles().equalsIgnoreCase(Roles.COUNSELLOR.toString())) {
-                Predicate roles = criteriaBuilder.and(root.get("counsellorName").in(response.getCounsellorId()));
+            if (request.getRoles() != null && request.getRoles().equalsIgnoreCase(Roles.COUNSELLOR.toString())) {
+                Predicate roles = criteriaBuilder.and(root.get("counsellorName").in(request.getCounsellorId()));
                 addVendorPredicate.add(roles);
             }
-            if (response.getShiftTimings() != null) {
-                Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(response.getShiftTimings()));
+            if (request.getShiftTimingsList() != null && !request.getShiftTimingsList().isEmpty()) {
+                Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(request.getShiftTimingsList()));
                 addVendorPredicate.add(shiftTimings);
             }
-            if (Validator.isValid(response.getSearchKey())) {
+            if (Validator.isValid(request.getSearchKey())) {
                 Predicate searchPredicate = criteriaBuilder.like(
                         criteriaBuilder.lower(root.get("searchKey")),
-                        "%" + response.getSearchKey().toLowerCase() + "%");
+                        "%" + request.getSearchKey().toLowerCase() + "%");
                 addVendorPredicate.add(searchPredicate);
             }
             return criteriaBuilder.and(addVendorPredicate.toArray(new Predicate[0]));
         });
-        Page<AppUser> appUserObjectives = appUserRepo.findAll(appUserSpecification, pageable);
-        if (appUserObjectives.getContent() != null) {
-            PaginationResponse paginationResponse=new PaginationResponse();
-            paginationResponse.setAppUserList(appUserObjectives.getContent());
-            paginationResponse.setTotalPages(appUserObjectives.getTotalPages());
-            paginationResponse.setTotalElements(appUserObjectives.getTotalElements());
+        PaginationResponse paginationResponse = new PaginationResponse();
+        if (request.getPageSize() != null && request.getPageNumber() != null) {
+            Page<AppUser> appUserObjectives = appUserRepo.findAll(appUserSpecification, pageable);
+            if (appUserObjectives.getContent() != null) {
+                paginationResponse.setAppUserList(appUserObjectives.getContent());
+                paginationResponse.setTotalPages(appUserObjectives.getTotalPages());
+                paginationResponse.setTotalElements(appUserObjectives.getTotalElements());
+                return paginationResponse;
+            }
+        } else {
+            List<AppUser> appUserList = appUserRepo.findAll(appUserSpecification);
+            paginationResponse.setAppUserList(appUserList.stream().filter(team -> team.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList()));
             return paginationResponse;
         }
         return new PaginationResponse();
+    }
+
+    @Override
+    public String saveCounsellorEmployeeInfo(CounsellorEmployeeDto request) {
+        CounsellorEmployee counsellorEmployee = new CounsellorEmployee();
+        if (Validator.isValid(request.getAppUserId())) {
+            Optional<AppUser> optionalAppUser= appUserRepo.findById(request.getAppUserId());
+            if(optionalAppUser.isPresent()) {
+                counsellorEmployee.setAppUser(optionalAppUser.get());
+            }
+        }
+        if(Validator.isValid(request.getCounsellorId())) {
+            Optional<Counsellor> counsellorOptional = counsellorRepo.findById(request.getCounsellorId());
+            if (counsellorOptional.isPresent()) {
+                counsellorEmployee.setCounsellor(counsellorOptional.get());
+
+            }
+        }
+        counsellorEmployeeRepo.save(counsellorEmployee);
+        return "counsellor employee information saved successfully";
     }
 
     public String getAppUserSearchKey(AppUser appUser) {
@@ -453,32 +549,35 @@ public class AppUserServiceImpl implements AppUserService {
         if (appUser.getShiftTimings() != null) {
             searchKey = searchKey + " " + appUser.getShiftTimings();
         }
-        if(appUser.getIsActive() != null){
+        if (appUser.getIsActive() != null) {
             searchKey = searchKey + " " + appUser.getIsActive();
         }
-        if(appUser.getCreatedOn() != null){
+        if (appUser.getCreatedOn() != null) {
             searchKey = searchKey + " " + appUser.getCreatedOn();
         }
-        if(appUser.getEmpId() != null){
+        if (appUser.getEmpId() != null) {
             searchKey = searchKey + " " + appUser.getEmpId();
         }
-        if(appUser.getEmail() != null){
+        if (appUser.getEmail() != null) {
             searchKey = searchKey + " " + appUser.getEmail();
         }
-        if(appUser.getDateOfJoining() != null){
+        if (appUser.getDateOfJoining() != null) {
             searchKey = searchKey + " " + appUser.getDateOfJoining();
         }
-        if(appUser.getShiftEndAt() != null){
+        if (appUser.getShiftEndAt() != null) {
             searchKey = searchKey + " " + appUser.getShiftEndAt();
         }
-        if(appUser.getIsActive() != null){
+        if (appUser.getIsActive() != null) {
             searchKey = searchKey + " " + appUser.getShiftEndAt();
         }
-        if(appUser.getMobile() != null){
-            searchKey = searchKey +" "+ appUser.getUserName();
+        if (appUser.getMobile() != null) {
+            searchKey = searchKey + " " + appUser.getUserName();
         }
-        if(appUser.getCountryCode() != null){
-            searchKey = searchKey +" "+appUser.getCountryCode();
+        if (appUser.getCountryCode() != null) {
+            searchKey = searchKey + " " + appUser.getCountryCode();
+        }
+        if (appUser.getSite() != null) {
+            searchKey = searchKey + " " + appUser.getSite().getSiteName();
         }
         return searchKey;
     }
