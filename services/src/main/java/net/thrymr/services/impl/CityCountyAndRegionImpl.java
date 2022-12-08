@@ -99,7 +99,7 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
     public List<MtCountry> getAllCountry() {
         List<MtCountry> mtCountries=countryRepo.findAll();
         if(!mtCountries.isEmpty()) {
-            return mtCountries.stream().filter(obj-> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+            return mtCountries.stream().filter(obj-> obj.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList());
         }
         return new ArrayList<>();
     }
@@ -180,7 +180,7 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
     public List<MtCity> getAllCities() {
         List<MtCity> mtCity=cityRepo.findAll();
         if(!mtCity.isEmpty()) {
-            return mtCity.stream().filter(obj-> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+            return mtCity.stream().filter(obj-> obj.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList());
         }
         return new ArrayList<>();
     }
@@ -229,7 +229,7 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
     public List<MtRegion> getAllRegions() {
         List<MtRegion> mtRegions=regionRepo.findAll();
         if(!mtRegions.isEmpty()) {
-            return mtRegions.stream().filter(obj-> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+            return mtRegions.stream().filter(obj-> obj.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList());
         }
         return new ArrayList<>();
     }

@@ -30,4 +30,5 @@ public class CounsellorDto {
     private String shiftTimings;
     private String countryCode;
     private String gender;
+    private Boolean isCreatedOn;
 }

@@ -230,9 +230,9 @@ public class Query implements GraphQLQueryResolver {
         return counsellorSlotService.getCounsellorSlotById(id);
     }
 
-    @QueryMapping(name = "getAllCounsellor")
-    public Page<Counsellor> getAllCounsellor(@Argument(name = "input") CounsellorDto response) {
-        return counsellorService.getAllCounsellor(response);
+    @QueryMapping(name = "getAllCounsellorPagination")
+    public PaginationResponse getAllCounsellorPagination(@Argument(name = "input") CounsellorDto response) {
+        return counsellorService.getAllCounsellorPagination(response);
     }
 
     @QueryMapping("getAllAssessment")
@@ -343,6 +343,16 @@ public class Query implements GraphQLQueryResolver {
     @QueryMapping(name = "getAllGroupDetails")
     public List<GroupDetails> getAllGroupDetails() {
         return miniSessionService.getAllGroupDetails();
+    }
+
+    @QueryMapping(name = "getAllFileDetails")
+    public List<FileDetails> getAllFileDetails() {
+        return miniSessionService.getAllFileDetails();
+    }
+
+    @QueryMapping(name = "getAllFileDetailsByType")
+    public List<FileDetailsDto> getAllFileDetailsByType() {
+        return miniSessionService.getAllFileDetailsByType();
     }
 
     @QueryMapping(name = "getGroupById")

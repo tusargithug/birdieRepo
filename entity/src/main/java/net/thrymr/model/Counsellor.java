@@ -28,7 +28,6 @@ public class Counsellor extends BaseEntity {
     private String countryCode;
 
     @Column(unique = true)
-    @Size(min = 10, max = 10)
     private String mobileNumber;
 
     @Enumerated(EnumType.STRING)
