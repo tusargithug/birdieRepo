@@ -8,7 +8,6 @@ type Query {
     getAllMoodInfo:[MtMoodInfo]
     getAllMoodIntensities:[MtMoodIntensity]
     getAppUserById(id:ID):AppUser
-    getAllAppUsers:[AppUser]
     mtRoleById(id:ID):MtRoles
     getAllMtRoles:[MtRoles]
     getAllCategory:[Category]
