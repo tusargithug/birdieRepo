@@ -6,7 +6,6 @@ import net.thrymr.enums.Alerts;
 import net.thrymr.enums.Gender;
 import net.thrymr.enums.Roles;
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,7 +22,7 @@ public class AppUser extends BaseEntity {
     @Column(name = "emp_id", unique = true)
     private String empId;
 
-    @Column(name = "user_name", unique = true)
+    @Column(name = "user_name")
     private String userName;
 
     private String countryCode;
