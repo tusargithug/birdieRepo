@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 public class Site extends BaseEntity {
-    @Column(name = "site_id",unique = true)
+    @Column(name = "site_id", unique = true)
     private String siteId;
 
     @Column(name = "site_name")

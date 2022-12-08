@@ -55,23 +55,20 @@ public class MutationResolver implements GraphQLMutationResolver {
     AssessmentService assessmentService;
     @Autowired
     AppointmentService appointmentService;
-
     @Autowired
     MiniSessionService miniSessionService;
-
     @Autowired
     FileService fileService;
     @Autowired
     MoodInfoService moodInfoService;
-
     @Autowired
     WorksheetService worksheetService;
-
     @Autowired
     PsychoEducationService psychoEducationService;
-
     @Autowired
     MeditationService meditationService;
+    @Autowired
+    TeamMembersService teamMembersService;
 
     @MutationMapping(name = "createAppUser")
     public String createAppUser(AppUserDto request) throws Exception {
@@ -550,7 +547,15 @@ public class MutationResolver implements GraphQLMutationResolver {
     @MutationMapping(name = "saveCounsellorEmployeeInfo")
     public String saveCounsellorEmployeeInfo(@Argument(name = "input") CounsellorEmployeeDto request) {
         return appUserService.saveCounsellorEmployeeInfo(request);
+    }
 
+    @MutationMapping(name = "addEmployeeToTeam")
+    public String addEmployeeToTeam(@Argument(name = "input") TeamMembersDto request) {
+        return teamMembersService.addEmployeeToTeam(request);
+    }
+    @MutationMapping(name = "updateTeamMemberById")
+    public String updateTeamMemberById(@Argument(name = "input") TeamMembersDto request) {
+        return teamMembersService.updateTeamMemberById(request);
     }
 }
 
