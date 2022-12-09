@@ -691,7 +691,8 @@ input TeamMembersDto {
     appUserIdList:[Int]
     teamId:Int
     alerts:String
-
+    previousTeamId:ID
+    newTeamId:ID
 }
 
 type TeamMembers {

@@ -109,74 +109,63 @@ public class TeamMembersImpl implements TeamMembersService {
 
     @Override
     public String updateTeamMemberById(TeamMembersDto request) {
-        if (Validator.isValid(request.getId())) {
-            Optional<TeamMembers> optionalTeamMembers = teamMembersRepo.findById(request.getId());
-            if (optionalTeamMembers.isPresent()) {
-                if (request != null && Validator.isValid(request.getAppUserIdList()) && request.getTeamId() != null && request.getAlerts() != null) {
+        if (Validator.isValid(request.getPreviousTeamId())) {
+            List<TeamMembers> teamMembersList = teamMembersRepo.findAllByTeamId(request.getPreviousTeamId());
+            if (!teamMembersList.isEmpty()) {
+                if (!request.getAppUserIdList().isEmpty() && request.getPreviousTeamId() != null && request.getAlerts() != null && request.getNewTeamId() != null) {
                     List<AppUser> appUserList = appUserRepo.findAllByIdIn(request.getAppUserIdList());
                     if (!appUserList.isEmpty()) {
-                        Optional<Team> optionalTeam = teamRepo.findById(request.getTeamId());
+                        Optional<Team> optionalTeam = teamRepo.findById(request.getNewTeamId());
                         Team team = null;
                         if (optionalTeam.isPresent()) {
                             team = optionalTeam.get();
                         }
-                        for (AppUser appUser : appUserList) {
-                            TeamMembers teamMembers = new TeamMembers();
-                            if (appUser != null && appUser.getRoles() != null) {
-                                if (appUser.getRoles().equals(Roles.TEAM_LEADER)) {
-                                    appUser.setAlerts(Alerts.valueOf(request.getAlerts()));
-                                    teamMembers.setAppUser(appUser);
-                                    if (team != null) {
-                                        teamMembers.setTeam(team);
+                        for (TeamMembers teamMembers : teamMembersList) {
+                            for (AppUser appUser : appUserList) {
+                                if (teamMembersRepo.existsByAppUserId(appUser.getId())){
+                                    if (appUser.getRoles() != null) {
+                                        Optional<TeamMembers> optionalTeamMembers = teamMembersRepo.findByAppUserId(appUser.getId());
+                                        TeamMembers members = null;
+                                        if (optionalTeamMembers.isPresent()) {
+                                             members = optionalTeamMembers.get();
+                                        }
+                                        if (appUser.getRoles().equals(Roles.TEAM_LEADER) || appUser.getRoles().equals(Roles.TEAM_MANAGER) || appUser.getRoles().equals(Roles.DIRECTOR) || appUser.getRoles().equals(Roles.ACCOUNT_MANAGER) || appUser.getRoles().equals(Roles.GENERAL_MANAGER) || appUser.getRoles().equals(Roles.SENIOR_MANAGER)) {
+                                                appUser.setAlerts(Alerts.valueOf(request.getAlerts()));
+                                                members.setAppUser(appUser);
+                                                if (team != null) {
+                                                    members.setTeam(team);
+                                                }
+                                        } else {
+                                            members.setAppUser(appUser);
+                                            if (team != null) {
+                                                members.setTeam(team);
+                                            }
+                                        }
                                     }
-                                }
-                                if (appUser.getRoles().equals(Roles.TEAM_MANAGER)) {
-                                    appUser.setAlerts(Alerts.valueOf(request.getAlerts()));
-                                    teamMembers.setAppUser(appUser);
-                                    if (team != null) {
-                                        teamMembers.setTeam(team);
-                                    }
-                                }
-
-                                if (appUser.getRoles().equals(Roles.DIRECTOR)) {
-                                    appUser.setAlerts(Alerts.valueOf(request.getAlerts()));
-                                    teamMembers.setAppUser(appUser);
-                                    if (team != null) {
-                                        teamMembers.setTeam(team);
-                                    }
-                                }
-                                if (appUser.getRoles().equals(Roles.ACCOUNT_MANAGER)) {
-                                    appUser.setAlerts(Alerts.valueOf(request.getAlerts()));
-                                    teamMembers.setAppUser(appUser);
-                                    if (team != null) {
-                                        teamMembers.setTeam(team);
-                                    }
-                                }
-                                if (appUser.getRoles().equals(Roles.GENERAL_MANAGER)) {
-                                    appUser.setAlerts(Alerts.valueOf(request.getAlerts()));
-                                    teamMembers.setAppUser(appUser);
-                                    if (team != null) {
-                                        teamMembers.setTeam(team);
-                                    }
-                                }
-                                if (appUser.getRoles().equals(Roles.SENIOR_MANAGER)) {
-                                    appUser.setAlerts(Alerts.valueOf(request.getAlerts()));
-                                    teamMembers.setAppUser(appUser);
-                                    if (team != null) {
-                                        teamMembers.setTeam(team);
-                                    }
+                                    appUser.setSearchKey(appUser.getSearchKey() + " " + getAppUserSearchKey(appUser));
+                                    appUserRepo.save(appUser);
+                                    teamMembersRepo.save(teamMembers);
                                 } else {
-                                    teamMembers.setAppUser(appUser);
-                                    if (team != null) {
-                                        teamMembers.setTeam(team);
+                                    TeamMembers insertNewRecord = new TeamMembers();
+                                    if (appUser.getRoles().equals(Roles.TEAM_LEADER) || appUser.getRoles().equals(Roles.TEAM_MANAGER) || appUser.getRoles().equals(Roles.DIRECTOR) || appUser.getRoles().equals(Roles.ACCOUNT_MANAGER) || appUser.getRoles().equals(Roles.GENERAL_MANAGER) || appUser.getRoles().equals(Roles.SENIOR_MANAGER)) {
+                                        appUser.setAlerts(Alerts.valueOf(request.getAlerts()));
+                                        insertNewRecord.setAppUser(appUser);
+                                        if (team != null) {
+                                            insertNewRecord.setTeam(team);
+                                        }
+                                    } else {
+                                        insertNewRecord.setAppUser(appUser);
+                                        if (team != null) {
+                                            insertNewRecord.setTeam(team);
+                                        }
                                     }
+                                    appUser.setSearchKey(appUser.getSearchKey() + " " + getAppUserSearchKey(appUser));
+                                    appUserRepo.save(appUser);
+                                    teamMembersRepo.save(insertNewRecord);
                                 }
-                                appUser.setSearchKey(appUser.getSearchKey() + " " + getAppUserSearchKey(appUser));
-                                appUserRepo.save(appUser);
-                                teamMembersRepo.save(teamMembers);
                             }
+                            return "Team members update successfully";
                         }
-                        return "Team members update successfully";
                     }
                 }
             }
