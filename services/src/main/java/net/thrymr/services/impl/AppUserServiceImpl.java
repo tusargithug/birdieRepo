@@ -195,7 +195,11 @@ public class AppUserServiceImpl implements AppUserService {
     public String createAppUser(AppUserDto request) throws ParseException {
         AppUser user = new AppUser();
         user.setUserName(request.getUserName());
-        user.setEmpId(request.getEmpId());
+        if(request.getEmpId() != null && !appUserRepo.existsByEmpId(request.getEmpId())) {
+            user.setEmpId(request.getEmpId());
+        }else {
+            return "this employee id is already Existed";
+        }
         if (request.getDateOfJoining() != null) {
             user.setDateOfJoining(DateUtils.toFormatStringToDate(String.valueOf(request.getDateOfJoining()), Constants.DATE_FORMAT));
         }
@@ -206,9 +210,17 @@ public class AppUserServiceImpl implements AppUserService {
             }
         }
         user.setRoles(Roles.valueOf(request.getRoles()));
-        user.setEmail(request.getEmail());
+        if(request.getEmail() != null && !appUserRepo.existsByEmail(request.getEmail())) {
+            user.setEmail(request.getEmail());
+        }else {
+            return "This email already existed";
+        }
         user.setCountryCode(request.getCountryCode());
-        user.setMobile(request.getMobile());
+        if(request.getMobile() != null && !appUserRepo.existsByMobile(request.getMobile())) {
+            user.setMobile(request.getMobile());
+        }else {
+            return "This mobile number already existed";
+        }
         user.setGender(Gender.valueOf(request.getGender()));
         user.setShiftStartAt(DateUtils.toStringToLocalTime(request.getShiftStartAt(), Constants.TIME_FORMAT_12_HOURS));
         user.setShiftEndAt(DateUtils.toStringToLocalTime(request.getShiftEndAt(), Constants.TIME_FORMAT_12_HOURS));

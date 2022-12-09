@@ -19,4 +19,10 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> , JpaSpecifica
 	Optional<AppUser> findByEmail(String email);
 
     List<AppUser> findAllByIdIn(List<Long> appUserIdList);
+
+	boolean existsByEmpId(String empId);
+
+	boolean existsByEmail(String email);
+
+	boolean existsByMobile(String mobile);
 }

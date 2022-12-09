@@ -168,7 +168,6 @@ type Mutation {
     addEmployeeToTeam(input:TeamMembersDto):String!
     updateTeamMemberById(input:TeamMembersDto):String!
 }
-
 scalar Upload
 type MtMoodInfo {
     id: ID!
