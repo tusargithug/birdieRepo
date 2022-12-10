@@ -12,4 +12,9 @@ public interface TeamMembersRepo extends JpaRepository<TeamMembers,Long> {
 
 
     List<TeamMembers> findAllByTeamId(Long id);
+    boolean existsAllByIdIn(List<Long> appUserIdList);
+
+    boolean existsByAppUserId(Long id);
+
+    Optional<TeamMembers> findByAppUserId(Long id);
 }

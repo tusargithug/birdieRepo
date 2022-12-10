@@ -195,7 +195,11 @@ public class AppUserServiceImpl implements AppUserService {
     public String createAppUser(AppUserDto request) throws ParseException {
         AppUser user = new AppUser();
         user.setUserName(request.getUserName());
-        user.setEmpId(request.getEmpId());
+        if(request.getEmpId() != null && !appUserRepo.existsByEmpId(request.getEmpId())) {
+            user.setEmpId(request.getEmpId());
+        }else {
+            return "this employee id is already Existed";
+        }
         if (request.getDateOfJoining() != null) {
             user.setDateOfJoining(DateUtils.toFormatStringToDate(String.valueOf(request.getDateOfJoining()), Constants.DATE_FORMAT));
         }
@@ -206,9 +210,17 @@ public class AppUserServiceImpl implements AppUserService {
             }
         }
         user.setRoles(Roles.valueOf(request.getRoles()));
-        user.setEmail(request.getEmail());
+        if(request.getEmail() != null && !appUserRepo.existsByEmail(request.getEmail())) {
+            user.setEmail(request.getEmail());
+        }else {
+            return "This email already existed";
+        }
         user.setCountryCode(request.getCountryCode());
-        user.setMobile(request.getMobile());
+        if(request.getMobile() != null && !appUserRepo.existsByMobile(request.getMobile())) {
+            user.setMobile(request.getMobile());
+        }else {
+            return "This mobile number already existed";
+        }
         user.setGender(Gender.valueOf(request.getGender()));
         user.setShiftStartAt(DateUtils.toStringToLocalTime(request.getShiftStartAt(), Constants.TIME_FORMAT_12_HOURS));
         user.setShiftEndAt(DateUtils.toStringToLocalTime(request.getShiftEndAt(), Constants.TIME_FORMAT_12_HOURS));
@@ -233,8 +245,10 @@ public class AppUserServiceImpl implements AppUserService {
                 if (Validator.isValid(request.getUserName())) {
                     user.setUserName(request.getUserName());
                 }
-                if (Validator.isValid(request.getEmpId())) {
+                if (Validator.isValid(request.getEmpId()) && !appUserRepo.existsByEmpId(request.getEmpId())) {
                     user.setEmpId(request.getEmpId());
+                } else {
+                    return "This employee id already existed";
                 }
                 if (Validator.isObjectValid(request.getDateOfJoining())) {
                     user.setDateOfJoining(DateUtils.toFormatStringToDate(String.valueOf(request.getDateOfJoining()), Constants.DATE_FORMAT));
@@ -248,12 +262,16 @@ public class AppUserServiceImpl implements AppUserService {
                 if (Validator.isValid(request.getCountryCode())) {
                     user.setCountryCode(request.getCountryCode());
                 }
-                if (Validator.isValid(request.getMobile())) {
+                if (Validator.isValid(request.getMobile()) && !appUserRepo.existsByMobile(request.getMobile())) {
                     user.setMobile(request.getMobile());
+                }else {
+                    return "This mobile number already existed";
                 }
 
-                if (Validator.isValid(request.getEmail())) {
+                if (Validator.isValid(request.getEmail()) && !appUserRepo.existsByEmail(request.getEmail())) {
                     user.setEmail(request.getEmail());
+                } else {
+                    return "This email already existed";
                 }
                 if (Validator.isValid(request.getRoles())) {
                     user.setRoles(Roles.valueOf(request.getRoles()));

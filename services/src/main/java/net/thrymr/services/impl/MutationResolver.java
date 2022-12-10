@@ -309,8 +309,8 @@ public class MutationResolver implements GraphQLMutationResolver {
     }
 
     @MutationMapping(name = "uploadRegionData")
-    public String uploadRegionData(@Argument(name = "file") MultipartFile file) {
-        return cityCountyAndRegionService.uploadRegionData(file);
+    public String uploadRegionData(@Argument(name = "file") MultipartFile file,DataFetchingEnvironment environment) {
+        return cityCountyAndRegionService.uploadRegionData(environment.getArgument("file"));
     }
 
     /*@MutationMapping(name="upload-excel-city-data")
