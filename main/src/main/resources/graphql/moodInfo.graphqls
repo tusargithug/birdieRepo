@@ -253,7 +253,7 @@ type AppUser{
     mobile:String
     email:String
     password:String
-    dateOfJoining:Date
+    dateOfJoining:String
     roles:Roles
     site:Site
     counsellorSlotList:[CounsellorSlot]
@@ -395,7 +395,7 @@ type Vendor{
     isActive:Boolean
     mobileNumber:String
     countryCode:String
-    site:[Site]
+    email:String
 }
 input VendorDto{
     id:Int
@@ -672,7 +672,7 @@ enum Gender{
 type PaginationResponse{
     siteList:[Site]
     teamList:[Team]
-    vendorList:[Vendor]
+    vendorSiteList:[VendorSite]
     appUserList:[AppUser]
     miniSessionList:[MiniSession]
     meditationList:[MtMeditation]
@@ -698,4 +698,9 @@ input TeamMembersDto {
 type TeamMembers {
     team:Team
     appUser:AppUser
+}
+
+type VendorSite{
+    vendor:Vendor
+    site:Site
 }

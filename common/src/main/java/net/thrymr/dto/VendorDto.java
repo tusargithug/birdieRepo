@@ -15,6 +15,7 @@ import java.util.List;
 public class VendorDto {
     private Long id;
     private List<Long> siteIdList;
+    private List<Long> vendorIdList;
     private String POC;
     private String vendorName;
     private Boolean sortVendorName;
