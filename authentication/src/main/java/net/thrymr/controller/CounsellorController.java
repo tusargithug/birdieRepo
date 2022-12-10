@@ -1,8 +1,12 @@
 package net.thrymr.controller;
 
 import net.thrymr.dto.CounsellorDto;
+import net.thrymr.dto.EducationDto;
+import net.thrymr.dto.LanguageDto;
 import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.model.Counsellor;
+import net.thrymr.model.master.EducationDetails;
+import net.thrymr.model.master.LanguageDetails;
 import net.thrymr.services.CounsellorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -41,5 +45,37 @@ public class CounsellorController {
     @QueryMapping(name = "getCounsellorById")
     public Counsellor getCounsellorById(@Argument Long id) {
         return counsellorService.getCounsellorById(id);
+    }
+    @MutationMapping(name = "addNewLanguage")
+    public String addNewLanguage(@Argument(name = "input") LanguageDto request){
+        return counsellorService.addNewLanguage(request);
+    }
+    @MutationMapping(name = "addNewEducation")
+    public String addNewEducation(@Argument(name = "input") EducationDto request){
+        return counsellorService.addNewEducation(request);
+    }
+    @MutationMapping(name = "updateEducationDetailsById")
+    public String updateEducationDetailsById(@Argument(name = "input") EducationDto request){
+        return counsellorService.updateEducationDetailsById(request);
+    }
+    @MutationMapping(name = "updateLanguageDetailsById")
+    public String updateLanguageDetailsById(@Argument(name = "input") LanguageDto request){
+        return counsellorService.updateLanguageDetailsById(request);
+    }
+    @QueryMapping(name = "getEducationalDetailsById")
+    public EducationDetails getEducationalDetailsById(@Argument Long id) {
+        return counsellorService.getEducationalDetailsById(id);
+    }
+    @QueryMapping(name = "getLanguageDetailsById")
+    public LanguageDetails getLanguageDetailsById(@Argument Long id) {
+        return counsellorService.getLanguageDetailsById(id);
+    }
+    @QueryMapping(name = "getAllEducationalDetails")
+    public List<EducationDetails> getAllEducationalDetails() {
+        return counsellorService.getAllEducationalDetails();
+    }
+    @QueryMapping(name = "getAllLanguagesDetails")
+    public List<LanguageDetails> getAllLanguagesDetails() {
+        return counsellorService.getAllLanguagesDetails();
     }
 }

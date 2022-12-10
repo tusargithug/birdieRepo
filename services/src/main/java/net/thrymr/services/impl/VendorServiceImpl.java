@@ -78,14 +78,14 @@ public class VendorServiceImpl implements VendorService {
     @Override
     public String deleteVendorById(Long id) {
         Optional<Vendor> vendorEntityId = vendorRepo.findById(id);
-        Vendor vendor =null;
+        Vendor vendor = null;
         if (vendorEntityId.isPresent()) {
-            vendor= vendorEntityId.get();
+            vendor = vendorEntityId.get();
             vendor.setIsActive(Boolean.FALSE);
             vendor.setIsDeleted(Boolean.TRUE);
             vendorRepo.save(vendor);
             List<VendorSite> vendorSiteList = vendorSiteRepo.findAllByVendorId(id);
-            for(VendorSite vendorSite: vendorSiteList) {
+            for (VendorSite vendorSite : vendorSiteList) {
                 vendorSite.setIsActive(Boolean.FALSE);
                 vendorSite.setIsDeleted(Boolean.TRUE);
                 vendorSiteRepo.save(vendorSite);
@@ -232,13 +232,13 @@ public class VendorServiceImpl implements VendorService {
         });
         PaginationResponse paginationResponse = new PaginationResponse();
         if (response.getPageSize() != null && response.getPageNumber() != null) {
-        Page<VendorSite> vendorObjectives = vendorSiteRepo.findAll(addVendorSpecification, pageable);
-        if (vendorObjectives.getContent() != null) {
-            paginationResponse.setVendorSiteList(new HashSet<>(vendorObjectives.getContent()));
-            paginationResponse.setTotalElements(vendorObjectives.getTotalElements());
-            paginationResponse.setTotalPages(vendorObjectives.getTotalPages());
-            return paginationResponse;
-        }
+            Page<VendorSite> vendorObjectives = vendorSiteRepo.findAll(addVendorSpecification, pageable);
+            if (vendorObjectives.getContent() != null) {
+                paginationResponse.setVendorSiteList(new HashSet<>(vendorObjectives.getContent()));
+                paginationResponse.setTotalElements(vendorObjectives.getTotalElements());
+                paginationResponse.setTotalPages(vendorObjectives.getTotalPages());
+                return paginationResponse;
+            }
         } else {
             List<VendorSite> vendorSiteList = vendorSiteRepo.findAll(addVendorSpecification);
             paginationResponse.setVendorSiteList(vendorSiteList.stream().filter(vendorSite -> vendorSite.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toSet()));
