@@ -245,10 +245,8 @@ public class AppUserServiceImpl implements AppUserService {
                 if (Validator.isValid(request.getUserName())) {
                     user.setUserName(request.getUserName());
                 }
-                if (Validator.isValid(request.getEmpId()) && !appUserRepo.existsByEmpId(request.getEmpId())) {
+                if (Validator.isValid(request.getEmpId())) {
                     user.setEmpId(request.getEmpId());
-                } else {
-                    return "This employee id already existed";
                 }
                 if (Validator.isObjectValid(request.getDateOfJoining())) {
                     user.setDateOfJoining(DateUtils.toFormatStringToDate(String.valueOf(request.getDateOfJoining()), Constants.DATE_FORMAT));
@@ -262,16 +260,11 @@ public class AppUserServiceImpl implements AppUserService {
                 if (Validator.isValid(request.getCountryCode())) {
                     user.setCountryCode(request.getCountryCode());
                 }
-                if (Validator.isValid(request.getMobile()) && !appUserRepo.existsByMobile(request.getMobile())) {
+                if (Validator.isValid(request.getMobile())) {
                     user.setMobile(request.getMobile());
-                }else {
-                    return "This mobile number already existed";
                 }
-
-                if (Validator.isValid(request.getEmail()) && !appUserRepo.existsByEmail(request.getEmail())) {
+                if (Validator.isValid(request.getEmail())) {
                     user.setEmail(request.getEmail());
-                } else {
-                    return "This email already existed";
                 }
                 if (Validator.isValid(request.getRoles())) {
                     user.setRoles(Roles.valueOf(request.getRoles()));
