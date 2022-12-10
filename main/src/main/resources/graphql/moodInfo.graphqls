@@ -696,11 +696,12 @@ type PaginationResponse{
 }
 
 input TeamMembersDto {
-    id:Int
-    appUserIdList:[Int]
-    teamId:Int
+    id:ID
+    appUserIdList:[ID]
+    teamId:ID
     alerts:String
-
+    previousTeamId:ID
+    newTeamId:ID
 }
 
 type TeamMembers {
