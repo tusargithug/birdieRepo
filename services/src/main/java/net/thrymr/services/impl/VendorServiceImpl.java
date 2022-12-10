@@ -2,12 +2,13 @@ package net.thrymr.services.impl;
 
 import net.thrymr.dto.VendorDto;
 import net.thrymr.dto.response.PaginationResponse;
-import net.thrymr.enums.Roles;
+import net.thrymr.model.AppUser;
 import net.thrymr.model.Site;
 import net.thrymr.model.Vendor;
-import net.thrymr.repository.AppUserRepo;
+import net.thrymr.model.VendorSite;
 import net.thrymr.repository.SiteRepo;
 import net.thrymr.repository.VendorRepo;
+import net.thrymr.repository.VendorSiteRepo;
 import net.thrymr.services.VendorService;
 import net.thrymr.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class VendorServiceImpl implements VendorService {
     SiteRepo siteRepo;
 
     @Autowired
-    AppUserRepo appUserRepo;
+    VendorSiteRepo vendorSiteRepo;
 
 
     @Override
@@ -44,16 +45,25 @@ public class VendorServiceImpl implements VendorService {
         vendor.setVendorId(request.getVendorId());
         vendor.setCountryCode(request.getCountryCode());
         vendor.setMobileNumber(request.getMobileNumber());
+        vendor.setEmail(request.getEmail());
         vendor.setPOC(request.getPOC());
-        if (request.getSiteIdList() != null) {
-            List<Site> siteList = siteRepo.findAllById(request.getSiteIdList());
-            if (!siteList.isEmpty()) {
-                vendor.setSite(siteList);
-            }
-        }
         vendor.setSearchKey(getVendorSearchKey(vendor));
-        vendorRepo.save(vendor);
-        return "vendor creation success";
+        vendor = vendorRepo.save(vendor);
+        if (request.getSiteIdList() != null && vendor.getId() != null) {
+            List<Site> siteList = siteRepo.findAllByIdInAndIsActiveAndIsDeleted(request.getSiteIdList(), Boolean.TRUE, Boolean.FALSE);
+            if (siteList != null) {
+                for (Site site : siteList) {
+                    VendorSite vendorSite = new VendorSite();
+                    vendorSite.setVendor(vendor);
+                    vendorSite.setSite(site);
+                    vendorSite.setSearchKey(getVendorSiteSearchKey(vendorSite));
+                    vendorSiteRepo.save(vendorSite);
+                }
+            }
+            return "vendor creation success";
+        } else {
+            return "Please select site";
+        }
     }
 
     @Override
@@ -68,12 +78,18 @@ public class VendorServiceImpl implements VendorService {
     @Override
     public String deleteVendorById(Long id) {
         Optional<Vendor> vendorEntityId = vendorRepo.findById(id);
-        Vendor vendor;
+        Vendor vendor = null;
         if (vendorEntityId.isPresent()) {
             vendor = vendorEntityId.get();
             vendor.setIsActive(Boolean.FALSE);
             vendor.setIsDeleted(Boolean.TRUE);
             vendorRepo.save(vendor);
+            List<VendorSite> vendorSiteList = vendorSiteRepo.findAllByVendorId(id);
+            for (VendorSite vendorSite : vendorSiteList) {
+                vendorSite.setIsActive(Boolean.FALSE);
+                vendorSite.setIsDeleted(Boolean.TRUE);
+                vendorSiteRepo.save(vendorSite);
+            }
             return "deleted record successfully";
         }
         return "this id is not in the database";
@@ -91,9 +107,8 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
-
     public String updateVendor(VendorDto request) {
-        Vendor vendor = null;
+        Vendor vendor;
         if (Validator.isValid(request.getId())) {
             Optional<Vendor> optionalVendor = vendorRepo.findById(request.getId());
             if (optionalVendor.isPresent()) {
@@ -104,6 +119,9 @@ public class VendorServiceImpl implements VendorService {
                 if (Validator.isValid(request.getVendorId())) {
                     vendor.setVendorId(request.getVendorId());
                 }
+                if (Validator.isValid(request.getEmail())) {
+                    vendor.setEmail(request.getEmail());
+                }
                 if (Validator.isValid(request.getCountryCode())) {
                     vendor.setCountryCode(request.getCountryCode());
                 }
@@ -113,15 +131,47 @@ public class VendorServiceImpl implements VendorService {
                 if (Validator.isValid(request.getPOC())) {
                     vendor.setPOC(request.getPOC());
                 }
-                if (request.getSiteIdList() != null) {
-                    List<Site> siteList = siteRepo.findAllById(request.getSiteIdList());
-                    if (!siteList.isEmpty()) {
-                        vendor.setSite(siteList);
-                    }
-                }
                 vendor.setSearchKey(getVendorSearchKey(vendor));
-                vendorRepo.save(vendor);
-                return "Vendor updated successfully";
+                vendor = vendorRepo.save(vendor);
+
+                if (request.getSiteIdList() != null && vendor.getId() != null) {
+                    List<VendorSite> vendorSiteList = vendorSiteRepo.findAllByVendorId(vendor.getId());
+                    for (Long newSiteIds : request.getSiteIdList()) {
+                        VendorSite saveVendorSite = null;
+                        if (!vendorSiteList.isEmpty()) {
+                            for (VendorSite vendorSite : vendorSiteList) {
+                                if (vendorSite.getSite() != null && vendorSiteRepo.existsByVendorIdAndSiteId(vendor.getId(), newSiteIds)) {
+                                    saveVendorSite = vendorSite;
+                                    saveVendorSite.setSite(vendorSite.getSite());
+                                    saveVendorSite.setVendor(vendor);
+                                } else {
+                                    Optional<Site> optionalSite = siteRepo.findById(newSiteIds);
+                                    if (optionalVendor.isPresent()) {
+                                        saveVendorSite = new VendorSite();
+                                        saveVendorSite.setVendor(vendor);
+                                        saveVendorSite.setSite(optionalSite.get());
+                                    }
+
+                                }
+                                if (Validator.isObjectValid(saveVendorSite)) {
+                                    vendorSiteRepo.save(saveVendorSite);
+                                }
+                            }
+                        } else {
+                            Optional<Site> optionalSite = siteRepo.findById(newSiteIds);
+                            if (optionalVendor.isPresent()) {
+                                saveVendorSite = new VendorSite();
+                                saveVendorSite.setVendor(vendor);
+                                saveVendorSite.setSite(optionalSite.get());
+                                if (Validator.isObjectValid(saveVendorSite)) {
+                                    vendorSiteRepo.save(saveVendorSite);
+                                }
+
+                            }
+                        }
+                    }
+                    return "vendor updated success";
+                }
             }
         }
         return "This vendor id is not present in database";
@@ -134,26 +184,43 @@ public class VendorServiceImpl implements VendorService {
         if (Validator.isValid(response.getPageSize())) {
             pageable = PageRequest.of(response.getPageNumber(), response.getPageSize());
         }
+        if (response.getPageSize() != null && response.getPageNumber() != null) {
+            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.DESC, "createdOn");
+        }
         if (response.getSortVendorName() != null && response.getSortVendorName().equals(Boolean.TRUE)) {
-            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.ASC, "vendorName");
+            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.ASC, "vendor.vendorName");
         } else if (response.getSortVendorName() != null && response.getSortVendorName().equals(Boolean.FALSE)) {
-            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.DESC, "vendorName");
+            pageable = PageRequest.of(response.getPageNumber(), response.getPageSize(), Sort.Direction.DESC, "vendor.vendorName");
         }
         //filters
-        Specification<Vendor> addVendorSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
+        Specification<VendorSite> addVendorSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> addVendorPredicate = new ArrayList<>();
-            Join<Vendor, Site> siteJoin = root.join("site");
+            Join<VendorSite, Site> siteJoin = root.join("site");
+            Join<VendorSite, Vendor> vendorJoin = root.join("vendor");
+
             if (response.getVendorName() != null) {
-                Predicate name = criteriaBuilder.and(root.get("vendorName").in(response.getVendorName()));
+                Predicate name = criteriaBuilder.and(vendorJoin.get("vendorName").in(response.getVendorName()));
                 addVendorPredicate.add(name);
             }
+            if (response.getVendorId() != null) {
+                Predicate vendorId = criteriaBuilder.and(vendorJoin.get("vendorId").in(response.getVendorId()));
+                addVendorPredicate.add(vendorId);
+            }
             if (response.getPOC() != null && !response.getPOC().isEmpty()) {
-                Predicate poc = criteriaBuilder.and(root.get("POC").in(response.getPOC()));
+                Predicate poc = criteriaBuilder.and(vendorJoin.get("POC").in(response.getPOC()));
                 addVendorPredicate.add(poc);
             }
             if (response.getSiteIdList() != null && !response.getSiteIdList().isEmpty()) {
                 Predicate site = criteriaBuilder.and(siteJoin.get("id").in(response.getSiteIdList()));
                 addVendorPredicate.add(site);
+            }
+            if (response.getEmail() != null) {
+                Predicate email = criteriaBuilder.and(vendorJoin.get("email").in(response.getEmail()));
+                addVendorPredicate.add(email);
+            }
+            if (response.getMobileNumber() != null) {
+                Predicate mobile = criteriaBuilder.and(vendorJoin.get("mobileNumber").in(response.getMobileNumber()));
+                addVendorPredicate.add(mobile);
             }
             if (Validator.isValid(response.getSearchKey())) {
                 Predicate searchPredicate = criteriaBuilder.like(
@@ -163,12 +230,18 @@ public class VendorServiceImpl implements VendorService {
             }
             return criteriaBuilder.and(addVendorPredicate.toArray(new Predicate[0]));
         });
-        Page<Vendor> vendorObjectives = vendorRepo.findAll(addVendorSpecification, pageable);
-        if (vendorObjectives.getContent() != null) {
-            PaginationResponse paginationResponse = new PaginationResponse();
-            paginationResponse.setVendorList(new HashSet<>(vendorObjectives.getContent()));
-            paginationResponse.setTotalElements(vendorObjectives.getTotalElements());
-            paginationResponse.setTotalPages(vendorObjectives.getTotalPages());
+        PaginationResponse paginationResponse = new PaginationResponse();
+        if (response.getPageSize() != null && response.getPageNumber() != null) {
+            Page<VendorSite> vendorObjectives = vendorSiteRepo.findAll(addVendorSpecification, pageable);
+            if (vendorObjectives.getContent() != null) {
+                paginationResponse.setVendorSiteList(new HashSet<>(vendorObjectives.getContent()));
+                paginationResponse.setTotalElements(vendorObjectives.getTotalElements());
+                paginationResponse.setTotalPages(vendorObjectives.getTotalPages());
+                return paginationResponse;
+            }
+        } else {
+            List<VendorSite> vendorSiteList = vendorSiteRepo.findAll(addVendorSpecification);
+            paginationResponse.setVendorSiteList(vendorSiteList.stream().filter(vendorSite -> vendorSite.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toSet()));
             return paginationResponse;
         }
         return new PaginationResponse();
@@ -194,9 +267,40 @@ public class VendorServiceImpl implements VendorService {
         if (vendor.getIsActive() != null) {
             searchKey = searchKey + " " + vendor.getIsActive();
         }
-        if (vendor.getSite() != null) {
-            searchKey = searchKey + " " + vendor.getSite();
+        if (vendor.getEmail() != null) {
+            searchKey = searchKey + " " + vendor.getEmail();
+
         }
         return searchKey;
     }
+
+    public String getVendorSiteSearchKey(VendorSite vendorSite) {
+        String searchKey = "";
+        if (vendorSite.getVendor().getPOC() != null) {
+            searchKey = searchKey + " " + vendorSite.getVendor().getPOC();
+        }
+        if (vendorSite.getVendor().getVendorName() != null) {
+            searchKey = searchKey + " " + vendorSite.getVendor().getVendorName();
+        }
+        if (vendorSite.getVendor().getVendorId() != null) {
+            searchKey = searchKey + " " + vendorSite.getVendor().getVendorId();
+        }
+        if (vendorSite.getVendor().getCountryCode() != null) {
+            searchKey = searchKey + " " + vendorSite.getVendor().getCountryCode();
+        }
+        if (vendorSite.getVendor().getMobileNumber() != null) {
+            searchKey = searchKey + " " + vendorSite.getVendor().getMobileNumber();
+        }
+        if (vendorSite.getVendor().getIsActive() != null) {
+            searchKey = searchKey + " " + vendorSite.getVendor().getIsActive();
+        }
+        if (vendorSite.getVendor().getEmail() != null) {
+            searchKey = searchKey + " " + vendorSite.getVendor().getEmail();
+        }
+        if (vendorSite.getSite().getSiteName() != null) {
+            searchKey = searchKey + " " + vendorSite.getSite().getSiteName();
+        }
+        return searchKey;
+    }
+
 }
