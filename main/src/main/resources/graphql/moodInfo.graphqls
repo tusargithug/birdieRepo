@@ -75,6 +75,10 @@ type Query {
     getCityById(id:ID):MtCity
     getTeamMemberById(id:ID):[TeamMembers]
     getAllTeamMember:[TeamMembers]
+    getAllEducationalDetails:[EducationDetails]
+    getAllLanguagesDetails:[LanguageDetails]
+    getEducationalDetailsById(id:ID):EducationDetails
+    getLanguageDetailsById(id:ID):LanguageDetails
 }
 
 type Mutation {
@@ -167,6 +171,10 @@ type Mutation {
     saveCounsellorEmployeeInfo(input:CounsellorEmployeeDto):String!
     addEmployeeToTeam(input:TeamMembersDto):String!
     updateTeamMemberById(input:TeamMembersDto):String!
+    addNewLanguage(input:LanguageDto):String!
+    addNewEducation(input:EducationDto):String!
+    updateEducationDetailsById(input:EducationDto):String!
+    updateLanguageDetailsById(input:LanguageDto):String!
 }
 scalar Upload
 type MtMoodInfo {
@@ -698,4 +706,20 @@ input TeamMembersDto {
 type TeamMembers {
     team:Team
     appUser:AppUser
+}
+type LanguageDetails{
+    id:ID
+    languageName:String
+}
+input LanguageDto {
+    id:ID
+    languageName:String
+}
+input EducationDto {
+    id:ID
+    educationName:String
+}
+type EducationDetails {
+    id:ID
+    educationName:String
 }

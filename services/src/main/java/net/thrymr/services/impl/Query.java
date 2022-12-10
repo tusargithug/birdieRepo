@@ -445,4 +445,20 @@ public class Query implements GraphQLQueryResolver {
     public Set<TeamMembers> getTeamMemberById(@Argument Long id){
         return teamMembersService.getTeamMemberById(id);
     }
+    @QueryMapping(name = "getAllEducationalDetails")
+    public List<EducationDetails> getAllEducationalDetails() {
+        return counsellorService.getAllEducationalDetails();
+    }
+    @QueryMapping(name = "getEducationalDetailsById")
+    public EducationDetails getEducationalDetailsById(@Argument Long id) {
+        return counsellorService.getEducationalDetailsById(id);
+    }
+    @QueryMapping(name = "getLanguageDetailsById")
+    public LanguageDetails getLanguageDetailsById(@Argument Long id) {
+        return counsellorService.getLanguageDetailsById(id);
+    }
+    @QueryMapping(name = "getAllLanguagesDetails")
+    public List<LanguageDetails> getAllLanguagesDetails() {
+        return counsellorService.getAllLanguagesDetails();
+    }
 }
