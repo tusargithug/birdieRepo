@@ -6,7 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.List;
+
 
 @Entity
 @Getter
@@ -28,6 +28,6 @@ public class Vendor extends BaseEntity {
     @Column(unique = true)
     private String mobileNumber;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Site> site;
+    @Column(unique = true)
+    private String email;
 }
