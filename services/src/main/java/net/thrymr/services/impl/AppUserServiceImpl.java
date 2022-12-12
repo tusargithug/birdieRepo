@@ -134,9 +134,9 @@ public class AppUserServiceImpl implements AppUserService {
                             Optional<Site> optionalSite = siteRepo.findById(Long.valueOf(getCellValue(row.getCell(14))));
                             optionalSite.ifPresent(appUser::setSite);
                         }
-                        if (row.getCell(15) != null) {
-                            appUser.setAlerts(Alerts.valueOf(getCellValue(row.getCell(15))));
-                        }
+//                        if (row.getCell(15) != null) {
+//                            appUser.setAlerts(Alerts.valueOf(getCellValue(row.getCell(15))));
+//                        }
                         if (row.getCell(16) != null) {
                             appUser.setRoles(Roles.valueOf(getCellValue(row.getCell(16))));
                         }
