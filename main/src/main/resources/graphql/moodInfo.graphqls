@@ -105,8 +105,8 @@ type Mutation {
     saveChapter(input:ChapterDto):String!
     deleteUnitById(id:ID):String!
     deleteChapterById(id:ID):String!
-    createTeam(input:TeamDto):String!
-    updateTeam(input:TeamDto):String!
+    createTeam(input:TeamDto):Team
+    updateTeam(input:TeamDto):Team
     deleteTeamById(id:ID):String!
     saveSite(input:SiteDto):String!
     updateSite(input:SiteDto):String!
@@ -703,7 +703,6 @@ input TeamMembersDto {
     alert:String
     previousTeamId:ID
     newTeamId:ID
-
 }
 
 type TeamMembers {
