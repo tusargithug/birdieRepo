@@ -14,7 +14,7 @@ public class TeamMembersDto {
     private Long id;
     private List<Long> appUserIdList=new ArrayList<>();
     private Long teamId;
-    private String alerts;
+    private List<String> alerts=new ArrayList<>();
 
     private Long previousTeamId;
     private Long newTeamId;

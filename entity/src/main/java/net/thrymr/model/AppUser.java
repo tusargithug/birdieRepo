@@ -50,7 +50,8 @@ public class AppUser extends BaseEntity {
     private List<CounsellorSlot> counsellorSlotList = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
-    private Alerts alerts;
+    @ElementCollection(targetClass = Alerts.class)
+    private List<Alerts> alerts;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
