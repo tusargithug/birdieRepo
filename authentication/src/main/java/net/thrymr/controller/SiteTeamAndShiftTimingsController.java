@@ -23,11 +23,11 @@ public class SiteTeamAndShiftTimingsController {
 
 
     @MutationMapping(name="createTeam")
-    public String createTeam(@Argument(name = "input") TeamDto teamDto){
+    public Team createTeam(@Argument(name = "input") TeamDto teamDto){
         return siteTeamAndShiftTimingsService.createTeam(teamDto);
     }
     @MutationMapping(name="updateTeam")
-    public String updateTeam(@Argument(name = "input")TeamDto teamDto){
+    public Team updateTeam(@Argument(name = "input")TeamDto teamDto){
         return siteTeamAndShiftTimingsService.updateTeam(teamDto);
     }
 

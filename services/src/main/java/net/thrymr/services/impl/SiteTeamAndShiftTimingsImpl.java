@@ -52,7 +52,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     TeamMembersRepo teamMembersRepo;
 
     @Override
-    public String createTeam(TeamDto teamDto) {
+    public Team createTeam(TeamDto teamDto) {
         Team team = new Team();
         team.setTeamId(teamDto.getTeamId());
         team.setTeamName(teamDto.getTeamName());
@@ -69,12 +69,12 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         }
         team.setSearchKey(getTeamSearchKey(team));
         teamRepo.save(team);
-        return "Team save successfully" + team.getTeamId();
+        return team;
     }
 
 
     @Override
-    public String updateTeam(TeamDto teamDto) {
+    public Team updateTeam(TeamDto teamDto) {
         Team team = null;
         if (Validator.isValid(teamDto.getId())) {
             Optional<Team> teamId = teamRepo.findById(teamDto.getId());
@@ -105,10 +105,10 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                 }
                 team.setSearchKey(getTeamSearchKey(team));
                 teamRepo.save(team);
-                return "Team update successfully";
+                return team;
             }
         }
-        return "this id not in database";
+        return new Team();
     }
 
 
