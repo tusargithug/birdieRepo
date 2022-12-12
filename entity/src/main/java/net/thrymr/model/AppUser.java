@@ -19,7 +19,7 @@ import java.util.List;
 @Table(name = "app_user")
 public class AppUser extends BaseEntity {
 
-    @Column(name = "emp_id", unique = true)
+    @Column(name = "emp_id")
     private String empId;
 
     @Column(name = "user_name")
@@ -27,7 +27,7 @@ public class AppUser extends BaseEntity {
 
     private String countryCode;
 
-    @Column(name = "mobile_number", unique = true)
+    @Column(name = "mobile_number")
     private String mobile;
 
     @Column(unique = true)
