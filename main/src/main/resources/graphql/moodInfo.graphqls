@@ -64,7 +64,7 @@ type Query {
     getAllWorkSheetPagination(input:WorksheetDto):PaginationResponse
     getAllChapterPagination(input:ChapterDto):PaginationResponse
 #    getAllMoodIntensitiesByMoodInfoId(id:ID!):[MtMoodIntensity]
-    previewAlertNotification(input:AppUserDto):RoleWiseCountResponse
+    previewAlertNotification(input:TeamMembersDto):RoleWiseCountResponse
     getTeamById(id:ID):Team
     getAllFileDetails:[FileDetails]
     getAllFileDetailsByType:[GetFileDetails]
@@ -222,7 +222,7 @@ input AppUserDto{
     roles:String
     siteId:Int
     dateOfJoining:String
-    alerts:String
+    alerts:[Alerts]
     pageSize:Int
     pageNumber:Int
     addedOn:String
@@ -266,7 +266,7 @@ type AppUser{
     roles:Roles
     site:Site
     counsellorSlotList:[CounsellorSlot]
-    alerts:Alerts
+    alerts:[Alerts]
     gender:Gender
     shiftStartAt:LocalTime
     shiftEndAt:LocalTime
@@ -696,10 +696,13 @@ type PaginationResponse{
 }
 
 input TeamMembersDto {
-    id:Int
-    appUserIdList:[Int]
-    teamId:Int
-    alerts:String
+    id:ID
+    appUserIdList:[ID]
+    teamId:ID
+    alerts:[Alerts]
+    alert:String
+    previousTeamId:ID
+    newTeamId:ID
 
 }
 

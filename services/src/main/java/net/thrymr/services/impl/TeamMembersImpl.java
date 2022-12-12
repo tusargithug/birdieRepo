@@ -41,44 +41,8 @@ public class TeamMembersImpl implements TeamMembersService {
                 for (AppUser appUser : appUserList) {
                     TeamMembers teamMembers = new TeamMembers();
                     if (appUser != null && appUser.getRoles() != null) {
-                        if (appUser.getRoles().equals(Roles.TEAM_LEADER)) {
-                            appUser.setAlerts(Alerts.valueOf(request.getAlerts()));
-                            teamMembers.setAppUser(appUser);
-                            if (team != null) {
-                                teamMembers.setTeam(team);
-                            }
-                        }
-                        if (appUser.getRoles().equals(Roles.TEAM_MANAGER)) {
-                            appUser.setAlerts(Alerts.valueOf(request.getAlerts()));
-                            teamMembers.setAppUser(appUser);
-                            if (team != null) {
-                                teamMembers.setTeam(team);
-                            }
-                        }
-
-                        if (appUser.getRoles().equals(Roles.DIRECTOR)) {
-                            appUser.setAlerts(Alerts.valueOf(request.getAlerts()));
-                            teamMembers.setAppUser(appUser);
-                            if (team != null) {
-                                teamMembers.setTeam(team);
-                            }
-                        }
-                        if (appUser.getRoles().equals(Roles.ACCOUNT_MANAGER)) {
-                            appUser.setAlerts(Alerts.valueOf(request.getAlerts()));
-                            teamMembers.setAppUser(appUser);
-                            if (team != null) {
-                                teamMembers.setTeam(team);
-                            }
-                        }
-                        if (appUser.getRoles().equals(Roles.GENERAL_MANAGER)) {
-                            appUser.setAlerts(Alerts.valueOf(request.getAlerts()));
-                            teamMembers.setAppUser(appUser);
-                            if (team != null) {
-                                teamMembers.setTeam(team);
-                            }
-                        }
-                        if (appUser.getRoles().equals(Roles.SENIOR_MANAGER)) {
-                            appUser.setAlerts(Alerts.valueOf(request.getAlerts()));
+                        if (appUser.getRoles().equals(Roles.TEAM_LEADER) || appUser.getRoles().equals(Roles.TEAM_MANAGER) || appUser.getRoles().equals(Roles.DIRECTOR) || appUser.getRoles().equals(Roles.ACCOUNT_MANAGER) || appUser.getRoles().equals(Roles.GENERAL_MANAGER) || appUser.getRoles().equals(Roles.SENIOR_MANAGER)) {
+                            appUser.setAlerts(request.getAlerts());
                             teamMembers.setAppUser(appUser);
                             if (team != null) {
                                 teamMembers.setTeam(team);
@@ -130,7 +94,7 @@ public class TeamMembersImpl implements TeamMembersService {
                                             members = optionalTeamMembers.get();
                                         }
                                         if (appUser.getRoles().equals(Roles.TEAM_LEADER) || appUser.getRoles().equals(Roles.TEAM_MANAGER) || appUser.getRoles().equals(Roles.DIRECTOR) || appUser.getRoles().equals(Roles.ACCOUNT_MANAGER) || appUser.getRoles().equals(Roles.GENERAL_MANAGER) || appUser.getRoles().equals(Roles.SENIOR_MANAGER)) {
-                                            appUser.setAlerts(Alerts.valueOf(request.getAlerts()));
+                                            appUser.setAlerts(request.getAlerts());
                                             appUser.setSearchKey(appUser.getSearchKey() + " " + getAppUserSearchKey(appUser));
                                             members.setAppUser(appUser);
                                             if (team != null) {
@@ -148,7 +112,7 @@ public class TeamMembersImpl implements TeamMembersService {
                                 } else {
                                     TeamMembers insertNewRecord = new TeamMembers();
                                     if (appUser.getRoles().equals(Roles.TEAM_LEADER) || appUser.getRoles().equals(Roles.TEAM_MANAGER) || appUser.getRoles().equals(Roles.DIRECTOR) || appUser.getRoles().equals(Roles.ACCOUNT_MANAGER) || appUser.getRoles().equals(Roles.GENERAL_MANAGER) || appUser.getRoles().equals(Roles.SENIOR_MANAGER)) {
-                                        appUser.setAlerts(Alerts.valueOf(request.getAlerts()));
+                                        appUser.setAlerts(request.getAlerts());
                                         insertNewRecord.setAppUser(appUser);
                                         appUser.setSearchKey(appUser.getSearchKey() + " " + getAppUserSearchKey(appUser));
                                         if (team != null) {
