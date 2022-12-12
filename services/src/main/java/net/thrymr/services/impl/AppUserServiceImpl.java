@@ -475,39 +475,43 @@ public class AppUserServiceImpl implements AppUserService {
         }
 
         Specification<AppUser> appUserSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
-            List<Predicate> addVendorPredicate = new ArrayList<>();
+            List<Predicate> addAppUserPredicate = new ArrayList<>();
             if (request.getUserName() != null) {
                 Predicate userName = criteriaBuilder.and(root.get("userName").in(request.getUserName()));
-                addVendorPredicate.add(userName);
+                addAppUserPredicate.add(userName);
             }
             if (request.getEmpId() != null && !request.getEmpId().isEmpty()) {
                 Predicate empId = criteriaBuilder.and(root.get("empId").in(request.getEmpId()));
-                addVendorPredicate.add(empId);
+                addAppUserPredicate.add(empId);
             }
             if (request.getRoles() != null && request.getRoles().isEmpty()) {
                 Predicate roles = criteriaBuilder.and(root.get("roles").in(request.getRoles()));
-                addVendorPredicate.add(roles);
+                addAppUserPredicate.add(roles);
             }
             if (request.getAlertList() != null && !request.getAlertList().isEmpty()) {
                 Predicate alerts = criteriaBuilder.and(root.get("alerts").in(request.getAlertList()));
-                addVendorPredicate.add(alerts);
+                addAppUserPredicate.add(alerts);
             }
 
             if (request.getRoles() != null && request.getRoles().equalsIgnoreCase(Roles.COUNSELLOR.toString())) {
                 Predicate roles = criteriaBuilder.and(root.get("counsellorName").in(request.getCounsellorId()));
-                addVendorPredicate.add(roles);
+                addAppUserPredicate.add(roles);
             }
             if (request.getShiftTimingsList() != null && !request.getShiftTimingsList().isEmpty()) {
                 Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(request.getShiftTimingsList()));
-                addVendorPredicate.add(shiftTimings);
+                addAppUserPredicate.add(shiftTimings);
             }
+
+            Predicate isDeletedPredicate = criteriaBuilder.equal(root.get("isDeleted"), Boolean.FALSE);
+            addAppUserPredicate.add(isDeletedPredicate);
+
             if (Validator.isValid(request.getSearchKey())) {
                 Predicate searchPredicate = criteriaBuilder.like(
                         criteriaBuilder.lower(root.get("searchKey")),
                         "%" + request.getSearchKey().toLowerCase() + "%");
-                addVendorPredicate.add(searchPredicate);
+                addAppUserPredicate.add(searchPredicate);
             }
-            return criteriaBuilder.and(addVendorPredicate.toArray(new Predicate[0]));
+            return criteriaBuilder.and(addAppUserPredicate.toArray(new Predicate[0]));
         });
         PaginationResponse paginationResponse = new PaginationResponse();
         if (request.getPageSize() != null && request.getPageNumber() != null) {
