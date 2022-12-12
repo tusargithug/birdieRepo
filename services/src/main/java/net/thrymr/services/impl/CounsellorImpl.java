@@ -2,10 +2,14 @@ package net.thrymr.services.impl;
 
 import net.thrymr.constant.Constants;
 import net.thrymr.dto.CounsellorDto;
+import net.thrymr.dto.EducationDto;
+import net.thrymr.dto.LanguageDto;
 import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.enums.Gender;
 import net.thrymr.enums.Roles;
 import net.thrymr.model.*;
+import net.thrymr.model.master.EducationDetails;
+import net.thrymr.model.master.LanguageDetails;
 import net.thrymr.repository.*;
 import net.thrymr.services.CounsellorService;
 import net.thrymr.utils.DateUtils;
@@ -35,8 +39,10 @@ public class CounsellorImpl implements CounsellorService {
     TeamRepo teamRepo;
     @Autowired
     SiteRepo siteRepo;
-    @Autowired
-    ShiftTimingsRepo shiftTimingsRepo;
+   @Autowired
+   EducationRepo educationRepo;
+   @Autowired
+   LanguageRepo languageRepo;
 
 
     @Override
@@ -223,6 +229,90 @@ public class CounsellorImpl implements CounsellorService {
         return new Counsellor();
     }
 
+    @Override
+    public List<EducationDetails> getAllEducationalDetails() {
+        return educationRepo.findAll();
+    }
+
+    @Override
+    public List<LanguageDetails> getAllLanguagesDetails() {
+        return languageRepo.findAll();
+    }
+
+    @Override
+    public String addNewLanguage(LanguageDto request) {
+        LanguageDetails languageDetails = new LanguageDetails();
+        languageDetails.setLanguageName(request.getLanguageName());
+        languageRepo.save(languageDetails);
+        return "language added successfully";
+    }
+
+    @Override
+    public String addNewEducation(EducationDto request) {
+        EducationDetails educationDetails = new EducationDetails();
+        educationDetails.setEducationName(request.getEducationName());
+        educationRepo.save(educationDetails);
+        return "education added successfully";
+    }
+
+    @Override
+    public String updateEducationDetailsById(EducationDto request) {
+        EducationDetails educationDetails = null;
+        if(Validator.isValid(request.getId())){
+            Optional<EducationDetails> optionalEducationDetails = educationRepo.findById(request.getId());
+            if(optionalEducationDetails.isPresent()){
+                educationDetails = optionalEducationDetails.get();
+                if (Validator.isValid(request.getEducationName())) {
+                    educationDetails.setEducationName(request.getEducationName());
+                }
+                educationRepo.save(educationDetails);
+                return "educational details successfully updated";
+            }
+        }
+        return "This id not present in database";
+    }
+
+    @Override
+    public String updateLanguageDetailsById(LanguageDto request) {
+        LanguageDetails languageDetails = null;
+        if(Validator.isValid(request.getId())){
+            Optional<LanguageDetails> languageDetailsOptional = languageRepo.findById(request.getId());
+            if(languageDetailsOptional.isPresent()) {
+                languageDetails = languageDetailsOptional.get();
+                languageDetails.setLanguageName(request.getLanguageName());
+                languageRepo.save(languageDetails);
+                return "language details successfully updated";
+            }
+        }
+        return "This id not present in database";
+    }
+
+    @Override
+    public EducationDetails getEducationalDetailsById(Long id) {
+        EducationDetails educationDetails = null;
+        if(Validator.isValid(id)) {
+            Optional<EducationDetails> optionalEducationDetails = educationRepo.findById(id);
+            if(optionalEducationDetails.isPresent()){
+                educationDetails = optionalEducationDetails.get();
+                return educationDetails;
+            }
+        }
+        return new EducationDetails();
+    }
+
+    @Override
+    public LanguageDetails getLanguageDetailsById(Long id) {
+        LanguageDetails languageDetails = null;
+        if(Validator.isValid(id)){
+            Optional<LanguageDetails> languageDetailsOptional = languageRepo.findById(id);
+            if(languageDetailsOptional.isPresent()){
+                languageDetails = languageDetailsOptional.get();
+                return languageDetails;
+            }
+        }
+        return new LanguageDetails();
+    }
+
     public String getCounsellorSearchKey(Counsellor counsellor) {
         String searchKey = "";
         if (counsellor.getCounsellorName() != null) {
@@ -248,6 +338,12 @@ public class CounsellorImpl implements CounsellorService {
         }
         if (counsellor.getShiftEndAt() != null) {
             searchKey = searchKey + " " + counsellor.getShiftEndAt();
+        }
+        if(counsellor.getEducationalDetails() != null){
+            searchKey = searchKey + " " +counsellor.getEducationalDetails();
+        }
+        if(counsellor.getLanguages() != null){
+            searchKey = searchKey + " " +counsellor.getLanguages();
         }
         if (counsellor.getShiftTimings() != null) {
             searchKey = searchKey + " " + counsellor.getShiftTimings();

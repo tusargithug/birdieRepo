@@ -47,7 +47,7 @@ public class AppUserDto {
 
     private String dateOfJoining;
 
-    private String alerts;
+    private List<Alerts> alerts;
 
     private Integer pageSize;
 

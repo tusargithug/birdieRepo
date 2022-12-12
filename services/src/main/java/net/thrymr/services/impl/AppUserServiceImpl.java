@@ -37,6 +37,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import java.io.IOException;
 import java.text.ParseException;
@@ -134,9 +135,9 @@ public class AppUserServiceImpl implements AppUserService {
                             Optional<Site> optionalSite = siteRepo.findById(Long.valueOf(getCellValue(row.getCell(14))));
                             optionalSite.ifPresent(appUser::setSite);
                         }
-                        if (row.getCell(15) != null) {
-                            appUser.setAlerts(Alerts.valueOf(getCellValue(row.getCell(15))));
-                        }
+//                        if (row.getCell(15) != null) {
+//                            appUser.setAlerts(Alerts.valueOf(getCellValue(row.getCell(15))));
+//                        }
                         if (row.getCell(16) != null) {
                             appUser.setRoles(Roles.valueOf(getCellValue(row.getCell(16))));
                         }
@@ -245,10 +246,8 @@ public class AppUserServiceImpl implements AppUserService {
                 if (Validator.isValid(request.getUserName())) {
                     user.setUserName(request.getUserName());
                 }
-                if (Validator.isValid(request.getEmpId()) && !appUserRepo.existsByEmpId(request.getEmpId())) {
+                if (Validator.isValid(request.getEmpId())) {
                     user.setEmpId(request.getEmpId());
-                } else {
-                    return "This employee id already existed";
                 }
                 if (Validator.isObjectValid(request.getDateOfJoining())) {
                     user.setDateOfJoining(DateUtils.toFormatStringToDate(String.valueOf(request.getDateOfJoining()), Constants.DATE_FORMAT));
@@ -262,16 +261,11 @@ public class AppUserServiceImpl implements AppUserService {
                 if (Validator.isValid(request.getCountryCode())) {
                     user.setCountryCode(request.getCountryCode());
                 }
-                if (Validator.isValid(request.getMobile()) && !appUserRepo.existsByMobile(request.getMobile())) {
+                if (Validator.isValid(request.getMobile())) {
                     user.setMobile(request.getMobile());
-                }else {
-                    return "This mobile number already existed";
                 }
-
-                if (Validator.isValid(request.getEmail()) && !appUserRepo.existsByEmail(request.getEmail())) {
+                if (Validator.isValid(request.getEmail())) {
                     user.setEmail(request.getEmail());
-                } else {
-                    return "This email already existed";
                 }
                 if (Validator.isValid(request.getRoles())) {
                     user.setRoles(Roles.valueOf(request.getRoles()));
@@ -482,39 +476,46 @@ public class AppUserServiceImpl implements AppUserService {
         }
 
         Specification<AppUser> appUserSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
-            List<Predicate> addVendorPredicate = new ArrayList<>();
+            List<Predicate> addUserPredicate = new ArrayList<>();
+            Join<AppUser, Site> siteJoin =root.join("site");
             if (request.getUserName() != null) {
                 Predicate userName = criteriaBuilder.and(root.get("userName").in(request.getUserName()));
-                addVendorPredicate.add(userName);
+                addUserPredicate.add(userName);
             }
             if (request.getEmpId() != null && !request.getEmpId().isEmpty()) {
                 Predicate empId = criteriaBuilder.and(root.get("empId").in(request.getEmpId()));
-                addVendorPredicate.add(empId);
+                addUserPredicate.add(empId);
             }
             if (request.getRoles() != null && request.getRoles().isEmpty()) {
                 Predicate roles = criteriaBuilder.and(root.get("roles").in(request.getRoles()));
-                addVendorPredicate.add(roles);
+                addUserPredicate.add(roles);
             }
             if (request.getAlertList() != null && !request.getAlertList().isEmpty()) {
                 Predicate alerts = criteriaBuilder.and(root.get("alerts").in(request.getAlertList()));
-                addVendorPredicate.add(alerts);
+                addUserPredicate.add(alerts);
             }
 
             if (request.getRoles() != null && request.getRoles().equalsIgnoreCase(Roles.COUNSELLOR.toString())) {
                 Predicate roles = criteriaBuilder.and(root.get("counsellorName").in(request.getCounsellorId()));
-                addVendorPredicate.add(roles);
+                addUserPredicate.add(roles);
             }
             if (request.getShiftTimingsList() != null && !request.getShiftTimingsList().isEmpty()) {
                 Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(request.getShiftTimingsList()));
-                addVendorPredicate.add(shiftTimings);
+                addUserPredicate.add(shiftTimings);
             }
+            if(request.getSiteId() != null){
+                Predicate site = criteriaBuilder.and(siteJoin.get("id").in(request.getSiteId()));
+                addUserPredicate.add(site);
+            }
+            Predicate isDeletedPredicate = criteriaBuilder.equal(root.get("isDeleted"), Boolean.FALSE);
+            addUserPredicate.add(isDeletedPredicate);
             if (Validator.isValid(request.getSearchKey())) {
                 Predicate searchPredicate = criteriaBuilder.like(
                         criteriaBuilder.lower(root.get("searchKey")),
                         "%" + request.getSearchKey().toLowerCase() + "%");
-                addVendorPredicate.add(searchPredicate);
+                addUserPredicate.add(searchPredicate);
             }
-            return criteriaBuilder.and(addVendorPredicate.toArray(new Predicate[0]));
+            return criteriaBuilder.and(addUserPredicate.toArray(new Predicate[0]));
         });
         PaginationResponse paginationResponse = new PaginationResponse();
         if (request.getPageSize() != null && request.getPageNumber() != null) {

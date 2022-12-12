@@ -544,7 +544,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     }
 
     @Override
-    public RoleWiseCountResponse previewAlertNotification(AppUserDto request) {
+    public RoleWiseCountResponse previewAlertNotification(TeamMembersDto request) {
         RoleWiseCountResponse roleWiseCountResponse = new RoleWiseCountResponse();
         roleWiseCountResponse.setTeamLeaderCount(0);
         roleWiseCountResponse.setTeamManagerCount(0);
@@ -555,22 +555,22 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         if (Validator.isValid(request.getAppUserIdList())) {
             List<AppUser> appUserList = appUserRepo.findAllById(request.getAppUserIdList());
             for (AppUser appUser : appUserList) {
-                if (appUser.getRoles().equals(Roles.TEAM_LEADER)) {
+                if (appUser.getRoles().equals(Roles.TEAM_LEADER) && appUser.getAlerts().contains(Alerts.valueOf(request.getAlert()))) {
                     roleWiseCountResponse.setTeamLeaderCount(roleWiseCountResponse.getTeamLeaderCount() + 1);
                 }
-                if (appUser.getRoles().equals(Roles.TEAM_MANAGER)) {
+                if (appUser.getRoles().equals(Roles.TEAM_MANAGER) && appUser.getAlerts().contains(Alerts.valueOf(request.getAlert()))) {
                     roleWiseCountResponse.setTeamManagerCount(roleWiseCountResponse.getTeamManagerCount() + 1);
                 }
-                if (appUser.getRoles().equals(Roles.DIRECTOR)) {
+                if (appUser.getRoles().equals(Roles.DIRECTOR) && appUser.getAlerts().contains(Alerts.valueOf(request.getAlert()))) {
                     roleWiseCountResponse.setDirectorCount(roleWiseCountResponse.getDirectorCount() + 1);
                 }
-                if (appUser.getRoles().equals(Roles.ACCOUNT_MANAGER)) {
+                if (appUser.getRoles().equals(Roles.ACCOUNT_MANAGER) && appUser.getAlerts().contains(Alerts.valueOf(request.getAlert()))) {
                     roleWiseCountResponse.setAccountManagerCount(roleWiseCountResponse.getAccountManagerCount() + 1);
                 }
-                if (appUser.getRoles().equals(Roles.GENERAL_MANAGER)) {
+                if (appUser.getRoles().equals(Roles.GENERAL_MANAGER) && appUser.getAlerts().contains(Alerts.valueOf(request.getAlert()))) {
                     roleWiseCountResponse.setGeneralManagerCount(roleWiseCountResponse.getGeneralManagerCount() + 1);
                 }
-                if (appUser.getRoles().equals(Roles.SENIOR_MANAGER)) {
+                if (appUser.getRoles().equals(Roles.SENIOR_MANAGER) && appUser.getAlerts().contains(Alerts.valueOf(request.getAlert()))) {
                     roleWiseCountResponse.setSeniorManagerCount(roleWiseCountResponse.getSeniorManagerCount() + 1);
                 }
             }

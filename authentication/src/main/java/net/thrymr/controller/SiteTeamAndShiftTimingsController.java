@@ -89,7 +89,7 @@ public class SiteTeamAndShiftTimingsController {
     }
 
     @QueryMapping(name="previewAlertNotification")
-    public RoleWiseCountResponse previewAlertNotification(@Argument(name = "input") AppUserDto request)  {
+    public RoleWiseCountResponse previewAlertNotification(@Argument(name = "input") TeamMembersDto request)  {
         return siteTeamAndShiftTimingsService.previewAlertNotification(request);
     }
 

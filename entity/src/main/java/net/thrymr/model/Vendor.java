@@ -24,7 +24,6 @@ public class Vendor extends BaseEntity {
 
     private String countryCode;
 
-    @Size(min = 10, max = 10)
     @Column(unique = true)
     private String mobileNumber;
 

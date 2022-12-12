@@ -9,8 +9,5 @@ import java.util.List;
 
 @Repository
 public interface SiteRepo extends JpaRepository<Site,Long>, JpaSpecificationExecutor<Site> {
-
-    boolean existsBySiteId(String siteId);
-
     List<Site> findAllByIdInAndIsActiveAndIsDeleted(List<Long> siteIdList, Boolean aTrue, Boolean aFalse);
 }
