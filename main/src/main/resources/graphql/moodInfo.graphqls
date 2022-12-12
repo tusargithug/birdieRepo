@@ -64,7 +64,7 @@ type Query {
     getAllWorkSheetPagination(input:WorksheetDto):PaginationResponse
     getAllChapterPagination(input:ChapterDto):PaginationResponse
 #    getAllMoodIntensitiesByMoodInfoId(id:ID!):[MtMoodIntensity]
-    previewAlertNotification(input:AppUserDto):RoleWiseCountResponse
+    previewAlertNotification(input:TeamMembersDto):RoleWiseCountResponse
     getTeamById(id:ID):Team
     getAllFileDetails:[FileDetails]
     getAllFileDetailsByType:[GetFileDetails]
@@ -700,6 +700,7 @@ input TeamMembersDto {
     appUserIdList:[ID]
     teamId:ID
     alerts:[Alerts]
+    alert:String
     previousTeamId:ID
     newTeamId:ID
 
