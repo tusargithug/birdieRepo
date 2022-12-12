@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.thrymr.dto.*;
 import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
 import net.thrymr.dto.slotRequest.TimeSlotDto;
+import net.thrymr.model.Team;
 import net.thrymr.model.master.Category;
 import net.thrymr.model.master.Course;
 import net.thrymr.services.*;
@@ -233,12 +234,12 @@ public class MutationResolver implements GraphQLMutationResolver {
     }
 
     @MutationMapping(name = "createTeam")
-    public String createTeam(TeamDto teamDto) {
+    public Team createTeam(TeamDto teamDto) {
         return siteTeamAndShiftTimingsService.createTeam(teamDto);
     }
 
     @MutationMapping(name = "updateTeam")
-    public String updateTeam(TeamDto teamDto) {
+    public Team updateTeam(TeamDto teamDto) {
         return siteTeamAndShiftTimingsService.updateTeam(teamDto);
     }
 

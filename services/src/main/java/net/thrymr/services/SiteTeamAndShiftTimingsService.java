@@ -8,9 +8,9 @@ import net.thrymr.model.*;
 import java.util.List;
 
 public interface SiteTeamAndShiftTimingsService {
-    String createTeam(TeamDto teamDto);
+    Team createTeam(TeamDto teamDto);
 
-    String updateTeam(TeamDto teamDto);
+    Team updateTeam(TeamDto teamDto);
 
     String deleteTeamById(Long id);
 
