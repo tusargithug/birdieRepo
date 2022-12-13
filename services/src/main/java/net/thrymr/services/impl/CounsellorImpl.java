@@ -191,7 +191,8 @@ public class CounsellorImpl implements CounsellorService {
                 Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(response.getShiftTimings()));
                 addCounsellorPredicate.add(shiftTimings);
             }
-
+            Predicate isDeletedPredicate = criteriaBuilder.equal(root.get("isDeleted"), Boolean.FALSE);
+            addCounsellorPredicate.add(isDeletedPredicate);
             if (Validator.isValid(response.getSearchKey())) {
                 Predicate searchPredicate = criteriaBuilder.like(
                         criteriaBuilder.lower(root.get("searchKey")),
