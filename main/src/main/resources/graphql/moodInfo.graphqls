@@ -390,7 +390,7 @@ input CounsellorDto {
      isActive:Boolean
      shiftStartAt:String
      shiftEndAt:String
-     shiftTimings:String
+     shiftTimings:[String]
      countryCode:String
      gender:String
      isCreatedOn:Boolean

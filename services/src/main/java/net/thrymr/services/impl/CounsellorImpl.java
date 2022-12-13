@@ -187,7 +187,7 @@ public class CounsellorImpl implements CounsellorService {
                 addCounsellorPredicate.add(site);
             }
 
-            if (response.getShiftTimings() != null) {
+            if (Validator.isValid(response.getShiftTimings())) {
                 Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(response.getShiftTimings()));
                 addCounsellorPredicate.add(shiftTimings);
             }

@@ -6,7 +6,6 @@ import lombok.Setter;
 import net.thrymr.enums.Gender;
 import net.thrymr.enums.Roles;
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
