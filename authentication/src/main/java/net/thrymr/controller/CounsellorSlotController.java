@@ -1,4 +1,5 @@
 package net.thrymr.controller;
+import net.thrymr.dto.CounsellorSlotDto;
 import net.thrymr.dto.slotRequest.TimeSlotDto;
 
 import net.thrymr.model.CounsellorSlot;
@@ -32,12 +33,12 @@ public class CounsellorSlotController {
     }
 
     @MutationMapping(name = "createCounsellorSlot")
-    public String createCounsellorSlot(@Argument(name = "input") TimeSlotDto request) throws ParseException {
+    public String createCounsellorSlot(@Argument(name = "input") CounsellorSlotDto request) throws ParseException {
         return counsellorSlotService.createCounsellorSlot(request);
     }
 
     @MutationMapping(name="rescheduledCounsellorSlot")
-    public String rescheduledCounsellorSlot(@Argument(name = "input") TimeSlotDto request) throws ParseException {
+    public String rescheduledCounsellorSlot(@Argument(name = "input") CounsellorSlotDto request) throws ParseException {
         return counsellorSlotService.rescheduledCounsellorSlot(request);
     }
 

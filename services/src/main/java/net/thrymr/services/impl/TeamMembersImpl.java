@@ -30,7 +30,7 @@ public class TeamMembersImpl implements TeamMembersService {
 
     @Override
     public String addEmployeeToTeam(TeamMembersDto request) {
-        if (request != null && Validator.isValid(request.getAppUserIdList()) && request.getTeamId() != null && request.getAlerts() != null) {
+        if (request != null && Validator.isValid(request.getAppUserIdList()) && request.getTeamId() != null) {
             List<AppUser> appUserList = appUserRepo.findAllByIdIn(request.getAppUserIdList());
             if (!appUserList.isEmpty()) {
                 Optional<Team> optionalTeam = teamRepo.findById(request.getTeamId());
@@ -42,7 +42,7 @@ public class TeamMembersImpl implements TeamMembersService {
                     TeamMembers teamMembers = new TeamMembers();
                     if (appUser != null && appUser.getRoles() != null) {
                         if (appUser.getRoles().equals(Roles.TEAM_LEADER) || appUser.getRoles().equals(Roles.TEAM_MANAGER) || appUser.getRoles().equals(Roles.DIRECTOR) || appUser.getRoles().equals(Roles.ACCOUNT_MANAGER) || appUser.getRoles().equals(Roles.GENERAL_MANAGER) || appUser.getRoles().equals(Roles.SENIOR_MANAGER)) {
-                            appUser.setAlerts(request.getAlerts());
+                           // appUser.setAlerts(request.getAlerts());
                             teamMembers.setAppUser(appUser);
                             if (team != null) {
                                 teamMembers.setTeam(team);
@@ -76,7 +76,7 @@ public class TeamMembersImpl implements TeamMembersService {
         if (Validator.isValid(request.getPreviousTeamId())) {
             List<TeamMembers> teamMembersList = teamMembersRepo.findAllByTeamId(request.getPreviousTeamId());
             if (!teamMembersList.isEmpty()) {
-                if (!request.getAppUserIdList().isEmpty() && request.getPreviousTeamId() != null && request.getAlerts() != null && request.getNewTeamId() != null) {
+                if (!request.getAppUserIdList().isEmpty() && request.getPreviousTeamId() != null && request.getNewTeamId() != null) {
                     List<AppUser> appUserList = appUserRepo.findAllByIdIn(request.getAppUserIdList());
                     if (!appUserList.isEmpty()) {
                         Optional<Team> optionalTeam = teamRepo.findById(request.getNewTeamId());
@@ -94,7 +94,7 @@ public class TeamMembersImpl implements TeamMembersService {
                                             members = optionalTeamMembers.get();
                                         }
                                         if (appUser.getRoles().equals(Roles.TEAM_LEADER) || appUser.getRoles().equals(Roles.TEAM_MANAGER) || appUser.getRoles().equals(Roles.DIRECTOR) || appUser.getRoles().equals(Roles.ACCOUNT_MANAGER) || appUser.getRoles().equals(Roles.GENERAL_MANAGER) || appUser.getRoles().equals(Roles.SENIOR_MANAGER)) {
-                                            appUser.setAlerts(request.getAlerts());
+                                           // appUser.setAlerts(request.getAlerts());
                                             appUser.setSearchKey(appUser.getSearchKey() + " " + getAppUserSearchKey(appUser));
                                             members.setAppUser(appUser);
                                             if (team != null) {
@@ -112,7 +112,7 @@ public class TeamMembersImpl implements TeamMembersService {
                                 } else {
                                     TeamMembers insertNewRecord = new TeamMembers();
                                     if (appUser.getRoles().equals(Roles.TEAM_LEADER) || appUser.getRoles().equals(Roles.TEAM_MANAGER) || appUser.getRoles().equals(Roles.DIRECTOR) || appUser.getRoles().equals(Roles.ACCOUNT_MANAGER) || appUser.getRoles().equals(Roles.GENERAL_MANAGER) || appUser.getRoles().equals(Roles.SENIOR_MANAGER)) {
-                                        appUser.setAlerts(request.getAlerts());
+                                       // appUser.setAlerts(request.getAlerts());
                                         insertNewRecord.setAppUser(appUser);
                                         appUser.setSearchKey(appUser.getSearchKey() + " " + getAppUserSearchKey(appUser));
                                         if (team != null) {
@@ -169,6 +169,6 @@ public class TeamMembersImpl implements TeamMembersService {
                 return "Team member record deleted successfully";
             }
         }
-        return "null";
+        return "gi";
     }
 }

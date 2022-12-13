@@ -6,7 +6,9 @@ import lombok.Setter;
 import net.thrymr.enums.SlotStatus;
 import net.thrymr.model.AppUser;
 
+import java.time.DayOfWeek;
 import java.util.Date;
+import java.util.List;
 
 
 @Getter
@@ -18,7 +20,7 @@ public class SlotDetailsDto {
     private String startTime;
     private String endTime;
     private Integer duration;
-    private String dayOfWeek;
+    private List<DayOfWeek> slotDays;
     private String date;
     //Date range
     private String toDate;

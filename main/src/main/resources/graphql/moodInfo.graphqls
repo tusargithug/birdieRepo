@@ -126,14 +126,14 @@ type Mutation {
     uploadRegionData(file:Upload!):String!
     updateRegionById(input:RegionDto):String!
     deleteRegionById(id:ID):String!
-    createCounsellorSlot(input:TimeSlotDto):String!
+    createCounsellorSlot(input:CounsellorSlotDto):String!
     createCounsellor(input:CounsellorDto):String!
     updateCounsellorById(input:CounsellorDto):String!
     deleteCounsellorById(id:ID!):String!
     saveVendor(input:VendorDto):String!
     deleteVendorById(id:ID):String!
     updateVendor(input:VendorDto):String!
-    rescheduledCounsellorSlot(input:TimeSlotDto):String!
+    rescheduledCounsellorSlot(input:CounsellorSlotDto):String!
     cancelCounsellorSlot(id:ID!):String!
     createQuestion(input:QuestionDto):String!
     updateQuestionById(input:QuestionDto):String!
@@ -316,11 +316,14 @@ type CounsellorSlot{
     counsellor:Counsellor
     startTime:LocalTime
     endTime:LocalTime
-    slotDt:Date
-    slotShift:SlotShift
-    days:DayOfWeek
+    slotDate:String
+    slotShift:[SlotShift]
+    slotDays:[DayOfWeek]
     slotStatus:SlotStatus
     isActive:Boolean
+    fromDate:String
+    appUser:AppUser
+    toDate:String
 }
 type Counsellor{
     id:Int
@@ -729,4 +732,18 @@ input EducationDto {
 type EducationDetails {
     id:ID
     educationName:String
+}
+input CounsellorSlotDto {
+    counsellorId:ID
+    startTime:String
+    endTime:String
+    slotDate:String
+    slotShift:[SlotShift]
+    slotDays:[DayOfWeek]
+    slotStatus:String
+    appUserId:ID
+    fromDate:String
+    toDate:String
+    isActive:Boolean
+    counsellorSlotId:ID
 }
