@@ -12,4 +12,6 @@ public interface VendorSiteRepo extends JpaRepository<VendorSite,Long>, JpaSpeci
     List<VendorSite> findAllByVendorId(Long id);
 
     boolean existsByVendorIdAndSiteId(Long id, Long newSiteIds);
+
+    List<VendorSite> findAllByVendorIdAndIsDeleted(Long id, Boolean aFalse);
 }

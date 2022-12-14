@@ -262,14 +262,14 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
-    public VendorSite getVendorSiteById(Long id) {
+    public List<VendorSite> getVendorSiteById(Long id) {
         if (Validator.isValid(id)) {
-            Optional<VendorSite> optionalVendorSite = vendorSiteRepo.findById(id);
-            if (optionalVendorSite.isPresent() && optionalVendorSite.get().getIsActive().equals(Boolean.TRUE)) {
-                return optionalVendorSite.get();
+            List<VendorSite> vendorSiteList = vendorSiteRepo.findAllByVendorIdAndIsDeleted(id, Boolean.FALSE);
+            if (!vendorSiteList.isEmpty()) {
+                return vendorSiteList;
             }
         }
-        return new VendorSite();
+        return new ArrayList<>();
     }
 
     public String getVendorSearchKey(Vendor vendor) {

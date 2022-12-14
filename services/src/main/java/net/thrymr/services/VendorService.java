@@ -17,6 +17,6 @@ public interface VendorService {
 
     PaginationResponse getAllVendorPagination(VendorDto vendorDto);
 
-    VendorSite getVendorSiteById(Long id);
+    List<VendorSite>  getVendorSiteById(Long id);
 
 }
