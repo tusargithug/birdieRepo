@@ -24,9 +24,9 @@ public class Vendor extends BaseEntity {
 
     private String countryCode;
 
-    @Column(unique = true)
+    @Column(name = "mobileNumber")
     private String mobileNumber;
 
-    @Column(unique = true)
+    @Column(name = "email")
     private String email;
 }
