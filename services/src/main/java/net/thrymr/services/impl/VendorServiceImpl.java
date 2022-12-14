@@ -240,6 +240,8 @@ public class VendorServiceImpl implements VendorService {
                         "%" + response.getSearchKey().toLowerCase() + "%");
                 addVendorPredicate.add(searchPredicate);
             }
+            Predicate isDeletedPredicate = criteriaBuilder.equal(root.get("isDeleted"), Boolean.FALSE);
+            addVendorPredicate.add(isDeletedPredicate);
             return criteriaBuilder.and(addVendorPredicate.toArray(new Predicate[0]));
         });
         PaginationResponse paginationResponse = new PaginationResponse();
