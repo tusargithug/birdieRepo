@@ -342,6 +342,7 @@ type Counsellor{
     languages:[String]
     bio:String
     gender:Gender
+    vendor:Vendor
 }
 scalar LocalTime
 scalar Date
@@ -375,28 +376,29 @@ enum Alerts{
     NONE
 }
 input CounsellorDto {
-     id:Int
-     educationalDetails:[String]
-     languages:[String]
-     siteId:Int
-     designation:String
-     bio:String
-     counsellorName:String
-     sortCounsellorName:Boolean
-     empId:String
-     emailId:String
-     mobileNumber:String
-     pageNumber:Int
-      pageSize:Int
-     addedOn:Boolean
-     searchKey:String
-     isActive:Boolean
-     shiftStartAt:String
-     shiftEndAt:String
-     shiftTimings:[String]
-     countryCode:String
-     gender:String
-     isCreatedOn:Boolean
+    id:Int
+    educationalDetails:[String]
+    languages:[String]
+    siteId:Int
+    designation:String
+    bio:String
+    counsellorName:String
+    sortCounsellorName:Boolean
+    empId:String
+    emailId:String
+    mobileNumber:String
+    pageNumber:Int
+    pageSize:Int
+    addedOn:Boolean
+    searchKey:String
+    isActive:Boolean
+    shiftStartAt:String
+    shiftEndAt:String
+    shiftTimings:[String]
+    countryCode:String
+    gender:String
+    isCreatedOn:Boolean
+    vendorId:ID
 }
 
 type Vendor{

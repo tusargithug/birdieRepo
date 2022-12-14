@@ -210,9 +210,9 @@ public class Query implements GraphQLQueryResolver {
         return vendorService.getAllVendorPagination(request);
     }
 
-    @QueryMapping(name = "getCounsellorSlot")
-    public List<CounsellorSlot> getCounsellorSlot() {
-        return counsellorSlotService.getCounsellorSlot();
+    @QueryMapping(name = "getAllCounsellorSlotPagination")
+    public PaginationResponse getAllCounsellorSlotPagination(@Argument(name = "input") CounsellorSlotDto request) {
+        return counsellorSlotService.getAllCounsellorSlotPagination(request);
     }
 
     @QueryMapping(name = "getAllShiftTimings")

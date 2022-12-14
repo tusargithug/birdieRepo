@@ -31,4 +31,5 @@ public class CounsellorDto {
     private String countryCode;
     private String gender;
     private Boolean isCreatedOn;
+    private Long vendorId;
 }
