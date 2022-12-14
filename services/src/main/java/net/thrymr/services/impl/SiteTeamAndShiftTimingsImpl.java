@@ -555,22 +555,22 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         if (Validator.isValid(request.getAppUserIdList())) {
             List<AppUser> appUserList = appUserRepo.findAllById(request.getAppUserIdList());
             for (AppUser appUser : appUserList) {
-                if (appUser.getRoles().equals(Roles.TEAM_LEADER) && appUser.getAlerts().contains(Alerts.valueOf(request.getAlert()))) {
+                if (appUser.getRoles().equals(Roles.TEAM_LEADER)) {
                     roleWiseCountResponse.setTeamLeaderCount(roleWiseCountResponse.getTeamLeaderCount() + 1);
                 }
-                if (appUser.getRoles().equals(Roles.TEAM_MANAGER) && appUser.getAlerts().contains(Alerts.valueOf(request.getAlert()))) {
+                if (appUser.getRoles().equals(Roles.TEAM_MANAGER)) {
                     roleWiseCountResponse.setTeamManagerCount(roleWiseCountResponse.getTeamManagerCount() + 1);
                 }
-                if (appUser.getRoles().equals(Roles.DIRECTOR) && appUser.getAlerts().contains(Alerts.valueOf(request.getAlert()))) {
+                if (appUser.getRoles().equals(Roles.DIRECTOR)) {
                     roleWiseCountResponse.setDirectorCount(roleWiseCountResponse.getDirectorCount() + 1);
                 }
-                if (appUser.getRoles().equals(Roles.ACCOUNT_MANAGER) && appUser.getAlerts().contains(Alerts.valueOf(request.getAlert()))) {
+                if (appUser.getRoles().equals(Roles.ACCOUNT_MANAGER)) {
                     roleWiseCountResponse.setAccountManagerCount(roleWiseCountResponse.getAccountManagerCount() + 1);
                 }
-                if (appUser.getRoles().equals(Roles.GENERAL_MANAGER) && appUser.getAlerts().contains(Alerts.valueOf(request.getAlert()))) {
+                if (appUser.getRoles().equals(Roles.GENERAL_MANAGER)) {
                     roleWiseCountResponse.setGeneralManagerCount(roleWiseCountResponse.getGeneralManagerCount() + 1);
                 }
-                if (appUser.getRoles().equals(Roles.SENIOR_MANAGER) && appUser.getAlerts().contains(Alerts.valueOf(request.getAlert()))) {
+                if (appUser.getRoles().equals(Roles.SENIOR_MANAGER)) {
                     roleWiseCountResponse.setSeniorManagerCount(roleWiseCountResponse.getSeniorManagerCount() + 1);
                 }
             }
@@ -608,7 +608,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
 
     @Override
     public List<Alerts> getAllEnumAlerts() {
-        List<Alerts> alertsList = Arrays.asList(Alerts.NONE,Alerts.RED_ALERT,Alerts.ORANGE_ALERT,Alerts.GREEN_ALERT);
+        List<Alerts> alertsList = Arrays.asList(Alerts.NONE, Alerts.RED_ALERT, Alerts.ORANGE_ALERT, Alerts.GREEN_ALERT);
         return alertsList;
     }
 }

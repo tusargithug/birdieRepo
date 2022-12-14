@@ -20,7 +20,7 @@ type Query {
     getAllCountry:[MtCountry]
     getAllCities:[MtCity]
     getAllRegions:[MtRegion]
-#    getCounsellorSlot:[CounsellorSlot]
+    getAllCounsellorSlotPagination(input:CounsellorSlotDto):PaginationResponse
     getAllShiftTimings:[ShiftTimings]
     getCounsellorSlotById(id:ID!):CounsellorSlot
     getAllCounsellorPagination(input:CounsellorDto):PaginationResponse
@@ -175,6 +175,7 @@ type Mutation {
     addNewEducation(input:EducationDto):String!
     updateEducationDetailsById(input:EducationDto):String!
     updateLanguageDetailsById(input:LanguageDto):String!
+    deleteTeamMember(input:TeamMembersDto):String!
 }
 
 scalar Upload
@@ -698,16 +699,13 @@ type PaginationResponse{
     totalPages:Int
     totalElements:Int
     counsellorEmployeeList:[CounsellorEmployee]
+    counsellorSlotList:[CounsellorSlot]
 }
 
 input TeamMembersDto {
     id:ID
     appUserIdList:[ID]
     teamId:ID
-    alerts:[Alerts]
-    alert:String
-    previousTeamId:ID
-    newTeamId:ID
 }
 
 type TeamMembers {
@@ -748,4 +746,9 @@ input CounsellorSlotDto {
     toDate:String
     isActive:Boolean
     counsellorSlotId:ID
+    siteIdList:[ID]
+    vendorIdList:[ID]
+    shiftTimingList:[String]
+    isSorted:Boolean
+    searchKey:String
 }

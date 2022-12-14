@@ -37,9 +37,9 @@ public class TeamMembersController {
         return teamMembersService.getAllTeamMember();
     }
 
-    @QueryMapping(name = "deleteTeamMember")
-    public String deleteTeamMember(@Argument Long id){
-        return teamMembersService.deleteTeamMember(id);
+    @MutationMapping(name = "deleteTeamMember")
+    public String deleteTeamMember(@Argument(name = "input") TeamMembersDto request){
+        return teamMembersService.deleteTeamMember(request);
     }
 
 }

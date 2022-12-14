@@ -3,9 +3,6 @@ package net.thrymr.services.impl;
 import net.thrymr.constant.Constants;
 import net.thrymr.dto.CounsellorSlotDto;
 import net.thrymr.dto.response.PaginationResponse;
-import net.thrymr.dto.slotRequest.SlotDetailsDto;
-import net.thrymr.dto.slotRequest.TimeSlotDto;
-import net.thrymr.enums.SlotShift;
 import net.thrymr.enums.SlotStatus;
 import net.thrymr.model.*;
 import net.thrymr.repository.AppUserRepo;
@@ -16,22 +13,19 @@ import net.thrymr.services.CounsellorSlotService;
 import net.thrymr.utils.DateUtils;
 import net.thrymr.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import javax.persistence.criteria.Join;
-import java.text.DateFormat;
+import javax.persistence.criteria.Predicate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -90,6 +84,7 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
         if (request.getIsActive() != null && request.getIsActive().equals(Boolean.TRUE)) {
             slot.setIsActive(request.getIsActive());
         }
+        slot.setIsBooked(Boolean.TRUE);
         slot.setSearchKey(getCounsellorSearchKey(slot));
         counsellorSlotRepo.save(slot);
         return "Counsellor slots saved successfully";
@@ -98,27 +93,58 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
     @Override
     public PaginationResponse getAllCounsellorSlotPagination(CounsellorSlotDto request) {
         Pageable pageable = null;
-//
-//        if (request.getPageSize() != null && request.getPageNumber() != null) {
-//            pageable = PageRequest.of(request.getPageNumber(), request.getPageSize());
-//        }
-//        if (request.getPageSize() != null && request.getPageNumber() != null) {
-//            pageable = PageRequest.of(request.getPageNumber(), request.getPageSize(), Sort.Direction.DESC, "createdOn");
-//        }
-//        Specification<CounsellorSlot> counsellorSlotSpecification = (root, query, criteriaBuilder) -> {
-//            List<Predicate> predicateList = new ArrayList<>();
-//            Join<Counsellor, Vendor> vendorJoin = root.join("vendor");
-//            Join<CounsellorSlot, Counsellor> counsellorJoin = root.join("counsellor");
-//            Join<Counsellor, Site> siteJoin= root.join("site");
-//            if();
-//        };
-//
-//        List<CounsellorSlot> counsellorSlotList = counsellorSlotRepo.findAll();
-//        if (!counsellorSlotList.isEmpty()) {
-//            return counsellorSlotList.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
-//        }
-//        return new ArrayList<>();
-        return null;
+
+        if (request.getPageSize() != null && request.getPageNumber() != null) {
+            pageable = PageRequest.of(request.getPageNumber(), request.getPageSize());
+        }
+        if (request.getPageSize() != null && request.getPageNumber() != null) {
+            pageable = PageRequest.of(request.getPageNumber(), request.getPageSize(), Sort.Direction.DESC, "createdOn");
+        }
+        if (request.getIsSorted() != null && request.getIsSorted().equals(Boolean.TRUE)) {
+            pageable = PageRequest.of(request.getPageNumber(), request.getPageSize(), Sort.Direction.ASC, "counsellor.counsellorName");
+        }
+        Specification<CounsellorSlot> counsellorSlotSpecification = ((root, query, criteriaBuilder) -> {
+            List<Predicate> predicateList = new ArrayList<>();
+            Join<Counsellor, Vendor> vendorJoin = root.join("vendor");
+            Join<CounsellorSlot, Counsellor> counsellorJoin = root.join("counsellor");
+
+            Join<Counsellor, Site> siteJoin = root.join("site");
+            if (request.getSiteIdList() != null && request.getSiteIdList().isEmpty()) {
+                Predicate site = criteriaBuilder.and(siteJoin.get("id").in(request.getSiteIdList()));
+                predicateList.add(site);
+            }
+            if (request.getVendorIdList() != null && request.getVendorIdList().isEmpty()) {
+                Predicate vendor = criteriaBuilder.and(vendorJoin.get("id").in(request.getVendorIdList()));
+                predicateList.add(vendor);
+            }
+            if (request.getShiftTimingList() != null && request.getShiftTimingList().isEmpty()) {
+                Predicate shiftTimings = criteriaBuilder.and(counsellorJoin.get("shiftTimings").in(request.getShiftTimingList()));
+                predicateList.add(shiftTimings);
+            }
+            if (Validator.isValid(request.getSearchKey())) {
+                Predicate searchPredicate = criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get("searchKey")),
+                        "%" + request.getSearchKey().toLowerCase() + "%");
+                predicateList.add(searchPredicate);
+            }
+            Predicate isDeletedPredicate = criteriaBuilder.equal(root.get("isDeleted"), Boolean.FALSE);
+            predicateList.add(isDeletedPredicate);
+            return criteriaBuilder.and(predicateList.toArray(new Predicate[0]));
+        });
+        PaginationResponse paginationResponse = new PaginationResponse();
+        if (request.getPageNumber() != null && request.getPageSize() != null) {
+            Page<CounsellorSlot> counsellorSlotsObject = counsellorSlotRepo.findAll(counsellorSlotSpecification, pageable);
+            paginationResponse.setCounsellorSlotList(counsellorSlotsObject.stream().collect(Collectors.toList()));
+            paginationResponse.setTotalPages(counsellorSlotsObject.getTotalPages());
+            paginationResponse.setTotalElements(counsellorSlotsObject.getTotalElements());
+        } else {
+            List<CounsellorSlot> counsellorSlotList = counsellorSlotRepo.findAll(counsellorSlotSpecification);
+            if (!counsellorSlotList.isEmpty()) {
+                paginationResponse.setCounsellorSlotList(counsellorSlotList);
+            }
+            return paginationResponse;
+        }
+        return new PaginationResponse();
     }
 
     @Override
@@ -209,6 +235,7 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
                 counsellorSlot = optionalCounsellorSlot.get();
                 counsellorSlot.setIsActive(Boolean.FALSE);
                 counsellorSlot.setIsDeleted(Boolean.TRUE);
+                counsellorSlot.setIsBooked(Boolean.TRUE);
                 counsellorSlot.setSlotStatus(SlotStatus.DELETED);
                 counsellorSlot.setSearchKey(getCounsellorSearchKey(counsellorSlot));
                 counsellorSlotRepo.save(counsellorSlot);

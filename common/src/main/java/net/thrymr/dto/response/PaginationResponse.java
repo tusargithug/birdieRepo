@@ -29,6 +29,7 @@ public class PaginationResponse {
     private List<CounsellorEmployee> counsellorEmployeeList = new ArrayList<>();
     private List<MtPsychoEducation> psychoEducationList = new ArrayList<>();
     private List<Counsellor> counsellorList = new ArrayList<>();
+    private List<CounsellorSlot> counsellorSlotList = new ArrayList<>();
     private int totalPages = 0;
     private Long totalElements = 0L;
 }
