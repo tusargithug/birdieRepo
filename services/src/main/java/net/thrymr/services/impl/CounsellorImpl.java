@@ -43,6 +43,8 @@ public class CounsellorImpl implements CounsellorService {
    EducationRepo educationRepo;
    @Autowired
    LanguageRepo languageRepo;
+   @Autowired
+   VendorRepo vendorRepo;
 
 
     @Override
@@ -78,6 +80,10 @@ public class CounsellorImpl implements CounsellorService {
         if (Validator.isValid(request.getSiteId())) {
             Optional<Site> optionalSite = siteRepo.findById(request.getSiteId());
             optionalSite.ifPresent(counsellor::setSite);
+        }
+        if (Validator.isValid(request.getVendorId())){
+            Optional<Vendor> optionalVendor = vendorRepo.findById(request.getVendorId());
+            optionalVendor.ifPresent(counsellor::setVendor);
         }
         counsellor.setSearchKey(getCounsellorSearchKey(counsellor));
         counsellorRepo.save(counsellor);
@@ -135,6 +141,10 @@ public class CounsellorImpl implements CounsellorService {
                     if (optionalSite.isPresent()) {
                         counsellor.setSite(optionalSite.get());
                     }
+                }
+                if (Validator.isValid(request.getVendorId())){
+                    Optional<Vendor> optionalVendor = vendorRepo.findById(request.getVendorId());
+                    optionalVendor.ifPresent(counsellor::setVendor);
                 }
                 counsellor.setSearchKey(getCounsellorSearchKey(counsellor));
                 counsellorRepo.save(counsellor);
@@ -367,6 +377,9 @@ public class CounsellorImpl implements CounsellorService {
         }
         if (counsellor.getIsActive() != null) {
             searchKey = searchKey + " " + counsellor.getIsActive();
+        }
+        if(counsellor.getVendor() != null) {
+            searchKey = searchKey + " " + counsellor.getVendor().getVendorName();
         }
         return searchKey;
     }

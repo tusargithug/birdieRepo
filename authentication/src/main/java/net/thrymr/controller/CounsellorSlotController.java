@@ -1,5 +1,6 @@
 package net.thrymr.controller;
 import net.thrymr.dto.CounsellorSlotDto;
+import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.dto.slotRequest.TimeSlotDto;
 
 import net.thrymr.model.CounsellorSlot;
@@ -23,9 +24,9 @@ public class CounsellorSlotController {
     public CounsellorSlotController(CounsellorSlotService counsellorSlotService) {
         this.counsellorSlotService = counsellorSlotService;
     }
-    @QueryMapping(name="getCounsellorSlot")
-    public List<CounsellorSlot> getCounsellorSlot() {
-        return counsellorSlotService.getCounsellorSlot();
+    @QueryMapping(name="getAllCounsellorSlotPagination")
+    public PaginationResponse getAllCounsellorSlotPagination(@Argument(name = "input") CounsellorSlotDto request) {
+        return counsellorSlotService.getAllCounsellorSlotPagination(request);
     }
     @QueryMapping(name="getCounsellorSlotById")
     public CounsellorSlot getCounsellorSlotById(@Argument Long id) {
