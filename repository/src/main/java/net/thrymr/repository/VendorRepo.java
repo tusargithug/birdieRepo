@@ -8,4 +8,9 @@ import java.util.Optional;
 
 @Repository
 public interface VendorRepo extends JpaRepository<Vendor,Long>, JpaSpecificationExecutor<Vendor>  {
+    boolean existsByVendorId(String vendorId);
+
+    boolean existsByMobileNumber(String mobileNumber);
+
+    boolean existsByEmail(String email);
 }

@@ -42,10 +42,22 @@ public class VendorServiceImpl implements VendorService {
     public String saveVendor(VendorDto request) {
         Vendor vendor = new Vendor();
         vendor.setVendorName(request.getVendorName());
-        vendor.setVendorId(request.getVendorId());
+        if(request.getVendorId() != null && !vendorRepo.existsByVendorId(request.getVendorId())) {
+            vendor.setVendorId(request.getVendorId());
+        }else {
+            return "This vendorId already existed";
+        }
         vendor.setCountryCode(request.getCountryCode());
-        vendor.setMobileNumber(request.getMobileNumber());
-        vendor.setEmail(request.getEmail());
+        if(request.getMobileNumber() != null && !vendorRepo.existsByMobileNumber(request.getMobileNumber())) {
+            vendor.setMobileNumber(request.getMobileNumber());
+        }else {
+            return "This mobile number already existed";
+        }
+        if(request.getEmail() != null && !vendorRepo.existsByEmail(request.getEmail())) {
+            vendor.setEmail(request.getEmail());
+        }else {
+            return "This email id already existed";
+        }
         vendor.setPOC(request.getPOC());
         vendor.setSearchKey(getVendorSearchKey(vendor));
         vendor = vendorRepo.save(vendor);
@@ -116,17 +128,23 @@ public class VendorServiceImpl implements VendorService {
                 if (Validator.isValid(request.getVendorName())) {
                     vendor.setVendorName(request.getVendorName());
                 }
-                if (Validator.isValid(request.getVendorId())) {
+                if (Validator.isValid(request.getVendorId()) && !vendor.getVendorId().equals(request.getVendorId())) {
                     vendor.setVendorId(request.getVendorId());
+                }else {
+                    return "This vendor id already existed";
                 }
-                if (Validator.isValid(request.getEmail())) {
+                if (Validator.isValid(request.getEmail()) && !vendor.getEmail().equals(request.getEmail())) {
                     vendor.setEmail(request.getEmail());
+                }else {
+                    return "This email already existed";
                 }
                 if (Validator.isValid(request.getCountryCode())) {
                     vendor.setCountryCode(request.getCountryCode());
                 }
-                if (Validator.isValid(request.getMobileNumber())) {
+                if (Validator.isValid(request.getMobileNumber()) && !vendor.getMobileNumber().equals(request.getMobileNumber())) {
                     vendor.setMobileNumber(request.getMobileNumber());
+                }else {
+                    return "This mobile number already existed";
                 }
                 if (Validator.isValid(request.getPOC())) {
                     vendor.setPOC(request.getPOC());
