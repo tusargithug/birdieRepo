@@ -261,6 +261,17 @@ public class VendorServiceImpl implements VendorService {
         return new PaginationResponse();
     }
 
+    @Override
+    public VendorSite getVendorSiteById(Long id) {
+        if (Validator.isValid(id)) {
+            Optional<VendorSite> optionalVendorSite = vendorSiteRepo.findById(id);
+            if (optionalVendorSite.isPresent() && optionalVendorSite.get().getIsActive().equals(Boolean.TRUE)) {
+                return optionalVendorSite.get();
+            }
+        }
+        return new VendorSite();
+    }
+
     public String getVendorSearchKey(Vendor vendor) {
         String searchKey = "";
         if (vendor.getPOC() != null) {
