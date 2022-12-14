@@ -27,7 +27,7 @@ public class CounsellorDto {
     private Boolean isActive;
     private String shiftStartAt;
     private String shiftEndAt;
-    private String shiftTimings;
+    private List<String> shiftTimings;
     private String countryCode;
     private String gender;
     private Boolean isCreatedOn;
