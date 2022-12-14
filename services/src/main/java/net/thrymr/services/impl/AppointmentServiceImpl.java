@@ -54,7 +54,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             for (SlotDetailsDto detailsDto : request.getSlots()) {
                 appointment.setStartTime(DateUtils.toParseLocalTime(detailsDto.getStartTime(), Constants.TIME_FORMAT_2));
                 appointment.setEndTime(DateUtils.toParseLocalTime(detailsDto.getEndTime(), Constants.TIME_FORMAT_2));
-                appointment.setDays(DayOfWeek.valueOf(detailsDto.getDayOfWeek()));
+                //appointment.setDays(DayOfWeek.valueOf(detailsDto.getSlotDays()));
                 appointment.setSlotStatus(SlotStatus.valueOf(detailsDto.getSlotStatus()));
                 appointment.setSlotShift(SlotShift.getType(detailsDto.getSlotShift()));
                 if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE)) {
@@ -159,7 +159,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                             userAppointment.setStartTime(DateUtils.toParseLocalTime(detailsDto.getStartTime(), Constants.TIME_FORMAT_2));
                         }
                         userAppointment.setEndTime(DateUtils.toParseLocalTime(detailsDto.getEndTime(), Constants.TIME_FORMAT_2));
-                        userAppointment.setDays(DayOfWeek.valueOf(detailsDto.getDayOfWeek()));
+                       // userAppointment.setDays(DayOfWeek.valueOf(detailsDto.getDayOfWeek()));
                         userAppointment.setSlotStatus(SlotStatus.valueOf(detailsDto.getSlotStatus()));
                         userAppointment.setSlotShift(SlotShift.getType(detailsDto.getSlotShift()));
                         if (request.getIsActive() != null && request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {

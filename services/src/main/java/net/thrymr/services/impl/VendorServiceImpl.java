@@ -42,10 +42,22 @@ public class VendorServiceImpl implements VendorService {
     public String saveVendor(VendorDto request) {
         Vendor vendor = new Vendor();
         vendor.setVendorName(request.getVendorName());
-        vendor.setVendorId(request.getVendorId());
+        if(request.getVendorId() != null && !vendorRepo.existsByVendorId(request.getVendorId())) {
+            vendor.setVendorId(request.getVendorId());
+        }else {
+            return "This vendorId already existed";
+        }
         vendor.setCountryCode(request.getCountryCode());
-        vendor.setMobileNumber(request.getMobileNumber());
-        vendor.setEmail(request.getEmail());
+        if(request.getMobileNumber() != null && !vendorRepo.existsByMobileNumber(request.getMobileNumber())) {
+            vendor.setMobileNumber(request.getMobileNumber());
+        }else {
+            return "This mobile number already existed";
+        }
+        if(request.getEmail() != null && !vendorRepo.existsByEmail(request.getEmail())) {
+            vendor.setEmail(request.getEmail());
+        }else {
+            return "This email id already existed";
+        }
         vendor.setPOC(request.getPOC());
         vendor.setSearchKey(getVendorSearchKey(vendor));
         vendor = vendorRepo.save(vendor);
@@ -228,6 +240,8 @@ public class VendorServiceImpl implements VendorService {
                         "%" + response.getSearchKey().toLowerCase() + "%");
                 addVendorPredicate.add(searchPredicate);
             }
+            Predicate isDeletedPredicate = criteriaBuilder.equal(root.get("isDeleted"), Boolean.FALSE);
+            addVendorPredicate.add(isDeletedPredicate);
             return criteriaBuilder.and(addVendorPredicate.toArray(new Predicate[0]));
         });
         PaginationResponse paginationResponse = new PaginationResponse();

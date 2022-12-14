@@ -48,10 +48,18 @@ public class CounsellorImpl implements CounsellorService {
     @Override
     public String createCounsellor(CounsellorDto request) {
         Counsellor counsellor = new Counsellor();
-        counsellor.setEmpId(request.getEmpId());
+        if(request.getEmpId() != null && !counsellorRepo.existsByEmpId(request.getEmpId())) {
+            counsellor.setEmpId(request.getEmpId());
+        }else {
+            return "This employee id already existed";
+        }
         counsellor.setCounsellorName(request.getCounsellorName());
         counsellor.setEducationalDetails(request.getEducationalDetails());
-        counsellor.setEmailId(request.getEmailId());
+        if(request.getEmailId() != null && !counsellorRepo.existsByEmailId(request.getEmailId())) {
+            counsellor.setEmailId(request.getEmailId());
+        }else {
+            return "This email already existed";
+        }
         counsellor.setLanguages(request.getLanguages());
         counsellor.setBio(request.getBio());
         counsellor.setShiftStartAt(DateUtils.toStringToLocalTime(request.getShiftStartAt(), Constants.TIME_FORMAT_12_HOURS));
@@ -61,13 +69,15 @@ public class CounsellorImpl implements CounsellorService {
             counsellor.setDesignation(Roles.valueOf(request.getDesignation()));
         }
         counsellor.setCountryCode(request.getCountryCode());
-        counsellor.setMobileNumber(request.getMobileNumber());
+        if(request.getMobileNumber() != null && !counsellorRepo.existsByMobileNumber(request.getMobileNumber())) {
+            counsellor.setMobileNumber(request.getMobileNumber());
+        }else{
+            return "This mobile number already existed";
+        }
         counsellor.setGender(Gender.valueOf(request.getGender()));
         if (Validator.isValid(request.getSiteId())) {
             Optional<Site> optionalSite = siteRepo.findById(request.getSiteId());
-            if (optionalSite.isPresent()) {
-                counsellor.setSite(optionalSite.get());
-            }
+            optionalSite.ifPresent(counsellor::setSite);
         }
         counsellor.setSearchKey(getCounsellorSearchKey(counsellor));
         counsellorRepo.save(counsellor);
