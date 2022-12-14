@@ -20,7 +20,7 @@ type Query {
     getAllCountry:[MtCountry]
     getAllCities:[MtCity]
     getAllRegions:[MtRegion]
-    getCounsellorSlot:[CounsellorSlot]
+#    getCounsellorSlot:[CounsellorSlot]
     getAllShiftTimings:[ShiftTimings]
     getCounsellorSlotById(id:ID!):CounsellorSlot
     getAllCounsellorPagination(input:CounsellorDto):PaginationResponse
