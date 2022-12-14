@@ -79,7 +79,7 @@ type Query {
     getAllLanguagesDetails:[LanguageDetails]
     getEducationalDetailsById(id:ID):EducationDetails
     getLanguageDetailsById(id:ID):LanguageDetails
-    getVendorSiteById(id:ID):VendorSite
+    getVendorSiteById(id:ID):[VendorSite]
 }
 
 type Mutation {
