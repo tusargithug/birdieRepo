@@ -42,14 +42,7 @@ import java.util.List;
 @PropertySource("message.properties")
 @SpringBootApplication
 public class BaseApplication {
-
-
-    @Autowired
-    private Query query;
-    @Autowired
-    private MutationResolver mutationResolver;
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseApplication.class);
-
     public static void main(String[] args) {
         SpringApplication.run(BaseApplication.class, args);
 

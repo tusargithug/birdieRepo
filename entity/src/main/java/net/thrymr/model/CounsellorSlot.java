@@ -12,6 +12,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
+import java.util.List;
 
 @Setter
 @Getter
@@ -31,16 +32,24 @@ public class CounsellorSlot extends BaseEntity {
     private LocalTime endTime;
 
     @Column(name = "slot_date")
-    private Date slotDt;
+    private Date slotDate;
 
     @Enumerated(EnumType.STRING)
-    private SlotShift slotShift;
+    @ElementCollection(targetClass = SlotShift.class)
+    private List<SlotShift> slotShift;
 
-    private DayOfWeek days;
+    @ElementCollection(targetClass = DayOfWeek.class)
+    private List<DayOfWeek> slotDays;
 
     @Enumerated(EnumType.STRING)
     private SlotStatus slotStatus;
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private AppUser appUser;
+
+    private Date fromDate;
+
+    private Date toDate;
+
+    private int AvailableSlots;
 
 }

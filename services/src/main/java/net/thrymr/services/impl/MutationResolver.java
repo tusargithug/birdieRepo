@@ -326,7 +326,7 @@ public class MutationResolver implements GraphQLMutationResolver {
     }*/
 
     @MutationMapping(name = "createCounsellorSlot")
-    public String createCounsellorSlot(@Argument(name = "input") TimeSlotDto request) throws ParseException {
+    public String createCounsellorSlot(@Argument(name = "input") CounsellorSlotDto request) throws ParseException {
         return counsellorSlotService.createCounsellorSlot(request);
     }
 
@@ -361,7 +361,7 @@ public class MutationResolver implements GraphQLMutationResolver {
     }
 
     @MutationMapping(name = "rescheduledCounsellorSlot")
-    public String rescheduledCounsellorSlot(@Argument(name = "input") TimeSlotDto request) throws ParseException {
+    public String rescheduledCounsellorSlot(@Argument(name = "input") CounsellorSlotDto request) throws ParseException {
         return counsellorSlotService.rescheduledCounsellorSlot(request);
     }
 

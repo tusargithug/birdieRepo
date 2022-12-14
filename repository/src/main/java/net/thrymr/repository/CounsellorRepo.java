@@ -10,4 +10,9 @@ import java.util.List;
 @Repository
 public interface CounsellorRepo extends JpaRepository<Counsellor,Long>, JpaSpecificationExecutor<Counsellor> {
 
+    boolean existsByEmpId(String empId);
+
+    boolean existsByEmailId(String emailId);
+
+    boolean existsByMobileNumber(String mobileNumber);
 }
