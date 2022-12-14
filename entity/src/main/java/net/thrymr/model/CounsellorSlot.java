@@ -20,8 +20,6 @@ import java.util.List;
 @Entity
 @Table(name = "Counsellor_slot")
 public class CounsellorSlot extends BaseEntity {
-
-
     @ManyToOne(fetch = FetchType.LAZY)
     private Counsellor counsellor;
 

@@ -29,4 +29,9 @@ public class CounsellorSlotDto {
     private String toDate;
     private Boolean isActive;
     private Long counsellorSlotId;
+    private Integer pageNumber;
+    private Integer pageSize;
+    private Long siteIdList;
+    private Long vendorIdList;
+    private String shiftTimingList;
 }
