@@ -50,4 +50,6 @@ public class CounsellorSlot extends BaseEntity {
 
     private int AvailableSlots;
 
+    private Boolean isBooked;
+
 }

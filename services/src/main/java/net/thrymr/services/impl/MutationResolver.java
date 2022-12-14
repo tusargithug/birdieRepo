@@ -574,6 +574,10 @@ public class MutationResolver implements GraphQLMutationResolver {
     public String updateLanguageDetailsById(@Argument(name = "input") LanguageDto request){
         return counsellorService.updateLanguageDetailsById(request);
     }
+    @MutationMapping(name = "deleteTeamMember")
+    public String deleteTeamMember(@Argument(name = "input") TeamMembersDto request){
+        return teamMembersService.deleteTeamMember(request);
+    }
 }
 
 

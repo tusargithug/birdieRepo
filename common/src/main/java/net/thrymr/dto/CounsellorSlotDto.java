@@ -31,7 +31,9 @@ public class CounsellorSlotDto {
     private Long counsellorSlotId;
     private Integer pageNumber;
     private Integer pageSize;
-    private Long siteIdList;
-    private Long vendorIdList;
-    private String shiftTimingList;
+    private List<Long> siteIdList;
+    private List<Long> vendorIdList;
+    private List<String> shiftTimingList;
+    private Boolean isSorted;
+    private String searchKey;
 }
