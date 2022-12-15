@@ -69,7 +69,6 @@ public class TeamMembersImpl implements TeamMembersService {
             List<Long> existedUsers = teamMembersList.stream().filter(user -> user.getAppUser() != null).map(obj -> obj.getAppUser().getId()).collect(Collectors.toList());
             List<Long> allUsersFromRequest = request.getAppUserIdList();
             List<Long> list = new ArrayList<>(CollectionUtils.disjunction(allUsersFromRequest, existedUsers));
-            System.out.println(list);
             if (allUsersFromRequest != null) {
                 List<AppUser> appUserList = appUserRepo.findAllByIdIn(list);
                 if (!appUserList.isEmpty()) {
@@ -78,15 +77,9 @@ public class TeamMembersImpl implements TeamMembersService {
                     if (optionalTeam.isPresent()) {
                         team = optionalTeam.get();
                     }
-                  //  for (TeamMembers teamMembers : teamMembersList) {
                         for (AppUser appUser : appUserList) {
                             if (!teamMembersRepo.existsByAppUserId(appUser.getId())) {
                                 TeamMembers insertNewRecord = new TeamMembers();
-                                Optional<TeamMembers> optionalTeamMembers = teamMembersRepo.findByAppUserId(appUser.getId());
-                                TeamMembers members = null;
-                                if (optionalTeamMembers.isPresent()) {
-                                    members = optionalTeamMembers.get();
-                                }
                                 insertNewRecord.setAppUser(appUser);
                                 if (team != null) {
                                     insertNewRecord.setTeam(team);
@@ -106,7 +99,6 @@ public class TeamMembersImpl implements TeamMembersService {
                                 teamMembersRepo.save(members);
                             }
                         }
-                   // }
                     return "Team members update successfully";
                 }
             }

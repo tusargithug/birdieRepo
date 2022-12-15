@@ -2,15 +2,13 @@ package net.thrymr.services.impl;
 
 import net.thrymr.dto.VendorDto;
 import net.thrymr.dto.response.PaginationResponse;
-import net.thrymr.model.AppUser;
-import net.thrymr.model.Site;
-import net.thrymr.model.Vendor;
-import net.thrymr.model.VendorSite;
+import net.thrymr.model.*;
 import net.thrymr.repository.SiteRepo;
 import net.thrymr.repository.VendorRepo;
 import net.thrymr.repository.VendorSiteRepo;
 import net.thrymr.services.VendorService;
 import net.thrymr.utils.Validator;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -148,47 +146,47 @@ public class VendorServiceImpl implements VendorService {
 
                 if (request.getSiteIdList() != null && vendor.getId() != null) {
                     List<VendorSite> vendorSiteList = vendorSiteRepo.findAllByVendorId(vendor.getId());
-                    for (Long newSiteIds : request.getSiteIdList()) {
-                        VendorSite saveVendorSite = null;
-                        if (!vendorSiteList.isEmpty()) {
-                            for (VendorSite vendorSite : vendorSiteList) {
-                                if (vendorSite.getSite() != null && vendorSiteRepo.existsByVendorIdAndSiteId(vendor.getId(), newSiteIds)) {
-                                    saveVendorSite = vendorSite;
-                                    saveVendorSite.setSite(vendorSite.getSite());
-                                    saveVendorSite.setVendor(vendor);
-                                } else {
-                                    Optional<Site> optionalSite = siteRepo.findById(newSiteIds);
-                                    if (optionalVendor.isPresent()) {
-                                        saveVendorSite = new VendorSite();
-                                        saveVendorSite.setVendor(vendor);
-                                        saveVendorSite.setSite(optionalSite.get());
+                    List<Long> existedUsers = vendorSiteList.stream().filter(user -> user.getSite() != null).map(obj -> obj.getSite().getId()).collect(Collectors.toList());
+                    List<Long> allUsersFromRequest = request.getSiteIdList();
+                    List<Long> list = new ArrayList<>(CollectionUtils.disjunction(allUsersFromRequest, existedUsers));
+                    if (allUsersFromRequest != null) {
+                        List<Site> siteList = siteRepo.findAllBySiteIdIn(list);
+                        if (!siteList.isEmpty()) {
+                            Optional<Vendor> optionalVendor1 = vendorRepo.findById(request.getIdVendor());
+                            Vendor vendor1 = null;
+                            if (optionalVendor1.isPresent()) {
+                                vendor1 = optionalVendor1.get();
+                            }
+                            for (Site site : siteList) {
+                                if (!vendorSiteRepo.existsBySiteId(site.getId())) {
+                                    VendorSite insertNewRecord = new VendorSite();
+                                    insertNewRecord.setSite(site);
+                                    if (vendor1 != null) {
+                                        insertNewRecord.setVendor(vendor1);
                                     }
-
-                                }
-                                if (Validator.isObjectValid(saveVendorSite)) {
-                                    vendorSiteRepo.save(saveVendorSite);
+                                    vendorSiteRepo.save(insertNewRecord);
+                                } else {
+                                    Optional<VendorSite> optionalVendorSite = vendorSiteRepo.findBySiteId(site.getId());
+                                    VendorSite vendorSite=null;
+                                    if (optionalVendorSite.isPresent()) {
+                                        vendorSite = optionalVendorSite.get();
+                                    }
+                                    vendorSite.setIsActive(Boolean.FALSE);
+                                    vendorSite.setIsDeleted(Boolean.TRUE);
+                                    if (vendor1 != null) {
+                                        vendorSite.setVendor(vendor1);
+                                    }
+                                    vendorSiteRepo.save(vendorSite);
                                 }
                             }
-                        } else {
-                            Optional<Site> optionalSite = siteRepo.findById(newSiteIds);
-                            if (optionalVendor.isPresent()) {
-                                saveVendorSite = new VendorSite();
-                                saveVendorSite.setVendor(vendor);
-                                saveVendorSite.setSite(optionalSite.get());
-                                if (Validator.isObjectValid(saveVendorSite)) {
-                                    vendorSiteRepo.save(saveVendorSite);
-                                }
-
-                            }
+                            return "Team members update successfully";
                         }
                     }
-                    return "vendor updated success";
                 }
             }
         }
-        return "This vendor id is not present in database";
+        return "give the valid appUser id's";
     }
-
 
     @Override
     public PaginationResponse getAllVendorPagination(VendorDto response) {
