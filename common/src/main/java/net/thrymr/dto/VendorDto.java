@@ -16,6 +16,7 @@ public class VendorDto {
     private Long id;
     private List<Long> siteIdList;
     private List<Long> vendorIdList;
+    private Long idVendor;
     private String POC;
     private String vendorName;
     private Boolean sortVendorName;

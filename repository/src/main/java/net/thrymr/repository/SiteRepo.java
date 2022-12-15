@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface SiteRepo extends JpaRepository<Site,Long>, JpaSpecificationExecutor<Site> {
     List<Site> findAllByIdInAndIsActiveAndIsDeleted(List<Long> siteIdList, Boolean aTrue, Boolean aFalse);
+
+    List<Site> findAllBySiteIdIn(List<Long> list);
 }

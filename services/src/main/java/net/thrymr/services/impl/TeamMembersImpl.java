@@ -12,6 +12,7 @@ import net.thrymr.repository.TeamMembersRepo;
 import net.thrymr.repository.TeamRepo;
 import net.thrymr.services.TeamMembersService;
 import net.thrymr.utils.Validator;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.sl.draw.geom.GuideIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class TeamMembersImpl implements TeamMembersService {
 
     @Override
     public String addEmployeeToTeam(TeamMembersDto request) {
-        if (request != null && Validator.isValid(request.getAppUserIdList()) && request.getTeamId() != null) {
+        if (Validator.isValid(request.getAppUserIdList()) && request.getTeamId() != null) {
             List<AppUser> appUserList = appUserRepo.findAllByIdIn(request.getAppUserIdList());
             if (!appUserList.isEmpty()) {
                 Optional<Team> optionalTeam = teamRepo.findById(request.getTeamId());
@@ -41,20 +42,10 @@ public class TeamMembersImpl implements TeamMembersService {
                 for (AppUser appUser : appUserList) {
                     TeamMembers teamMembers = new TeamMembers();
                     if (appUser != null && appUser.getRoles() != null) {
-                        if (appUser.getRoles().equals(Roles.TEAM_LEADER) || appUser.getRoles().equals(Roles.TEAM_MANAGER) || appUser.getRoles().equals(Roles.DIRECTOR) || appUser.getRoles().equals(Roles.ACCOUNT_MANAGER) || appUser.getRoles().equals(Roles.GENERAL_MANAGER) || appUser.getRoles().equals(Roles.SENIOR_MANAGER)) {
-                           // appUser.setAlerts(request.getAlerts());
-                            teamMembers.setAppUser(appUser);
-                            if (team != null) {
-                                teamMembers.setTeam(team);
-                            }
-                        } else {
-                            teamMembers.setAppUser(appUser);
-                            if (team != null) {
-                                teamMembers.setTeam(team);
-                            }
+                        teamMembers.setAppUser(appUser);
+                        if (team != null) {
+                            teamMembers.setTeam(team);
                         }
-                        appUser.setSearchKey(appUser.getSearchKey() + " " + getAppUserSearchKey(appUser));
-                        appUserRepo.save(appUser);
                         teamMembersRepo.save(teamMembers);
                     }
                 }
@@ -73,69 +64,49 @@ public class TeamMembersImpl implements TeamMembersService {
 
     @Override
     public String updateTeamMemberById(TeamMembersDto request) {
-        if (Validator.isValid(request.getPreviousTeamId())) {
-            List<TeamMembers> teamMembersList = teamMembersRepo.findAllByTeamId(request.getPreviousTeamId());
-            if (!teamMembersList.isEmpty()) {
-                if (!request.getAppUserIdList().isEmpty() && request.getPreviousTeamId() != null && request.getNewTeamId() != null) {
-                    List<AppUser> appUserList = appUserRepo.findAllByIdIn(request.getAppUserIdList());
-                    if (!appUserList.isEmpty()) {
-                        Optional<Team> optionalTeam = teamRepo.findById(request.getNewTeamId());
-                        Team team = null;
-                        if (optionalTeam.isPresent()) {
-                            team = optionalTeam.get();
-                        }
-                        for (TeamMembers teamMembers : teamMembersList) {
-                            for (AppUser appUser : appUserList) {
-                                if (teamMembersRepo.existsByAppUserId(appUser.getId())) {
-                                    if (appUser.getRoles() != null) {
-                                        Optional<TeamMembers> optionalTeamMembers = teamMembersRepo.findByAppUserId(appUser.getId());
-                                        TeamMembers members = null;
-                                        if (optionalTeamMembers.isPresent()) {
-                                            members = optionalTeamMembers.get();
-                                        }
-                                        if (appUser.getRoles().equals(Roles.TEAM_LEADER) || appUser.getRoles().equals(Roles.TEAM_MANAGER) || appUser.getRoles().equals(Roles.DIRECTOR) || appUser.getRoles().equals(Roles.ACCOUNT_MANAGER) || appUser.getRoles().equals(Roles.GENERAL_MANAGER) || appUser.getRoles().equals(Roles.SENIOR_MANAGER)) {
-                                           // appUser.setAlerts(request.getAlerts());
-                                            appUser.setSearchKey(appUser.getSearchKey() + " " + getAppUserSearchKey(appUser));
-                                            members.setAppUser(appUser);
-                                            if (team != null) {
-                                                members.setTeam(team);
-                                            }
-                                        } else {
-                                            members.setAppUser(appUser);
-                                            if (team != null) {
-                                                members.setTeam(team);
-                                            }
-                                        }
-                                    }
-                                    appUserRepo.save(appUser);
-                                    teamMembersRepo.save(teamMembers);
-                                } else {
-                                    TeamMembers insertNewRecord = new TeamMembers();
-                                    if (appUser.getRoles().equals(Roles.TEAM_LEADER) || appUser.getRoles().equals(Roles.TEAM_MANAGER) || appUser.getRoles().equals(Roles.DIRECTOR) || appUser.getRoles().equals(Roles.ACCOUNT_MANAGER) || appUser.getRoles().equals(Roles.GENERAL_MANAGER) || appUser.getRoles().equals(Roles.SENIOR_MANAGER)) {
-                                       // appUser.setAlerts(request.getAlerts());
-                                        insertNewRecord.setAppUser(appUser);
-                                        appUser.setSearchKey(appUser.getSearchKey() + " " + getAppUserSearchKey(appUser));
-                                        if (team != null) {
-                                            insertNewRecord.setTeam(team);
-                                        }
-                                    } else {
-                                        insertNewRecord.setAppUser(appUser);
-                                        if (team != null) {
-                                            insertNewRecord.setTeam(team);
-                                        }
-                                    }
-                                    appUserRepo.save(appUser);
-                                    teamMembersRepo.save(insertNewRecord);
-                                }
-                            }
-                            return "Team members update successfully";
-                        }
+        if (!request.getAppUserIdList().isEmpty() && Validator.isValid(request.getTeamId())) {
+            List<TeamMembers> teamMembersList = teamMembersRepo.findAllByTeamId(request.getTeamId());
+            List<Long> existedUsers = teamMembersList.stream().filter(user -> user.getAppUser() != null).map(obj -> obj.getAppUser().getId()).collect(Collectors.toList());
+            List<Long> allUsersFromRequest = request.getAppUserIdList();
+            List<Long> list = new ArrayList<>(CollectionUtils.disjunction(allUsersFromRequest, existedUsers));
+            if (allUsersFromRequest != null) {
+                List<AppUser> appUserList = appUserRepo.findAllByIdIn(list);
+                if (!appUserList.isEmpty()) {
+                    Optional<Team> optionalTeam = teamRepo.findById(request.getTeamId());
+                    Team team = null;
+                    if (optionalTeam.isPresent()) {
+                        team = optionalTeam.get();
                     }
+                        for (AppUser appUser : appUserList) {
+                            if (!teamMembersRepo.existsByAppUserId(appUser.getId())) {
+                                TeamMembers insertNewRecord = new TeamMembers();
+                                insertNewRecord.setAppUser(appUser);
+                                if (team != null) {
+                                    insertNewRecord.setTeam(team);
+                                }
+                                teamMembersRepo.save(insertNewRecord);
+                            } else {
+                                Optional<TeamMembers> optionalTeamMembers = teamMembersRepo.findByAppUserId(appUser.getId());
+                                TeamMembers members = null;
+                                if (optionalTeamMembers.isPresent()) {
+                                    members = optionalTeamMembers.get();
+                                }
+                                members.setIsActive(Boolean.FALSE);
+                                members.setIsDeleted(Boolean.TRUE);
+                                if (team != null) {
+                                    members.setTeam(team);
+                                }
+                                teamMembersRepo.save(members);
+                            }
+                        }
+                    return "Team members update successfully";
                 }
             }
         }
         return "give the valid appUser id's";
     }
+
+
     @Override
     public Set<TeamMembers> getTeamMemberById(Long id) {
         if (Validator.isValid(id)) {
@@ -151,22 +122,24 @@ public class TeamMembersImpl implements TeamMembersService {
     public List<TeamMembers> getAllTeamMember() {
         List<TeamMembers> teamMembersList = teamMembersRepo.findAll();
         if (!teamMembersList.isEmpty()) {
-            return teamMembersList.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+            return teamMembersList.stream().filter(obj -> obj.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList());
         }
         return new ArrayList<>();
     }
-
     @Override
-    public String deleteTeamMember(Long id) {
-        TeamMembers teamMembers = null;
-        if (Validator.isValid(id)) {
-            Optional<TeamMembers> optionalTeamMembers = teamMembersRepo.findById(id);
-            if (optionalTeamMembers.isPresent()) {
-                teamMembers = optionalTeamMembers.get();
-                teamMembers.setIsActive(Boolean.FALSE);
-                teamMembers.setIsDeleted(Boolean.TRUE);
-                teamMembersRepo.save(teamMembers);
-                return "Team member record deleted successfully";
+    public String deleteTeamMember(TeamMembersDto request) {
+        if (Validator.isValid(request.getTeamId())) {
+            List<TeamMembers> teamMembersList = teamMembersRepo.findAllByTeamId(request.getTeamId());
+            if (!teamMembersList.isEmpty()) {
+                for (TeamMembers teamMembers : teamMembersList) {
+                    List<TeamMembers> appUserList = teamMembersRepo.findAllByAppUserIdIn(request.getAppUserIdList());
+                    for (TeamMembers appUser : appUserList) {
+                        appUser.setIsActive(Boolean.FALSE);
+                        appUser.setIsDeleted(Boolean.TRUE);
+                        teamMembersRepo.save(teamMembers);
+                        return "Team member record deleted successfully";
+                    }
+                }
             }
         }
         return "This id not present database";

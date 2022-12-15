@@ -15,7 +15,5 @@ public interface TeamMembersService {
 
    List<TeamMembers> getAllTeamMember();
 
-    String deleteTeamMember(Long id);
-
-
+    String deleteTeamMember(TeamMembersDto request);
 }
