@@ -128,12 +128,12 @@ public class VendorServiceImpl implements VendorService {
                 }
                 if (vendor.getVendorId().equals(request.getVendorId()) || !vendorRepo.existsByVendorId(request.getVendorId())) {
                     vendor.setVendorId(request.getVendorId());
-                }else {
+                } else {
                     return "This vendor id already existed";
                 }
                 if (vendor.getEmail().equals(request.getEmail()) || !vendorRepo.existsByEmail(request.getEmail())) {
                     vendor.setEmail(request.getEmail());
-                }else {
+                } else {
                     return "This email already exist";
                 }
                 if (Validator.isValid(request.getCountryCode())) {
@@ -141,7 +141,7 @@ public class VendorServiceImpl implements VendorService {
                 }
                 if (vendor.getMobileNumber().equals(request.getMobileNumber()) || !vendorRepo.existsByMobileNumber(request.getMobileNumber())) {
                     vendor.setMobileNumber(request.getMobileNumber());
-                }else {
+                } else {
                     return "This mobile number already existed";
                 }
                 if (Validator.isValid(request.getPOC())) {
@@ -169,21 +169,21 @@ public class VendorServiceImpl implements VendorService {
                                     if (vendor1 != null) {
                                         insertNewRecord.setVendor(vendor1);
                                     }
-                                    vendor.setSearchKey(getVendorSearchKey(vendor));
+                                    insertNewRecord.setSearchKey(getVendorSiteSearchKey(insertNewRecord));
                                     vendorSiteRepo.save(insertNewRecord);
                                 } else {
-                                    Optional<VendorSite> optionalVendorSite = vendorSiteRepo.findBySiteId(site.getId());
-                                    VendorSite vendorSite=null;
-                                    if (optionalVendorSite.isPresent()) {
-                                        vendorSite = optionalVendorSite.get();
+                                    List<VendorSite> vendorSiteList1 = vendorSiteRepo.findBySiteId(site.getId());
+                                    if (!vendorSiteList1.isEmpty()) {
+                                        for (VendorSite vendorSite : vendorSiteList1) {
+                                            vendorSite.setIsActive(Boolean.FALSE);
+                                            vendorSite.setIsDeleted(Boolean.TRUE);
+                                            if (vendor1 != null) {
+                                                vendorSite.setVendor(vendor1);
+                                            }
+                                            vendorSite.setSearchKey(getVendorSiteSearchKey(vendorSite));
+                                            vendorSiteRepo.save(vendorSite);
+                                        }
                                     }
-                                    vendorSite.setIsActive(Boolean.FALSE);
-                                    vendorSite.setIsDeleted(Boolean.TRUE);
-                                    if (vendor1 != null) {
-                                        vendorSite.setVendor(vendor1);
-                                    }
-                                    vendorSite.setSearchKey(getVendorSiteSearchKey(vendorSite));
-                                    vendorSiteRepo.save(vendorSite);
                                 }
                             }
                             return "Team members update successfully";

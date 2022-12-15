@@ -77,28 +77,28 @@ public class TeamMembersImpl implements TeamMembersService {
                     if (optionalTeam.isPresent()) {
                         team = optionalTeam.get();
                     }
-                        for (AppUser appUser : appUserList) {
-                            if (!teamMembersRepo.existsByAppUserId(appUser.getId())) {
-                                TeamMembers insertNewRecord = new TeamMembers();
-                                insertNewRecord.setAppUser(appUser);
-                                if (team != null) {
-                                    insertNewRecord.setTeam(team);
+                    for (AppUser appUser : appUserList) {
+                        if (!teamMembersRepo.existsByAppUserId(appUser.getId())) {
+                            TeamMembers insertNewRecord = new TeamMembers();
+                            insertNewRecord.setAppUser(appUser);
+                            if (team != null) {
+                                insertNewRecord.setTeam(team);
+                            }
+                            teamMembersRepo.save(insertNewRecord);
+                        } else {
+                            List<TeamMembers> teamMembersList1 = teamMembersRepo.findByAppUserId(appUser.getId());
+                            if (!teamMembersList1.isEmpty()) {
+                                for (TeamMembers teamMembers : teamMembersList1) {
+                                    teamMembers.setIsActive(Boolean.FALSE);
+                                    teamMembers.setIsDeleted(Boolean.TRUE);
+                                    if (team != null) {
+                                        teamMembers.setTeam(team);
+                                    }
+                                    teamMembersRepo.save(teamMembers);
                                 }
-                                teamMembersRepo.save(insertNewRecord);
-                            } else {
-                                Optional<TeamMembers> optionalTeamMembers = teamMembersRepo.findByAppUserId(appUser.getId());
-                                TeamMembers members = null;
-                                if (optionalTeamMembers.isPresent()) {
-                                    members = optionalTeamMembers.get();
-                                }
-                                members.setIsActive(Boolean.FALSE);
-                                members.setIsDeleted(Boolean.TRUE);
-                                if (team != null) {
-                                    members.setTeam(team);
-                                }
-                                teamMembersRepo.save(members);
                             }
                         }
+                    }
                     return "Team members update successfully";
                 }
             }
