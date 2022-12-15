@@ -430,6 +430,7 @@ input VendorDto{
     vendorId:String
     searchKey:String
     countryCode:String
+    idVendor:ID
 }
 
 type UserAppointment {

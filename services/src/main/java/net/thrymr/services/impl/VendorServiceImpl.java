@@ -119,8 +119,8 @@ public class VendorServiceImpl implements VendorService {
     @Override
     public String updateVendor(VendorDto request) {
         Vendor vendor;
-        if (Validator.isValid(request.getId())) {
-            Optional<Vendor> optionalVendor = vendorRepo.findById(request.getId());
+        if (Validator.isValid(request.getIdVendor())) {
+            Optional<Vendor> optionalVendor = vendorRepo.findById(request.getIdVendor());
             if (optionalVendor.isPresent()) {
                 vendor = optionalVendor.get();
                 if (Validator.isValid(request.getVendorName())) {
@@ -143,14 +143,13 @@ public class VendorServiceImpl implements VendorService {
                 }
                 vendor.setSearchKey(getVendorSearchKey(vendor));
                 vendor = vendorRepo.save(vendor);
-
-                if (request.getSiteIdList() != null && vendor.getId() != null) {
-                    List<VendorSite> vendorSiteList = vendorSiteRepo.findAllByVendorId(vendor.getId());
+                if (request.getSiteIdList() != null && request.getIdVendor() != null) {
+                    List<VendorSite> vendorSiteList = vendorSiteRepo.findAllByVendorId(request.getIdVendor());
                     List<Long> existedUsers = vendorSiteList.stream().filter(user -> user.getSite() != null).map(obj -> obj.getSite().getId()).collect(Collectors.toList());
                     List<Long> allUsersFromRequest = request.getSiteIdList();
                     List<Long> list = new ArrayList<>(CollectionUtils.disjunction(allUsersFromRequest, existedUsers));
                     if (allUsersFromRequest != null) {
-                        List<Site> siteList = siteRepo.findAllBySiteIdIn(list);
+                        List<Site> siteList = siteRepo.findAllById(list);
                         if (!siteList.isEmpty()) {
                             Optional<Vendor> optionalVendor1 = vendorRepo.findById(request.getIdVendor());
                             Vendor vendor1 = null;
@@ -164,6 +163,7 @@ public class VendorServiceImpl implements VendorService {
                                     if (vendor1 != null) {
                                         insertNewRecord.setVendor(vendor1);
                                     }
+                                    vendor.setSearchKey(getVendorSearchKey(vendor));
                                     vendorSiteRepo.save(insertNewRecord);
                                 } else {
                                     Optional<VendorSite> optionalVendorSite = vendorSiteRepo.findBySiteId(site.getId());
@@ -176,6 +176,7 @@ public class VendorServiceImpl implements VendorService {
                                     if (vendor1 != null) {
                                         vendorSite.setVendor(vendor1);
                                     }
+                                    vendorSite.setSearchKey(getVendorSiteSearchKey(vendorSite));
                                     vendorSiteRepo.save(vendorSite);
                                 }
                             }
