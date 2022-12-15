@@ -19,14 +19,13 @@ public class Vendor extends BaseEntity {
 
     private String vendorName;
 
-    @Column(unique = true)
     private String vendorId;
 
     private String countryCode;
 
-    @Column(name = "mobileNumber")
+    @Column(name = "mobileNumber", unique = true)
     private String mobileNumber;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 }

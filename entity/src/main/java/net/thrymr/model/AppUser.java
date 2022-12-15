@@ -27,7 +27,7 @@ public class AppUser extends BaseEntity {
 
     private String countryCode;
 
-    @Column(name = "mobile_number")
+    @Column(name = "mobile_number",unique = true)
     private String mobile;
 
     @Column(unique = true)

@@ -126,17 +126,23 @@ public class VendorServiceImpl implements VendorService {
                 if (Validator.isValid(request.getVendorName())) {
                     vendor.setVendorName(request.getVendorName());
                 }
-                if (Validator.isValid(request.getVendorId())) {
+                if (vendor.getVendorId().equals(request.getVendorId()) || !vendorRepo.existsByVendorId(request.getVendorId())) {
                     vendor.setVendorId(request.getVendorId());
+                }else {
+                    return "This vendor id already existed";
                 }
-                if (Validator.isValid(request.getEmail())) {
+                if (vendor.getEmail().equals(request.getEmail()) || !vendorRepo.existsByEmail(request.getEmail())) {
                     vendor.setEmail(request.getEmail());
+                }else {
+                    return "This email already exist";
                 }
                 if (Validator.isValid(request.getCountryCode())) {
                     vendor.setCountryCode(request.getCountryCode());
                 }
-                if (Validator.isValid(request.getMobileNumber())) {
+                if (vendor.getMobileNumber().equals(request.getMobileNumber()) || !vendorRepo.existsByMobileNumber(request.getMobileNumber())) {
                     vendor.setMobileNumber(request.getMobileNumber());
+                }else {
+                    return "This mobile number already existed";
                 }
                 if (Validator.isValid(request.getPOC())) {
                     vendor.setPOC(request.getPOC());
