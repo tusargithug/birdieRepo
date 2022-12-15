@@ -461,4 +461,7 @@ public class Query implements GraphQLQueryResolver {
     public List<LanguageDetails> getAllLanguagesDetails() {
         return counsellorService.getAllLanguagesDetails();
     }
+
+    @QueryMapping(name = "getVendorSiteById")
+    public List<VendorSite> getVendorSiteById(@Argument Long id) {return vendorService.getVendorSiteById(id);}
 }
