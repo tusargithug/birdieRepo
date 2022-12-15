@@ -130,7 +130,7 @@ public class TeamMembersImpl implements TeamMembersService {
     public List<TeamMembers> getAllTeamMember() {
         List<TeamMembers> teamMembersList = teamMembersRepo.findAll();
         if (!teamMembersList.isEmpty()) {
-            return teamMembersList.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+            return teamMembersList.stream().filter(obj -> obj.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList());
         }
         return new ArrayList<>();
     }
