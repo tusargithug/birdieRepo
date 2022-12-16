@@ -316,8 +316,7 @@ input ShiftTimingsDto{
 type CounsellorSlot{
     id: ID!
     counsellor:Counsellor
-    startTime:LocalTime
-    endTime:LocalTime
+    slotTimings:[LocalTime]
     slotDate:String
     slotShift:[SlotShift]
     slotDays:[DayOfWeek]
@@ -737,8 +736,7 @@ type EducationDetails {
 }
 input CounsellorSlotDto {
     counsellorId:ID
-    startTime:String
-    endTime:String
+    slotTimings:[String]
     slotDate:String
     slotShift:[SlotShift]
     slotDays:[DayOfWeek]

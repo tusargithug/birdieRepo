@@ -78,7 +78,7 @@ public class TeamMembersImpl implements TeamMembersService {
                         team = optionalTeam.get();
                     }
                     for (AppUser appUser : appUserList) {
-                        if (!teamMembersRepo.existsByAppUserId(appUser.getId())) {
+                        if (!teamMembersRepo.existsByAppUserIdAndTeamId(appUser.getId(), request.getTeamId())) {
                             TeamMembers insertNewRecord = new TeamMembers();
                             insertNewRecord.setAppUser(appUser);
                             if (team != null) {

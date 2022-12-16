@@ -53,8 +53,9 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
         } else {
             return "Counsellor not found";
         }
-        slot.setStartTime(DateUtils.toParseLocalTime(request.getStartTime(), Constants.TIME_FORMAT_2));
-        slot.setEndTime(DateUtils.toParseLocalTime(request.getEndTime(), Constants.TIME_FORMAT_2));
+        for(String slotTime : request.getSlotTimings()){
+            slot.getSlotTimings().add(DateUtils.toParseLocalTime(slotTime, Constants.TIME_FORMAT_2));
+        }
         slot.setSlotDays(request.getSlotDays());
         slot.setSlotStatus(SlotStatus.valueOf(request.getSlotStatus()));
         slot.setSlotShift(request.getSlotShift());
@@ -105,16 +106,13 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
         }
         Specification<CounsellorSlot> counsellorSlotSpecification = ((root, query, criteriaBuilder) -> {
             List<Predicate> predicateList = new ArrayList<>();
-            Join<Counsellor, Vendor> vendorJoin = root.join("vendor");
             Join<CounsellorSlot, Counsellor> counsellorJoin = root.join("counsellor");
-
-            Join<Counsellor, Site> siteJoin = root.join("site");
             if (request.getSiteIdList() != null && request.getSiteIdList().isEmpty()) {
-                Predicate site = criteriaBuilder.and(siteJoin.get("id").in(request.getSiteIdList()));
+                Predicate site = criteriaBuilder.and(counsellorJoin.get("counsellor.site.id").in(request.getSiteIdList()));
                 predicateList.add(site);
             }
             if (request.getVendorIdList() != null && request.getVendorIdList().isEmpty()) {
-                Predicate vendor = criteriaBuilder.and(vendorJoin.get("id").in(request.getVendorIdList()));
+                Predicate vendor = criteriaBuilder.and(counsellorJoin.get("counsellor.vendor.id").in(request.getVendorIdList()));
                 predicateList.add(vendor);
             }
             if (request.getShiftTimingList() != null && request.getShiftTimingList().isEmpty()) {
@@ -168,19 +166,19 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
             Optional<CounsellorSlot> optionalCounsellorSlot = counsellorSlotRepo.findById(request.getCounsellorSlotId());
             if (optionalCounsellorSlot.isPresent()) {
                 counsellorSlot = optionalCounsellorSlot.get();
-                Duration duration = Duration.between(LocalTime.now(), optionalCounsellorSlot.get().getStartTime());
-                if (duration.toMinutes() >= 30) {
+                //Duration duration = Duration.between(LocalTime.now(), optionalCounsellorSlot.get().getStartTime());
+                //if (duration.toMinutes() >= 30) {
                     if (Validator.isValid(request.getCounsellorId())) {
                         Optional<Counsellor> optionalCounsellor = counsellorRepo.findById(request.getCounsellorId());
                         optionalCounsellor.ifPresent(counsellorSlot::setCounsellor);
                     } else {
                         return "Counsellor not found";
                     }
-                    if(Validator.isValid(request.getStartTime())) {
-                        counsellorSlot.setStartTime(DateUtils.toParseLocalTime(request.getStartTime(), Constants.TIME_FORMAT_2));
-                    }if(Validator.isValid(request.getEndTime())) {
-                        counsellorSlot.setEndTime(DateUtils.toParseLocalTime(request.getEndTime(), Constants.TIME_FORMAT_2));
-                    }
+                   // if(Validator.isValid(request.getStartTime())) {
+                    //    counsellorSlot.setStartTime(DateUtils.toParseLocalTime(request.getStartTime(), Constants.TIME_FORMAT_2));
+                   // }if(Validator.isValid(request.getEndTime())) {
+                     //   counsellorSlot.setEndTime(DateUtils.toParseLocalTime(request.getEndTime(), Constants.TIME_FORMAT_2));
+                   // }
                     if(request.getSlotDays() != null && request.getSlotDays().isEmpty()) {
                         counsellorSlot.setSlotDays(request.getSlotDays());
                     }
@@ -222,7 +220,7 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
             } else {
                 return "rescheduling is not possible";
             }
-        }
+       // }
         return "Invalid Slot Id";
     }
 
@@ -248,12 +246,12 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
 
     public String getCounsellorSearchKey(CounsellorSlot counsellorSlot) {
         String searchKey = "";
-        if (counsellorSlot.getStartTime() != null) {
-            searchKey = searchKey + " " + counsellorSlot.getStartTime();
-        }
-        if (counsellorSlot.getEndTime() != null) {
-            searchKey = searchKey + " " + counsellorSlot.getEndTime();
-        }
+        //if (counsellorSlot.getStartTime() != null) {
+           // searchKey = searchKey + " " + counsellorSlot.getStartTime();
+        //}
+//        if (counsellorSlot.getEndTime() != null) {
+//            searchKey = searchKey + " " + counsellorSlot.getEndTime();
+//        }
         if (counsellorSlot.getSlotDate() != null) {
             searchKey = searchKey + " " + counsellorSlot.getSlotDate();
         }
@@ -270,7 +268,13 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
             searchKey = searchKey + " " + counsellorSlot.getAppUser();
         }
         if (counsellorSlot.getCounsellor() != null) {
-            searchKey = searchKey + " " + counsellorSlot.getCounsellor();
+            searchKey = searchKey + " " + counsellorSlot.getCounsellor().getCounsellorName();
+        }
+        if (counsellorSlot.getCounsellor() != null) {
+            searchKey = searchKey + " " + counsellorSlot.getCounsellor().getVendor().getVendorName();
+        }
+        if (counsellorSlot.getCounsellor() != null) {
+            searchKey = searchKey + " " + counsellorSlot.getCounsellor().getSite().getSiteName();
         }
         if (counsellorSlot.getIsActive() != null) {
             searchKey = searchKey + " " + counsellorSlot.getIsActive();

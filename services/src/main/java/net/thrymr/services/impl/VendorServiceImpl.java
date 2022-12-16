@@ -61,7 +61,7 @@ public class VendorServiceImpl implements VendorService {
         vendor = vendorRepo.save(vendor);
         if (request.getSiteIdList() != null && vendor.getId() != null) {
             List<Site> siteList = siteRepo.findAllByIdInAndIsActiveAndIsDeleted(request.getSiteIdList(), Boolean.TRUE, Boolean.FALSE);
-            if (siteList != null) {
+            if (!siteList.isEmpty()) {
                 for (Site site : siteList) {
                     VendorSite vendorSite = new VendorSite();
                     vendorSite.setVendor(vendor);
@@ -163,7 +163,7 @@ public class VendorServiceImpl implements VendorService {
                                 vendor1 = optionalVendor1.get();
                             }
                             for (Site site : siteList) {
-                                if (!vendorSiteRepo.existsBySiteId(site.getId())) {
+                                if (!vendorSiteRepo.existsBySiteIdAndVendorId(site.getId(),request.getIdVendor())) {
                                     VendorSite insertNewRecord = new VendorSite();
                                     insertNewRecord.setSite(site);
                                     if (vendor1 != null) {
@@ -186,7 +186,7 @@ public class VendorServiceImpl implements VendorService {
                                     }
                                 }
                             }
-                            return "Team members update successfully";
+                            return "Team vendor update successfully";
                         }
                     }
                 }
