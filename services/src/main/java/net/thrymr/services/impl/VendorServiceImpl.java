@@ -192,7 +192,7 @@ public class VendorServiceImpl implements VendorService {
                 }
             }
         }
-        return "give the valid appUser id's";
+        return "give the valid Vendor id";
     }
 
     @Override
