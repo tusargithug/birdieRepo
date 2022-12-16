@@ -172,7 +172,7 @@ public class VendorServiceImpl implements VendorService {
                                     insertNewRecord.setSearchKey(getVendorSiteSearchKey(insertNewRecord));
                                     vendorSiteRepo.save(insertNewRecord);
                                 } else {
-                                    List<VendorSite> vendorSiteList1 = vendorSiteRepo.findBySiteId(site.getId());
+                                    List<VendorSite> vendorSiteList1 = vendorSiteRepo.findBySiteIdAndVendorId(site.getId(),request.getIdVendor());
                                     if (!vendorSiteList1.isEmpty()) {
                                         for (VendorSite vendorSite : vendorSiteList1) {
                                             vendorSite.setIsActive(Boolean.FALSE);

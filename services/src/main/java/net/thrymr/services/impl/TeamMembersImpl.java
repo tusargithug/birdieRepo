@@ -86,7 +86,7 @@ public class TeamMembersImpl implements TeamMembersService {
                             }
                             teamMembersRepo.save(insertNewRecord);
                         } else {
-                            List<TeamMembers> teamMembersList1 = teamMembersRepo.findByAppUserId(appUser.getId());
+                            List<TeamMembers> teamMembersList1 = teamMembersRepo.findByAppUserIdAndTeamId(appUser.getId(),request.getTeamId());
                             if (!teamMembersList1.isEmpty()) {
                                 for (TeamMembers teamMembers : teamMembersList1) {
                                     teamMembers.setIsActive(Boolean.FALSE);
