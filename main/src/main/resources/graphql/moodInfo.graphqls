@@ -177,6 +177,7 @@ type Mutation {
     updateEducationDetailsById(input:EducationDto):String!
     updateLanguageDetailsById(input:LanguageDto):String!
     deleteTeamMember(input:TeamMembersDto):String!
+    deleteAllCounsellorSlot:String!
 }
 
 scalar Upload
@@ -344,6 +345,7 @@ type Counsellor{
     bio:String
     gender:Gender
     vendor:Vendor
+    availableSlots:Int
 }
 scalar LocalTime
 scalar Date
@@ -691,6 +693,7 @@ type PaginationResponse{
     vendorSiteList:[VendorSite]
     appUserList:[AppUser]
     miniSessionList:[MiniSession]
+    #SiteVendorMap:[]
     meditationList:[MtMeditation]
     worksheetList:[MtWorksheet]
     chapterList:[Chapter]

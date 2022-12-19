@@ -19,10 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,20 +37,20 @@ public class VendorServiceImpl implements VendorService {
     public String saveVendor(VendorDto request) {
         Vendor vendor = new Vendor();
         vendor.setVendorName(request.getVendorName());
-        if(request.getVendorId() != null && !vendorRepo.existsByVendorId(request.getVendorId())) {
+        if (request.getVendorId() != null && !vendorRepo.existsByVendorId(request.getVendorId())) {
             vendor.setVendorId(request.getVendorId());
-        }else {
+        } else {
             return "This vendorId already existed";
         }
         vendor.setCountryCode(request.getCountryCode());
-        if(request.getMobileNumber() != null && !vendorRepo.existsByMobileNumber(request.getMobileNumber())) {
+        if (request.getMobileNumber() != null && !vendorRepo.existsByMobileNumber(request.getMobileNumber())) {
             vendor.setMobileNumber(request.getMobileNumber());
-        }else {
+        } else {
             return "This mobile number already existed";
         }
-        if(request.getEmail() != null && !vendorRepo.existsByEmail(request.getEmail())) {
+        if (request.getEmail() != null && !vendorRepo.existsByEmail(request.getEmail())) {
             vendor.setEmail(request.getEmail());
-        }else {
+        } else {
             return "This email id already existed";
         }
         vendor.setPOC(request.getPOC());
@@ -163,7 +160,7 @@ public class VendorServiceImpl implements VendorService {
                                 vendor1 = optionalVendor1.get();
                             }
                             for (Site site : siteList) {
-                                if (!vendorSiteRepo.existsBySiteIdAndVendorId(site.getId(),request.getIdVendor())) {
+                                if (!vendorSiteRepo.existsBySiteIdAndVendorId(site.getId(), request.getIdVendor())) {
                                     VendorSite insertNewRecord = new VendorSite();
                                     insertNewRecord.setSite(site);
                                     if (vendor1 != null) {
@@ -172,7 +169,7 @@ public class VendorServiceImpl implements VendorService {
                                     insertNewRecord.setSearchKey(getVendorSiteSearchKey(insertNewRecord));
                                     vendorSiteRepo.save(insertNewRecord);
                                 } else {
-                                    List<VendorSite> vendorSiteList1 = vendorSiteRepo.findBySiteIdAndVendorId(site.getId(),request.getIdVendor());
+                                    List<VendorSite> vendorSiteList1 = vendorSiteRepo.findBySiteIdAndVendorId(site.getId(), request.getIdVendor());
                                     if (!vendorSiteList1.isEmpty()) {
                                         for (VendorSite vendorSite : vendorSiteList1) {
                                             vendorSite.setIsActive(Boolean.FALSE);
@@ -253,14 +250,20 @@ public class VendorServiceImpl implements VendorService {
         if (response.getPageSize() != null && response.getPageNumber() != null) {
             Page<VendorSite> vendorObjectives = vendorSiteRepo.findAll(addVendorSpecification, pageable);
             if (vendorObjectives.getContent() != null) {
-                paginationResponse.setVendorSiteList(new HashSet<>(vendorObjectives.getContent()));
+                paginationResponse.setVendorSiteList(vendorObjectives.stream().toList());
                 paginationResponse.setTotalElements(vendorObjectives.getTotalElements());
                 paginationResponse.setTotalPages(vendorObjectives.getTotalPages());
                 return paginationResponse;
             }
         } else {
             List<VendorSite> vendorSiteList = vendorSiteRepo.findAll(addVendorSpecification);
-            paginationResponse.setVendorSiteList(vendorSiteList.stream().filter(vendorSite -> vendorSite.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toSet()));
+            paginationResponse.setVendorSiteList(vendorSiteList.stream().filter(vendorSite -> vendorSite.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList()));
+     /*       Map<Vendor, Site> map = new LinkedHashMap<>();
+            for (VendorSite vendorSite : vendorSiteList) {
+                map.put(vendorSite.getVendor(), vendorSite.getSite() );
+            }
+            new HashSet<>(map.entrySet().stream().collect(Collectors.groupingBy(Map.Entry::getValue)).values());
+            paginationResponse.setSiteVendorMap(map);*/
             return paginationResponse;
         }
         return new PaginationResponse();
