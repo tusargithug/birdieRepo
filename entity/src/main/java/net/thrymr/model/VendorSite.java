@@ -16,6 +16,4 @@ public class VendorSite extends BaseEntity{
     private Vendor vendor;
     @ManyToOne
     private Site site;
-
-
 }
