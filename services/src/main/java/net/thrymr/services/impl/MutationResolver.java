@@ -576,6 +576,19 @@ public class MutationResolver implements GraphQLMutationResolver {
     public String deleteAllCounsellorSlot() {
         return counsellorSlotService.deleteAllCounsellorSlots();
     }
+
+    @MutationMapping(name = "deleteAllCountry")
+    public String deleteAllCountry() {
+        return cityCountyAndRegionService.deleteAllCountry();
+    }
+    @MutationMapping(name = "deleteAllRegion")
+    public String deleteAllRegion() {
+        return cityCountyAndRegionService.deleteAllRegion();
+    }
+    @MutationMapping(name = "deleteAllCities")
+    public String deleteAllCities() {
+        return cityCountyAndRegionService.deleteAllCities();
+    }
 }
 
 

@@ -261,6 +261,7 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
             return "COUNTRY.IMPORT.FORMAT.INVALID.DATA";
         }
         for (int index = 1; index <= worksheet.getLastRowNum(); index++) {
+            System.out.println("getLastRowNum: "+ worksheet.getLastRowNum());
             if (index > 0) {
                 try {
                     XSSFRow row = worksheet.getRow(index);
@@ -273,7 +274,7 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
                         country.setCountryName(getCellValue(row.getCell(10)));
                     }
                     if(row.getCell(11)!=null){
-                        country.setInternationalDialing(getCellValue(row.getCell(11)));
+                        country.setInternationalDialing("+"+getCellValue(row.getCell(11)));
                     }
                     if(row.getCell(12)!=null){
                         Optional<MtRegion> mtRegion = regionRepo.findById(Long.valueOf(getCellValue(row.getCell(12))));
@@ -422,6 +423,24 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
             }
         }
         return new MtCity();
+    }
+
+    @Override
+    public String deleteAllCountry() {
+        countryRepo.deleteAll();
+        return "all country details deleted successfully ";
+    }
+
+    @Override
+    public String deleteAllRegion() {
+        regionRepo.deleteAll();
+        return "all region details deleted successfully";
+    }
+
+    @Override
+    public String deleteAllCities() {
+        cityRepo.deleteAll();
+        return "all cities details deleted successfully";
     }
 
     private String getCellValue(XSSFCell cell) {

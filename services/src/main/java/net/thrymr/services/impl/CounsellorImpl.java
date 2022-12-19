@@ -196,7 +196,7 @@ public class CounsellorImpl implements CounsellorService {
                 Predicate counsellorName = criteriaBuilder.and(root.get("counsellorName").in(response.getCounsellorName()));
                 addCounsellorPredicate.add(counsellorName);
             }
-            if (response.getEmpId() != null && !response.getEmpId().isEmpty()) {
+            if (response.getEmpId() != null) {
                 Predicate empId = criteriaBuilder.and(root.get("empId").in(response.getEmpId()));
                 addCounsellorPredicate.add(empId);
             }

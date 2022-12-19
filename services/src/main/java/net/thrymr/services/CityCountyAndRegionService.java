@@ -49,4 +49,10 @@ public interface CityCountyAndRegionService {
     MtCountry getCountryById(Long id);
 
     MtCity getCityById(Long id);
+
+    String deleteAllCountry();
+
+    String deleteAllRegion();
+
+    String deleteAllCities();
 }

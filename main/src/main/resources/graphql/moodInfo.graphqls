@@ -178,6 +178,9 @@ type Mutation {
     updateLanguageDetailsById(input:LanguageDto):String!
     deleteTeamMember(input:TeamMembersDto):String!
     deleteAllCounsellorSlot:String!
+    deleteAllCountry:String!
+    deleteAllRegion:String!
+    deleteAllCities:String!
 }
 
 scalar Upload
