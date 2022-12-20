@@ -1,9 +1,8 @@
 package net.thrymr.services.impl;
 
-import net.thrymr.dto.FileDetailsDto;
 import net.thrymr.dto.VendorDto;
-import net.thrymr.dto.response.PaginationResponse;
-import net.thrymr.enums.FileType;
+import net.thrymr.dto.response.SiteResponse;
+import net.thrymr.dto.response.VendorResponse;
 import net.thrymr.model.*;
 import net.thrymr.repository.SiteRepo;
 import net.thrymr.repository.VendorRepo;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Service;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import java.util.*;
-import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;

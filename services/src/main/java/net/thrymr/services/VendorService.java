@@ -2,7 +2,7 @@ package net.thrymr.services;
 
 import net.thrymr.dto.VendorDto;
 import net.thrymr.model.Vendor;
-import net.thrymr.model.VendorResponse;
+import net.thrymr.dto.response.VendorResponse;
 import net.thrymr.model.VendorSite;
 
 import java.util.List;

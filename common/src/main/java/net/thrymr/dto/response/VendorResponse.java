@@ -1,10 +1,9 @@
-package net.thrymr.model;
+package net.thrymr.dto.response;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
 import java.util.ArrayList;
 import java.util.List;
 @Getter

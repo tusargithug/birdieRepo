@@ -696,7 +696,6 @@ type PaginationResponse{
     vendorSiteList:[VendorSite]
     appUserList:[AppUser]
     miniSessionList:[MiniSession]
-    #siteVendorMap:[VendorSite]
     meditationList:[MtMeditation]
     worksheetList:[MtWorksheet]
     chapterList:[Chapter]
