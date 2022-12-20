@@ -206,7 +206,7 @@ public class Query implements GraphQLQueryResolver {
     }
 
     @QueryMapping(name = "getAllVendorPagination")
-    public PaginationResponse getAllVendorPagination(@Argument(name = "input") VendorDto request) {
+    public List<VendorResponse> getAllVendorPagination(@Argument(name = "input") VendorDto request) {
         return vendorService.getAllVendorPagination(request);
     }
 
@@ -226,8 +226,8 @@ public class Query implements GraphQLQueryResolver {
     }
 
     @QueryMapping(name = "getCounsellorSlotById")
-    public CounsellorSlot getCounsellorSlotById(@Argument Long id) {
-        return counsellorSlotService.getCounsellorSlotById(id);
+    public List<CounsellorSlot> getCounsellorSlotById(@Argument Long counsellorId) {
+        return counsellorSlotService.getCounsellorSlotById(counsellorId);
     }
 
     @QueryMapping(name = "getAllCounsellorPagination")

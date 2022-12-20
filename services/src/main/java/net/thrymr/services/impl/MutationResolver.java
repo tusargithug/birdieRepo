@@ -304,7 +304,7 @@ public class MutationResolver implements GraphQLMutationResolver {
     }
 
     @MutationMapping(name = "uploadRegionData")
-    public String uploadRegionData(@Argument(name = "file") MultipartFile file,DataFetchingEnvironment environment) {
+    public String uploadRegionData(@Argument(name = "file") MultipartFile file, DataFetchingEnvironment environment) {
         return cityCountyAndRegionService.uploadRegionData(environment.getArgument("file"));
     }
 
@@ -354,14 +354,14 @@ public class MutationResolver implements GraphQLMutationResolver {
         return counsellorService.deleteCounsellorById(id);
     }
 
-    @MutationMapping(name = "rescheduledCounsellorSlot")
-    public String rescheduledCounsellorSlot(@Argument(name = "input") CounsellorSlotDto request) throws ParseException {
-        return counsellorSlotService.rescheduledCounsellorSlot(request);
+    @MutationMapping(name = "updateCounsellorSlot")
+    public String updateCounsellorSlot(@Argument(name = "input") CounsellorSlotDto request) throws ParseException {
+        return counsellorSlotService.updateCounsellorSlot(request);
     }
 
-    @MutationMapping(name = "cancelCounsellorSlot")
-    public String cancelCounsellorSlot(@Argument Long id) {
-        return counsellorSlotService.cancelCounsellorSlot(id);
+    @MutationMapping(name = "removeCounsellorSlotsById")
+    public String removeCounsellorSlotsById(@Argument(name = "input") CounsellorSlotDto request) {
+        return counsellorSlotService.removeCounsellorSlotsById(request);
     }
 
     @MutationMapping("createQuestion")
@@ -548,31 +548,38 @@ public class MutationResolver implements GraphQLMutationResolver {
     public String addEmployeeToTeam(@Argument(name = "input") TeamMembersDto request) {
         return teamMembersService.addEmployeeToTeam(request);
     }
+
     @MutationMapping(name = "updateTeamMemberById")
     public String updateTeamMemberById(@Argument(name = "input") TeamMembersDto request) {
         return teamMembersService.updateTeamMemberById(request);
     }
+
     @MutationMapping(name = "addNewLanguage")
-    public String addNewLanguage(@Argument(name = "input") LanguageDto request){
+    public String addNewLanguage(@Argument(name = "input") LanguageDto request) {
         return counsellorService.addNewLanguage(request);
     }
+
     @MutationMapping(name = "addNewEducation")
-    public String addNewEducation(@Argument(name = "input") EducationDto request){
+    public String addNewEducation(@Argument(name = "input") EducationDto request) {
         return counsellorService.addNewEducation(request);
     }
+
     @MutationMapping(name = "updateEducationDetailsById")
-    public String updateEducationDetailsById(@Argument(name = "input") EducationDto request){
+    public String updateEducationDetailsById(@Argument(name = "input") EducationDto request) {
         return counsellorService.updateEducationDetailsById(request);
     }
+
     @MutationMapping(name = "updateLanguageDetailsById")
-    public String updateLanguageDetailsById(@Argument(name = "input") LanguageDto request){
+    public String updateLanguageDetailsById(@Argument(name = "input") LanguageDto request) {
         return counsellorService.updateLanguageDetailsById(request);
     }
+
     @MutationMapping(name = "deleteTeamMember")
-    public String deleteTeamMember(@Argument(name = "input") TeamMembersDto request){
+    public String deleteTeamMember(@Argument(name = "input") TeamMembersDto request) {
         return teamMembersService.deleteTeamMember(request);
     }
-    @MutationMapping(name="deleteAllCounsellorSlot")
+
+    @MutationMapping(name = "deleteAllCounsellorSlot")
     public String deleteAllCounsellorSlot() {
         return counsellorSlotService.deleteAllCounsellorSlots();
     }
@@ -581,10 +588,12 @@ public class MutationResolver implements GraphQLMutationResolver {
     public String deleteAllCountry() {
         return cityCountyAndRegionService.deleteAllCountry();
     }
+
     @MutationMapping(name = "deleteAllRegion")
     public String deleteAllRegion() {
         return cityCountyAndRegionService.deleteAllRegion();
     }
+
     @MutationMapping(name = "deleteAllCities")
     public String deleteAllCities() {
         return cityCountyAndRegionService.deleteAllCities();

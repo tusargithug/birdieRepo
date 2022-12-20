@@ -1,7 +1,9 @@
 package net.thrymr.services.impl;
 
+import net.thrymr.dto.FileDetailsDto;
 import net.thrymr.dto.VendorDto;
 import net.thrymr.dto.response.PaginationResponse;
+import net.thrymr.enums.FileType;
 import net.thrymr.model.*;
 import net.thrymr.repository.SiteRepo;
 import net.thrymr.repository.VendorRepo;
@@ -20,7 +22,10 @@ import org.springframework.stereotype.Service;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
 
 @Service
 public class VendorServiceImpl implements VendorService {
@@ -193,7 +198,7 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
-    public PaginationResponse getAllVendorPagination(VendorDto response) {
+    public List<VendorResponse> getAllVendorPagination(VendorDto response) {
         Pageable pageable = null;
         if (Validator.isValid(response.getPageSize())) {
             pageable = PageRequest.of(response.getPageNumber(), response.getPageSize());
@@ -246,27 +251,66 @@ public class VendorServiceImpl implements VendorService {
             addVendorPredicate.add(isDeletedPredicate);
             return criteriaBuilder.and(addVendorPredicate.toArray(new Predicate[0]));
         });
-        PaginationResponse paginationResponse = new PaginationResponse();
+
         if (response.getPageSize() != null && response.getPageNumber() != null) {
             Page<VendorSite> vendorObjectives = vendorSiteRepo.findAll(addVendorSpecification, pageable);
             if (vendorObjectives.getContent() != null) {
-                paginationResponse.setVendorSiteList(vendorObjectives.stream().toList());
-                paginationResponse.setTotalElements(vendorObjectives.getTotalElements());
-                paginationResponse.setTotalPages(vendorObjectives.getTotalPages());
-                return paginationResponse;
+                List<VendorResponse> vendorResponseList = new ArrayList<>();
+                for (VendorSite vendorSite : vendorObjectives) {
+                    Optional<VendorResponse> vendorResponseOptional =  vendorResponseList.stream().filter(vendorResponse ->  vendorResponse.getId().equals(vendorSite.getVendor().getId())).findAny();
+                    var vendorResponse = vendorResponseOptional.orElse(new VendorResponse());
+                        vendorResponse.setVendorId(vendorSite.getVendor().getVendorName());
+                        vendorResponse.setId(vendorSite.getVendor().getId());
+                        vendorResponse.setMobileNumber(vendorSite.getVendor().getMobileNumber());
+                        vendorResponse.setPOC(vendorSite.getVendor().getPOC());
+                        vendorResponse.setEmail(vendorSite.getVendor().getEmail());
+                        vendorResponse.setTotalPages(vendorObjectives.getTotalPages());
+                        vendorResponse.setTotalElement(vendorObjectives.getTotalElements());
+                        vendorResponse.setCountryCode(vendorSite.getVendor().getCountryCode());
+                        SiteResponse siteResponse = new SiteResponse();
+                        siteResponse.setId(vendorSite.getSite().getId());
+                        siteResponse.setSiteName(vendorSite.getSite().getSiteName());
+                        siteResponse.setSiteId(vendorSite.getSite().getSiteId());
+                        siteResponse.setRegion(vendorSite.getSite().getRegion());
+                        siteResponse.setCountry(vendorSite.getSite().getCountry());
+                        siteResponse.setCity(vendorSite.getSite().getCity());
+                        vendorResponse.getSiteResponseList().add(siteResponse);
+                        if(!vendorResponseOptional.isPresent()){
+                            vendorResponseList.add(vendorResponse);
+                        }
+                }
+                return vendorResponseList;
             }
         } else {
             List<VendorSite> vendorSiteList = vendorSiteRepo.findAll(addVendorSpecification);
-            paginationResponse.setVendorSiteList(vendorSiteList.stream().filter(vendorSite -> vendorSite.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList()));
-     /*       Map<Vendor, Site> map = new LinkedHashMap<>();
-            for (VendorSite vendorSite : vendorSiteList) {
-                map.put(vendorSite.getVendor(), vendorSite.getSite() );
+            if (!vendorSiteList.isEmpty()) {
+                List<VendorResponse> vendorResponseList = new ArrayList<>();
+                for (VendorSite vendorSite : vendorSiteList) {
+                    Optional<VendorResponse> vendorResponseOptional =  vendorResponseList.stream().filter(vendorResponse -> vendorResponse.getId().equals(vendorSite.getVendor().getId())).findAny();
+                    var vendorResponse = vendorResponseOptional.orElse(new VendorResponse());
+                        vendorResponse.setId(vendorSite.getVendor().getId());
+                        vendorResponse.setVendorId(vendorSite.getVendor().getVendorId());
+                        vendorResponse.setVendorName(vendorSite.getVendor().getVendorName());
+                        vendorResponse.setMobileNumber(vendorSite.getVendor().getMobileNumber());
+                        vendorResponse.setPOC(vendorSite.getVendor().getPOC());
+                        vendorResponse.setEmail(vendorSite.getVendor().getEmail());
+                        vendorResponse.setCountryCode(vendorSite.getVendor().getCountryCode());
+                        SiteResponse siteResponse = new SiteResponse();
+                        siteResponse.setId(vendorSite.getSite().getId());
+                        siteResponse.setSiteName(vendorSite.getSite().getSiteName());
+                        siteResponse.setSiteId(vendorSite.getSite().getSiteId());
+                        siteResponse.setRegion(vendorSite.getSite().getRegion());
+                        siteResponse.setCountry(vendorSite.getSite().getCountry());
+                        siteResponse.setCity(vendorSite.getSite().getCity());
+                        vendorResponse.getSiteResponseList().add(siteResponse);
+                        if(!vendorResponseOptional.isPresent()) {
+                            vendorResponseList.add(vendorResponse);
+                        }
+                }
+                return vendorResponseList;
             }
-            new HashSet<>(map.entrySet().stream().collect(Collectors.groupingBy(Map.Entry::getValue)).values());
-            paginationResponse.setSiteVendorMap(map);*/
-            return paginationResponse;
         }
-        return new PaginationResponse();
+        return new ArrayList<>();
     }
 
     @Override

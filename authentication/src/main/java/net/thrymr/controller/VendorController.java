@@ -2,6 +2,7 @@ package net.thrymr.controller;
 import net.thrymr.dto.VendorDto;
 import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.model.Vendor;
+import net.thrymr.model.VendorResponse;
 import net.thrymr.model.VendorSite;
 import net.thrymr.services.VendorService;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -43,7 +44,7 @@ public class VendorController {
     }
 
     @QueryMapping(name = "getAllVendorPagination")
-    public PaginationResponse getAllVendorPagination(@Argument(name="input") VendorDto request) {
+    public List<VendorResponse> getAllVendorPagination(@Argument(name="input") VendorDto request) {
         return vendorService.getAllVendorPagination(request);
     }
 
