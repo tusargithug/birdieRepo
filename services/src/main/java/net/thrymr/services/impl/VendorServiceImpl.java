@@ -257,27 +257,28 @@ public class VendorServiceImpl implements VendorService {
             if (vendorObjectives.getContent() != null) {
                 List<VendorResponse> vendorResponseList = new ArrayList<>();
                 for (VendorSite vendorSite : vendorObjectives) {
-                    Optional<VendorResponse> vendorResponseOptional =  vendorResponseList.stream().filter(vendorResponse ->  vendorResponse.getId().equals(vendorSite.getVendor().getId())).findAny();
+                    Optional<VendorResponse> vendorResponseOptional = vendorResponseList.stream().filter(vendorResponse -> vendorResponse.getId().equals(vendorSite.getVendor().getId())).findAny();
                     var vendorResponse = vendorResponseOptional.orElse(new VendorResponse());
-                        vendorResponse.setVendorId(vendorSite.getVendor().getVendorName());
-                        vendorResponse.setId(vendorSite.getVendor().getId());
-                        vendorResponse.setMobileNumber(vendorSite.getVendor().getMobileNumber());
-                        vendorResponse.setPOC(vendorSite.getVendor().getPOC());
-                        vendorResponse.setEmail(vendorSite.getVendor().getEmail());
-                        vendorResponse.setTotalPages(vendorObjectives.getTotalPages());
-                        vendorResponse.setTotalElement(vendorObjectives.getTotalElements());
-                        vendorResponse.setCountryCode(vendorSite.getVendor().getCountryCode());
-                        SiteResponse siteResponse = new SiteResponse();
-                        siteResponse.setId(vendorSite.getSite().getId());
-                        siteResponse.setSiteName(vendorSite.getSite().getSiteName());
-                        siteResponse.setSiteId(vendorSite.getSite().getSiteId());
-                        siteResponse.setRegion(vendorSite.getSite().getRegion());
-                        siteResponse.setCountry(vendorSite.getSite().getCountry());
-                        siteResponse.setCity(vendorSite.getSite().getCity());
-                        vendorResponse.getSiteResponseList().add(siteResponse);
-                        if(!vendorResponseOptional.isPresent()){
-                            vendorResponseList.add(vendorResponse);
-                        }
+                    vendorResponse.setVendorId(vendorSite.getVendor().getVendorId());
+                    vendorResponse.setVendorName(vendorSite.getVendor().getVendorName());
+                    vendorResponse.setId(vendorSite.getVendor().getId());
+                    vendorResponse.setMobileNumber(vendorSite.getVendor().getMobileNumber());
+                    vendorResponse.setPOC(vendorSite.getVendor().getPOC());
+                    vendorResponse.setEmail(vendorSite.getVendor().getEmail());
+                    vendorResponse.setTotalPages(vendorObjectives.getTotalPages());
+                    vendorResponse.setTotalElement(vendorObjectives.getTotalElements());
+                    vendorResponse.setCountryCode(vendorSite.getVendor().getCountryCode());
+                    SiteResponse siteResponse = new SiteResponse();
+                    siteResponse.setId(vendorSite.getSite().getId());
+                    siteResponse.setSiteName(vendorSite.getSite().getSiteName());
+                    siteResponse.setSiteId(vendorSite.getSite().getSiteId());
+                    siteResponse.setRegion(vendorSite.getSite().getRegion());
+                    siteResponse.setCountry(vendorSite.getSite().getCountry());
+                    siteResponse.setCity(vendorSite.getSite().getCity());
+                    vendorResponse.getSiteResponseList().add(siteResponse);
+                    if (!vendorResponseOptional.isPresent()) {
+                        vendorResponseList.add(vendorResponse);
+                    }
                 }
                 return vendorResponseList;
             }
@@ -286,26 +287,26 @@ public class VendorServiceImpl implements VendorService {
             if (!vendorSiteList.isEmpty()) {
                 List<VendorResponse> vendorResponseList = new ArrayList<>();
                 for (VendorSite vendorSite : vendorSiteList) {
-                    Optional<VendorResponse> vendorResponseOptional =  vendorResponseList.stream().filter(vendorResponse -> vendorResponse.getId().equals(vendorSite.getVendor().getId())).findAny();
+                    Optional<VendorResponse> vendorResponseOptional = vendorResponseList.stream().filter(vendorResponse -> vendorResponse.getId().equals(vendorSite.getVendor().getId())).findAny();
                     var vendorResponse = vendorResponseOptional.orElse(new VendorResponse());
-                        vendorResponse.setId(vendorSite.getVendor().getId());
-                        vendorResponse.setVendorId(vendorSite.getVendor().getVendorId());
-                        vendorResponse.setVendorName(vendorSite.getVendor().getVendorName());
-                        vendorResponse.setMobileNumber(vendorSite.getVendor().getMobileNumber());
-                        vendorResponse.setPOC(vendorSite.getVendor().getPOC());
-                        vendorResponse.setEmail(vendorSite.getVendor().getEmail());
-                        vendorResponse.setCountryCode(vendorSite.getVendor().getCountryCode());
-                        SiteResponse siteResponse = new SiteResponse();
-                        siteResponse.setId(vendorSite.getSite().getId());
-                        siteResponse.setSiteName(vendorSite.getSite().getSiteName());
-                        siteResponse.setSiteId(vendorSite.getSite().getSiteId());
-                        siteResponse.setRegion(vendorSite.getSite().getRegion());
-                        siteResponse.setCountry(vendorSite.getSite().getCountry());
-                        siteResponse.setCity(vendorSite.getSite().getCity());
-                        vendorResponse.getSiteResponseList().add(siteResponse);
-                        if(!vendorResponseOptional.isPresent()) {
-                            vendorResponseList.add(vendorResponse);
-                        }
+                    vendorResponse.setId(vendorSite.getVendor().getId());
+                    vendorResponse.setVendorId(vendorSite.getVendor().getVendorId());
+                    vendorResponse.setVendorName(vendorSite.getVendor().getVendorName());
+                    vendorResponse.setMobileNumber(vendorSite.getVendor().getMobileNumber());
+                    vendorResponse.setPOC(vendorSite.getVendor().getPOC());
+                    vendorResponse.setEmail(vendorSite.getVendor().getEmail());
+                    vendorResponse.setCountryCode(vendorSite.getVendor().getCountryCode());
+                    SiteResponse siteResponse = new SiteResponse();
+                    siteResponse.setId(vendorSite.getSite().getId());
+                    siteResponse.setSiteName(vendorSite.getSite().getSiteName());
+                    siteResponse.setSiteId(vendorSite.getSite().getSiteId());
+                    siteResponse.setRegion(vendorSite.getSite().getRegion());
+                    siteResponse.setCountry(vendorSite.getSite().getCountry());
+                    siteResponse.setCity(vendorSite.getSite().getCity());
+                    vendorResponse.getSiteResponseList().add(siteResponse);
+                    if (!vendorResponseOptional.isPresent()) {
+                        vendorResponseList.add(vendorResponse);
+                    }
                 }
                 return vendorResponseList;
             }
