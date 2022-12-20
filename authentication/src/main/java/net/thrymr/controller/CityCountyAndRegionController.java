@@ -113,31 +113,28 @@ public class CityCountyAndRegionController {
         return cityCountyAndRegionService.getCityById(id);
     }
 
-    /*@PostMapping("/upload-excel-region-data")
-    public ResponseEntity<ApiResponse> uploadRegionData(@RequestBody MultipartFile file) {
-        ApiResponse apiResponse=cityCountyAndRegionService.uploadRegionData(file);
-        return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
+    @PostMapping("/upload-excel-region-data")
+    public String uploadRegionData(@RequestBody MultipartFile file) {
+      return  cityCountyAndRegionService.uploadRegionData(file);
     }
 
     @PostMapping("/upload-excel-city-data")
-    public ResponseEntity<ApiResponse> uploadCityData(@RequestBody MultipartFile file) {
-        ApiResponse apiResponse= cityCountyAndRegionService.uploadCityData(file);
-        return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
+    public String uploadCityData(@RequestBody MultipartFile file) {
+        return cityCountyAndRegionService.uploadCityData(file);
     }
 
      @PostMapping("/upload-excel-country-data")
-    public ResponseEntity<ApiResponse> uploadCountryData(@RequestBody MultipartFile file) {
-         ApiResponse apiResponse=  cityCountyAndRegionService.uploadCountryData(file);
-         return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
+    public String uploadCountryData(@RequestBody MultipartFile file) {
+        return  cityCountyAndRegionService.uploadCountryData(file);
     }
 
     /*@MutationMapping(name="upload-excel-city-data")
     public String uploadCityData(@Argument(name="file") MultipartFile file) {
        return cityCountyAndRegionService.uploadCityData(file);
 
-    }*/
+    }
 
-    /*@MutationMapping(name="upload-excel-country-data")
+    @MutationMapping(name="upload-excel-country-data")
     public String uploadCountryData(@Argument(name="file") MultipartFile file) {
        return cityCountyAndRegionService.uploadCountryData(file);
     }*/
@@ -145,6 +142,19 @@ public class CityCountyAndRegionController {
     @MutationMapping(name = "uploadRegionData")
     public String uploadRegionData(@Argument(name = "file") MultipartFile file, DataFetchingEnvironment environment) {
         return cityCountyAndRegionService.uploadRegionData(environment.getArgument("file"));
+    }
+
+    @MutationMapping(name = "deleteAllCountry")
+    public String deleteAllCountry() {
+        return cityCountyAndRegionService.deleteAllCountry();
+    }
+    @MutationMapping(name = "deleteAllRegion")
+    public String deleteAllRegion() {
+        return cityCountyAndRegionService.deleteAllRegion();
+    }
+    @MutationMapping(name = "deleteAllCities")
+    public String deleteAllCities() {
+        return cityCountyAndRegionService.deleteAllCities();
     }
 }
 

@@ -177,6 +177,10 @@ type Mutation {
     updateEducationDetailsById(input:EducationDto):String!
     updateLanguageDetailsById(input:LanguageDto):String!
     deleteTeamMember(input:TeamMembersDto):String!
+    deleteAllCounsellorSlot:String!
+    deleteAllCountry:String!
+    deleteAllRegion:String!
+    deleteAllCities:String!
 }
 
 scalar Upload
@@ -316,8 +320,7 @@ input ShiftTimingsDto{
 type CounsellorSlot{
     id: ID!
     counsellor:Counsellor
-    startTime:LocalTime
-    endTime:LocalTime
+    slotTimings:[LocalTime]
     slotDate:String
     slotShift:[SlotShift]
     slotDays:[DayOfWeek]
@@ -345,6 +348,7 @@ type Counsellor{
     bio:String
     gender:Gender
     vendor:Vendor
+    availableSlots:Int
 }
 scalar LocalTime
 scalar Date
@@ -692,6 +696,7 @@ type PaginationResponse{
     vendorSiteList:[VendorSite]
     appUserList:[AppUser]
     miniSessionList:[MiniSession]
+    #SiteVendorMap:[]
     meditationList:[MtMeditation]
     worksheetList:[MtWorksheet]
     chapterList:[Chapter]
@@ -737,8 +742,7 @@ type EducationDetails {
 }
 input CounsellorSlotDto {
     counsellorId:ID
-    startTime:String
-    endTime:String
+    slotTimings:[String]
     slotDate:String
     slotShift:[SlotShift]
     slotDays:[DayOfWeek]

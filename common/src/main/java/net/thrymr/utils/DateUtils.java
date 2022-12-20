@@ -51,6 +51,10 @@ public class DateUtils {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
         return LocalTime.parse(ldt, formatter);
     }
+//    public static LocalTime toParseListLocalTime(String ldt, String format) {
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+//        return LocalTime.parse(ldt, formatter);
+//    }
 
     public static String toFormatLocalTime(LocalTime ldt, String format) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);

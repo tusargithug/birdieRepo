@@ -140,6 +140,7 @@ type MtCountry {
     region:MtRegion
     cities:[MtCity]
     isActive:Boolean
+    internationalDialing:String
 }
 
 interface Result{

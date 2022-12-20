@@ -12,11 +12,9 @@ import java.util.Optional;
 public interface VendorSiteRepo extends JpaRepository<VendorSite,Long>, JpaSpecificationExecutor<VendorSite> {
     List<VendorSite> findAllByVendorId(Long id);
 
-    boolean existsByVendorIdAndSiteId(Long id, Long newSiteIds);
-
-    boolean existsBySiteId(Long id);
-
-    Optional<VendorSite> findBySiteId(Long id);
-
     List<VendorSite> findAllByVendorIdAndIsDeleted(Long id, Boolean aFalse);
+
+    List<VendorSite> findBySiteIdAndVendorId(Long id, Long idVendor);
+
+    boolean existsBySiteIdAndVendorId(Long id, Long idVendor);
 }

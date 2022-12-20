@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface CounsellorSlotRepo extends JpaRepository<CounsellorSlot,Long>, JpaSpecificationExecutor<CounsellorSlot> {
-    List<CounsellorSlot> findByAppUser(String empId);
+    List<CounsellorSlot> findAllByCounsellorId(Long counsellorId);
 }

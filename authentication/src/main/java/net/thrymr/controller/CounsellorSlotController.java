@@ -1,7 +1,6 @@
 package net.thrymr.controller;
 import net.thrymr.dto.CounsellorSlotDto;
 import net.thrymr.dto.response.PaginationResponse;
-import net.thrymr.dto.slotRequest.TimeSlotDto;
 
 import net.thrymr.model.CounsellorSlot;
 import net.thrymr.services.CounsellorSlotService;
@@ -12,7 +11,6 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.ParseException;
-import java.util.List;
 
 
 @RestController
@@ -46,6 +44,11 @@ public class CounsellorSlotController {
     @MutationMapping(name="cancelCounsellorSlot")
     public String cancelCounsellorSlot(@Argument Long id){
         return counsellorSlotService.cancelCounsellorSlot(id);
+    }
+
+    @MutationMapping(name="deleteAllCounsellorSlot")
+    public String deleteAllCounsellorSlot() {
+        return counsellorSlotService.deleteAllCounsellorSlots();
     }
 
 }
