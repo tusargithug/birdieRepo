@@ -693,7 +693,6 @@ enum Gender{
 type PaginationResponse{
     siteList:[Site]
     teamList:[Team]
-    vendorSiteList:[VendorSite]
     appUserList:[AppUser]
     miniSessionList:[MiniSession]
     meditationList:[MtMeditation]
