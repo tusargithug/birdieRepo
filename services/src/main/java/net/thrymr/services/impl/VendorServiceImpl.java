@@ -1,7 +1,8 @@
 package net.thrymr.services.impl;
 
 import net.thrymr.dto.VendorDto;
-import net.thrymr.dto.response.PaginationResponse;
+import net.thrymr.dto.response.SiteResponse;
+import net.thrymr.dto.response.VendorResponse;
 import net.thrymr.model.*;
 import net.thrymr.repository.SiteRepo;
 import net.thrymr.repository.VendorRepo;
@@ -19,11 +20,10 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
 
 @Service
 public class VendorServiceImpl implements VendorService {
@@ -40,20 +40,20 @@ public class VendorServiceImpl implements VendorService {
     public String saveVendor(VendorDto request) {
         Vendor vendor = new Vendor();
         vendor.setVendorName(request.getVendorName());
-        if(request.getVendorId() != null && !vendorRepo.existsByVendorId(request.getVendorId())) {
+        if (request.getVendorId() != null && !vendorRepo.existsByVendorId(request.getVendorId())) {
             vendor.setVendorId(request.getVendorId());
-        }else {
+        } else {
             return "This vendorId already existed";
         }
         vendor.setCountryCode(request.getCountryCode());
-        if(request.getMobileNumber() != null && !vendorRepo.existsByMobileNumber(request.getMobileNumber())) {
+        if (request.getMobileNumber() != null && !vendorRepo.existsByMobileNumber(request.getMobileNumber())) {
             vendor.setMobileNumber(request.getMobileNumber());
-        }else {
+        } else {
             return "This mobile number already existed";
         }
-        if(request.getEmail() != null && !vendorRepo.existsByEmail(request.getEmail())) {
+        if (request.getEmail() != null && !vendorRepo.existsByEmail(request.getEmail())) {
             vendor.setEmail(request.getEmail());
-        }else {
+        } else {
             return "This email id already existed";
         }
         vendor.setPOC(request.getPOC());
@@ -61,7 +61,7 @@ public class VendorServiceImpl implements VendorService {
         vendor = vendorRepo.save(vendor);
         if (request.getSiteIdList() != null && vendor.getId() != null) {
             List<Site> siteList = siteRepo.findAllByIdInAndIsActiveAndIsDeleted(request.getSiteIdList(), Boolean.TRUE, Boolean.FALSE);
-            if (siteList != null) {
+            if (!siteList.isEmpty()) {
                 for (Site site : siteList) {
                     VendorSite vendorSite = new VendorSite();
                     vendorSite.setVendor(vendor);
@@ -126,17 +126,23 @@ public class VendorServiceImpl implements VendorService {
                 if (Validator.isValid(request.getVendorName())) {
                     vendor.setVendorName(request.getVendorName());
                 }
-                if (Validator.isValid(request.getVendorId())) {
+                if (vendor.getVendorId().equals(request.getVendorId()) || !vendorRepo.existsByVendorId(request.getVendorId())) {
                     vendor.setVendorId(request.getVendorId());
+                } else {
+                    return "This vendor id already existed";
                 }
-                if (Validator.isValid(request.getEmail())) {
+                if (vendor.getEmail().equals(request.getEmail()) || !vendorRepo.existsByEmail(request.getEmail())) {
                     vendor.setEmail(request.getEmail());
+                } else {
+                    return "This email already exist";
                 }
                 if (Validator.isValid(request.getCountryCode())) {
                     vendor.setCountryCode(request.getCountryCode());
                 }
-                if (Validator.isValid(request.getMobileNumber())) {
+                if (vendor.getMobileNumber().equals(request.getMobileNumber()) || !vendorRepo.existsByMobileNumber(request.getMobileNumber())) {
                     vendor.setMobileNumber(request.getMobileNumber());
+                } else {
+                    return "This mobile number already existed";
                 }
                 if (Validator.isValid(request.getPOC())) {
                     vendor.setPOC(request.getPOC());
@@ -157,40 +163,40 @@ public class VendorServiceImpl implements VendorService {
                                 vendor1 = optionalVendor1.get();
                             }
                             for (Site site : siteList) {
-                                if (!vendorSiteRepo.existsBySiteId(site.getId())) {
+                                if (!vendorSiteRepo.existsBySiteIdAndVendorId(site.getId(), request.getIdVendor())) {
                                     VendorSite insertNewRecord = new VendorSite();
                                     insertNewRecord.setSite(site);
                                     if (vendor1 != null) {
                                         insertNewRecord.setVendor(vendor1);
                                     }
-                                    vendor.setSearchKey(getVendorSearchKey(vendor));
+                                    insertNewRecord.setSearchKey(getVendorSiteSearchKey(insertNewRecord));
                                     vendorSiteRepo.save(insertNewRecord);
                                 } else {
-                                    Optional<VendorSite> optionalVendorSite = vendorSiteRepo.findBySiteId(site.getId());
-                                    VendorSite vendorSite=null;
-                                    if (optionalVendorSite.isPresent()) {
-                                        vendorSite = optionalVendorSite.get();
+                                    List<VendorSite> vendorSiteList1 = vendorSiteRepo.findBySiteIdAndVendorId(site.getId(), request.getIdVendor());
+                                    if (!vendorSiteList1.isEmpty()) {
+                                        for (VendorSite vendorSite : vendorSiteList1) {
+                                            vendorSite.setIsActive(Boolean.FALSE);
+                                            vendorSite.setIsDeleted(Boolean.TRUE);
+                                            if (vendor1 != null) {
+                                                vendorSite.setVendor(vendor1);
+                                            }
+                                            vendorSite.setSearchKey(getVendorSiteSearchKey(vendorSite));
+                                            vendorSiteRepo.save(vendorSite);
+                                        }
                                     }
-                                    vendorSite.setIsActive(Boolean.FALSE);
-                                    vendorSite.setIsDeleted(Boolean.TRUE);
-                                    if (vendor1 != null) {
-                                        vendorSite.setVendor(vendor1);
-                                    }
-                                    vendorSite.setSearchKey(getVendorSiteSearchKey(vendorSite));
-                                    vendorSiteRepo.save(vendorSite);
                                 }
                             }
-                            return "Team members update successfully";
+                            return "Team vendor update successfully";
                         }
                     }
                 }
             }
         }
-        return "give the valid appUser id's";
+        return "give the valid Vendor id";
     }
 
     @Override
-    public PaginationResponse getAllVendorPagination(VendorDto response) {
+    public List<VendorResponse> getAllVendorPagination(VendorDto response) {
         Pageable pageable = null;
         if (Validator.isValid(response.getPageSize())) {
             pageable = PageRequest.of(response.getPageNumber(), response.getPageSize());
@@ -243,21 +249,67 @@ public class VendorServiceImpl implements VendorService {
             addVendorPredicate.add(isDeletedPredicate);
             return criteriaBuilder.and(addVendorPredicate.toArray(new Predicate[0]));
         });
-        PaginationResponse paginationResponse = new PaginationResponse();
+
         if (response.getPageSize() != null && response.getPageNumber() != null) {
             Page<VendorSite> vendorObjectives = vendorSiteRepo.findAll(addVendorSpecification, pageable);
             if (vendorObjectives.getContent() != null) {
-                paginationResponse.setVendorSiteList(new HashSet<>(vendorObjectives.getContent()));
-                paginationResponse.setTotalElements(vendorObjectives.getTotalElements());
-                paginationResponse.setTotalPages(vendorObjectives.getTotalPages());
-                return paginationResponse;
+                List<VendorResponse> vendorResponseList = new ArrayList<>();
+                for (VendorSite vendorSite : vendorObjectives) {
+                    Optional<VendorResponse> vendorResponseOptional = vendorResponseList.stream().filter(vendorResponse -> vendorResponse.getId().equals(vendorSite.getVendor().getId())).findAny();
+                    var vendorResponse = vendorResponseOptional.orElse(new VendorResponse());
+                    vendorResponse.setVendorId(vendorSite.getVendor().getVendorId());
+                    vendorResponse.setVendorName(vendorSite.getVendor().getVendorName());
+                    vendorResponse.setId(vendorSite.getVendor().getId());
+                    vendorResponse.setMobileNumber(vendorSite.getVendor().getMobileNumber());
+                    vendorResponse.setPOC(vendorSite.getVendor().getPOC());
+                    vendorResponse.setEmail(vendorSite.getVendor().getEmail());
+                    vendorResponse.setTotalPages(vendorObjectives.getTotalPages());
+                    vendorResponse.setTotalElement(vendorObjectives.getTotalElements());
+                    vendorResponse.setCountryCode(vendorSite.getVendor().getCountryCode());
+                    SiteResponse siteResponse = new SiteResponse();
+                    siteResponse.setId(vendorSite.getSite().getId());
+                    siteResponse.setSiteName(vendorSite.getSite().getSiteName());
+                    siteResponse.setSiteId(vendorSite.getSite().getSiteId());
+                    siteResponse.setRegion(vendorSite.getSite().getRegion());
+                    siteResponse.setCountry(vendorSite.getSite().getCountry());
+                    siteResponse.setCity(vendorSite.getSite().getCity());
+                    vendorResponse.getSiteResponseList().add(siteResponse);
+                    if (!vendorResponseOptional.isPresent()) {
+                        vendorResponseList.add(vendorResponse);
+                    }
+                }
+                return vendorResponseList;
             }
         } else {
             List<VendorSite> vendorSiteList = vendorSiteRepo.findAll(addVendorSpecification);
-            paginationResponse.setVendorSiteList(vendorSiteList.stream().filter(vendorSite -> vendorSite.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toSet()));
-            return paginationResponse;
+            if (!vendorSiteList.isEmpty()) {
+                List<VendorResponse> vendorResponseList = new ArrayList<>();
+                for (VendorSite vendorSite : vendorSiteList) {
+                    Optional<VendorResponse> vendorResponseOptional = vendorResponseList.stream().filter(vendorResponse -> vendorResponse.getId().equals(vendorSite.getVendor().getId())).findAny();
+                    var vendorResponse = vendorResponseOptional.orElse(new VendorResponse());
+                    vendorResponse.setId(vendorSite.getVendor().getId());
+                    vendorResponse.setVendorId(vendorSite.getVendor().getVendorId());
+                    vendorResponse.setVendorName(vendorSite.getVendor().getVendorName());
+                    vendorResponse.setMobileNumber(vendorSite.getVendor().getMobileNumber());
+                    vendorResponse.setPOC(vendorSite.getVendor().getPOC());
+                    vendorResponse.setEmail(vendorSite.getVendor().getEmail());
+                    vendorResponse.setCountryCode(vendorSite.getVendor().getCountryCode());
+                    SiteResponse siteResponse = new SiteResponse();
+                    siteResponse.setId(vendorSite.getSite().getId());
+                    siteResponse.setSiteName(vendorSite.getSite().getSiteName());
+                    siteResponse.setSiteId(vendorSite.getSite().getSiteId());
+                    siteResponse.setRegion(vendorSite.getSite().getRegion());
+                    siteResponse.setCountry(vendorSite.getSite().getCountry());
+                    siteResponse.setCity(vendorSite.getSite().getCity());
+                    vendorResponse.getSiteResponseList().add(siteResponse);
+                    if (!vendorResponseOptional.isPresent()) {
+                        vendorResponseList.add(vendorResponse);
+                    }
+                }
+                return vendorResponseList;
+            }
         }
-        return new PaginationResponse();
+        return new ArrayList<>();
     }
 
     @Override

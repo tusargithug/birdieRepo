@@ -16,6 +16,8 @@ public class VendorSite extends BaseEntity{
     private Vendor vendor;
     @ManyToOne
     private Site site;
-
-
+    public VendorSite(Vendor vendor, Site site){
+        this.site=site;
+        this.vendor= vendor;
+    }
 }

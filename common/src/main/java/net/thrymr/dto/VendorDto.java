@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.thrymr.model.Site;
+import net.thrymr.model.Vendor;
+import net.thrymr.model.VendorSite;
 
 import java.util.List;
 
@@ -31,4 +34,6 @@ public class VendorDto {
     private String vendorId;
     private String searchKey;
     private String countryCode;
+
+
 }

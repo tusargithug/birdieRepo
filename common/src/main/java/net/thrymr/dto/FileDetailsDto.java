@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.thrymr.enums.FileType;
 import net.thrymr.model.FileDetails;
+import net.thrymr.model.Vendor;
+import net.thrymr.model.VendorSite;
 
 import java.util.List;
 

@@ -11,6 +11,7 @@ import net.thrymr.model.Counsellor;
 import javax.persistence.*;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 @Getter
@@ -18,13 +19,11 @@ import java.util.List;
 @NoArgsConstructor
 public class CounsellorSlotDto {
     private Long counsellorId;
-    private String startTime;
-    private String endTime;
-    private String slotDate;
+    private List<String> slotTimings = new ArrayList<>();
+    //private String slotDate;
     private List<SlotShift> slotShift;
     private List<DayOfWeek> slotDays;
     private String slotStatus;
-    private Long appUserId;
     private String fromDate;
     private String toDate;
     private Boolean isActive;

@@ -1,30 +1,23 @@
-package net.thrymr.model;
+package net.thrymr.dto.response;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
-
-
-@Entity
+import java.util.ArrayList;
+import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "vendor")
-public class Vendor extends BaseEntity {
-    @Column(name = "vendorPOC")
+public class VendorResponse {
+    private Long id;
     private String POC;
-
     private String vendorName;
-
     private String vendorId;
-
     private String countryCode;
-
-    @Column(name = "mobileNumber", unique = true)
     private String mobileNumber;
-
-    @Column(name = "email", unique = true)
     private String email;
+    List<SiteResponse> siteResponseList = new ArrayList<>();
+    private Long totalElement;
+    private int totalPages;
 }

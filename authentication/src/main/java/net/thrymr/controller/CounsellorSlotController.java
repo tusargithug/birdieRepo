@@ -1,7 +1,6 @@
 package net.thrymr.controller;
 import net.thrymr.dto.CounsellorSlotDto;
 import net.thrymr.dto.response.PaginationResponse;
-import net.thrymr.dto.slotRequest.TimeSlotDto;
 
 import net.thrymr.model.CounsellorSlot;
 import net.thrymr.services.CounsellorSlotService;
@@ -29,8 +28,8 @@ public class CounsellorSlotController {
         return counsellorSlotService.getAllCounsellorSlotPagination(request);
     }
     @QueryMapping(name="getCounsellorSlotById")
-    public CounsellorSlot getCounsellorSlotById(@Argument Long id) {
-        return counsellorSlotService.getCounsellorSlotById(id);
+    public List<CounsellorSlot> getCounsellorSlotById(@Argument Long counsellorId) {
+        return counsellorSlotService.getCounsellorSlotById(counsellorId);
     }
 
     @MutationMapping(name = "createCounsellorSlot")
@@ -38,14 +37,19 @@ public class CounsellorSlotController {
         return counsellorSlotService.createCounsellorSlot(request);
     }
 
-    @MutationMapping(name="rescheduledCounsellorSlot")
-    public String rescheduledCounsellorSlot(@Argument(name = "input") CounsellorSlotDto request) throws ParseException {
-        return counsellorSlotService.rescheduledCounsellorSlot(request);
+    @MutationMapping(name="updateCounsellorSlot")
+    public String updateCounsellorSlot(@Argument(name = "input") CounsellorSlotDto request) throws ParseException {
+        return counsellorSlotService.updateCounsellorSlot(request);
     }
 
-    @MutationMapping(name="cancelCounsellorSlot")
-    public String cancelCounsellorSlot(@Argument Long id){
-        return counsellorSlotService.cancelCounsellorSlot(id);
+    @MutationMapping(name="removeCounsellorSlotsById")
+    public String removeCounsellorSlotsById(@Argument (name = "input") CounsellorSlotDto request) {
+        return counsellorSlotService.removeCounsellorSlotsById(request);
+    }
+
+    @MutationMapping(name="deleteAllCounsellorSlot")
+    public String deleteAllCounsellorSlot() {
+        return counsellorSlotService.deleteAllCounsellorSlots();
     }
 
 }

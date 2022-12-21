@@ -14,7 +14,7 @@ import java.time.LocalTime;
 @Entity
 @Table(name = "team")
 public class Team extends BaseEntity {
-    @Column(name = "team_id", unique = true)
+    @Column(name = "team_id")
     private String teamId;
     @Column(name = "team_name")
     private String teamName;

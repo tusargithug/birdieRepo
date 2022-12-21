@@ -97,8 +97,10 @@ public class CounsellorImpl implements CounsellorService {
             Counsellor counsellor = null;
             if (optionalCounsellor.isPresent()) {
                 counsellor = optionalCounsellor.get();
-                if (Validator.isValid(request.getEmpId())) {
+                if(counsellor.getEmpId().equals(request.getEmpId()) || !counsellorRepo.existsByEmpId(request.getEmpId())) {
                     counsellor.setEmpId(request.getEmpId());
+                }else {
+                    return "This employee id already existed";
                 }
                 if (Validator.isValid(request.getCounsellorName())) {
                     counsellor.setCounsellorName(request.getCounsellorName());
@@ -106,8 +108,10 @@ public class CounsellorImpl implements CounsellorService {
                 if (Validator.isValid(request.getEducationalDetails())) {
                     counsellor.setEducationalDetails(request.getEducationalDetails());
                 }
-                if (Validator.isValid(request.getEmailId())) {
+                if(counsellor.getEmailId().equals(request.getEmailId()) || !counsellorRepo.existsByEmailId(request.getEmailId())) {
                     counsellor.setEmailId(request.getEmailId());
+                } else {
+                    return "This Email Id already existed";
                 }
                 if (Validator.isValid(request.getLanguages())) {
                     counsellor.setLanguages(request.getLanguages());
@@ -121,8 +125,10 @@ public class CounsellorImpl implements CounsellorService {
                 if (Validator.isValid(request.getCountryCode())) {
                     counsellor.setCountryCode(request.getCountryCode());
                 }
-                if (Validator.isValid(request.getMobileNumber())) {
+                if(counsellor.getMobileNumber().equals(request.getMobileNumber()) || !counsellorRepo.existsByMobileNumber(request.getMobileNumber())) {
                     counsellor.setMobileNumber(request.getMobileNumber());
+                }else {
+                    return "This mobile number already existed";
                 }
                 if (request.getShiftStartAt() != null) {
                     counsellor.setShiftStartAt(DateUtils.toStringToLocalTime(request.getShiftStartAt(), Constants.TIME_FORMAT_12_HOURS));
@@ -190,7 +196,7 @@ public class CounsellorImpl implements CounsellorService {
                 Predicate counsellorName = criteriaBuilder.and(root.get("counsellorName").in(response.getCounsellorName()));
                 addCounsellorPredicate.add(counsellorName);
             }
-            if (response.getEmpId() != null && !response.getEmpId().isEmpty()) {
+            if (response.getEmpId() != null) {
                 Predicate empId = criteriaBuilder.and(root.get("empId").in(response.getEmpId()));
                 addCounsellorPredicate.add(empId);
             }
@@ -383,6 +389,7 @@ public class CounsellorImpl implements CounsellorService {
         }
         return searchKey;
     }
+
 
 
 }
