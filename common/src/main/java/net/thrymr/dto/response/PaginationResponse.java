@@ -17,8 +17,6 @@ import java.util.*;
 public class PaginationResponse {
     private List<Site> siteList = new ArrayList<>();
     private List<Team> teamList = new ArrayList<>();
-    private List<VendorSite> vendorSiteList = new ArrayList<>();
-    private Map<Vendor, Site> SiteVendorMap = new LinkedHashMap<>();
     private List<AppUser> appUserList = new ArrayList<>();
     private List<MiniSession> miniSessionList = new ArrayList<>();
     private List<MtMeditation> meditationList = new ArrayList<>();
@@ -31,4 +29,5 @@ public class PaginationResponse {
     private List<CounsellorSlot> counsellorSlotList = new ArrayList<>();
     private int totalPages = 0;
     private Long totalElements = 0L;
+    private Vendor vendor;
 }

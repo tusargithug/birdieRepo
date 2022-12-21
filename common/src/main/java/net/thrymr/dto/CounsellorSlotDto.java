@@ -20,11 +20,10 @@ import java.util.List;
 public class CounsellorSlotDto {
     private Long counsellorId;
     private List<String> slotTimings = new ArrayList<>();
-    private String slotDate;
+    //private String slotDate;
     private List<SlotShift> slotShift;
     private List<DayOfWeek> slotDays;
     private String slotStatus;
-    private Long appUserId;
     private String fromDate;
     private String toDate;
     private Boolean isActive;

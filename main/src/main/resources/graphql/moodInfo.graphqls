@@ -22,11 +22,11 @@ type Query {
     getAllRegions:[MtRegion]
     getAllCounsellorSlotPagination(input:CounsellorSlotDto):PaginationResponse
     getAllShiftTimings:[ShiftTimings]
-    getCounsellorSlotById(id:ID!):CounsellorSlot
+    getCounsellorSlotById(counsellorId:ID!):[CounsellorSlot]
     getAllCounsellorPagination(input:CounsellorDto):PaginationResponse
     getAllVendor:[Vendor]
     getVendorById(id:ID):Vendor
-    getAllVendorPagination(input:VendorDto):PaginationResponse
+    getAllVendorPagination(input:VendorDto):[VendorResponse]
     getAllAssessment:[MtAssessment]
     getAssessmentById(id:ID!):MtAssessment
     getQuestionById(id:ID!):MtQuestion
@@ -134,8 +134,8 @@ type Mutation {
     saveVendor(input:VendorDto):String!
     deleteVendorById(id:ID):String!
     updateVendor(input:VendorDto):String!
-    rescheduledCounsellorSlot(input:CounsellorSlotDto):String!
-    cancelCounsellorSlot(id:ID!):String!
+    updateCounsellorSlot(input:CounsellorSlotDto):String!
+    removeCounsellorSlotsById(input:CounsellorSlotDto):String!
     createQuestion(input:QuestionDto):String!
     updateQuestionById(input:QuestionDto):String!
     deleteQuestionById(id:ID):String!
@@ -693,10 +693,8 @@ enum Gender{
 type PaginationResponse{
     siteList:[Site]
     teamList:[Team]
-    vendorSiteList:[VendorSite]
     appUserList:[AppUser]
     miniSessionList:[MiniSession]
-    #SiteVendorMap:[]
     meditationList:[MtMeditation]
     worksheetList:[MtWorksheet]
     chapterList:[Chapter]
@@ -708,7 +706,6 @@ type PaginationResponse{
     counsellorEmployeeList:[CounsellorEmployee]
     counsellorSlotList:[CounsellorSlot]
 }
-
 input TeamMembersDto {
     id:ID
     appUserIdList:[ID]
@@ -743,11 +740,10 @@ type EducationDetails {
 input CounsellorSlotDto {
     counsellorId:ID
     slotTimings:[String]
-    slotDate:String
+    #slotDate:String
     slotShift:[SlotShift]
     slotDays:[DayOfWeek]
     slotStatus:String
-    appUserId:ID
     fromDate:String
     toDate:String
     isActive:Boolean
@@ -757,4 +753,25 @@ input CounsellorSlotDto {
     shiftTimingList:[String]
     isSorted:Boolean
     searchKey:String
+}
+
+type VendorResponse{
+    id:ID
+    POC:String
+    vendorName:String
+    vendorId:String
+    countryCode:String
+    mobileNumber:String
+    email:String
+    siteResponseList:[SiteResponse]
+    totalElement:Int
+    totalPages:Int
+}
+type SiteResponse{
+    id:Int
+    siteId:String
+    siteName:String
+    city:MtCity
+    country:MtCountry
+    region:MtRegion
 }

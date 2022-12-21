@@ -5,6 +5,7 @@ import net.thrymr.FileDocument;
 import net.thrymr.dto.*;
 import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.dto.response.UserAppointmentResponse;
+import net.thrymr.dto.response.VendorResponse;
 import net.thrymr.enums.Alerts;
 import net.thrymr.enums.Roles;
 import net.thrymr.enums.TagType;
@@ -14,13 +15,11 @@ import net.thrymr.repository.CategoryRepo;
 import net.thrymr.repository.CourseRepo;
 import net.thrymr.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.List;
 import java.util.Set;
 
@@ -206,7 +205,7 @@ public class Query implements GraphQLQueryResolver {
     }
 
     @QueryMapping(name = "getAllVendorPagination")
-    public PaginationResponse getAllVendorPagination(@Argument(name = "input") VendorDto request) {
+    public List<VendorResponse> getAllVendorPagination(@Argument(name = "input") VendorDto request) {
         return vendorService.getAllVendorPagination(request);
     }
 
@@ -226,8 +225,8 @@ public class Query implements GraphQLQueryResolver {
     }
 
     @QueryMapping(name = "getCounsellorSlotById")
-    public CounsellorSlot getCounsellorSlotById(@Argument Long id) {
-        return counsellorSlotService.getCounsellorSlotById(id);
+    public List<CounsellorSlot> getCounsellorSlotById(@Argument Long counsellorId) {
+        return counsellorSlotService.getCounsellorSlotById(counsellorId);
     }
 
     @QueryMapping(name = "getAllCounsellorPagination")

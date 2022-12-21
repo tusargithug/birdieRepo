@@ -264,7 +264,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             }
         } else {
             List<Site> siteList = siteRepo.findAll(siteSpecification);
-            paginationResponse.setSiteList(siteList.stream().filter(site -> site.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList()));
+            paginationResponse.setSiteList(siteList.stream().filter(site -> site.getIsDeleted().equals(Boolean.FALSE) && site.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList()));
             return paginationResponse;
         }
         return new PaginationResponse();
