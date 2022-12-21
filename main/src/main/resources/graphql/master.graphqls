@@ -291,6 +291,7 @@ input QuestionDto {
     Sequence:Int
     isActive:Boolean
     optionsDtoList:[OptionsDto]
+    chapterId:Int
 }
 input OptionsDto{
     id:Int
