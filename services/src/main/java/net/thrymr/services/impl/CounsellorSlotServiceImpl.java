@@ -76,7 +76,7 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
         }*/
         if (Validator.isValid(request.getFromDate()) && Validator.isValid(request.getToDate())) {
             Date date2 = new SimpleDateFormat("dd-MM-yyyy").parse(request.getFromDate());
-            if (date2.getDate() == todayDate.getDate() || date2.after(todayDate) && (request.getToDate() != null && !todayDate.before(date2))) {
+            if (date2.getDate() == todayDate.getDate() || (date2.after(todayDate) && (request.getToDate() != null && request.getFromDate() != null))) {
                 slot.setFromDate(DateUtils.toFormatStringToDate(request.getFromDate(), Constants.DATE_FORMAT));
                 slot.setToDate(DateUtils.toFormatStringToDate(request.getToDate(), Constants.DATE_FORMAT));
             } else {

@@ -753,6 +753,8 @@ input CounsellorSlotDto {
     shiftTimingList:[String]
     isSorted:Boolean
     searchKey:String
+    pageNumber:Int
+    pageSize:Int
 }
 
 type VendorResponse{
