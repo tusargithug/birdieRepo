@@ -1,5 +1,6 @@
 package net.thrymr.controller;
 import net.thrymr.dto.CounsellorSlotDto;
+import net.thrymr.dto.response.CounsellorSlotResponse;
 import net.thrymr.dto.response.PaginationResponse;
 
 import net.thrymr.model.CounsellorSlot;
@@ -28,7 +29,7 @@ public class CounsellorSlotController {
         return counsellorSlotService.getAllCounsellorSlotPagination(request);
     }
     @QueryMapping(name="getCounsellorSlotById")
-    public List<CounsellorSlot> getCounsellorSlotById(@Argument Long counsellorId) {
+    public List<CounsellorSlotResponse> getCounsellorSlotById(@Argument Long counsellorId) {
         return counsellorSlotService.getCounsellorSlotById(counsellorId);
     }
 
@@ -43,8 +44,13 @@ public class CounsellorSlotController {
     }
 
     @MutationMapping(name="removeCounsellorSlotsById")
-    public String removeCounsellorSlotsById(@Argument (name = "input") CounsellorSlotDto request) {
+    public String removeCounsellorSlotsById(@Argument (name = "input") CounsellorSlotDto request) throws ParseException {
         return counsellorSlotService.removeCounsellorSlotsById(request);
+    }
+
+    @MutationMapping(name="pauseCounsellorSlotsById")
+    public String pauseCounsellorSlotsById(@Argument (name = "input") CounsellorSlotDto request) throws ParseException {
+        return counsellorSlotService.pauseCounsellorSlotsById(request);
     }
 
     @MutationMapping(name="deleteAllCounsellorSlot")
