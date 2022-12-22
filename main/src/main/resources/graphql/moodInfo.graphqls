@@ -80,6 +80,7 @@ type Query {
     getEducationalDetailsById(id:ID):EducationDetails
     getLanguageDetailsById(id:ID):LanguageDetails
     getVendorSiteById(id:ID):[VendorSite]
+    getChapterById(id:ID):Chapter
 }
 
 type Mutation {
@@ -136,7 +137,7 @@ type Mutation {
     updateVendor(input:VendorDto):String!
     updateCounsellorSlot(input:CounsellorSlotDto):String!
     removeCounsellorSlotsById(input:CounsellorSlotDto):String!
-    createQuestion(input:QuestionDto):String!
+    createQuestion(input:[QuestionDto]):String!
     updateQuestionById(input:QuestionDto):String!
     deleteQuestionById(id:ID):String!
     createOptions(input:OptionsDto):String!
