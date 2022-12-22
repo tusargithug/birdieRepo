@@ -22,7 +22,7 @@ type Query {
     getAllRegions:[MtRegion]
     getAllCounsellorSlotPagination(input:CounsellorSlotDto):PaginationResponse
     getAllShiftTimings:[ShiftTimings]
-    getCounsellorSlotById(counsellorId:ID!):[CounsellorSlot]
+    getCounsellorSlotById(counsellorId:ID!):[CounsellorSlotResponse]
     getAllCounsellorPagination(input:CounsellorDto):PaginationResponse
     getAllVendor:[Vendor]
     getVendorById(id:ID):Vendor
@@ -181,6 +181,7 @@ type Mutation {
     deleteAllCountry:String!
     deleteAllRegion:String!
     deleteAllCities:String!
+    pauseCounsellorSlotsById(input:CounsellorSlotDto):String!
 }
 
 scalar Upload
@@ -271,7 +272,6 @@ type AppUser{
     dateOfJoining:String
     roles:Roles
     site:Site
-    counsellorSlotList:[CounsellorSlot]
     alerts:[Alerts]
     gender:Gender
     shiftStartAt:LocalTime
@@ -320,14 +320,7 @@ input ShiftTimingsDto{
 type CounsellorSlot{
     id: ID!
     counsellor:Counsellor
-    slotTimings:[LocalTime]
-    slotDate:String
-    slotShift:[SlotShift]
-    slotDays:[DayOfWeek]
-    slotStatus:SlotStatus
-    isActive:Boolean
     fromDate:String
-    appUser:AppUser
     toDate:String
 }
 type Counsellor{
@@ -740,14 +733,9 @@ type EducationDetails {
 input CounsellorSlotDto {
     counsellorId:ID
     slotTimings:[String]
-    #slotDate:String
-    slotShift:[SlotShift]
     slotDays:[DayOfWeek]
-    slotStatus:String
     fromDate:String
     toDate:String
-    isActive:Boolean
-    counsellorSlotId:ID
     siteIdList:[ID]
     vendorIdList:[ID]
     shiftTimingList:[String]
@@ -774,4 +762,19 @@ type SiteResponse{
     city:MtCity
     country:MtCountry
     region:MtRegion
+}
+type CounsellorSlotResponse{
+    id:ID
+    counsellorName:String
+    vendorName:String
+    siteName:String
+    shiftTimings:String
+    slotDetailsResponses:[SlotDetailsResponse]
+}
+type SlotDetailsResponse{
+    slotTiming:LocalTime
+    slotShift:SlotShift
+    slotStatus:SlotStatus
+    slotDate:String
+    slotDay:DayOfWeek
 }

@@ -3,6 +3,7 @@ package net.thrymr.services.impl;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import net.thrymr.FileDocument;
 import net.thrymr.dto.*;
+import net.thrymr.dto.response.CounsellorSlotResponse;
 import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.dto.response.UserAppointmentResponse;
 import net.thrymr.dto.response.VendorResponse;
@@ -225,7 +226,7 @@ public class Query implements GraphQLQueryResolver {
     }
 
     @QueryMapping(name = "getCounsellorSlotById")
-    public List<CounsellorSlot> getCounsellorSlotById(@Argument Long counsellorId) {
+    public List<CounsellorSlotResponse> getCounsellorSlotById(@Argument Long counsellorId) {
         return counsellorSlotService.getCounsellorSlotById(counsellorId);
     }
 

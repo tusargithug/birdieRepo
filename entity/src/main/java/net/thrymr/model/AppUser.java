@@ -46,9 +46,6 @@ public class AppUser extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Site site;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "appUser")
-    private List<CounsellorSlot> counsellorSlotList = new ArrayList<>();
-
     @Enumerated(EnumType.STRING)
     @ElementCollection(targetClass = Alerts.class)
     private List<Alerts> alerts;

@@ -24,27 +24,7 @@ public class CounsellorSlot extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Counsellor counsellor;
 
-    @ElementCollection
-    private List<LocalTime> slotTimings = new ArrayList<>();
-
-    @Column(name = "slot_date")
-    private Date slotDate;
-
-    @Enumerated(EnumType.STRING)
-    @ElementCollection(targetClass = SlotShift.class)
-    private List<SlotShift> slotShift;
-
-    @ElementCollection(targetClass = DayOfWeek.class)
-    private List<DayOfWeek> slotDays;
-
-    @Enumerated(EnumType.STRING)
-    private SlotStatus slotStatus;
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private AppUser appUser;
-
     private Date fromDate;
 
     private Date toDate;
-    private Boolean isBooked;
-
 }

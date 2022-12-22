@@ -360,7 +360,7 @@ public class MutationResolver implements GraphQLMutationResolver {
     }
 
     @MutationMapping(name = "removeCounsellorSlotsById")
-    public String removeCounsellorSlotsById(@Argument(name = "input") CounsellorSlotDto request) {
+    public String removeCounsellorSlotsById(@Argument(name = "input") CounsellorSlotDto request) throws ParseException {
         return counsellorSlotService.removeCounsellorSlotsById(request);
     }
 
@@ -597,6 +597,11 @@ public class MutationResolver implements GraphQLMutationResolver {
     @MutationMapping(name = "deleteAllCities")
     public String deleteAllCities() {
         return cityCountyAndRegionService.deleteAllCities();
+    }
+
+    @MutationMapping(name="pauseCounsellorSlotsById")
+    public String pauseCounsellorSlotsById(@Argument (name = "input") CounsellorSlotDto request) throws ParseException {
+        return counsellorSlotService.pauseCounsellorSlotsById(request);
     }
 }
 
