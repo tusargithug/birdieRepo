@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.Part;
 import java.text.ParseException;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -365,8 +366,8 @@ public class MutationResolver implements GraphQLMutationResolver {
     }
 
     @MutationMapping("createQuestion")
-    public String createQuestion(@Argument(name = "input") QuestionDto request) {
-        return questionAndOptionsService.createQuestion(request);
+    public String createQuestion(@Argument(name = "input") List<QuestionDto> questionDtos) {
+        return questionAndOptionsService.createQuestion(questionDtos);
     }
 
     @MutationMapping("updateQuestionById")

@@ -4,6 +4,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -20,5 +23,8 @@ public class QuestionDto {
     //TODO questionType
    // one month
      //       6 month
+
     //appoinment
+
+    private List<OptionsDto> optionsDtoList = new ArrayList<>();
 }

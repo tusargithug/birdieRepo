@@ -16,9 +16,7 @@ import net.thrymr.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -39,32 +37,49 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
     ChapterRepo chapterRepo;
 
     @Override
-    public String createQuestion(QuestionDto request) {
-        MtQuestion question = new MtQuestion();
-        question.setQuestion(request.getQuestion());
-        question.setQuestionCalType(QuestionCalType.valueOf(request.getQuestionCalType()));
-        question.setSequence(request.getSequence());
-        if (Validator.isValid(request.getPsychometricTestId())) {
-            Optional<PsychometricTest> optionalPsychometricTest = psychometricTestRepo.findById(request.getPsychometricTestId());
-            if (optionalPsychometricTest.isPresent()) {
-                question.setPsychometricTest(optionalPsychometricTest.get());
+    public String createQuestion(List<QuestionDto> questionDtos) {
+       for (QuestionDto o : questionDtos){
+            Set<MtOptions> mtOptions = new HashSet<>();
+            MtQuestion question = new MtQuestion();
+            question.setQuestion(o.getQuestion());
+            question.setQuestionCalType(QuestionCalType.valueOf(o.getQuestionCalType()));
+            question.setSequence(o.getSequence());
+            if (o.getPsychometricTestId() != null) {
+                Optional<PsychometricTest> optionalPsychometricTest = psychometricTestRepo.findById(o.getPsychometricTestId());
+                if (optionalPsychometricTest.isPresent()) {
+                    question.setPsychometricTest(optionalPsychometricTest.get());
+                }
             }
-        }
-        if (Validator.isValid(request.getAssessmentId())) {
-            Optional<MtAssessment> optionalAssessment = assessmentRepo.findById(request.getAssessmentId());
-            if (optionalAssessment.isPresent()) {
-                question.setAssessment(optionalAssessment.get());
+            if (o.getAssessmentId() != null) {
+                Optional<MtAssessment> optionalAssessment = assessmentRepo.findById(o.getAssessmentId());
+                if (optionalAssessment.isPresent()) {
+                    question.setAssessment(optionalAssessment.get());
+                }
             }
-        }
 
-        if(Validator.isValid(request.getChapterId())){
-            Optional<Chapter> chapterOptional= chapterRepo.findById(request.getChapterId());
-            if(chapterOptional.isPresent()){
-                question.setChapter(chapterOptional.get());
+            if (o.getChapterId() != null) {
+                Optional<Chapter> chapterOptional = chapterRepo.findById(o.getChapterId());
+                if (chapterOptional.isPresent()) {
+                    question.setChapter(chapterOptional.get());
+                }
             }
+            question.setSearchKey(getAppUserSearchKey(question));
+            question = questionRepo.save(question);
+            for(OptionsDto optionsDto: o.getOptionsDtoList()){
+                MtOptions option = new MtOptions();
+                option.setQuestion(question);
+                option.setTextAnswer(optionsDto.getTextAnswer());
+                if (optionsDto.getUserCourseId() != null) {
+                    Optional<UserCourse> optionalUserCourse = userCourseRepo.findById(optionsDto.getUserCourseId());
+                    if (optionalUserCourse.isPresent()) {
+                        option.setUserCourse(optionalUserCourse.get());
+                    }
+                }
+                option.setSearchKey(getOptionsSearchKey(option));
+                mtOptions.add(option);
+            }
+            optionsRepo.saveAll(mtOptions);
         }
-        question.setSearchKey(getAppUserSearchKey(question));
-        questionRepo.save(question);
         return "create question successfully";
     }
 
@@ -143,9 +158,9 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
                         question.setAssessment(optionalAssessment.get());
                     }
                 }
-                if(Validator.isValid(request.getChapterId())){
-                    Optional<Chapter> chapterOptional= chapterRepo.findById(request.getChapterId());
-                    if(chapterOptional.isPresent()){
+                if (Validator.isValid(request.getChapterId())) {
+                    Optional<Chapter> chapterOptional = chapterRepo.findById(request.getChapterId());
+                    if (chapterOptional.isPresent()) {
                         question.setChapter(chapterOptional.get());
                     }
                 }
@@ -269,6 +284,7 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
         }
         return searchKey;
     }
+
     public String getOptionsSearchKey(MtOptions options) {
         String searchKey = "";
         if (options.getTextAnswer() != null) {
