@@ -5,7 +5,6 @@ import net.thrymr.dto.UnitDto;
 import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.model.Chapter;
 import net.thrymr.model.Unit;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -29,4 +28,6 @@ public interface UnitAndChapterServices {
 
     String deleteChapterById(Long id);
     PaginationResponse getAllChapterPagination(ChapterDto chapterDto);
+
+    Chapter getChapterById(Long id);
 }

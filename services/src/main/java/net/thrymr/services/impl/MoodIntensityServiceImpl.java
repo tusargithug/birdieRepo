@@ -118,6 +118,9 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
                             mtMoodIntensity.setMtMoodInfo(optionalMoodInfo.get());
                         }
                     }
+                    if (row.getCell(5) != null) {
+                        mtMoodIntensity.setDescription(getCellValue(row.getCell(5)));
+                    }
                     mtMoodIntensityList.add(mtMoodIntensity);
                     setMoodIntensitySearchKey(mtMoodIntensity);
                     mtMoodIntensityList = moodIntensityRepo.saveAll(mtMoodIntensityList);

@@ -73,4 +73,9 @@ public class UnitAndChapterController {
     public PaginationResponse getLearnPath(@Argument(name = "input")UnitDto unitDto){
         return unitAndChapterServices.getLearnPath(unitDto);
     }
+
+    @QueryMapping(name = "getChapterById")
+    public Chapter getChapterById(@Argument(name = "input") Long id) {
+        return unitAndChapterServices.getChapterById(id);
+    }
 }

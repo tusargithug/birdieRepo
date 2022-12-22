@@ -97,6 +97,9 @@ public class MoodInfoServiceImpl implements MoodInfoService {
                     if (row.getCell(4) != null) {
                         mtMoodInfo.setMoodType(MoodType.stringToEnum(getCellValue(row.getCell(4))));
                     }
+                    if(row.getCell(5) != null) {
+                        mtMoodInfo.setDescription(getCellValue(row.getCell(5)));
+                    }
                     setUserSearchKey(mtMoodInfo);
                     mtMoodInfoList.add(mtMoodInfo);
                     mtMoodInfoList = moodInfoRepo.saveAll(mtMoodInfoList);
