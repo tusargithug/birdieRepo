@@ -75,7 +75,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
     public List<Unit> getAllUnit() {
         List<Unit> unitList = unitRpo.findAll();
         if (!unitList.isEmpty()) {
-            return unitList.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+            return unitList.stream().filter(obj -> obj.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList());
         }
         return new ArrayList<>();
     }

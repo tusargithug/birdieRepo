@@ -148,7 +148,7 @@ public class VendorServiceImpl implements VendorService {
                     vendor.setPOC(request.getPOC());
                 }
                 vendor.setSearchKey(getVendorSearchKey(vendor));
-                vendor = vendorRepo.save(vendor);
+                vendorRepo.save(vendor);
                 if (request.getSiteIdList() != null && request.getIdVendor() != null) {
                     List<VendorSite> vendorSiteList = vendorSiteRepo.findAllByVendorId(request.getIdVendor());
                     List<Long> existedUsers = vendorSiteList.stream().filter(user -> user.getSite() != null).map(obj -> obj.getSite().getId()).collect(Collectors.toList());

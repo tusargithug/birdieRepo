@@ -1,6 +1,7 @@
 package net.thrymr.services;
 
 import net.thrymr.dto.CounsellorSlotDto;
+import net.thrymr.dto.response.CounsellorSlotResponse;
 import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.model.CounsellorSlot;
 
@@ -12,11 +13,13 @@ public interface CounsellorSlotService {
 
     PaginationResponse getAllCounsellorSlotPagination(CounsellorSlotDto request);
 
-    List<CounsellorSlot> getCounsellorSlotById(Long counsellorId);
+    List<CounsellorSlotResponse> getCounsellorSlotById(Long counsellorId);
 
     String updateCounsellorSlot(CounsellorSlotDto request) throws ParseException;
 
-    String removeCounsellorSlotsById(CounsellorSlotDto request);
+    String removeCounsellorSlotsById(CounsellorSlotDto request) throws ParseException;
 
     String deleteAllCounsellorSlots();
+
+    String pauseCounsellorSlotsById(CounsellorSlotDto request) throws ParseException;
 }
