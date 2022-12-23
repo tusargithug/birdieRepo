@@ -38,12 +38,17 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
 
     @Override
     public String createQuestion(List<QuestionDto> questionDtos) {
-       for (QuestionDto o : questionDtos){
+        for (QuestionDto o : questionDtos) {
             Set<MtOptions> mtOptions = new HashSet<>();
             MtQuestion question = new MtQuestion();
             question.setQuestion(o.getQuestion());
-            question.setQuestionCalType(QuestionCalType.valueOf(o.getQuestionCalType()));
-            question.setSequence(o.getSequence());
+            if (o.getQuestionCalType() != null) {
+                question.setQuestionCalType(QuestionCalType.valueOf(o.getQuestionCalType()));
+            }
+            if (o.getSequence() != null) {
+                question.setSequence(o.getSequence());
+            }
+
             if (o.getPsychometricTestId() != null) {
                 Optional<PsychometricTest> optionalPsychometricTest = psychometricTestRepo.findById(o.getPsychometricTestId());
                 if (optionalPsychometricTest.isPresent()) {
@@ -65,10 +70,13 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
             }
             question.setSearchKey(getAppUserSearchKey(question));
             question = questionRepo.save(question);
-            for(OptionsDto optionsDto: o.getOptionsDtoList()){
+            for (OptionsDto optionsDto : o.getOptionsDtoList()) {
                 MtOptions option = new MtOptions();
                 option.setQuestion(question);
                 option.setTextAnswer(optionsDto.getTextAnswer());
+                if (optionsDto.getIsCorrect().equals(Boolean.TRUE)) {
+                    option.setIsCorrect(optionsDto.getIsCorrect());
+                }
                 if (optionsDto.getUserCourseId() != null) {
                     Optional<UserCourse> optionalUserCourse = userCourseRepo.findById(optionsDto.getUserCourseId());
                     if (optionalUserCourse.isPresent()) {
@@ -164,10 +172,16 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
                         question.setChapter(chapterOptional.get());
                     }
                 }
+                Set<MtOptions> optionsList = question.getMtOptions();
+                for (MtOptions mtOptions : optionsList) {
+                    mtOptions.setQuestion(question);
+                    mtOptions.setTextAnswer(request.getTextAnswer());
+                    optionsRepo.save(mtOptions);
+                }
                 question.setSearchKey(getAppUserSearchKey(question));
                 questionRepo.save(question);
-                return "update question successfully";
             }
+            return "update question successfully";
         }
         return "this question id not in database";
     }

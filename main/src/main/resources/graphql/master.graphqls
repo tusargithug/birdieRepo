@@ -186,6 +186,7 @@ type MtOptions{
     textAnswer:String
     question:MtQuestion
     userCourse:UserCourse
+    isCorrect:Boolean
 }
 type UserCourse{
     user:AppUser
@@ -292,12 +293,14 @@ input QuestionDto {
     isActive:Boolean
     optionsDtoList:[OptionsDto]
     chapterId:Int
+    textAnswer:String
 }
 input OptionsDto{
     id:Int
     textAnswer:String
     questionId:Int
     userCourseId:Int
+    isCorrect:Boolean
 }
 input TimeSlotDto{
     appUserId:Int

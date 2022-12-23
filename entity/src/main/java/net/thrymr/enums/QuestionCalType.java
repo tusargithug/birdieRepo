@@ -1,6 +1,5 @@
 package net.thrymr.enums;
 
-import javax.xml.validation.Validator;
 
 public enum QuestionCalType {
 	FORWARD, REVERSE, NONE;
