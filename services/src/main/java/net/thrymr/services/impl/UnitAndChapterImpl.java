@@ -213,7 +213,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
             pageable = PageRequest.of(chapterDto.getPageNumber(), chapterDto.getPageSize());
         }
         if (chapterDto.getPageNumber() != null && chapterDto.getPageSize() != null) {
-            pageable = PageRequest.of(chapterDto.getPageNumber(), chapterDto.getPageSize(),Sort.Direction.DESC, "createdOn");
+            pageable = PageRequest.of(chapterDto.getPageNumber(), chapterDto.getPageSize(), Sort.Direction.DESC, "createdOn");
         }
         if (chapterDto.getIsSorting() != null && chapterDto.getIsSorting().equals(Boolean.TRUE)) {
             pageable = PageRequest.of(chapterDto.getPageNumber(), chapterDto.getPageSize(), Sort.Direction.ASC, "chapterName");
@@ -221,7 +221,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
             pageable = PageRequest.of(chapterDto.getPageNumber(), chapterDto.getPageSize(), Sort.Direction.DESC, "chapterName");
         }
         //filters
-            Specification<Chapter> chapterSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
+        Specification<Chapter> chapterSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> addUnitPredicate = new ArrayList<>();
             Join<Chapter, MtQuestion> questionJoin = root.join("questionList");
             if (chapterDto.getIsActive() != null && chapterDto.getIsActive().equals(Boolean.TRUE)) {
@@ -243,7 +243,14 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                 Predicate question = criteriaBuilder.and(questionJoin.get("id").in(chapterDto.getQuestionId()));
                 addUnitPredicate.add(question);
             }
-
+            Predicate isDeletedPredicate = criteriaBuilder.equal(root.get("isDeleted"), Boolean.FALSE);
+            addUnitPredicate.add(isDeletedPredicate);
+            if (Validator.isValid(chapterDto.getSearchKey())) {
+                Predicate searchPredicate = criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get("searchKey")),
+                        "%" + chapterDto.getSearchKey().toLowerCase() + "%");
+                addUnitPredicate.add(searchPredicate);
+            }
             return criteriaBuilder.and(addUnitPredicate.toArray(new Predicate[0]));
         });
         PaginationResponse paginationResponse = new PaginationResponse();
@@ -267,14 +274,14 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
 
     @Override
     public Chapter getChapterById(Long id) {
-       Chapter chapter;
-       if (Validator.isValid(id)) {
-           Optional<Chapter> optionalAppUser = chapterRepo.findById(id);
-           if (optionalAppUser.isPresent() && optionalAppUser.get().getIsActive().equals(Boolean.TRUE)) {
-               chapter = optionalAppUser.get();
-               return chapter;
-           }
-       }
+        Chapter chapter;
+        if (Validator.isValid(id)) {
+            Optional<Chapter> optionalAppUser = chapterRepo.findById(id);
+            if (optionalAppUser.isPresent() && optionalAppUser.get().getIsActive().equals(Boolean.TRUE)) {
+                chapter = optionalAppUser.get();
+                return chapter;
+            }
+        }
         return new Chapter();
     }
 
