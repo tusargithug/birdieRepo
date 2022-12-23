@@ -223,7 +223,6 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         //filters
         Specification<Chapter> chapterSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> addUnitPredicate = new ArrayList<>();
-            Join<Chapter, MtQuestion> questionJoin = root.join("questionList");
             if (chapterDto.getIsActive() != null && chapterDto.getIsActive().equals(Boolean.TRUE)) {
                 Predicate isActive = criteriaBuilder.and(root.get("isActive").in(chapterDto.getIsActive()));
                 addUnitPredicate.add(isActive);
@@ -239,11 +238,6 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                 Predicate createdOn = criteriaBuilder.and(root.get("createdOn").in(chapterDto.getAddedOn()));
                 addUnitPredicate.add(createdOn);
             }
-            if (chapterDto.getQuestionId() != null) {
-                Predicate question = criteriaBuilder.and(questionJoin.get("id").in(chapterDto.getQuestionId()));
-                addUnitPredicate.add(question);
-            }
-
             return criteriaBuilder.and(addUnitPredicate.toArray(new Predicate[0]));
         });
         PaginationResponse paginationResponse = new PaginationResponse();

@@ -69,7 +69,7 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
                 return "This counsellor id not present in database";
             }
             for (Date date : dateList) {
-                slot.getCounsellor().setAvailableSlots( slot.getCounsellor().getAvailableSlots() + 12);
+                slot.getCounsellor().setAvailableSlots(slot.getCounsellor().getAvailableSlots() + 12);
                 for (String slotTimings : request.getSlotTimings()) {
                     slot.getCounsellor().setAvailableSlots(slot.getCounsellor().getAvailableSlots() - 1);
                 }
@@ -218,10 +218,24 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
 
     @Override
     public String updateCounsellorSlot(CounsellorSlotDto request) throws ParseException {
+        Date fromDate = DateUtils.toFormatStringToDate(request.getFromDate(), Constants.DATE_FORMAT);
+        Date toDate = DateUtils.toFormatStringToDate(request.getToDate(), Constants.DATE_FORMAT);
+        List<LocalTime> slotTimingsFromRequest = new ArrayList<>();
+        for (String slotTime : request.getSlotTimings()) {
+            slotTimingsFromRequest.add(DateUtils.toParseLocalTime(slotTime, Constants.TIME_FORMAT_2));
+        }
+        long interval = 86400000; // 1 hour in milliseconds
+        long endTime = toDate.getTime(); // create your endtime here, possibly using Calendar or Date
+        long curTime = fromDate.getTime();
+        List<Date> dateList = new ArrayList<>();
+        while (curTime <= endTime) {
+            dateList.add(new Date(curTime));
+            curTime += interval;
+        }
+        Calendar cal = Calendar.getInstance();
         List<CounsellorSlotTimings> counsellorSlotTimingsList = new ArrayList<>();
         if (Validator.isValid(request.getCounsellorId())) {
             List<CounsellorSlot> counsellorSlotList = counsellorSlotRepo.findAllByCounsellorId(request.getCounsellorId());
-            CounsellorSlot slot = null;
             if (!counsellorSlotList.isEmpty()) {
                 for (CounsellorSlot counsellorSlot : counsellorSlotList) {
                     Optional<Counsellor> optionalCounsellor = counsellorRepo.findById(request.getCounsellorId());
@@ -240,10 +254,6 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
                     counsellorSlotRepo.save(counsellorSlot);
                 }
                 if (request.getSlotTimings() != null && !request.getSlotTimings().isEmpty()) {
-                    List<LocalTime> slotTimingsFromRequest = new ArrayList<>();
-                    for (String slotTime : request.getSlotTimings()) {
-                        slotTimingsFromRequest.add(DateUtils.toParseLocalTime(slotTime, Constants.TIME_FORMAT_2));
-                    }
                     if (!slotTimingsFromRequest.isEmpty()) {
                         Optional<Counsellor> optionalCounsellor1 = counsellorRepo.findById(request.getCounsellorId());
                         Counsellor counsellor = null;
@@ -251,20 +261,9 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
                             counsellor = optionalCounsellor1.get();
                         }
                         for (LocalTime slotTime : slotTimingsFromRequest) {
-                            Date fromDate = DateUtils.toFormatStringToDate(request.getFromDate(), Constants.DATE_FORMAT);
-                            Date toDate = DateUtils.toFormatStringToDate(request.getToDate(), Constants.DATE_FORMAT);
-                            long interval = 86400000; // 1 hour in milliseconds
-                            long endTime = toDate.getTime(); // create your endtime here, possibly using Calendar or Date
-                            long curTime = fromDate.getTime();
-                            List<Date> dateList = new ArrayList<>();
-                            while (curTime <= endTime) {
-                                dateList.add(new Date(curTime));
-                                curTime += interval;
-                            }
                             for (Date date : dateList) {
-                                Calendar cal = Calendar.getInstance();
                                 cal.setTime(date);
-                                if (!counsellorSlotTimingsRepo.existsBySlotTimingAndCounsellorIdAndSlotDateAndSlotDay(slotTime, request.getCounsellorId(), date, DayOfWeek.of(cal.get(Calendar.DAY_OF_WEEK)))) {
+                                if (!counsellorSlotTimingsRepo.existsBySlotTimingAndCounsellorIdAndSlotDate(slotTime, request.getCounsellorId(), date)) {
                                     CounsellorSlotTimings insertNewRecord = new CounsellorSlotTimings();
                                     insertNewRecord.setCounsellor(counsellor);
                                     insertNewRecord.setSlotStatus(SlotStatus.BOOKED);
@@ -287,6 +286,9 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
                                         if (!insertNewRecord.getSlotDays().contains(slotDay)) {
                                             insertNewRecord.setSlotDays(request.getSlotDays());
                                         }
+                                    }
+                                    if (!counsellorSlotTimingsRepo.existsBySlotDateAndCounsellorId(date, request.getCounsellorId())) {
+                                        insertNewRecord.getCounsellor().setAvailableSlots(insertNewRecord.getCounsellor().getAvailableSlots() + 12);
                                     }
                                     insertNewRecord.getCounsellor().setAvailableSlots(insertNewRecord.getCounsellor().getAvailableSlots() - 1);
                                     insertNewRecord.setSearchKey(getCounsellorSlotTimingsSearchKey(insertNewRecord));
