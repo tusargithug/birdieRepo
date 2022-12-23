@@ -237,7 +237,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                 addUnitPredicate.add(createdOn);
             }
             if (chapterDto.getQuestionId() != null) {
-                Predicate question = criteriaBuilder.and(root.get("question").in(chapterDto.getQuestionId()));
+                Predicate question = criteriaBuilder.and(root.get("id").in(chapterDto.getQuestionId()));
                 addUnitPredicate.add(question);
             }
 

@@ -61,5 +61,5 @@ public class Counsellor extends BaseEntity {
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private Vendor vendor;
 
-    private int availableSlots = 12;
+    private int availableSlots;
 }

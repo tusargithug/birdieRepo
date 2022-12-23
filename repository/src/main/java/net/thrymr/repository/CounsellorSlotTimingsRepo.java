@@ -14,13 +14,9 @@ import java.util.List;
 public interface CounsellorSlotTimingsRepo extends JpaRepository<CounsellorSlotTimings,Long>, JpaSpecificationExecutor<CounsellorSlotTimings> {
     List<CounsellorSlotTimings> findAllByCounsellorId(Long counsellorId);
 
-    boolean existsBySlotTimingAndCounsellorId(LocalTime slotTime, Long counsellorId);
-
-    List<CounsellorSlotTimings> findBySlotTimingAndCounsellorId(LocalTime slotTime, Long counsellorId);
-
     boolean existsBySlotTimingAndCounsellorIdAndSlotDateAndSlotDay(LocalTime slotTime, Long counsellorId, Date date, DayOfWeek of);
 
     List<CounsellorSlotTimings> findAllBySlotTimingAndCounsellorIdAndSlotDateAndSlotDay(LocalTime slotTime, Long counsellorId, Date date, DayOfWeek of);
 
-    boolean existsBySlotTimingAndCounsellorIdAndSlotDateAndSlotDayAndSlotDaysIn(LocalTime slotTime, Long counsellorId, Date date, DayOfWeek of, List<DayOfWeek> slotDays);
+    boolean existsByCounsellorId(Long counsellorId);
 }
