@@ -193,6 +193,7 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
                     counsellorSlotResponse.setIsDeleted(counsellorSlotTimings.getIsDeleted());
                     SlotDetailsResponse slotDetailsResponse = new SlotDetailsResponse();
                     slotDetailsResponse.setSlotTiming(counsellorSlotTimings.getSlotTiming());
+                    slotDetailsResponse.setSlotDay(counsellorSlotTimings.getSlotDay());
                     slotDetailsResponse.setSlotDays(counsellorSlotTimings.getSlotDays());
                     slotDetailsResponse.setSlotDate(counsellorSlotTimings.getSlotDate());
                     slotDetailsResponse.setSlotShift(counsellorSlotTimings.getSlotShift());
