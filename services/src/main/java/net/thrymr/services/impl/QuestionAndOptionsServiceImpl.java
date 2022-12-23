@@ -69,6 +69,9 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
                 MtOptions option = new MtOptions();
                 option.setQuestion(question);
                 option.setTextAnswer(optionsDto.getTextAnswer());
+                if(optionsDto.getIsCorrect().equals(Boolean.TRUE)) {
+                    option.setIsCorrect(optionsDto.getIsCorrect());
+                }
                 if (optionsDto.getUserCourseId() != null) {
                     Optional<UserCourse> optionalUserCourse = userCourseRepo.findById(optionsDto.getUserCourseId());
                     if (optionalUserCourse.isPresent()) {

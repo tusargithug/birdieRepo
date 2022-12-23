@@ -25,4 +25,6 @@ public class MtOptions extends BaseEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	private UserCourse userCourse;
+
+	private Boolean isCorrect;
 }
