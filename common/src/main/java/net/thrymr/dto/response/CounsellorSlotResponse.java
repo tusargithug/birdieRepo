@@ -25,5 +25,7 @@ public class CounsellorSlotResponse {
     private String vendorName;
     private String siteName;
     private String shiftTimings;
+    private Boolean isActive;
+    private Boolean isDeleted;
     private List<SlotDetailsResponse> slotDetailsResponses = new ArrayList<>();
 }
