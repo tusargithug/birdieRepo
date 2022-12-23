@@ -20,11 +20,6 @@ public class QuestionDto {
     private String questionCalType;
     private Long chapterId;
     private Integer Sequence;
-    //TODO questionType
-   // one month
-     //       6 month
-
-    //appoinment
-
+    private String textAnswer;
     private List<OptionsDto> optionsDtoList = new ArrayList<>();
 }
