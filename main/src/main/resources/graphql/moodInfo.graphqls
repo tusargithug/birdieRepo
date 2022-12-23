@@ -779,5 +779,5 @@ type SlotDetailsResponse{
     slotShift:SlotShift
     slotStatus:SlotStatus
     slotDate:String
-    slotDay:DayOfWeek
+    slotDays:[DayOfWeek]
 }

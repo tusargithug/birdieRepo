@@ -21,4 +21,5 @@ public class SlotDetailsResponse {
     private SlotStatus slotStatus;
     private Date slotDate;
     private DayOfWeek slotDay;
+    private List<DayOfWeek> slotDays;
 }

@@ -109,14 +109,15 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
                     counsellorSlotTimings.setSlotDate(date);
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(date);
-                    counsellorSlotTimings.setSlotDay(DayOfWeek.of(cal.get(Calendar.DAY_OF_WEEK)));
+                    DayOfWeek[]Days=new DayOfWeek[]{DayOfWeek.SUNDAY,DayOfWeek.MONDAY,DayOfWeek.TUESDAY,DayOfWeek.WEDNESDAY,DayOfWeek.THURSDAY,DayOfWeek.FRIDAY,DayOfWeek.SATURDAY};
+                    counsellorSlotTimings.setSlotDay(Days[cal.get(Calendar.DAY_OF_WEEK)-1]);
+                    counsellorSlotTimings.setSlotDays(request.getSlotDays());
                     counsellorSlotTimings.setSearchKey(getCounsellorSlotTimingsSearchKey(counsellorSlotTimings));
                     counsellorSlotTimingsList.add(counsellorSlotTimings);
                 }
             }
             counsellorSlotTimingsRepo.saveAll(counsellorSlotTimingsList);
         }
-
         return "Counsellor slots saved successfully";
     }
 
@@ -188,9 +189,12 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
                     counsellorSlotResponse.setShiftTimings(counsellorSlotTimings.getCounsellor().getShiftTimings());
                     counsellorSlotResponse.setVendorName(counsellorSlotTimings.getCounsellor().getVendor().getVendorName());
                     counsellorSlotResponse.setSiteName(counsellorSlotTimings.getCounsellor().getSite().getSiteName());
+                    counsellorSlotResponse.setIsActive(counsellorSlotTimings.getIsActive());
+                    counsellorSlotResponse.setIsDeleted(counsellorSlotTimings.getIsDeleted());
                     SlotDetailsResponse slotDetailsResponse = new SlotDetailsResponse();
                     slotDetailsResponse.setSlotTiming(counsellorSlotTimings.getSlotTiming());
                     slotDetailsResponse.setSlotDay(counsellorSlotTimings.getSlotDay());
+                    slotDetailsResponse.setSlotDays(counsellorSlotTimings.getSlotDays());
                     slotDetailsResponse.setSlotDate(counsellorSlotTimings.getSlotDate());
                     slotDetailsResponse.setSlotShift(counsellorSlotTimings.getSlotShift());
                     slotDetailsResponse.setSlotStatus(counsellorSlotTimings.getSlotStatus());
@@ -199,7 +203,7 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
                         counsellorSlotResponsesList.add(counsellorSlotResponse);
                     }
                 }
-                return counsellorSlotResponsesList;
+                return counsellorSlotResponsesList.stream().filter(counsellorSlotResponse -> counsellorSlotResponse.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList());
             }
         }
         return new ArrayList<>();
@@ -207,7 +211,7 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
 
     @Override
     public String updateCounsellorSlot(CounsellorSlotDto request) throws ParseException {
-        List<CounsellorSlotTimings> counsellorSlotTimingsList2 = new ArrayList<>();
+        List<CounsellorSlotTimings> counsellorSlotTimingsList = new ArrayList<>();
         if (Validator.isValid(request.getCounsellorId())) {
             List<CounsellorSlot> counsellorSlotList = counsellorSlotRepo.findAllByCounsellorId(request.getCounsellorId());
             CounsellorSlot slot = null;
@@ -253,36 +257,51 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
                             for (Date date : dateList) {
                                 Calendar cal = Calendar.getInstance();
                                 cal.setTime(date);
-                                if (!counsellorSlotTimingsRepo.existsBySlotTimingAndCounsellorIdAndSlotDateAndSlotDay(slotTime, request.getCounsellorId(), date, DayOfWeek.of(cal.get(Calendar.DAY_OF_WEEK)))) {
-                                    CounsellorSlotTimings insertNewRecord = new CounsellorSlotTimings();
-                                    insertNewRecord.setCounsellor(counsellor);
-                                    insertNewRecord.setSlotStatus(SlotStatus.BOOKED);
-                                    insertNewRecord.setSlotTiming(DateUtils.toParseLocalTime(String.valueOf(slotTime), Constants.TIME_FORMAT_2));
-                                    LocalTime localTime = DateUtils.toParseLocalTime(String.valueOf(slotTime), Constants.TIME_FORMAT_2);
-                                    LocalTime localTime1 = DateUtils.toParseLocalTime("12:00", Constants.TIME_FORMAT_2);
-                                    LocalTime localTime2 = DateUtils.toParseLocalTime("16:00", Constants.TIME_FORMAT_2);
-                                    if (localTime.isBefore(localTime1)) {
-                                        insertNewRecord.setSlotShift(SlotShift.MORNING);
+                                    if (!counsellorSlotTimingsRepo.existsBySlotTimingAndCounsellorIdAndSlotDateAndSlotDay(slotTime, request.getCounsellorId(), date, DayOfWeek.of(cal.get(Calendar.DAY_OF_WEEK)))) {
+                                        CounsellorSlotTimings insertNewRecord = new CounsellorSlotTimings();
+                                        insertNewRecord.setCounsellor(counsellor);
+                                        insertNewRecord.setSlotStatus(SlotStatus.BOOKED);
+                                        insertNewRecord.setSlotTiming(DateUtils.toParseLocalTime(String.valueOf(slotTime), Constants.TIME_FORMAT_2));
+                                        LocalTime localTime = DateUtils.toParseLocalTime(String.valueOf(slotTime), Constants.TIME_FORMAT_2);
+                                        LocalTime localTime1 = DateUtils.toParseLocalTime("12:00", Constants.TIME_FORMAT_2);
+                                        LocalTime localTime2 = DateUtils.toParseLocalTime("16:00", Constants.TIME_FORMAT_2);
+                                        if (localTime.isBefore(localTime1)) {
+                                            insertNewRecord.setSlotShift(SlotShift.MORNING);
+                                        }
+                                        if (localTime.equals(localTime1) || (localTime.isAfter(localTime1) && localTime.isBefore(localTime2))) {
+                                            insertNewRecord.setSlotShift(SlotShift.AFTERNOON);
+                                        }
+                                        if (localTime.equals(localTime2) || localTime.isAfter(localTime2)) {
+                                            insertNewRecord.setSlotShift(SlotShift.EVENING);
+                                        }
+                                        insertNewRecord.setSlotDate(date);
+                                        insertNewRecord.setSlotDay(DayOfWeek.of(cal.get(Calendar.DAY_OF_WEEK)));
+                                        for (DayOfWeek slotDay : request.getSlotDays()) {
+                                            if (!insertNewRecord.getSlotDays().contains(slotDay)) {
+                                                insertNewRecord.setSlotDays(request.getSlotDays());
+                                            }
+                                        }
+                                        insertNewRecord.setSearchKey(getCounsellorSlotTimingsSearchKey(insertNewRecord));
+                                        counsellorSlotTimingsList.add(insertNewRecord);
+                                    }else {
+                                        List<CounsellorSlotTimings> counsellorSlotTimingsList1 = counsellorSlotTimingsRepo.findAll();
+                                        for(CounsellorSlotTimings counsellorSlotTimings : counsellorSlotTimingsList1) {
+                                            for(DayOfWeek slotDay1 : request.getSlotDays()) {
+                                                if(!counsellorSlotTimings.getSlotDays().contains(slotDay1) && (counsellorSlotTimings.getSlotTiming().equals(DateUtils.toParseLocalTime(String.valueOf(slotTime), Constants.TIME_FORMAT_2))
+                                                        && !counsellorSlotTimings.getSlotDate().equals(DateUtils.toFormatStringToDate(request.getFromDate(), Constants.DATE_FORMAT)))) {
+                                                    counsellorSlotTimings.getSlotDays().add(slotDay1);
+                                                }
+                                            }
+                                        }
                                     }
-                                    if (localTime.equals(localTime1) || (localTime.isAfter(localTime1) && localTime.isBefore(localTime2))) {
-                                        insertNewRecord.setSlotShift(SlotShift.AFTERNOON);
-                                    }
-                                    if (localTime.equals(localTime2) || localTime.isAfter(localTime2)) {
-                                        insertNewRecord.setSlotShift(SlotShift.EVENING);
-                                    }
-                                    insertNewRecord.setSlotDate(date);
-                                    insertNewRecord.setSlotDay(DayOfWeek.of(cal.get(Calendar.DAY_OF_WEEK)));
-                                    insertNewRecord.setSearchKey(getCounsellorSlotTimingsSearchKey(insertNewRecord));
-                                    counsellorSlotTimingsList2.add(insertNewRecord);
+                                    counsellorSlotTimingsRepo.saveAll(counsellorSlotTimingsList);
                                 }
-                                counsellorSlotTimingsRepo.saveAll(counsellorSlotTimingsList2);
                             }
                         }
                         return "Counsellor slots updated successfully";
                     }
                 }
             }
-        }
         return "This counsellor id not present in slot database";
     }
     @Override
@@ -313,6 +332,9 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
                                 counsellorSlotTimings.setIsActive(Boolean.FALSE);
                                 counsellorSlotTimings.setIsDeleted(Boolean.TRUE);
                                 counsellorSlotTimings.setSlotStatus(SlotStatus.DELETED);
+                                for(DayOfWeek slotDay : request.getSlotDays()){
+                                    counsellorSlotTimings.getSlotDays().remove(slotDay);
+                                }
                                 counsellorSlotTimingsRepo.save(counsellorSlotTimings);
                             }
                         }

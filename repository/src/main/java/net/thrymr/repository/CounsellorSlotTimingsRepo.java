@@ -21,4 +21,6 @@ public interface CounsellorSlotTimingsRepo extends JpaRepository<CounsellorSlotT
     boolean existsBySlotTimingAndCounsellorIdAndSlotDateAndSlotDay(LocalTime slotTime, Long counsellorId, Date date, DayOfWeek of);
 
     List<CounsellorSlotTimings> findAllBySlotTimingAndCounsellorIdAndSlotDateAndSlotDay(LocalTime slotTime, Long counsellorId, Date date, DayOfWeek of);
+
+    boolean existsBySlotTimingAndCounsellorIdAndSlotDateAndSlotDayAndSlotDaysIn(LocalTime slotTime, Long counsellorId, Date date, DayOfWeek of, List<DayOfWeek> slotDays);
 }
