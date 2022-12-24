@@ -22,7 +22,6 @@ public class PaginationResponse {
     private List<MiniSession> miniSessionList = new ArrayList<>();
     private List<MtMeditation> meditationList = new ArrayList<>();
     private List<MtWorksheet> worksheetList = new ArrayList<>();
-    private List<Chapter> chapterList = new ArrayList<>();
     private List<Unit> unitList = new ArrayList<>();
     private List<CounsellorEmployee> counsellorEmployeeList = new ArrayList<>();
     private List<MtPsychoEducation> psychoEducationList = new ArrayList<>();

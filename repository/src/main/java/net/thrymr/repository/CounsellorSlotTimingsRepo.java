@@ -23,4 +23,6 @@ public interface CounsellorSlotTimingsRepo extends JpaRepository<CounsellorSlotT
     boolean existsBySlotDateAndCounsellorId(Date date, Long counsellorId);
 
     boolean existsBySlotTimingAndCounsellorIdAndSlotDate(LocalTime slotTime, Long counsellorId, Date date);
+
+    List<CounsellorSlotTimings> findAllBySlotTimingAndCounsellorIdAndSlotDate(LocalTime slotTime, Long counsellorId, Date date);
 }

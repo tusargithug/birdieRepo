@@ -281,7 +281,9 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
                                         insertNewRecord.setSlotShift(SlotShift.EVENING);
                                     }
                                     insertNewRecord.setSlotDate(date);
-                                    insertNewRecord.setSlotDay(DayOfWeek.of(cal.get(Calendar.DAY_OF_WEEK)));
+                                    cal.setTime(date);
+                                    DayOfWeek[] Days = new DayOfWeek[]{DayOfWeek.SUNDAY, DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY};
+                                    insertNewRecord.setSlotDay(Days[cal.get(Calendar.DAY_OF_WEEK) - 1]);
                                     for (DayOfWeek slotDay : request.getSlotDays()) {
                                         if (!insertNewRecord.getSlotDays().contains(slotDay)) {
                                             insertNewRecord.setSlotDays(request.getSlotDays());
@@ -294,11 +296,10 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
                                     insertNewRecord.setSearchKey(getCounsellorSlotTimingsSearchKey(insertNewRecord));
                                     counsellorSlotTimingsList.add(insertNewRecord);
                                 } else {
-                                    List<CounsellorSlotTimings> counsellorSlotTimingsList1 = counsellorSlotTimingsRepo.findAll();
+                                    List<CounsellorSlotTimings> counsellorSlotTimingsList1 = counsellorSlotTimingsRepo.findAllBySlotTimingAndCounsellorIdAndSlotDate(slotTime, request.getCounsellorId(), date);;
                                     for (CounsellorSlotTimings counsellorSlotTimings : counsellorSlotTimingsList1) {
                                         for (DayOfWeek slotDay1 : request.getSlotDays()) {
-                                            if (!counsellorSlotTimings.getSlotDays().contains(slotDay1) && (counsellorSlotTimings.getSlotTiming().equals(DateUtils.toParseLocalTime(String.valueOf(slotTime), Constants.TIME_FORMAT_2))
-                                                    && !counsellorSlotTimings.getSlotDate().equals(DateUtils.toFormatStringToDate(request.getFromDate(), Constants.DATE_FORMAT)))) {
+                                            if (counsellorSlotTimingsRepo.existsBySlotTimingAndCounsellorIdAndSlotDate(slotTime, request.getCounsellorId(), date) && !counsellorSlotTimings.getSlotDays().contains(slotDay1)){
                                                 counsellorSlotTimings.getSlotDays().add(slotDay1);
                                             }
                                         }
