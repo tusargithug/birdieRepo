@@ -691,7 +691,6 @@ type PaginationResponse{
     miniSessionList:[MiniSession]
     meditationList:[MtMeditation]
     worksheetList:[MtWorksheet]
-    chapterList:[Chapter]
     psychoEducationList:[MtPsychoEducation]
     unitList:[Unit]
     counsellorList:[Counsellor]

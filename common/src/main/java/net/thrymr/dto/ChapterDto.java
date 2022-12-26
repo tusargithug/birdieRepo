@@ -20,8 +20,6 @@ public class ChapterDto {
     private String addedOn;
     private String videoId;
     private String profilePictureId;
-
     private Boolean check;
-
     private String searchKey;
 }

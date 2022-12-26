@@ -221,9 +221,8 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
             pageable = PageRequest.of(chapterDto.getPageNumber(), chapterDto.getPageSize(), Sort.Direction.DESC, "chapterName");
         }
         //filters
-        Specification<Chapter> chapterSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
+        Specification<Unit> chapterSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> addUnitPredicate = new ArrayList<>();
-            Join<Chapter, MtQuestion> questionJoin = root.join("questionList");
             if (chapterDto.getIsActive() != null && chapterDto.getIsActive().equals(Boolean.TRUE)) {
                 Predicate isActive = criteriaBuilder.and(root.get("isActive").in(chapterDto.getIsActive()));
                 addUnitPredicate.add(isActive);
@@ -239,10 +238,6 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                 Predicate createdOn = criteriaBuilder.and(root.get("createdOn").in(chapterDto.getAddedOn()));
                 addUnitPredicate.add(createdOn);
             }
-            if (chapterDto.getQuestionId() != null) {
-                Predicate question = criteriaBuilder.and(questionJoin.get("id").in(chapterDto.getQuestionId()));
-                addUnitPredicate.add(question);
-            }
             Predicate isDeletedPredicate = criteriaBuilder.equal(root.get("isDeleted"), Boolean.FALSE);
             addUnitPredicate.add(isDeletedPredicate);
             if (Validator.isValid(chapterDto.getSearchKey())) {
@@ -251,22 +246,20 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                         "%" + chapterDto.getSearchKey().toLowerCase() + "%");
                 addUnitPredicate.add(searchPredicate);
             }
+            Predicate isDeleted = criteriaBuilder.equal(root.get("isDeleted"), Boolean.FALSE);
+            addUnitPredicate.add(isDeleted);
             return criteriaBuilder.and(addUnitPredicate.toArray(new Predicate[0]));
         });
         PaginationResponse paginationResponse = new PaginationResponse();
         if (chapterDto.getPageSize() != null && chapterDto.getPageNumber() != null) {
-            Page<Chapter> chapterObjectives = chapterRepo.findAll(chapterSpecification, pageable);
-            if (chapterObjectives.getContent() != null) {
-                paginationResponse.setChapterList(new ArrayList<>(chapterObjectives.getContent()));
-                paginationResponse.setTotalPages(chapterObjectives.getTotalPages());
-                paginationResponse.setTotalElements(chapterObjectives.getTotalElements());
-                return paginationResponse;
-            }
-        } else {
-            List<Chapter> chapterList = chapterRepo.findAll(chapterSpecification);
-            if (!chapterList.isEmpty()) {
-                paginationResponse.setChapterList(chapterList.stream().toList());
-                return paginationResponse;
+            Page<Unit> unitObjectives = unitRpo.findAll(chapterSpecification, pageable);
+            if (!unitObjectives.getContent().isEmpty()) {
+                if (chapterDto.getUnitId() != null) {
+                    paginationResponse.setUnitList(unitObjectives.stream().filter(unit -> unit.getId().equals(chapterDto.getUnitId())).collect(Collectors.toList()));
+                    paginationResponse.setTotalPages(unitObjectives.getTotalPages());
+                    paginationResponse.setTotalElements(unitObjectives.getTotalElements());
+                    return paginationResponse;
+                }
             }
         }
         return new PaginationResponse();
@@ -308,6 +301,18 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         }
         if (unit.getCreatedOn() != null) {
             searchKey = searchKey + " " + unit.getCreatedOn();
+        }
+        if (unit.getChapters() != null) {
+            searchKey = searchKey + " " + unit.getChapters().stream().map(Chapter::getChapterName);
+        }
+        if (unit.getChapters() != null) {
+            searchKey = searchKey + " " + unit.getChapters().stream().map(Chapter::getDescription);
+        }
+        if (unit.getChapters() != null) {
+            searchKey = searchKey + " " + unit.getChapters().stream().map(Chapter::getVideo);
+        }
+        if (unit.getChapters() != null) {
+            searchKey = searchKey + " " + unit.getChapters().stream().map(Chapter::getProfilePicture);
         }
         return searchKey;
     }
