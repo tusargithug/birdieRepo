@@ -102,9 +102,9 @@ type Mutation {
     updateRole(input:RolesDto):String!
     deleteRoleById(id:ID):String!
     updateUnitById(input:UnitDto):String!
-    updateChaptersById(input:ChapterDto):String!
+    updateChaptersById(input:ChapterDto):Chapter!
     saveUnit(input:UnitDto):String!
-    saveChapter(input:ChapterDto):String!
+    saveChapter(input:ChapterDto):Chapter!
     deleteUnitById(id:ID):String!
     deleteChapterById(id:ID):String!
     createTeam(input:TeamDto):Team
