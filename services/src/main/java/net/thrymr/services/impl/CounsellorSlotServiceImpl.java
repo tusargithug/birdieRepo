@@ -296,10 +296,10 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
                                     insertNewRecord.setSearchKey(getCounsellorSlotTimingsSearchKey(insertNewRecord));
                                     counsellorSlotTimingsList.add(insertNewRecord);
                                 } else {
-                                    List<CounsellorSlotTimings> counsellorSlotTimingsList1 = counsellorSlotTimingsRepo.findAllBySlotTimingAndCounsellorIdAndSlotDate(slotTime, request.getCounsellorId(), date);;
+                                    List<CounsellorSlotTimings> counsellorSlotTimingsList1 = counsellorSlotTimingsRepo.findAllBySlotTimingAndCounsellorIdAndSlotDate(slotTime, request.getCounsellorId(), date);
                                     for (CounsellorSlotTimings counsellorSlotTimings : counsellorSlotTimingsList1) {
                                         for (DayOfWeek slotDay1 : request.getSlotDays()) {
-                                            if (counsellorSlotTimingsRepo.existsBySlotTimingAndCounsellorIdAndSlotDate(slotTime, request.getCounsellorId(), date) && !counsellorSlotTimings.getSlotDays().contains(slotDay1)){
+                                            if (counsellorSlotTimingsRepo.existsBySlotTimingAndCounsellorIdAndSlotDate(slotTime, request.getCounsellorId(), date) && !counsellorSlotTimings.getSlotDays().contains(slotDay1)) {
                                                 counsellorSlotTimings.getSlotDays().add(slotDay1);
                                             }
                                         }
@@ -315,6 +315,7 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
         }
         return "This counsellor id not present in slot database";
     }
+
     @Override
     public String removeCounsellorSlotsById(CounsellorSlotDto request) throws ParseException {
         if (Validator.isValid(request.getCounsellorId()) && counsellorSlotTimingsRepo.existsByCounsellorId(request.getCounsellorId())) {
@@ -343,7 +344,7 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
                                 counsellorSlotTimings.setIsActive(Boolean.FALSE);
                                 counsellorSlotTimings.setIsDeleted(Boolean.TRUE);
                                 counsellorSlotTimings.setSlotStatus(SlotStatus.DELETED);
-                                for(DayOfWeek slotDay : request.getSlotDays()){
+                                for (DayOfWeek slotDay : request.getSlotDays()) {
                                     counsellorSlotTimings.getSlotDays().remove(slotDay);
                                 }
                                 counsellorSlotTimingsRepo.save(counsellorSlotTimings);
@@ -356,14 +357,15 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
         }
         return "This counsellor id is not present database";
     }
+
     @Override
     public String deleteAllCounsellorSlots() {
         List<CounsellorSlot> counsellorSlotList = counsellorSlotRepo.findAll();
         if (!counsellorSlotList.isEmpty()) {
             for (CounsellorSlot counsellorSlot : counsellorSlotList) {
-                    counsellorSlot.setIsActive(Boolean.FALSE);
-                    counsellorSlot.setIsDeleted(Boolean.TRUE);
-                    counsellorSlotRepo.save(counsellorSlot);
+                counsellorSlot.setIsActive(Boolean.FALSE);
+                counsellorSlot.setIsDeleted(Boolean.TRUE);
+                counsellorSlotRepo.save(counsellorSlot);
             }
             return "deleted successfully";
         }
@@ -447,10 +449,10 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
         if (counsellorSlotTimings.getSlotTiming() != null) {
             searchKey = searchKey + " " + counsellorSlotTimings.getSlotTiming();
         }
-        if (counsellorSlotTimings.getCounsellor().getShiftTimings() != null ){
+        if (counsellorSlotTimings.getCounsellor().getShiftTimings() != null) {
             searchKey = searchKey + " " + counsellorSlotTimings.getCounsellor().getShiftTimings();
         }
-        if(counsellorSlotTimings.getCounsellor().getAvailableSlots() != 0) {
+        if (counsellorSlotTimings.getCounsellor().getAvailableSlots() != 0) {
             searchKey = searchKey + " " + counsellorSlotTimings.getCounsellor().getAvailableSlots();
         }
         return searchKey;
