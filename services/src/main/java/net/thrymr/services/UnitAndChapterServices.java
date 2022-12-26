@@ -20,9 +20,9 @@ public interface UnitAndChapterServices {
 
     String deleteUnitById(Long id);
 
-    String saveChapter(ChapterDto request);
+    Chapter saveChapter(ChapterDto request);
 
-    String updateChaptersById(ChapterDto  dto);
+    Chapter updateChaptersById(ChapterDto  dto);
 
     List<Chapter> getAllChapters();
 

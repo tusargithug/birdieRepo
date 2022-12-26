@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.thrymr.dto.*;
 import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
 import net.thrymr.dto.slotRequest.TimeSlotDto;
+import net.thrymr.model.Chapter;
 import net.thrymr.model.Team;
 import net.thrymr.services.*;
 import org.slf4j.Logger;
@@ -285,7 +286,7 @@ public class MutationResolver implements GraphQLMutationResolver {
     }
 
     @MutationMapping(name = "saveChapter")
-    public String saveChapter(@Argument(name = "input") ChapterDto request) {
+    public Chapter saveChapter(@Argument(name = "input") ChapterDto request) {
         return unitAndChapterServices.saveChapter(request);
     }
 
@@ -295,7 +296,7 @@ public class MutationResolver implements GraphQLMutationResolver {
     }
 
     @MutationMapping(name = "updateChaptersById")
-    public String updateChaptersById(ChapterDto dto) {
+    public Chapter updateChaptersById(ChapterDto dto) {
         return unitAndChapterServices.updateChaptersById(dto);
     }
 
