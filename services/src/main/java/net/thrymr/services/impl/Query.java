@@ -466,7 +466,7 @@ public class Query implements GraphQLQueryResolver {
     public List<VendorSite> getVendorSiteById(@Argument Long id) {return vendorService.getVendorSiteById(id);}
 
     @QueryMapping(name = "getChapterById")
-    public Chapter getChapterById(@Argument(name = "input") Long id) {
+    public Chapter getChapterById(@Argument Long id) {
         return unitAndChapterServices.getChapterById(id);
     }
 }

@@ -3,6 +3,8 @@ package net.thrymr.controller;
 
 import net.thrymr.FileDocument;
 import net.thrymr.services.FileService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @RestController
 //@CrossOrigin("*")
@@ -61,4 +64,31 @@ public class FileController {
         return fileService.deleteFile(id);
     }
 
+
+
+        private static final Logger logger = LoggerFactory.getLogger(FileController.class);
+
+        @MutationMapping(name = "uploadFileTesting")
+        public FileUploadResult uploadFileTesting(@Argument MultipartFile file) {
+            logger.info("Upload file: name={}", file.getOriginalFilename());
+
+            return new FileUploadResult(UUID.randomUUID());
+        }
+
+    }
+
+    class FileUploadResult {
+        UUID id;
+
+        public FileUploadResult(UUID id) {
+            this.id = id;
+        }
+
+        public UUID getId() {
+            return id;
+        }
+
+        public void setId(UUID id) {
+            this.id = id;
+        }
 }

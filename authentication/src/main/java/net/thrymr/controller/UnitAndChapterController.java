@@ -75,7 +75,7 @@ public class UnitAndChapterController {
     }
 
     @QueryMapping(name = "getChapterById")
-    public Chapter getChapterById(@Argument(name = "input") Long id) {
+    public Chapter getChapterById(@Argument Long id) {
         return unitAndChapterServices.getChapterById(id);
     }
 }

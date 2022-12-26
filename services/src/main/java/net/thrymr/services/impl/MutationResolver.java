@@ -9,6 +9,8 @@ import net.thrymr.dto.slotRequest.TimeSlotDto;
 import net.thrymr.model.Chapter;
 import net.thrymr.model.Team;
 import net.thrymr.services.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -18,10 +20,14 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.Part;
 import java.text.ParseException;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Component
 public class MutationResolver implements GraphQLMutationResolver {
+
+    private static final Logger logger = LoggerFactory.getLogger(MutationResolver.class);
+
     @Autowired
     MoodSourceService moodSourceService;
     @Autowired
@@ -604,6 +610,28 @@ public class MutationResolver implements GraphQLMutationResolver {
     @MutationMapping(name="pauseCounsellorSlotsById")
     public String pauseCounsellorSlotsById(@Argument (name = "input") CounsellorSlotDto request) throws ParseException {
         return counsellorSlotService.pauseCounsellorSlotsById(request);
+    }
+    @MutationMapping(name = "uploadFileTesting")
+    public FileUploadResult uploadFileTesting(@Argument MultipartFile file) {
+        logger.info("Upload file: name={}", file.getOriginalFilename());
+
+        return new FileUploadResult(UUID.randomUUID());
+    }
+
+    class FileUploadResult {
+        UUID id;
+
+        public FileUploadResult(UUID id) {
+            this.id = id;
+        }
+
+        public UUID getId() {
+            return id;
+        }
+
+        public void setId(UUID id) {
+            this.id = id;
+        }
     }
 }
 

@@ -780,3 +780,11 @@ type SlotDetailsResponse{
     slotDate:String
     slotDays:[DayOfWeek]
 }
+
+type FileUploadResult {
+    id: String!
+}
+
+extend type Mutation {
+    uploadFileTesting(file: Upload!): FileUploadResult!
+}

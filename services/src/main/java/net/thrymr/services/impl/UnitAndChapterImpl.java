@@ -261,20 +261,24 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                     return paginationResponse;
                 }
             }
+        }else {
+            List<Unit> unitObjectives = unitRpo.findAll(chapterSpecification);
+            paginationResponse.setUnitList(unitObjectives.stream().filter(unit -> unit.getId().equals(chapterDto.getUnitId())).collect(Collectors.toList()));
+            return paginationResponse;
         }
         return new PaginationResponse();
     }
 
     @Override
     public Chapter getChapterById(Long id) {
-        Chapter chapter;
-        if (Validator.isValid(id)) {
-            Optional<Chapter> optionalAppUser = chapterRepo.findById(id);
-            if (optionalAppUser.isPresent() && optionalAppUser.get().getIsActive().equals(Boolean.TRUE)) {
-                chapter = optionalAppUser.get();
-                return chapter;
-            }
-        }
+       Chapter chapter = null;
+       if (Validator.isValid(id)) {
+           Optional<Chapter> optionalAppUser = chapterRepo.findById(id);
+           if (optionalAppUser.isPresent() && optionalAppUser.get().getIsDeleted().equals(Boolean.FALSE)) {
+               chapter = optionalAppUser.get();
+               return chapter;
+           }
+       }
         return new Chapter();
     }
 
