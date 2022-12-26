@@ -145,16 +145,16 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
     }
 
     @Override
-    public String saveChapter(ChapterDto request) {
+    public Chapter saveChapter(ChapterDto request) {
         Chapter chapter = chapterRepo.save(dtoToChapter(request));
-        return "saved successfully";
+        return chapter;
     }
 
     @Override
-    public String updateChaptersById(ChapterDto dto) {
+    public Chapter updateChaptersById(ChapterDto dto) {
         if (Validator.isValid(dto.getId())) {
             Optional<Chapter> optionalChapter = chapterRepo.findById(dto.getId());
-            Chapter chapter;
+            Chapter chapter = null;
             if (optionalChapter.isPresent()) {
                 chapter = optionalChapter.get();
                 if (Validator.isValid(dto.getChapterName())) {
@@ -180,9 +180,9 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                 }
                 chapterRepo.save(chapter);
             }
-            return "update successfully";
+            return chapter;
         }
-        return "id is not present in database";
+        return new Chapter();
     }
 
     @Override
@@ -237,6 +237,14 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
             if (chapterDto.getAddedOn() != null) {
                 Predicate createdOn = criteriaBuilder.and(root.get("createdOn").in(chapterDto.getAddedOn()));
                 addUnitPredicate.add(createdOn);
+            }
+            Predicate isDeletedPredicate = criteriaBuilder.equal(root.get("isDeleted"), Boolean.FALSE);
+            addUnitPredicate.add(isDeletedPredicate);
+            if (Validator.isValid(chapterDto.getSearchKey())) {
+                Predicate searchPredicate = criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get("searchKey")),
+                        "%" + chapterDto.getSearchKey().toLowerCase() + "%");
+                addUnitPredicate.add(searchPredicate);
             }
             Predicate isDeleted = criteriaBuilder.equal(root.get("isDeleted"), Boolean.FALSE);
             addUnitPredicate.add(isDeleted);

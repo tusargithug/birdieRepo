@@ -30,7 +30,7 @@ public class UnitAndChapterController {
     }
 
     @MutationMapping(name = "saveChapter")
-    public String  saveChapter(@Argument(name = "input") ChapterDto request) {
+    public Chapter  saveChapter(@Argument(name = "input") ChapterDto request) {
         return unitAndChapterServices.saveChapter(request);
     }
 
@@ -39,7 +39,7 @@ public class UnitAndChapterController {
         return unitAndChapterServices.updateUnitById(unitDto);
     }
     @MutationMapping(name="updateChaptersById")
-    public String updateChaptersById(@Argument(name = "input") ChapterDto dto) {
+    public Chapter updateChaptersById(@Argument(name = "input") ChapterDto dto) {
         return unitAndChapterServices.updateChaptersById(dto);
     }
     @MutationMapping(name="deleteUnitById")
