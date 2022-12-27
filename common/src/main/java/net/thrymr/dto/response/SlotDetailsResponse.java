@@ -19,7 +19,7 @@ public class SlotDetailsResponse {
     private LocalTime slotTiming;
     private SlotShift slotShift;
     private SlotStatus slotStatus;
-    private Date slotDate;
+    private List<SlotDateDetailsResponse> slotDates = new ArrayList<>();
     private DayOfWeek slotDay;
     private List<DayOfWeek> slotDays;
 }

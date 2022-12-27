@@ -777,10 +777,12 @@ type SlotDetailsResponse{
     slotTiming:LocalTime
     slotShift:SlotShift
     slotStatus:SlotStatus
-    slotDate:String
+    slotDates:[SlotDateDetailsResponse]
     slotDays:[DayOfWeek]
 }
-
+ type SlotDateDetailsResponse{
+     slotDate:String
+ }
 type FileUploadResult {
     id: String!
 }
