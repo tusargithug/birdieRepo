@@ -109,7 +109,7 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
                     if (localTime.equals(localTime1) || (localTime.isAfter(localTime1) && localTime.isBefore(localTime2))) {
                         counsellorSlotTimings.setSlotShift(SlotShift.AFTERNOON);
                     }
-                    if (localTime.isAfter(localTime2)) {
+                    if (localTime.equals(localTime2) || localTime.isAfter(localTime2)) {
                         counsellorSlotTimings.setSlotShift(SlotShift.EVENING);
                     }
                     counsellorSlotTimings.setSlotDate(date);
