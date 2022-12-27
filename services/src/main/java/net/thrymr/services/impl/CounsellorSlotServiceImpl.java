@@ -359,16 +359,8 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
 
     @Override
     public String deleteAllCounsellorSlots() {
-        List<CounsellorSlot> counsellorSlotList = counsellorSlotRepo.findAll();
-        if (!counsellorSlotList.isEmpty()) {
-            for (CounsellorSlot counsellorSlot : counsellorSlotList) {
-                counsellorSlot.setIsActive(Boolean.FALSE);
-                counsellorSlot.setIsDeleted(Boolean.TRUE);
-                counsellorSlotRepo.save(counsellorSlot);
-            }
-            return "deleted successfully";
-        }
-        return "counsellor List is empty";
+        counsellorSlotTimingsRepo.deleteAll();
+            return "counsellor slots deleted successfully";
     }
 
     @Override
