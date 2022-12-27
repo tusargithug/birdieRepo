@@ -787,4 +787,5 @@ type FileUploadResult {
 
 extend type Mutation {
     uploadFileTesting(file: Upload!): FileUploadResult!
+    testSingleFileUpload(file: Upload): String
 }

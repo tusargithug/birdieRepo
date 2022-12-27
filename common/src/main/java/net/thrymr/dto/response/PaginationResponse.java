@@ -28,5 +28,4 @@ public class PaginationResponse {
     private List<CounsellorSlot> counsellorSlotList = new ArrayList<>();
     private int totalPages = 0;
     private Long totalElements = 0L;
-    private long availableSlot;
 }
