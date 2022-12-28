@@ -183,6 +183,7 @@ type Chapter{
     questionList:[MtQuestion]
 }
 type MtOptions{
+    id:ID
     textAnswer:String
     question:MtQuestion
     userCourse:UserCourse
@@ -198,6 +199,7 @@ type UserCourse{
     isActive:Boolean
 }
 type MtQuestion{
+    id:ID
     question:String
     mtOptions:[MtOptions]
     psychometricTest:PsychometricTest

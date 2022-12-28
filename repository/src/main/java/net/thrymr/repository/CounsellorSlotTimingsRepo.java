@@ -1,5 +1,6 @@
 package net.thrymr.repository;
 
+import net.thrymr.enums.SlotStatus;
 import net.thrymr.model.CounsellorSlotTimings;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -27,4 +28,6 @@ public interface CounsellorSlotTimingsRepo extends JpaRepository<CounsellorSlotT
     List<CounsellorSlotTimings> findAllBySlotTimingAndCounsellorIdAndSlotDate(LocalTime slotTime, Long counsellorId, Date date);
 
     List<CounsellorSlotTimings> findAllBySlotTimingAndCounsellorId(LocalTime slotTiming, Long id);
+
+    List<CounsellorSlotTimings> findAllByCounsellorIdAndSlotStatusNot(Long counsellorId, SlotStatus deleted);
 }
