@@ -71,4 +71,9 @@ public class MoodSourceController {
     public String deleteUserMoodSourceCheckInById(@Argument Long id) {
         return moodSourceService.deleteUserMoodSourceCheckInById(id);
     }
+
+    @QueryMapping(name = "getAllMoodSourceById")
+    public List<MtMoodSource> getAllMoodSourceById(@Argument(name = "input") MoodSourceIntensityRequestDto request) {
+        return moodSourceService.getAllMoodSourceById(request);
+    }
 }

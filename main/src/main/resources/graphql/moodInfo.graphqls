@@ -83,6 +83,8 @@ type Query {
     getChapterById(id:ID):Chapter
     logoutUser:String!
     getLoggedInUser:LoginResponse
+    getAllMoodSourceById(input:MoodSourceIntensityRequestDto):[MtMoodSource]
+    getUnitById(id:ID):Unit
 }
 
 type Mutation {
@@ -140,7 +142,7 @@ type Mutation {
     updateCounsellorSlot(input:CounsellorSlotDto):String!
     removeCounsellorSlotsById(input:CounsellorSlotDto):String!
     createQuestion(input:[QuestionDto]):String!
-    updateQuestionById(input:QuestionDto):String!
+    updateQuestionById(input:[QuestionDto]):String!
     deleteQuestionById(id:ID):String!
     createOptions(input:OptionsDto):String!
     updateOptionById(input:OptionsDto):String!

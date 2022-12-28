@@ -139,49 +139,51 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
     }
 
     @Override
-    public String updateQuestionById(QuestionDto request) {
+    public String updateQuestionById(List<QuestionDto> request) {
         MtQuestion question = null;
-        if (Validator.isValid(request.getId())) {
-            Optional<MtQuestion> optionalQuestion = questionRepo.findById(request.getId());
-            if (optionalQuestion.isPresent()) {
-                question = optionalQuestion.get();
-                if (Validator.isValid(request.getQuestion())) {
-                    question.setQuestion(request.getQuestion());
-                }
-                if (Validator.isValid(request.getQuestionCalType())) {
-                    question.setQuestionCalType(QuestionCalType.valueOf(request.getQuestionCalType()));
-                }
-                if (Validator.isValid(request.getSequence())) {
-                    question.setSequence(request.getSequence());
-                }
-                if (Validator.isValid(request.getPsychometricTestId())) {
-                    Optional<PsychometricTest> optionalPsychometricTest = psychometricTestRepo.findById(request.getPsychometricTestId());
-                    if (optionalPsychometricTest.isPresent()) {
-                        question.setPsychometricTest(optionalPsychometricTest.get());
+        for (QuestionDto o : request) {
+            if (Validator.isValid(o.getId())) {
+                Optional<MtQuestion> optionalQuestion = questionRepo.findById(o.getId());
+                if (optionalQuestion.isPresent()) {
+                    question = optionalQuestion.get();
+                    if (Validator.isValid(o.getQuestion())) {
+                        question.setQuestion(o.getQuestion());
                     }
-                }
-                if (Validator.isValid(request.getAssessmentId())) {
-                    Optional<MtAssessment> optionalAssessment = assessmentRepo.findById(request.getAssessmentId());
-                    if (optionalAssessment.isPresent()) {
-                        question.setAssessment(optionalAssessment.get());
+                    if (Validator.isValid(o.getQuestionCalType())) {
+                        question.setQuestionCalType(QuestionCalType.valueOf(o.getQuestionCalType()));
                     }
-                }
-                if (Validator.isValid(request.getChapterId())) {
-                    Optional<Chapter> chapterOptional = chapterRepo.findById(request.getChapterId());
-                    if (chapterOptional.isPresent()) {
-                        question.setChapter(chapterOptional.get());
+                    if (Validator.isValid(o.getSequence())) {
+                        question.setSequence(o.getSequence());
                     }
+                    if (Validator.isValid(o.getPsychometricTestId())) {
+                        Optional<PsychometricTest> optionalPsychometricTest = psychometricTestRepo.findById(o.getPsychometricTestId());
+                        if (optionalPsychometricTest.isPresent()) {
+                            question.setPsychometricTest(optionalPsychometricTest.get());
+                        }
+                    }
+                    if (Validator.isValid(o.getAssessmentId())) {
+                        Optional<MtAssessment> optionalAssessment = assessmentRepo.findById(o.getAssessmentId());
+                        if (optionalAssessment.isPresent()) {
+                            question.setAssessment(optionalAssessment.get());
+                        }
+                    }
+                    if (Validator.isValid(o.getChapterId())) {
+                        Optional<Chapter> chapterOptional = chapterRepo.findById(o.getChapterId());
+                        if (chapterOptional.isPresent()) {
+                            question.setChapter(chapterOptional.get());
+                        }
+                    }
+                    Set<MtOptions> optionsList = question.getMtOptions();
+                    for (MtOptions mtOptions : optionsList) {
+                        mtOptions.setQuestion(question);
+                        mtOptions.setTextAnswer(o.getTextAnswer());
+                        optionsRepo.save(mtOptions);
+                    }
+                    question.setSearchKey(getAppUserSearchKey(question));
+                    questionRepo.save(question);
                 }
-                Set<MtOptions> optionsList = question.getMtOptions();
-                for (MtOptions mtOptions : optionsList) {
-                    mtOptions.setQuestion(question);
-                    mtOptions.setTextAnswer(request.getTextAnswer());
-                    optionsRepo.save(mtOptions);
-                }
-                question.setSearchKey(getAppUserSearchKey(question));
-                questionRepo.save(question);
+                return "update question successfully";
             }
-            return "update question successfully";
         }
         return "this question id not in database";
     }
