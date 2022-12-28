@@ -140,7 +140,7 @@ type Mutation {
     updateCounsellorSlot(input:CounsellorSlotDto):String!
     removeCounsellorSlotsById(input:CounsellorSlotDto):String!
     createQuestion(input:[QuestionDto]):String!
-    updateQuestionById(input:QuestionDto):String!
+    updateQuestionById(input:[QuestionDto]):String!
     deleteQuestionById(id:ID):String!
     createOptions(input:OptionsDto):String!
     updateOptionById(input:OptionsDto):String!
