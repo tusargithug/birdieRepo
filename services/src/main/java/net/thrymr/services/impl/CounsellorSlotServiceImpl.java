@@ -11,6 +11,7 @@ import net.thrymr.services.CounsellorSlotService;
 import net.thrymr.utils.DateUtils;
 import net.thrymr.utils.Validator;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.poi.sl.draw.geom.GuideIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -185,41 +186,39 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
     @Override
     public List<CounsellorSlotResponse> getCounsellorSlotById(Long counsellorId) {
         if (Validator.isValid(counsellorId)) {
-            List<CounsellorSlotTimings> counsellorSlotTimingsList = counsellorSlotTimingsRepo.findAllByCounsellorId(counsellorId);
+            List<CounsellorSlotTimings> counsellorSlotTimingsList = counsellorSlotTimingsRepo.findAllByCounsellorIdAndSlotStatusNot(counsellorId, SlotStatus.DELETED);
             if (!counsellorSlotTimingsList.isEmpty()) {
-                List<CounsellorSlotResponse> counsellorSlotResponsesList = new ArrayList<>();
-                List<SlotDetailsResponse> slotDetailsResponseList = new ArrayList<>();
-                for (CounsellorSlotTimings counsellorSlotTimings : counsellorSlotTimingsList) {
-                    if (counsellorSlotTimings.getSlotStatus() != null && !counsellorSlotTimings.getSlotStatus().equals(SlotStatus.DELETED)) {
-                        Optional<CounsellorSlotResponse> counsellorSlotResponseOptional = counsellorSlotResponsesList.stream().filter(counsellorSlotResponse -> counsellorSlotResponse.getId().equals(counsellorSlotTimings.getCounsellor().getId())).findAny();
-                        var counsellorSlotResponse = counsellorSlotResponseOptional.orElse(new CounsellorSlotResponse());
-                        counsellorSlotResponse.setId(counsellorSlotTimings.getCounsellor().getId());
-                        counsellorSlotResponse.setCounsellorName(counsellorSlotTimings.getCounsellor().getCounsellorName());
-                        counsellorSlotResponse.setShiftTimings(counsellorSlotTimings.getCounsellor().getShiftTimings());
-                        counsellorSlotResponse.setVendorName(counsellorSlotTimings.getCounsellor().getVendor().getVendorName());
-                        counsellorSlotResponse.setSiteName(counsellorSlotTimings.getCounsellor().getSite().getSiteName());
-                        counsellorSlotResponse.setIsActive(counsellorSlotTimings.getIsActive());
-                        counsellorSlotResponse.setIsDeleted(counsellorSlotTimings.getIsDeleted());
-                        Optional<SlotDetailsResponse> optionalSlotDetailsResponse = slotDetailsResponseList.stream().filter(slotDetailsResponse1 -> slotDetailsResponse1.getSlotTiming().equals(counsellorSlotTimings.getSlotTiming())).findAny();
-                        var slotDetailsResponse = optionalSlotDetailsResponse.orElse(new SlotDetailsResponse());
-                        slotDetailsResponse.setSlotTiming(counsellorSlotTimings.getSlotTiming());
-                        slotDetailsResponse.setSlotDay(counsellorSlotTimings.getSlotDay());
-                        slotDetailsResponse.setSlotDays(counsellorSlotTimings.getSlotDays());
-                        slotDetailsResponse.setSlotShift(counsellorSlotTimings.getSlotShift());
-                        slotDetailsResponse.setSlotStatus(counsellorSlotTimings.getSlotStatus());
-                        SlotDateDetailsResponse slotDateDetailsResponse = new SlotDateDetailsResponse();
-                        slotDateDetailsResponse.setSlotDate(counsellorSlotTimings.getSlotDate());
-                        slotDetailsResponse.getSlotDates().add(slotDateDetailsResponse);
-                        if (!optionalSlotDetailsResponse.isPresent()) {
-                            slotDetailsResponseList.add(slotDetailsResponse);
+                List<CounsellorSlotResponse> counsellorSlotResponsesListDto = new ArrayList<>();
+                List<SlotDetailsResponse> slotDetailsResponseListDto = new ArrayList<>();
+                for (CounsellorSlotTimings counsellorTimings : counsellorSlotTimingsList) {
+                    if (counsellorTimings.getCounsellor() != null) {
+                        Optional<CounsellorSlotResponse> optionalCounsellorSlotResponse = counsellorSlotResponsesListDto.stream().filter(counsellor -> counsellor.getId().equals(counsellorTimings.getCounsellor().getId())).findFirst();
+                        CounsellorSlotResponse counsellorSlotDto = optionalCounsellorSlotResponse.orElseGet(CounsellorSlotResponse::new);
+                        counsellorSlotDto.setId(counsellorTimings.getCounsellor().getId());
+                        counsellorSlotDto.setCounsellorName(counsellorTimings.getCounsellor().getCounsellorName());
+                        counsellorSlotDto.setShiftTimings(counsellorTimings.getSlotTiming());
+                        counsellorSlotDto.setVendorName(counsellorTimings.getCounsellor().getVendor() != null ? counsellorTimings.getCounsellor().getVendor().getVendorName() : "");
+                        counsellorSlotDto.setSiteName(counsellorTimings.getCounsellor().getSite() != null ? counsellorTimings.getCounsellor().getSite().getSiteName() : "");
+                        if (counsellorTimings.getSlotTiming() != null) {
+                            Optional<SlotDetailsResponse> optionalSlotDetailsDto = slotDetailsResponseListDto.stream().filter(counsellor -> (counsellor.getSlotTiming() != null && counsellor.getSlotTiming().equals(counsellorTimings.getSlotTiming()))).findFirst();
+                            SlotDetailsResponse slotDetailsDto = optionalSlotDetailsDto.orElseGet(SlotDetailsResponse::new);
+                            if (slotDetailsDto.getSlotTiming() == null) {
+                                slotDetailsDto.setSlotTiming(counsellorTimings.getSlotTiming());
+                                slotDetailsDto.setSlotDay(counsellorTimings.getSlotDay());
+                                slotDetailsDto.setSlotShift(counsellorTimings.getSlotShift());
+                                slotDetailsDto.setSlotStatus(counsellorTimings.getSlotStatus());
+                                slotDetailsDto.setSlotDays(counsellorTimings.getSlotDays());
+                                slotDetailsResponseListDto.add(slotDetailsDto);
+                                counsellorSlotDto.setSlotDetailsResponses(slotDetailsResponseListDto);
+                            }
+                            slotDetailsDto.getSlotDates().add(counsellorTimings.getSlotDate());
                         }
-                        counsellorSlotResponse.getSlotDetailsResponses().add(slotDetailsResponse);
-                        if (!counsellorSlotResponseOptional.isPresent()) {
-                            counsellorSlotResponsesList.add(counsellorSlotResponse);
+                        if (!optionalCounsellorSlotResponse.isPresent()) {
+                            counsellorSlotResponsesListDto.add(counsellorSlotDto);
                         }
                     }
                 }
-                return counsellorSlotResponsesList.stream().filter(counsellorSlotResponse -> counsellorSlotResponse.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList());
+                return counsellorSlotResponsesListDto;
             }
         }
         return new ArrayList<>();
