@@ -78,4 +78,9 @@ public class UnitAndChapterController {
     public Chapter getChapterById(@Argument Long id) {
         return unitAndChapterServices.getChapterById(id);
     }
+
+    @QueryMapping(name = "getUnitById")
+    public Unit getUnitById(@Argument Long id) {
+        return unitAndChapterServices.getUnitById(id);
+    }
 }

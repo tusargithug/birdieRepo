@@ -26,4 +26,6 @@ public interface MoodSourceService {
     String createUserMoodSourceCheckIn(MoodSourceIntensityRequestDto request);
 
     String deleteUserMoodSourceCheckInById(Long id);
+
+    List<MtMoodSource> getAllMoodSourceById(MoodSourceIntensityRequestDto request);
 }

@@ -3,6 +3,7 @@ package net.thrymr.services.impl;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import net.thrymr.FileDocument;
 import net.thrymr.dto.*;
+import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
 import net.thrymr.dto.response.CounsellorSlotResponse;
 import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.dto.response.UserAppointmentResponse;
@@ -468,5 +469,15 @@ public class Query implements GraphQLQueryResolver {
     @QueryMapping(name = "getChapterById")
     public Chapter getChapterById(@Argument Long id) {
         return unitAndChapterServices.getChapterById(id);
+    }
+
+    @QueryMapping(name = "getAllMoodSourceById")
+    public List<MtMoodSource> getAllMoodSourceById(@Argument(name = "input") MoodSourceIntensityRequestDto request) {
+        return moodSourceService.getAllMoodSourceById(request);
+    }
+
+    @QueryMapping(name = "getUnitById")
+    public Unit getUnitById(@Argument Long id) {
+        return unitAndChapterServices.getUnitById(id);
     }
 }

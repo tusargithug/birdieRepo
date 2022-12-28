@@ -3,10 +3,13 @@ package net.thrymr.services.impl;
 import net.thrymr.dto.MoodSourceDto;
 import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
 import net.thrymr.enums.Category;
+import net.thrymr.model.AppUser;
+import net.thrymr.model.UserMoodCheckIn;
 import net.thrymr.model.UserMoodSourceCheckedIn;
+import net.thrymr.model.master.MtMoodInfo;
+import net.thrymr.model.master.MtMoodIntensity;
 import net.thrymr.model.master.MtMoodSource;
-import net.thrymr.repository.MoodSourceRepo;
-import net.thrymr.repository.UserMoodSourceCheckInRepo;
+import net.thrymr.repository.*;
 import net.thrymr.services.MoodSourceService;
 import net.thrymr.utils.ApiResponse;
 import net.thrymr.utils.Validator;
@@ -41,6 +44,18 @@ public class MoodSourceServiceImpl implements MoodSourceService {
     MoodSourceRepo moodSourceRepo;
     @Autowired
     UserMoodSourceCheckInRepo userMoodSourceCheckInRepo;
+
+    @Autowired
+    MoodIntensityRepo moodIntensityRepo;
+
+    @Autowired
+    AppUserRepo appUserRepo;
+
+    @Autowired
+    MoodInfoRepo moodInfoRepo;
+
+    @Autowired
+    UserMoodCheckInRepo userMoodCheckInRepo;
 
     @Override
     public ApiResponse addMoodSourceByExcel(MultipartFile file) {
@@ -177,8 +192,36 @@ public class MoodSourceServiceImpl implements MoodSourceService {
 
     @Override
     public String createUserMoodSourceCheckIn(MoodSourceIntensityRequestDto request) {
+        UserMoodCheckIn userMoodCheckIn = new UserMoodCheckIn();
         List<MtMoodSource> mtMoodSourceList = moodSourceRepo.findAllByIdIn(request.getMoodSourceIdList());
         UserMoodSourceCheckedIn checkedIn = new UserMoodSourceCheckedIn();
+        if (Validator.isValid(request.getIntensityId())) {
+            Optional<MtMoodIntensity> optionalMtMoodIntensity = moodIntensityRepo.findByIdAndMtMoodInfoIdAndIsActiveAndIsDeleted(request.getIntensityId(), request.getMoodInfoId(), Boolean.TRUE, Boolean.FALSE);
+            if (optionalMtMoodIntensity.isPresent()) {
+                userMoodCheckIn.setMtMoodIntensity(optionalMtMoodIntensity.get());
+            }
+        }
+        if (Validator.isValid(request.getAppUserId())) {
+            Optional<AppUser> optionalAppUser = appUserRepo.findById(request.getAppUserId());
+            if (optionalAppUser.isPresent()) {
+                userMoodCheckIn.setAppUser(optionalAppUser.get());
+            }
+        }
+        if (Validator.isValid(request.getMoodInfoId())) {
+            Optional<MtMoodInfo> optionalMtMoodInfo = moodInfoRepo.findById(request.getMoodInfoId());
+            if (optionalMtMoodInfo.isPresent()) {
+                userMoodCheckIn.setMtMoodInfo(optionalMtMoodInfo.get());
+            }
+        }
+        if (Validator.isValid(request.getUserSourceCheckedInId())) {
+            Optional<UserMoodSourceCheckedIn> userMoodSourceCheckedIn = userMoodSourceCheckInRepo.findById(request.getUserSourceCheckedInId());
+            if (userMoodSourceCheckedIn.isPresent()) {
+                userMoodCheckIn.setUserMoodSourceCheckedIn(userMoodSourceCheckedIn.get());
+            }
+        }
+        userMoodCheckIn.setDescription(request.getDescription());
+        userMoodCheckInRepo.save(userMoodCheckIn);
+
         // checkedIn.setAppUser(user);
         if (!mtMoodSourceList.isEmpty()) {
             checkedIn.setMtMoodSourceList(mtMoodSourceList);
@@ -196,6 +239,15 @@ public class MoodSourceServiceImpl implements MoodSourceService {
         Optional<MtMoodSource> optionalMtMoodSource = moodSourceRepo.findById(id);
         optionalMtMoodSource.ifPresent(moodSourceRepo::delete);
         return "Source deleted successfully";
+    }
+
+    @Override
+    public List<MtMoodSource> getAllMoodSourceById(MoodSourceIntensityRequestDto request) {
+       List<MtMoodSource> moodSourceList = moodSourceRepo.findAllByIdIn(request.getMoodSourceIdList());
+       if (!moodSourceList.isEmpty()) {
+           return moodSourceList;
+       }
+       return new ArrayList<>();
     }
 
 

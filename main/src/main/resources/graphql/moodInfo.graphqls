@@ -81,6 +81,8 @@ type Query {
     getLanguageDetailsById(id:ID):LanguageDetails
     getVendorSiteById(id:ID):[VendorSite]
     getChapterById(id:ID):Chapter
+    getAllMoodSourceById(input:MoodSourceIntensityRequestDto):[MtMoodSource]
+    getUnitById(id:ID):Unit
 }
 
 type Mutation {
