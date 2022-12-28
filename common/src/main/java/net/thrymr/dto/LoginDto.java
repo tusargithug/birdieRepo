@@ -14,9 +14,13 @@ public class LoginDto {
 
     private String password;
 
+    private String userName;
+
     private String otp;
 
     private String registeredToken;
 
     private String email;
+
+    private String empId;
 }

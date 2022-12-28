@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.thrymr.enums.Roles;
 import net.thrymr.model.AppUser;
 import net.thrymr.model.master.MtRoles;
 
@@ -19,14 +20,13 @@ import java.util.Optional;
 @NoArgsConstructor
 public class LoggedInUser implements UserDetails {
     private Long id;
-
     private String contactNumber;
 
     private String firstName;
 
     private String lastName;
 
-    private MtRoles role;
+    private Roles role;
 
     private Boolean isActive;
 
