@@ -1,8 +1,5 @@
 package net.thrymr.model.master;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.*;
 
 import lombok.NoArgsConstructor;
@@ -10,7 +7,6 @@ import net.thrymr.enums.Category;
 import net.thrymr.model.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
-import net.thrymr.model.UserMoodSourceCheckedIn;
 
 @Entity
 @Setter

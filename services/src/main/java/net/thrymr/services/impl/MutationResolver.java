@@ -612,11 +612,17 @@ public class MutationResolver implements GraphQLMutationResolver {
         return counsellorSlotService.pauseCounsellorSlotsById(request);
     }
     @MutationMapping(name = "uploadFileTesting")
-    public FileUploadResult uploadFileTesting(@Argument MultipartFile file) {
+    public FileUploadResult uploadFileTesting(@Argument MultipartFile file, DataFetchingEnvironment environment) {
         logger.info("Upload file: name={}", file.getOriginalFilename());
-
+        environment.getArgument(file.getContentType());
         return new FileUploadResult(UUID.randomUUID());
     }
+
+    @MutationMapping(name = "testSingleFileUpload")
+    public String testSingleFileUpload(Part part, DataFetchingEnvironment env) {
+       return "uploaded";
+    }
+
 
     class FileUploadResult {
         UUID id;

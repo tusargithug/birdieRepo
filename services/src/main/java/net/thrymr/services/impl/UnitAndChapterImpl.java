@@ -119,6 +119,8 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                         "%" + unitDto.getSearchKey().toLowerCase() + "%");
                 addUnitPredicate.add(searchPredicate);
             }
+            Predicate isDeletedPredicate = criteriaBuilder.equal(root.get("isDeleted"), Boolean.FALSE);
+            addUnitPredicate.add(isDeletedPredicate);
             return criteriaBuilder.and(addUnitPredicate.toArray(new Predicate[0]));
         });
         Page<Unit> unitObjectives = unitRpo.findAll(addUnitSpecification, pageable);
@@ -282,6 +284,20 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         return new Chapter();
     }
 
+    @Override
+    public Unit getUnitById(Long id) {
+        Unit unit = null;
+        if(Validator.isValid(id)) {
+            Optional<Unit> optionalUnit = unitRpo.findById(id);
+            if (optionalUnit.isPresent() && optionalUnit.get().getIsDeleted().equals(Boolean.FALSE)){
+                unit = optionalUnit.get();
+                return unit;
+            }
+        }
+        return new Unit();
+    }
+
+
     public Unit dtoToEntity(UnitDto dto) {
         Unit unit = new Unit();
         unit.setUnitName(dto.getUnitName());
@@ -348,4 +364,6 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         }
         return chapter;
     }
+
+
 }

@@ -81,6 +81,8 @@ type Query {
     getLanguageDetailsById(id:ID):LanguageDetails
     getVendorSiteById(id:ID):[VendorSite]
     getChapterById(id:ID):Chapter
+    getAllMoodSourceById(input:MoodSourceIntensityRequestDto):[MtMoodSource]
+    getUnitById(id:ID):Unit
 }
 
 type Mutation {
@@ -777,14 +779,17 @@ type SlotDetailsResponse{
     slotTiming:LocalTime
     slotShift:SlotShift
     slotStatus:SlotStatus
-    slotDate:String
+    slotDates:[String]
     slotDays:[DayOfWeek]
 }
-
+ type SlotDateDetailsResponse{
+     slotDate:String
+ }
 type FileUploadResult {
     id: String!
 }
 
 extend type Mutation {
     uploadFileTesting(file: Upload!): FileUploadResult!
+    testSingleFileUpload(file: Upload): String
 }

@@ -30,4 +30,6 @@ public interface UnitAndChapterServices {
     PaginationResponse getAllChapterPagination(ChapterDto chapterDto);
 
     Chapter getChapterById(Long id);
+
+    Unit getUnitById(Long id);
 }
