@@ -8,7 +8,6 @@ import net.thrymr.dto.response.CounsellorSlotResponse;
 import net.thrymr.dto.response.PaginationResponse;
 import net.thrymr.dto.response.UserAppointmentResponse;
 import net.thrymr.dto.response.VendorResponse;
-import net.thrymr.dto.response.*;
 import net.thrymr.enums.Alerts;
 import net.thrymr.enums.Roles;
 import net.thrymr.enums.TagType;

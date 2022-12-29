@@ -14,14 +14,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/question")
 public class QuestionAndOptionsController {
 
     @Autowired
     QuestionAndOptionsService questionAndOptionsService;
 
     @MutationMapping("createQuestion")
-    public String createQuestion(@Argument(name = "input") List<QuestionDto> request) {
+    public List<MtQuestion> createQuestion(@Argument(name = "input") List<QuestionDto> request) {
         return questionAndOptionsService.createQuestion(request);
     }
 

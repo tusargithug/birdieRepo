@@ -2,6 +2,7 @@ package net.thrymr.controller;
 
 
 import net.thrymr.FileDocument;
+import net.thrymr.model.FileEntity;
 import net.thrymr.services.FileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,10 +19,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
-//@CrossOrigin("*")
 @RequestMapping("/file")
 public class FileController {
 
@@ -41,6 +44,32 @@ public class FileController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + loadFile.getFileName())
                 .body(new ByteArrayResource(loadFile.getFile()));
     }
+
+    @PostMapping("/upload")
+    public String uploadFiles(@RequestParam("files") MultipartFile[] files) throws IOException {
+        return fileService.uploadFiles(files);
+    }
+
+//    @GetMapping("/files")
+//    public ResponseEntity<List<FileInfo>> getListFiles() {
+//        List<FileInfo> fileInfos = storageService.loadAll().map(path -> {
+//            String filename = path.getFileName().toString();
+//            String url = MvcUriComponentsBuilder
+//                    .fromMethodName(FilesController.class, "getFile", path.getFileName().toString()).build().toString();
+//
+//            return new FileInfo(filename, url);
+//        }).collect(Collectors.toList());
+//
+//        return ResponseEntity.status(HttpStatus.OK).body(fileInfos);
+//    }
+
+//    @GetMapping("/files/{filename:.+}")
+//    public ResponseEntity<Resource> getFile(@PathVariable String filename) {
+//        Resource file = storageService.load(filename);
+//        return ResponseEntity.ok()
+//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+//    }
+
 
     @DeleteMapping("/{id}")
     public String deleteFile(@PathVariable String id) {
@@ -63,32 +92,6 @@ public class FileController {
     public String deleteFiles(@Argument String id) {
         return fileService.deleteFile(id);
     }
-
-
-
-        private static final Logger logger = LoggerFactory.getLogger(FileController.class);
-
-        @MutationMapping(name = "uploadFileTesting")
-        public FileUploadResult uploadFileTesting(@Argument MultipartFile file) {
-            logger.info("Upload file: name={}", file.getOriginalFilename());
-
-            return new FileUploadResult(UUID.randomUUID());
-        }
-
-    }
-
-    class FileUploadResult {
-        UUID id;
-
-        public FileUploadResult(UUID id) {
-            this.id = id;
-        }
-
-        public UUID getId() {
-            return id;
-        }
-
-        public void setId(UUID id) {
-            this.id = id;
-        }
 }
+
+

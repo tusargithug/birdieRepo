@@ -39,9 +39,11 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
     ChapterRepo chapterRepo;
 
     @Override
-    public String createQuestion(List<QuestionDto> request) {
+    public List<MtQuestion> createQuestion(List<QuestionDto> request) {
+        List<MtQuestion> mtQuestionList = new ArrayList<>();
         if (Validator.isObjectValid(request)) {
             for (QuestionDto questionDto : request) {
+                Set<MtOptions> mtOptionsList = new HashSet<>();
                 MtQuestion question = new MtQuestion();
                 question.setQuestion(questionDto.getQuestion());
                 if (questionDto.getQuestionCalType() != null) {
@@ -87,11 +89,15 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
                     }
                     option.setSearchKey(getOptionsSearchKey(option));
                     optionsRepo.save(option);
+                    mtOptionsList.add(option);
                 }
+
+                mtQuestionList.add(question);
+                question.setMtOptions(new HashSet<>(mtOptionsList));
             }
-            return "create question successfully";
+            return mtQuestionList;
         }
-        return "give valid input";
+        return new ArrayList<>();
     }
 
     @Override

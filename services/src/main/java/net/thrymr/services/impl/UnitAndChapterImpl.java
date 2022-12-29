@@ -250,6 +250,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
             }
             Predicate isDeleted = criteriaBuilder.equal(root.get("isDeleted"), Boolean.FALSE);
             addUnitPredicate.add(isDeleted);
+
             return criteriaBuilder.and(addUnitPredicate.toArray(new Predicate[0]));
         });
         PaginationResponse paginationResponse = new PaginationResponse();

@@ -8,7 +8,7 @@ import net.thrymr.model.master.MtQuestion;
 import java.util.List;
 
 public interface QuestionAndOptionsService {
-    String createQuestion(List<QuestionDto> request);
+    List<MtQuestion> createQuestion(List<QuestionDto> request);
 
     MtQuestion getQuestionById(Long id);
 

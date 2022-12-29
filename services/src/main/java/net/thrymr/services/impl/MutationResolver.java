@@ -8,6 +8,7 @@ import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
 import net.thrymr.dto.slotRequest.TimeSlotDto;
 import net.thrymr.model.Chapter;
 import net.thrymr.model.Team;
+import net.thrymr.model.master.MtQuestion;
 import net.thrymr.services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -373,7 +374,7 @@ public class MutationResolver implements GraphQLMutationResolver {
     }
 
     @MutationMapping("createQuestion")
-    public String createQuestion(@Argument(name = "input") List<QuestionDto> request) {
+    public List<MtQuestion> createQuestion(@Argument(name = "input") List<QuestionDto> request) {
         return questionAndOptionsService.createQuestion(request);
     }
 
