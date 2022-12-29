@@ -205,7 +205,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
             chapter.setIsActive(Boolean.FALSE);
             chapterRepo.save(chapter);
         }
-        return "record delete records successfully";
+        return "Chapter deleted successfully";
     }
 
     @Override
