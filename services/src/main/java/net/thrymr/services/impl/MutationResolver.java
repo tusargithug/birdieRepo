@@ -373,18 +373,18 @@ public class MutationResolver implements GraphQLMutationResolver {
     }
 
     @MutationMapping("createQuestion")
-    public String createQuestion(@Argument(name = "input") List<QuestionDto> questionDtos) {
-        return questionAndOptionsService.createQuestion(questionDtos);
+    public String createQuestion(@Argument(name = "input") QuestionDto request) {
+        return questionAndOptionsService.createQuestion(request);
     }
 
     @MutationMapping("updateQuestionById")
-    public String updateQuestionById(@Argument(name = "input") List<QuestionDto> request) {
+    public String updateQuestionById(@Argument(name = "input") QuestionDto request) {
         return questionAndOptionsService.updateQuestionById(request);
     }
 
     @MutationMapping("deleteQuestionById")
-    public String deleteQuestionById(@Argument Long id) {
-        return questionAndOptionsService.deleteQuestionById(id);
+    public String deleteQuestionById(@Argument(name = "input") QuestionDto request) {
+        return questionAndOptionsService.deleteQuestionById(request);
     }
 
     @MutationMapping("createOptions")

@@ -19,7 +19,7 @@ public class QuestionDto {
     private Long psychometricTestId;
     private String questionCalType;
     private Long chapterId;
+    private Long questionId;
     private Integer Sequence;
-    private String textAnswer;
     private List<OptionsDto> optionsDtoList = new ArrayList<>();
 }

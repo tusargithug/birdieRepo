@@ -141,9 +141,9 @@ type Mutation {
     updateVendor(input:VendorDto):String!
     updateCounsellorSlot(input:CounsellorSlotDto):String!
     removeCounsellorSlotsById(input:CounsellorSlotDto):String!
-    createQuestion(input:[QuestionDto]):String!
-    updateQuestionById(input:[QuestionDto]):String!
-    deleteQuestionById(id:ID):String!
+    createQuestion(input:QuestionDto):String!
+    updateQuestionById(input:QuestionDto):String!
+    deleteQuestionById(input:QuestionDto):String!
     createOptions(input:OptionsDto):String!
     updateOptionById(input:OptionsDto):String!
     deleteOptionById(id:ID):String!

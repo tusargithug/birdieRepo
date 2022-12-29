@@ -286,7 +286,8 @@ enum FrequencyType{
 }
 
 input QuestionDto {
-    id:Int
+    id:ID
+    questionId:ID
     question:String
     videoReference:String
     assessmentId:Int

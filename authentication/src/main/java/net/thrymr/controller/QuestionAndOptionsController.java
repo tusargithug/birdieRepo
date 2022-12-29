@@ -21,12 +21,12 @@ public class QuestionAndOptionsController {
     QuestionAndOptionsService questionAndOptionsService;
 
     @MutationMapping("createQuestion")
-    public String createQuestion(@Argument(name = "input") List<QuestionDto> request) {
+    public String createQuestion(@Argument(name = "input") QuestionDto request) {
         return questionAndOptionsService.createQuestion(request);
     }
 
     @MutationMapping("updateQuestionById")
-    public String updateQuestionById(@Argument(name = "input") List<QuestionDto> request) {
+    public String updateQuestionById(@Argument(name = "input") QuestionDto request) {
         return questionAndOptionsService.updateQuestionById(request);
     }
 
@@ -36,8 +36,8 @@ public class QuestionAndOptionsController {
     }
 
     @MutationMapping("deleteQuestionById")
-    public String deleteQuestionById(@Argument Long id) {
-        return  questionAndOptionsService.deleteQuestionById(id);
+    public String deleteQuestionById(@Argument(name = "input") QuestionDto request) {
+        return  questionAndOptionsService.deleteQuestionById(request);
     }
 
     @QueryMapping("getAnswersByQuestionId")

@@ -14,9 +14,11 @@ import net.thrymr.repository.*;
 import net.thrymr.services.QuestionAndOptionsService;
 import net.thrymr.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
@@ -37,56 +39,52 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
     ChapterRepo chapterRepo;
 
     @Override
-    public String createQuestion(List<QuestionDto> questionDtos) {
-        for (QuestionDto o : questionDtos) {
-            Set<MtOptions> mtOptions = new HashSet<>();
-            MtQuestion question = new MtQuestion();
-            question.setQuestion(o.getQuestion());
-            if (o.getQuestionCalType() != null) {
-                question.setQuestionCalType(QuestionCalType.valueOf(o.getQuestionCalType()));
-            }
-            if (o.getSequence() != null) {
-                question.setSequence(o.getSequence());
-            }
+    public String createQuestion(QuestionDto request) {
+        MtQuestion question = new MtQuestion();
+        question.setQuestion(request.getQuestion());
+        if (request.getQuestionCalType() != null) {
+            question.setQuestionCalType(QuestionCalType.valueOf(request.getQuestionCalType()));
+        }
+        if (request.getSequence() != null) {
+            question.setSequence(request.getSequence());
+        }
 
-            if (o.getPsychometricTestId() != null) {
-                Optional<PsychometricTest> optionalPsychometricTest = psychometricTestRepo.findById(o.getPsychometricTestId());
-                if (optionalPsychometricTest.isPresent()) {
-                    question.setPsychometricTest(optionalPsychometricTest.get());
-                }
+        if (request.getPsychometricTestId() != null) {
+            Optional<PsychometricTest> optionalPsychometricTest = psychometricTestRepo.findById(request.getPsychometricTestId());
+            if (optionalPsychometricTest.isPresent()) {
+                question.setPsychometricTest(optionalPsychometricTest.get());
             }
-            if (o.getAssessmentId() != null) {
-                Optional<MtAssessment> optionalAssessment = assessmentRepo.findById(o.getAssessmentId());
-                if (optionalAssessment.isPresent()) {
-                    question.setAssessment(optionalAssessment.get());
-                }
+        }
+        if (request.getAssessmentId() != null) {
+            Optional<MtAssessment> optionalAssessment = assessmentRepo.findById(request.getAssessmentId());
+            if (optionalAssessment.isPresent()) {
+                question.setAssessment(optionalAssessment.get());
             }
+        }
 
-            if (o.getChapterId() != null) {
-                Optional<Chapter> chapterOptional = chapterRepo.findById(o.getChapterId());
-                if (chapterOptional.isPresent()) {
-                    question.setChapter(chapterOptional.get());
+        if (request.getChapterId() != null) {
+            Optional<Chapter> chapterOptional = chapterRepo.findById(request.getChapterId());
+            if (chapterOptional.isPresent()) {
+                question.setChapter(chapterOptional.get());
+            }
+        }
+        question.setSearchKey(getAppUserSearchKey(question));
+        question = questionRepo.save(question);
+        for (OptionsDto optionsDto : request.getOptionsDtoList()) {
+            MtOptions option = new MtOptions();
+            option.setQuestion(question);
+            option.setTextAnswer(optionsDto.getTextAnswer());
+            if (optionsDto.getIsCorrect().equals(Boolean.TRUE)) {
+                option.setIsCorrect(optionsDto.getIsCorrect());
+            }
+            if (optionsDto.getUserCourseId() != null) {
+                Optional<UserCourse> optionalUserCourse = userCourseRepo.findById(optionsDto.getUserCourseId());
+                if (optionalUserCourse.isPresent()) {
+                    option.setUserCourse(optionalUserCourse.get());
                 }
             }
-            question.setSearchKey(getAppUserSearchKey(question));
-            question = questionRepo.save(question);
-            for (OptionsDto optionsDto : o.getOptionsDtoList()) {
-                MtOptions option = new MtOptions();
-                option.setQuestion(question);
-                option.setTextAnswer(optionsDto.getTextAnswer());
-                if (optionsDto.getIsCorrect().equals(Boolean.TRUE)) {
-                    option.setIsCorrect(optionsDto.getIsCorrect());
-                }
-                if (optionsDto.getUserCourseId() != null) {
-                    Optional<UserCourse> optionalUserCourse = userCourseRepo.findById(optionsDto.getUserCourseId());
-                    if (optionalUserCourse.isPresent()) {
-                        option.setUserCourse(optionalUserCourse.get());
-                    }
-                }
-                option.setSearchKey(getOptionsSearchKey(option));
-                mtOptions.add(option);
-            }
-            optionsRepo.saveAll(mtOptions);
+            option.setSearchKey(getOptionsSearchKey(option));
+            optionsRepo.save(option);
         }
         return "create question successfully";
     }
@@ -105,17 +103,27 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
     }
 
     @Override
-    public String deleteQuestionById(Long id) {
+    public String deleteQuestionById(QuestionDto request) {
         MtQuestion question = null;
-        if (Validator.isValid(id)) {
-            Optional<MtQuestion> optionalQuestion = questionRepo.findById(id);
+        if (Validator.isValid(request.getQuestionId())) {
+            Optional<MtQuestion> optionalQuestion = questionRepo.findById(request.getQuestionId());
             if (optionalQuestion.isPresent()) {
                 question = optionalQuestion.get();
                 question.setIsActive(Boolean.FALSE);
                 question.setIsDeleted(Boolean.TRUE);
                 questionRepo.save(question);
-                return "delete successfully";
             }
+            List<MtOptions> optionsList = optionsRepo.findAllByQuestionId(request.getQuestionId());
+            for (MtOptions mtOptions : optionsList) {
+                for (OptionsDto optionsDto : request.getOptionsDtoList()) {
+                    if (mtOptions.getId().equals(optionsDto.getId())) {
+                        mtOptions.setIsActive(Boolean.FALSE);
+                        mtOptions.setIsDeleted(Boolean.TRUE);
+                        optionsRepo.save(mtOptions);
+                    }
+                }
+            }
+            return "delete successfully";
         }
         return "this question id not found in database";
     }
@@ -131,7 +139,7 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
 
     @Override
     public List<MtQuestion> getAllQuestions() {
-        List<MtQuestion> mtQuestionList = questionRepo.findAll();
+        List<MtQuestion> mtQuestionList = questionRepo.findAll(Sort.by(Sort.Direction.DESC,"createdOn"));
         if (!mtQuestionList.isEmpty()) {
             return mtQuestionList.stream().filter(obj -> obj.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
         }
@@ -139,53 +147,59 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
     }
 
     @Override
-    public String updateQuestionById(List<QuestionDto> request) {
+    public String updateQuestionById(QuestionDto request) {
         MtQuestion question = null;
-        for (QuestionDto o : request) {
-            if (Validator.isValid(o.getId())) {
-                Optional<MtQuestion> optionalQuestion = questionRepo.findById(o.getId());
-                if (optionalQuestion.isPresent()) {
-                    question = optionalQuestion.get();
-                    if (Validator.isValid(o.getQuestion())) {
-                        question.setQuestion(o.getQuestion());
-                    }
-                    if (Validator.isValid(o.getQuestionCalType())) {
-                        question.setQuestionCalType(QuestionCalType.valueOf(o.getQuestionCalType()));
-                    }
-                    if (Validator.isValid(o.getSequence())) {
-                        question.setSequence(o.getSequence());
-                    }
-                    if (Validator.isValid(o.getPsychometricTestId())) {
-                        Optional<PsychometricTest> optionalPsychometricTest = psychometricTestRepo.findById(o.getPsychometricTestId());
-                        if (optionalPsychometricTest.isPresent()) {
-                            question.setPsychometricTest(optionalPsychometricTest.get());
-                        }
-                    }
-                    if (Validator.isValid(o.getAssessmentId())) {
-                        Optional<MtAssessment> optionalAssessment = assessmentRepo.findById(o.getAssessmentId());
-                        if (optionalAssessment.isPresent()) {
-                            question.setAssessment(optionalAssessment.get());
-                        }
-                    }
-                    if (Validator.isValid(o.getChapterId())) {
-                        Optional<Chapter> chapterOptional = chapterRepo.findById(o.getChapterId());
-                        if (chapterOptional.isPresent()) {
-                            question.setChapter(chapterOptional.get());
-                        }
-                    }
-                    Set<MtOptions> optionsList = question.getMtOptions();
-                    for (MtOptions mtOptions : optionsList) {
-                        mtOptions.setQuestion(question);
-                        mtOptions.setTextAnswer(o.getTextAnswer());
-                        optionsRepo.save(mtOptions);
-                    }
-                    question.setSearchKey(getAppUserSearchKey(question));
-                    questionRepo.save(question);
+        if (Validator.isValid(request.getQuestionId())) {
+            Optional<MtQuestion> optionalQuestion = questionRepo.findById(request.getQuestionId());
+            if (optionalQuestion.isPresent()) {
+                question = optionalQuestion.get();
+                if (Validator.isValid(request.getQuestion())) {
+                    question.setQuestion(request.getQuestion());
                 }
-                return "update question successfully";
+                if (Validator.isValid(request.getQuestionCalType())) {
+                    question.setQuestionCalType(QuestionCalType.valueOf(request.getQuestionCalType()));
+                }
+                if (Validator.isValid(request.getSequence())) {
+                    question.setSequence(request.getSequence());
+                }
+                if (Validator.isValid(request.getPsychometricTestId())) {
+                    Optional<PsychometricTest> optionalPsychometricTest = psychometricTestRepo.findById(request.getPsychometricTestId());
+                    if (optionalPsychometricTest.isPresent()) {
+                        question.setPsychometricTest(optionalPsychometricTest.get());
+                    }
+                }
+                if (Validator.isValid(request.getAssessmentId())) {
+                    Optional<MtAssessment> optionalAssessment = assessmentRepo.findById(request.getAssessmentId());
+                    if (optionalAssessment.isPresent()) {
+                        question.setAssessment(optionalAssessment.get());
+                    }
+                }
+                if (Validator.isValid(request.getChapterId())) {
+                    Optional<Chapter> chapterOptional = chapterRepo.findById(request.getChapterId());
+                    if (chapterOptional.isPresent()) {
+                        question.setChapter(chapterOptional.get());
+                    }
+                }
+                question.setSearchKey(getAppUserSearchKey(question));
+                questionRepo.save(question);
+                System.out.println(request.getQuestionId());
+                List<MtOptions> optionsList = optionsRepo.findAllByQuestionId(request.getQuestionId());
+                if (!optionsList.isEmpty()) {
+                    for (MtOptions mtOptions : optionsList) {
+                        for (OptionsDto optionsDto : request.getOptionsDtoList()) {
+                            if (mtOptions.getId().equals(optionsDto.getId())) {
+                                mtOptions.setQuestion(question);
+                                mtOptions.setTextAnswer(optionsDto.getTextAnswer());
+                                mtOptions.setSearchKey(getOptionsSearchKey(mtOptions));
+                                optionsRepo.save(mtOptions);
+                            }
+                        }
+                    }
+                    return "update question successfully";
+                }
             }
         }
-        return "this question id not in database";
+        return "This question id not present in database";
     }
 
     @Override
@@ -311,6 +325,12 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
         }
         if (options.getUserCourse() != null) {
             searchKey = searchKey + " " + options.getUserCourse();
+        }
+        if(options.getQuestion().getMtOptions() != null ){
+            searchKey = searchKey + " " + options.getQuestion().getMtOptions().stream().map(MtOptions::getTextAnswer);
+        }
+        if(options.getQuestion().getMtOptions() != null ){
+            searchKey = searchKey + " " + options.getQuestion().getMtOptions().stream().map(MtOptions::getIsCorrect);
         }
         return searchKey;
     }
