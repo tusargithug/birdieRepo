@@ -202,6 +202,9 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
                                     if (mtOptions.getId().equals(optionsDto.getId())) {
                                         mtOptions.setQuestion(question);
                                         mtOptions.setTextAnswer(optionsDto.getTextAnswer());
+                                        if (optionsDto.getIsCorrect()!=null && (optionsDto.getIsCorrect().equals(Boolean.TRUE) || optionsDto.getIsCorrect().equals(Boolean.FALSE))) {
+                                            mtOptions.setIsCorrect(optionsDto.getIsCorrect());
+                                        }
                                         mtOptions.setSearchKey(getOptionsSearchKey(mtOptions));
                                         optionsRepo.save(mtOptions);
                                     }
