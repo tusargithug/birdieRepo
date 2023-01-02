@@ -14,6 +14,7 @@ import net.thrymr.repository.FileRepo;
 import net.thrymr.repository.UnitRpo;
 import net.thrymr.services.UnitAndChapterServices;
 import net.thrymr.utils.Validator;
+import org.apache.poi.sl.draw.geom.GuideIf;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -121,6 +122,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
             }
             Predicate isDeletedPredicate = criteriaBuilder.equal(root.get("isDeleted"), Boolean.FALSE);
             addUnitPredicate.add(isDeletedPredicate);
+
             return criteriaBuilder.and(addUnitPredicate.toArray(new Predicate[0]));
         });
         Page<Unit> unitObjectives = unitRpo.findAll(addUnitSpecification, pageable);
@@ -164,6 +166,12 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                 }
                 if (Validator.isValid(dto.getDescription())) {
                     chapter.setDescription(dto.getDescription());
+                }
+                if(Validator.isValid(dto.getUnitId())){
+                    Optional<Unit> optionalUnit = unitRpo.findById(dto.getUnitId());
+                    if(optionalUnit.isPresent()){
+                        chapter.setUnit(optionalUnit.get());
+                    }
                 }
                 if (Validator.isValid(dto.getProfilePictureId())) {
                     Optional<FileEntity> optionalFileEntity = fileRepo.findByFileId(dto.getProfilePictureId());

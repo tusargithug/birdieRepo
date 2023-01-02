@@ -15,9 +15,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,6 +45,12 @@ public class FileController {
                 .contentType(MediaType.parseMediaType(loadFile.getFileType()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + loadFile.getFileName())
                 .body(new ByteArrayResource(loadFile.getFile()));
+    }
+
+    @GetMapping("/videos/stream/{id}")
+    public void streamVideo(@PathVariable String id, HttpServletResponse response) throws Exception {
+        FileDocument video = fileService.getVideo(id);
+        FileCopyUtils.copy(video.getStream(), response.getOutputStream());
     }
 
     @PostMapping("/upload")

@@ -4,6 +4,8 @@ import lombok.*;
 import net.thrymr.model.FileEntity;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.InputStream;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,4 +27,7 @@ public class FileDocument extends BaseDocument {
     private byte[] file;
 
     private FileEntity fileEntity;
+
+    private InputStream stream;
+
 }

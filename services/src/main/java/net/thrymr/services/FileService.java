@@ -8,7 +8,6 @@ import java.util.List;
 
 
 public interface FileService {
-
     public String addFile(MultipartFile upload) throws IOException ;
 
     public FileDocument downloadFile(String id) throws IOException ;
@@ -16,4 +15,6 @@ public interface FileService {
     String deleteFile(String id);
 
     String uploadFiles(MultipartFile[] files) throws IOException;
+
+    FileDocument getVideo(String id) throws IOException;
 }

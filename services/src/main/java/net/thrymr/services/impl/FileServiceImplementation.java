@@ -46,7 +46,7 @@ public class FileServiceImplementation implements FileService {
         List<FileEntity> imageList = new ArrayList<>();
 
 
-        if (upload.getSize() <= 12000000) {
+        if (upload.getSize() <= 30000000) {
             metadata.put("fileSize", upload.getSize());
             Object fileID = template.store(upload.getInputStream(), upload.getOriginalFilename(), upload.getContentType(), metadata);
             fileEntity.setFileId(fileID.toString());
@@ -169,6 +169,25 @@ public class FileServiceImplementation implements FileService {
                             (Collectors.toMap(FileEntity::getId, FileEntity::getFileId));
         }
         return "File is empty";
+    }
+
+    @Override
+    public FileDocument getVideo(String id) throws IOException {
+//        GridFSFile file = template.findOne(new Query(Criteria.where("_id").is(id)));
+//        FileDocument video = new FileDocument();
+//        video.setFileName(file.getMetadata().get("title").toString());
+//        video.setStream(operations.getResource(file).getInputStream());
+//        return video;
+
+        GridFSFile gridFSFile = template.findOne(new Query(Criteria.where("_id").is(id)));
+        FileDocument loadFile = new FileDocument();
+        if (gridFSFile != null && gridFSFile.getMetadata() != null && loadFile.getIsActive().equals(Boolean.TRUE)) {
+            loadFile.setFileName(gridFSFile.getFilename());
+            loadFile.setFileType(gridFSFile.getMetadata().get("_contentType").toString());
+            loadFile.setFileSizeInBytes(gridFSFile.getMetadata().get("fileSize").toString());
+            loadFile.setFile(IOUtils.toByteArray(operations.getResource(gridFSFile).getInputStream()));
+        }
+        return loadFile;
     }
 
     public String getFileEntitySearchKey(FileEntity fileEntity) {
