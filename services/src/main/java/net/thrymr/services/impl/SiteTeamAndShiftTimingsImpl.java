@@ -161,41 +161,39 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     @Override
     public String updateSite(SiteDto siteDto) {
         if (!Validator.isValid(siteDto.getId())) {
-            return "id required";
+            Optional<Site> optionalSite = siteRepo.findById(siteDto.getId());
+            Site site;
+            if (optionalSite.isPresent()) {
+                site = optionalSite.get();
+                if (Validator.isValid(siteDto.getSiteId())) {
+                    site.setSiteId(siteDto.getSiteId());
+                }
+                if (Validator.isValid(siteDto.getSiteName())) {
+                    site.setSiteName(siteDto.getSiteName());
+                }
+                //Region
+                if (siteDto.getRegionId() != null && regionRepo.existsById(siteDto.getRegionId())) {
+                    Optional<MtRegion> optionalRegion = regionRepo.findById(siteDto.getRegionId());
+                    optionalRegion.ifPresent(site::setRegion);
+                }
+                //Country
+                if (siteDto.getCountryId() != null && countryRepo.existsById(siteDto.getCountryId())) {
+                    Optional<MtCountry> optionalCountry = countryRepo.findById(siteDto.getCountryId());
+                    optionalCountry.ifPresent(site::setCountry);
+                }
+                //City
+                if (siteDto.getCityId() != null && cityRepo.existsById(siteDto.getCityId())) {
+                    Optional<MtCity> optionalCity = cityRepo.findById(siteDto.getCityId());
+                    optionalCity.ifPresent(site::setCity);
+                }
+                if (siteDto.getStatus().equals(Boolean.TRUE) || siteDto.getStatus().equals(Boolean.FALSE)) {
+                    site.setIsActive(siteDto.getStatus());
+                }
+                site.setSearchKey(getSiteSearchKey(site));
+                siteRepo.save(site);
+                return "site update successfully";
+            }
         }
-        Optional<Site> optionalSite = siteRepo.findById(siteDto.getId());
-        Site site;
-        if (optionalSite.isPresent()) {
-            site = optionalSite.get();
-            if (Validator.isValid(siteDto.getSiteId())) {
-                site.setSiteId(siteDto.getSiteId());
-            }
-            if (Validator.isValid(siteDto.getSiteName())) {
-                site.setSiteName(siteDto.getSiteName());
-            }
-            //Region
-            if (siteDto.getRegionId() != null && regionRepo.existsById(siteDto.getRegionId())) {
-                Optional<MtRegion> optionalRegion = regionRepo.findById(siteDto.getRegionId());
-                optionalRegion.ifPresent(site::setRegion);
-            }
-            //Country
-            if (siteDto.getCountryId() != null && countryRepo.existsById(siteDto.getCountryId())) {
-                Optional<MtCountry> optionalCountry = countryRepo.findById(siteDto.getCountryId());
-                optionalCountry.ifPresent(site::setCountry);
-            }
-            //City
-            if (siteDto.getCityId() != null && cityRepo.existsById(siteDto.getCityId())) {
-                Optional<MtCity> optionalCity = cityRepo.findById(siteDto.getCityId());
-                optionalCity.ifPresent(site::setCity);
-            }
-            if (siteDto.getStatus().equals(Boolean.TRUE) || siteDto.getStatus().equals(Boolean.FALSE)) {
-                site.setIsActive(siteDto.getStatus());
-            }
-            site.setSearchKey(getSiteSearchKey(site));
-            siteRepo.save(site);
-            return "site update successfully";
-        }
-
         return "this id not in database";
     }
 
