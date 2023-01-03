@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Mono;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -33,6 +35,8 @@ public class FileController {
     @Autowired
     FileService fileService;
 
+    Logger logger = LoggerFactory.getLogger(FileController.class);
+
     @PostMapping()
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
         return new ResponseEntity<>(fileService.addFile(file), HttpStatus.OK);
@@ -47,43 +51,21 @@ public class FileController {
                 .body(new ByteArrayResource(loadFile.getFile()));
     }
 
-    @GetMapping("/videos/stream/{id}")
-    public void streamVideo(@PathVariable String id, HttpServletResponse response) throws Exception {
-        FileDocument video = fileService.getVideo(id);
-        FileCopyUtils.copy(video.getStream(), response.getOutputStream());
-    }
-
     @PostMapping("/upload")
     public String uploadFiles(@RequestParam("files") MultipartFile[] files) throws IOException {
         return fileService.uploadFiles(files);
     }
 
-//    @GetMapping("/files")
-//    public ResponseEntity<List<FileInfo>> getListFiles() {
-//        List<FileInfo> fileInfos = storageService.loadAll().map(path -> {
-//            String filename = path.getFileName().toString();
-//            String url = MvcUriComponentsBuilder
-//                    .fromMethodName(FilesController.class, "getFile", path.getFileName().toString()).build().toString();
-//
-//            return new FileInfo(filename, url);
-//        }).collect(Collectors.toList());
-//
-//        return ResponseEntity.status(HttpStatus.OK).body(fileInfos);
-//    }
-
-//    @GetMapping("/files/{filename:.+}")
-//    public ResponseEntity<Resource> getFile(@PathVariable String filename) {
-//        Resource file = storageService.load(filename);
-//        return ResponseEntity.ok()
-//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
-//    }
-
+    @GetMapping(value = "video/{title}", produces = "video/mp4")
+    public Mono<Resource> getVideos(@PathVariable String title) throws IOException {
+        //logger.info("range in bytes() : " + range);
+        return fileService.getVideo(title);
+    }
 
     @DeleteMapping("/{id}")
     public String deleteFile(@PathVariable String id) {
         return fileService.deleteFile(id);
     }
-
 
     @MutationMapping(name = "uploadFiles")
     public String uploadFiles(@Argument(name = "file") MultipartFile file) throws IOException {

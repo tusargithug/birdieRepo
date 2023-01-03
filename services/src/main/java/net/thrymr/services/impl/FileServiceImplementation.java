@@ -5,6 +5,7 @@ import com.mongodb.DBObject;
 import com.mongodb.client.gridfs.model.GridFSFile;
 import net.thrymr.FileDocument;
 import net.thrymr.FileDocumentRepo;
+import net.thrymr.constant.Constants;
 import net.thrymr.model.FileEntity;
 import net.thrymr.model.Groups;
 import net.thrymr.repository.FileRepo;
@@ -12,12 +13,15 @@ import net.thrymr.repository.GroupRepo;
 import net.thrymr.services.FileService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.*;
@@ -34,8 +38,14 @@ public class FileServiceImplementation implements FileService {
     FileRepo fileRepo;
     @Autowired
     FileDocumentRepo fileDocumentRepo;
+
     @Autowired
     GroupRepo groupRepo;
+
+    @Autowired
+    private ResourceLoader resourceLoader;
+
+    private static final String FORMAT="classpath:videos/%s.mp4";
 
 
     @Override
@@ -172,22 +182,10 @@ public class FileServiceImplementation implements FileService {
     }
 
     @Override
-    public FileDocument getVideo(String id) throws IOException {
-//        GridFSFile file = template.findOne(new Query(Criteria.where("_id").is(id)));
-//        FileDocument video = new FileDocument();
-//        video.setFileName(file.getMetadata().get("title").toString());
-//        video.setStream(operations.getResource(file).getInputStream());
-//        return video;
-
-        GridFSFile gridFSFile = template.findOne(new Query(Criteria.where("_id").is(id)));
-        FileDocument loadFile = new FileDocument();
-        if (gridFSFile != null && gridFSFile.getMetadata() != null && loadFile.getIsActive().equals(Boolean.TRUE)) {
-            loadFile.setFileName(gridFSFile.getFilename());
-            loadFile.setFileType(gridFSFile.getMetadata().get("_contentType").toString());
-            loadFile.setFileSizeInBytes(gridFSFile.getMetadata().get("fileSize").toString());
-            loadFile.setFile(IOUtils.toByteArray(operations.getResource(gridFSFile).getInputStream()));
-        }
-        return loadFile;
+    public Mono<Resource> getVideo(String title){
+        String fileName = Constants.getVideoFiles().get(title);
+        return Mono.fromSupplier(()->resourceLoader.
+                getResource(String.format(FORMAT, fileName)));
     }
 
     public String getFileEntitySearchKey(FileEntity fileEntity) {
