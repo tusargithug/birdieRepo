@@ -160,7 +160,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
 
     @Override
     public String updateSite(SiteDto siteDto) {
-        if (!Validator.isValid(siteDto.getId())) {
+        if (Validator.isValid(siteDto.getId())) {
             Optional<Site> optionalSite = siteRepo.findById(siteDto.getId());
             Site site;
             if (optionalSite.isPresent()) {
