@@ -1,5 +1,6 @@
 package net.thrymr.services.impl;
 
+import net.thrymr.constant.Constants;
 import net.thrymr.dto.VendorDto;
 import net.thrymr.dto.response.SiteResponse;
 import net.thrymr.dto.response.VendorResponse;
@@ -47,7 +48,11 @@ public class VendorServiceImpl implements VendorService {
         }
         vendor.setCountryCode(request.getCountryCode());
         if (request.getMobileNumber() != null && !vendorRepo.existsByMobileNumber(request.getMobileNumber())) {
-            vendor.setMobileNumber(request.getMobileNumber());
+            if(Constants.isValidMobileNumberPattern(request.getMobileNumber())) {
+                vendor.setMobileNumber(request.getMobileNumber());
+            }else {
+                return "please provide valid mobile number or must be start mobile number with given digits 6,7,8,9";
+            }
         } else {
             return "This mobile number already existed";
         }
@@ -140,7 +145,11 @@ public class VendorServiceImpl implements VendorService {
                     vendor.setCountryCode(request.getCountryCode());
                 }
                 if (vendor.getMobileNumber().equals(request.getMobileNumber()) || !vendorRepo.existsByMobileNumber(request.getMobileNumber())) {
-                    vendor.setMobileNumber(request.getMobileNumber());
+                    if(Constants.isValidMobileNumberPattern(request.getMobileNumber())) {
+                        vendor.setMobileNumber(request.getMobileNumber());
+                    }else {
+                        return "please provide valid mobile number or must be start mobile number with given digits 6,7,8,9";
+                    }
                 } else {
                     return "This mobile number already existed";
                 }

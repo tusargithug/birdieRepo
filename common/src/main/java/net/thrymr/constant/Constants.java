@@ -6,6 +6,8 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class Constants {
@@ -77,5 +79,18 @@ public class Constants {
         videoFileNames.put("chapter_5","Chapter 5 - Impact of negative beliefs around Mental health");
         videoFileNames.put("chapter_6","Chapter 6 - Creating a safe environment");
         return videoFileNames;
+    }
+
+    public static Boolean isValidEmailPattern(String email) {
+        String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+        Pattern p = Pattern.compile(ePattern);
+        Matcher m = p.matcher(email);
+        return m.matches();
+    }
+    public static Boolean isValidMobileNumberPattern(String mobile) {
+        String ePattern = "^[6-9]{1}[0-9]{9}$";
+        Pattern p = Pattern.compile(ePattern);
+        Matcher m = p.matcher(mobile);
+        return m.matches();
     }
 }

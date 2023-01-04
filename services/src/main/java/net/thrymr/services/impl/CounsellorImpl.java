@@ -72,7 +72,11 @@ public class CounsellorImpl implements CounsellorService {
         }
         counsellor.setCountryCode(request.getCountryCode());
         if(request.getMobileNumber() != null && !counsellorRepo.existsByMobileNumber(request.getMobileNumber())) {
-            counsellor.setMobileNumber(request.getMobileNumber());
+            if(Constants.isValidMobileNumberPattern(request.getMobileNumber())) {
+                counsellor.setMobileNumber(request.getMobileNumber());
+            }else {
+                return "please provide valid mobile number or must be start mobile number with given digits 6,7,8,9";
+            }
         }else{
             return "This mobile number already existed";
         }
@@ -126,7 +130,11 @@ public class CounsellorImpl implements CounsellorService {
                     counsellor.setCountryCode(request.getCountryCode());
                 }
                 if(counsellor.getMobileNumber().equals(request.getMobileNumber()) || !counsellorRepo.existsByMobileNumber(request.getMobileNumber())) {
-                    counsellor.setMobileNumber(request.getMobileNumber());
+                    if(Constants.isValidMobileNumberPattern(request.getMobileNumber())) {
+                        counsellor.setMobileNumber(request.getMobileNumber());
+                    }else {
+                        return "please provide valid mobile number or must be start mobile number with given digits 6,7,8,9";
+                    }
                 }else {
                     return "This mobile number already existed";
                 }

@@ -218,7 +218,11 @@ public class AppUserServiceImpl implements AppUserService {
         }
         user.setCountryCode(request.getCountryCode());
         if(request.getMobile() != null && !appUserRepo.existsByMobile(request.getMobile())) {
-            user.setMobile(request.getMobile());
+            if(Constants.isValidMobileNumberPattern(request.getMobile())) {
+                user.setMobile(request.getMobile());
+            }else {
+                return "please provide valid mobile number or must be start mobile number with given digits 6,7,8,9";
+            }
         }else {
             return "This mobile number already existed";
         }
@@ -264,7 +268,11 @@ public class AppUserServiceImpl implements AppUserService {
                     user.setCountryCode(request.getCountryCode());
                 }
                 if (user.getMobile().equals(request.getMobile()) || !appUserRepo.existsByMobile(request.getMobile())) {
-                    user.setMobile(request.getMobile());
+                    if(Constants.isValidMobileNumberPattern(request.getMobile())) {
+                        user.setMobile(request.getMobile());
+                    }else {
+                        return "please provide valid mobile number or must be start mobile number with given digits 6,7,8,9";
+                    }
                 }else {
                    return  "This mobile number already exist";
                 }
