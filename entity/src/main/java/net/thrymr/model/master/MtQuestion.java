@@ -20,25 +20,25 @@ import net.thrymr.model.Chapter;
 @Getter
 @NoArgsConstructor
 @Table(name = "mt_question")
-public class MtQuestion extends BaseEntity{
-	
-	@Column(columnDefinition = "TEXT")
-	private String question;
+public class MtQuestion extends BaseEntity {
 
-	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY,mappedBy = "question")
-	private Set<MtOptions> mtOptions = new HashSet<>();
-	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private PsychometricTest psychometricTest;
+    @Column(columnDefinition = "TEXT")
+    private String question;
 
-	@Enumerated(EnumType.STRING)
-	private QuestionCalType questionCalType;
-	
-	private Integer sequence;
+    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, mappedBy = "question")
+    private Set<MtOptions> mtOptions = new HashSet<>();
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private MtAssessment assessment;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private PsychometricTest psychometricTest;
 
-	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-	private Chapter chapter;
+    @Enumerated(EnumType.STRING)
+    private QuestionCalType questionCalType;
+
+    private Integer sequence;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private MtAssessment assessment;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Chapter chapter;
 }

@@ -167,9 +167,9 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                 if (Validator.isValid(dto.getDescription())) {
                     chapter.setDescription(dto.getDescription());
                 }
-                if(Validator.isValid(dto.getUnitId())){
+                if (Validator.isValid(dto.getUnitId())) {
                     Optional<Unit> optionalUnit = unitRpo.findById(dto.getUnitId());
-                    if(optionalUnit.isPresent()){
+                    if (optionalUnit.isPresent()) {
                         chapter.setUnit(optionalUnit.get());
                     }
                 }
@@ -233,6 +233,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         //filters
         Specification<Unit> chapterSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> addUnitPredicate = new ArrayList<>();
+            Join<Unit, Chapter> unitChapterJoin = root.join("chapters");
             if (chapterDto.getIsActive() != null && chapterDto.getIsActive().equals(Boolean.TRUE)) {
                 Predicate isActive = criteriaBuilder.and(root.get("isActive").in(chapterDto.getIsActive()));
                 addUnitPredicate.add(isActive);
@@ -250,14 +251,32 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
             }
             Predicate isDeletedPredicate = criteriaBuilder.equal(root.get("isDeleted"), Boolean.FALSE);
             addUnitPredicate.add(isDeletedPredicate);
+
             if (Validator.isValid(chapterDto.getSearchKey())) {
                 Predicate searchPredicate = criteriaBuilder.like(
                         criteriaBuilder.lower(root.get("searchKey")),
                         "%" + chapterDto.getSearchKey().toLowerCase() + "%");
                 addUnitPredicate.add(searchPredicate);
             }
-            Predicate isDeleted = criteriaBuilder.equal(root.get("isDeleted"), Boolean.FALSE);
-            addUnitPredicate.add(isDeleted);
+
+
+            Predicate chapterIsDeletedPredicate = criteriaBuilder.equal(unitChapterJoin.get("isDeleted"), Boolean.FALSE);
+            addUnitPredicate.add(chapterIsDeletedPredicate);
+
+            Predicate mtQuestionsIsDeletedPredicate = criteriaBuilder.equal(unitChapterJoin.join("questionList").get("isDeleted"), Boolean.FALSE);
+            addUnitPredicate.add(mtQuestionsIsDeletedPredicate);
+
+            Predicate mtOptionsIsDeletedPredicate = criteriaBuilder.equal(unitChapterJoin.join("questionList").join("mtOptions").get("isDeleted"), Boolean.FALSE);
+            addUnitPredicate.add(mtOptionsIsDeletedPredicate);
+
+            /* Join<Chapter, MtQuestion> QsJOIN = unitChapterJoin.join("questionList");
+            Predicate mtQuestionIsDeletedPredicate=criteriaBuilder.equal(QsJOIN.get("isDeleted"), Boolean.FALSE);
+            addUnitPredicate.add(mtQuestionIsDeletedPredicate);*/
+
+            criteriaQuery.groupBy(root.get("id"));
+
+
+
 
             return criteriaBuilder.and(addUnitPredicate.toArray(new Predicate[0]));
         });
@@ -282,23 +301,23 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
 
     @Override
     public Chapter getChapterById(Long id) {
-       Chapter chapter = null;
-       if (Validator.isValid(id)) {
-           Optional<Chapter> optionalAppUser = chapterRepo.findById(id);
-           if (optionalAppUser.isPresent() && optionalAppUser.get().getIsDeleted().equals(Boolean.FALSE)) {
-               chapter = optionalAppUser.get();
-               return chapter;
-           }
-       }
+        Chapter chapter = null;
+        if (Validator.isValid(id)) {
+            Optional<Chapter> optionalAppUser = chapterRepo.findById(id);
+            if (optionalAppUser.isPresent() && optionalAppUser.get().getIsDeleted().equals(Boolean.FALSE)) {
+                chapter = optionalAppUser.get();
+                return chapter;
+            }
+        }
         return new Chapter();
     }
 
     @Override
     public Unit getUnitById(Long id) {
         Unit unit = null;
-        if(Validator.isValid(id)) {
+        if (Validator.isValid(id)) {
             Optional<Unit> optionalUnit = unitRpo.findById(id);
-            if (optionalUnit.isPresent() && optionalUnit.get().getIsDeleted().equals(Boolean.FALSE)){
+            if (optionalUnit.isPresent() && optionalUnit.get().getIsDeleted().equals(Boolean.FALSE)) {
                 unit = optionalUnit.get();
                 return unit;
             }
