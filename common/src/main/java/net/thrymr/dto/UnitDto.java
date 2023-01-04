@@ -12,6 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 public class UnitDto {
     private Long id;
+    private Integer sequence;
+    private Integer chapterSequence;
     private String unitName;
     private Boolean sortCreatedOn;
     private Integer chapterCount;

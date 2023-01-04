@@ -182,8 +182,8 @@ public class FileServiceImplementation implements FileService {
     }
 
     @Override
-    public Mono<Resource> getVideo(String title){
-        String fileName = Constants.getVideoFiles().get(title);
+    public Mono<Resource> getVideo(Integer sequence){
+        String fileName = Constants.getVideoFiles().get(sequence);
         return Mono.fromSupplier(()->resourceLoader.
                 getResource(String.format(FORMAT, fileName)));
     }

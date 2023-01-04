@@ -32,6 +32,9 @@ public class Chapter extends  BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Unit unit;
 
+    @Column(unique = true)
+    private Integer sequence;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,mappedBy = "chapter")
     private List<MtQuestion> questionList=new ArrayList<>();
     }

@@ -58,6 +58,7 @@ input ChapterDto{
     pageSize:Int
     isSorting:Boolean
     addedOn:String
+    sequence:Int
 }
 input FileEntityDto{
     fileId:ID!
@@ -132,6 +133,8 @@ input UnitDto {
     pageNumber :Int
     pageSize:Int
     sortUserName:Boolean
+    sequence:Int
+    chapterSequence:Int
 }
 type MtCountry {
     id:ID!
@@ -181,6 +184,7 @@ type Chapter{
     isActive:Boolean
     createdOn:String
     questionList:[MtQuestion]
+    sequence:Int
 }
 type MtOptions{
     id:ID
@@ -263,6 +267,7 @@ type Unit{
     isActive:Boolean
     createdOn:String
     searchKey:String
+    sequence:Int
 }
 
 input AssessmentDto{

@@ -56,10 +56,10 @@ public class FileController {
         return fileService.uploadFiles(files);
     }
 
-    @GetMapping(value = "video/{title}", produces = "video/mp4")
-    public Mono<Resource> getVideos(@PathVariable String title) throws IOException {
+    @GetMapping(value = "video/{sequence}", produces = "video/mp4")
+    public Mono<Resource> getVideos(@PathVariable Integer sequence) throws IOException {
         //logger.info("range in bytes() : " + range);
-        return fileService.getVideo(title);
+        return fileService.getVideo(sequence);
     }
 
     @DeleteMapping("/{id}")

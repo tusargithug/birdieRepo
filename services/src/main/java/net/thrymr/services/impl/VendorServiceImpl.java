@@ -48,11 +48,7 @@ public class VendorServiceImpl implements VendorService {
         }
         vendor.setCountryCode(request.getCountryCode());
         if (request.getMobileNumber() != null && !vendorRepo.existsByMobileNumber(request.getMobileNumber())) {
-            if(Constants.isValidMobileNumberPattern(request.getMobileNumber())) {
-                vendor.setMobileNumber(request.getMobileNumber());
-            }else {
-                return "please provide valid mobile number or must be start mobile number with given digits 6,7,8,9";
-            }
+            vendor.setMobileNumber(request.getMobileNumber());
         } else {
             return "This mobile number already existed";
         }
@@ -145,11 +141,7 @@ public class VendorServiceImpl implements VendorService {
                     vendor.setCountryCode(request.getCountryCode());
                 }
                 if (vendor.getMobileNumber().equals(request.getMobileNumber()) || !vendorRepo.existsByMobileNumber(request.getMobileNumber())) {
-                    if(Constants.isValidMobileNumberPattern(request.getMobileNumber())) {
-                        vendor.setMobileNumber(request.getMobileNumber());
-                    }else {
-                        return "please provide valid mobile number or must be start mobile number with given digits 6,7,8,9";
-                    }
+                    vendor.setMobileNumber(request.getMobileNumber());
                 } else {
                     return "This mobile number already existed";
                 }

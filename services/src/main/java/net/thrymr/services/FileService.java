@@ -18,5 +18,5 @@ public interface FileService {
 
     String uploadFiles(MultipartFile[] files) throws IOException;
 
-    Mono<Resource> getVideo(String title) throws IOException;
+    Mono<Resource> getVideo(Integer sequence) throws IOException;
 }

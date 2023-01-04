@@ -8,6 +8,7 @@ import net.thrymr.model.AppUser;
 import net.thrymr.model.Chapter;
 import net.thrymr.model.FileEntity;
 import net.thrymr.model.Unit;
+import net.thrymr.model.master.MtOptions;
 import net.thrymr.model.master.MtQuestion;
 import net.thrymr.repository.ChapterRepo;
 import net.thrymr.repository.FileRepo;
@@ -25,6 +26,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -57,19 +59,25 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
     }
 
     public Unit dtoToEntityForUpdate(UnitDto dto) {
-        Optional<Unit> optionalAddUnit = unitRpo.findById(dto.getId());
-        Unit unit = optionalAddUnit.orElse(new Unit());
-        if (optionalAddUnit.isPresent()) {
-            unit = optionalAddUnit.get();
-            if (Validator.isValid(dto.getUnitName())) {
-                unit.setUnitName(dto.getUnitName());
+        if(Validator.isValid(dto.getId())) {
+            Optional<Unit> optionalAddUnit = unitRpo.findById(dto.getId());
+            Unit unit;
+            if (optionalAddUnit.isPresent()) {
+                unit = optionalAddUnit.get();
+                if (Validator.isValid(dto.getUnitName())) {
+                    unit.setUnitName(dto.getUnitName());
+                }
+                if (dto.getIsActive() != null && dto.getIsActive().equals(Boolean.TRUE) || dto.getIsActive().equals(Boolean.FALSE)) {
+                    unit.setIsActive(dto.getIsActive());
+                }
+                if(Validator.isValid(dto.getSequence())){
+                    unit.setSequence(dto.getSequence());
+                }
+                unit.setSearchKey(getUnitSearchKey(unit));
+                return unit;
             }
         }
-        if (dto.getIsActive() != null && dto.getIsActive().equals(Boolean.TRUE) || dto.getIsActive().equals(Boolean.FALSE)) {
-            unit.setIsActive(dto.getIsActive());
-        }
-        unit.setSearchKey(getUnitSearchKey(unit));
-        return unit;
+        return new Unit();
     }
 
     @Override
@@ -128,7 +136,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         Page<Unit> unitObjectives = unitRpo.findAll(addUnitSpecification, pageable);
         if (unitObjectives.getContent() != null) {
             PaginationResponse paginationResponse = new PaginationResponse();
-            paginationResponse.setUnitList(unitObjectives.getContent());
+            paginationResponse.setUnitList(unitObjectives.stream().collect(Collectors.toSet()));
             paginationResponse.setTotalPages(unitObjectives.getTotalPages());
             paginationResponse.setTotalElements(unitObjectives.getTotalElements());
             return paginationResponse;
@@ -188,6 +196,9 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                 if (dto.getIsActive() != null && dto.getIsActive().equals(Boolean.TRUE) || dto.getIsActive().equals(Boolean.FALSE)) {
                     chapter.setIsActive(dto.getIsActive());
                 }
+                if(Validator.isValid(dto.getSequence())){
+                    chapter.setSequence(dto.getSequence());
+                }
                 chapterRepo.save(chapter);
             }
             return chapter;
@@ -230,9 +241,13 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         } else if (chapterDto.getIsSorting() != null && chapterDto.getIsSorting().equals(Boolean.FALSE)) {
             pageable = PageRequest.of(chapterDto.getPageNumber(), chapterDto.getPageSize(), Sort.Direction.DESC, "chapterName");
         }
+
+
+
         //filters
         Specification<Unit> chapterSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> addUnitPredicate = new ArrayList<>();
+
             if (chapterDto.getIsActive() != null && chapterDto.getIsActive().equals(Boolean.TRUE)) {
                 Predicate isActive = criteriaBuilder.and(root.get("isActive").in(chapterDto.getIsActive()));
                 addUnitPredicate.add(isActive);
@@ -256,8 +271,16 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                         "%" + chapterDto.getSearchKey().toLowerCase() + "%");
                 addUnitPredicate.add(searchPredicate);
             }
-            Predicate isDeleted = criteriaBuilder.equal(root.get("isDeleted"), Boolean.FALSE);
-            addUnitPredicate.add(isDeleted);
+
+            Join<Unit,Chapter> unitChapterJoin = root.join("chapters",JoinType.LEFT);
+            Predicate chapterIsDeletedPredicate=criteriaBuilder.and(unitChapterJoin.get("isDeleted").in(Boolean.FALSE));
+            addUnitPredicate.add(chapterIsDeletedPredicate);
+            Join<Chapter,MtQuestion> questionJoin = root.join("questionList",JoinType.LEFT);
+            Predicate mtQuestionIsDeletedPredicate=criteriaBuilder.and(questionJoin.get("isDeleted").in(Boolean.FALSE));
+            addUnitPredicate.add(mtQuestionIsDeletedPredicate);
+            Join<MtQuestion,MtOptions> optionsJoin = root.join("mtOptions",JoinType.LEFT);
+            Predicate mtOptionsIsDeletedPredicate=criteriaBuilder.and(optionsJoin.get("isDeleted").in(Boolean.FALSE));
+            addUnitPredicate.add(mtOptionsIsDeletedPredicate);
 
             return criteriaBuilder.and(addUnitPredicate.toArray(new Predicate[0]));
         });
@@ -266,7 +289,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
             Page<Unit> unitObjectives = unitRpo.findAll(chapterSpecification, pageable);
             if (!unitObjectives.getContent().isEmpty()) {
                 if (chapterDto.getUnitId() != null) {
-                    paginationResponse.setUnitList(unitObjectives.stream().filter(unit -> unit.getId().equals(chapterDto.getUnitId())).collect(Collectors.toList()));
+                    paginationResponse.setUnitList(unitObjectives.stream().filter(unit -> unit.getId().equals(chapterDto.getUnitId())).collect(Collectors.toSet()));
                     paginationResponse.setTotalPages(unitObjectives.getTotalPages());
                     paginationResponse.setTotalElements(unitObjectives.getTotalElements());
                     return paginationResponse;
@@ -274,7 +297,8 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
             }
         }else {
             List<Unit> unitObjectives = unitRpo.findAll(chapterSpecification);
-            paginationResponse.setUnitList(unitObjectives.stream().filter(unit -> unit.getId().equals(chapterDto.getUnitId())).collect(Collectors.toList()));
+            System.out.println(unitObjectives.size());
+            paginationResponse.setUnitList(unitObjectives.stream().filter(unit -> unit.getId().equals(chapterDto.getUnitId())).collect(Collectors.toSet()));
             return paginationResponse;
         }
         return new PaginationResponse();
@@ -306,10 +330,36 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         return new Unit();
     }
 
+    @Override
+    public Unit getUnitBySequence(UnitDto request) {
+        Unit unit = null;
+        if(Validator.isValid(request.getSequence()) && Validator.isValid(request.getChapterSequence())) {
+            Optional<Unit> optionalUnit = unitRpo.findBySequenceAndChaptersSequence(request.getSequence(),request.getChapterSequence());
+            if (optionalUnit.isPresent() && optionalUnit.get().getIsDeleted().equals(Boolean.FALSE)){
+                unit = optionalUnit.get();
+                return unit;
+            }
+        }
+        return new Unit();
+    }
+    @Override
+    public Chapter getChapterBySequence(Integer sequence) {
+        Chapter Chapter = null;
+        if(Validator.isValid(sequence)) {
+            Optional<Chapter> optionalChapter = chapterRepo.findBySequence(sequence);
+            if (optionalChapter.isPresent() && optionalChapter.get().getIsDeleted().equals(Boolean.FALSE)){
+                Chapter = optionalChapter.get();
+                return Chapter;
+            }
+        }
+        return new Chapter();
+    }
+
 
     public Unit dtoToEntity(UnitDto dto) {
         Unit unit = new Unit();
         unit.setUnitName(dto.getUnitName());
+        unit.setSequence(dto.getSequence());
         if (dto.getIsActive() != null && dto.getIsActive().equals(Boolean.TRUE)) {
             unit.setIsActive(dto.getIsActive());
         }
@@ -350,6 +400,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         Chapter chapter = new Chapter();
         chapter.setChapterName(chapterDto.getChapterName());
         chapter.setDescription(chapterDto.getDescription());
+        chapter.setSequence(chapterDto.getSequence());
         if (Validator.isValid(chapterDto.getProfilePictureId())) {
             Optional<FileEntity> optionalFileEntity = fileRepo.findByFileId(chapterDto.getProfilePictureId());
             if (optionalFileEntity.isPresent()) {

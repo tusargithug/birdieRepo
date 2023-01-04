@@ -70,14 +70,14 @@ public class Constants {
     public static final String FILE_PREVIEW_URL = "/api/v1/mongo/file-preview/";
     public static final String FILE_DOWNLOAD_URL = "/api/v1/mongo/file/";
 
-    public static Map<String, String> getVideoFiles(){
-        Map<String, String> videoFileNames = new HashMap<>();
-        videoFileNames.put("chapter_1","Chapter 1 - What_is_Mental_Health_ Presentation_22_December_2022");
-        videoFileNames.put("chapter_2","Chapter 2 -  Why is it necessary to work on Mental health - Presentation - 22 December 2022");
-        videoFileNames.put("chapter_3","Chapter 3 - Its okay not to be okay - Presentation - 26 December 2022");
-        videoFileNames.put("chapter_4","Chapter 4 - Negative attitudes and beliefs around Mental Health - Presentation - 22 December 2022");
-        videoFileNames.put("chapter_5","Chapter 5 - Impact of negative beliefs around Mental health");
-        videoFileNames.put("chapter_6","Chapter 6 - Creating a safe environment");
+    public static Map<Integer, String> getVideoFiles(){
+        Map<Integer, String> videoFileNames = new HashMap<>();
+        videoFileNames.put(1,"Chapter 1 - What_is_Mental_Health_ Presentation_22_December_2022");
+        videoFileNames.put(2,"Chapter 2 - Why is it necessary to work on Mental health - Presentation - 22 December 2022");
+        videoFileNames.put(3,"Chapter 3 - Its okay not to be okay - Presentation - 26 December 2022");
+        videoFileNames.put(4,"Chapter 4 - Negative attitudes and beliefs around Mental Health - Presentation - 22 December 2022");
+        videoFileNames.put(5,"Chapter 5 - Impact of negative beliefs around Mental health");
+        videoFileNames.put(6,"Chapter 6 - Creating a safe environment");
         return videoFileNames;
     }
 
