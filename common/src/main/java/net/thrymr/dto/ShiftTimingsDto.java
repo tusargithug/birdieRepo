@@ -17,4 +17,5 @@ public class ShiftTimingsDto {
     private String shiftStatAt;
     private String shiftEndAt;
     private Boolean status;
+    private Long SiteId;
 }

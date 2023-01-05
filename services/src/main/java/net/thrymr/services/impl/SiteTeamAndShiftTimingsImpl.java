@@ -354,11 +354,12 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         } else {
             shiftTimings.setIsActive(Boolean.TRUE);
         }
-
-       /* if (shiftTimingsDto.getSiteId() != null && siteRepo.existsById(shiftTimingsDto.getSiteId())) {
+        if (shiftTimingsDto.getSiteId() != null && siteRepo.existsById(shiftTimingsDto.getSiteId())) {
             Optional<Site> optionalSite = siteRepo.findById(shiftTimingsDto.getSiteId());
             optionalSite.ifPresent(shiftTimings::setSite);
         }
+
+       /*
         if (Validator.isValid(shiftTimingsDto.getCounsellorId())) {
             Optional<Counsellor> optionalCounsellorId = counsellorRepo.findById(shiftTimingsDto.getCounsellorId());
             if (optionalCounsellorId.isPresent()) {

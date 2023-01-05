@@ -313,6 +313,7 @@ enum FileType{
 type ShiftTimings{
     id: ID!
     shiftName:String
+    site:Site
     shiftStatAt:LocalTime
     shiftEndAt:LocalTime
     shiftTimings:String
@@ -320,6 +321,7 @@ type ShiftTimings{
 }
 input ShiftTimingsDto{
     id:Int
+    siteId:Int
     shiftName:String
     shiftStatAt:String
     shiftEndAt:String
