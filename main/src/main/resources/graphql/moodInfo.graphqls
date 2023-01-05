@@ -85,6 +85,8 @@ type Query {
     getLoggedInUser:LoginResponse
     getAllMoodSourceById(input:MoodSourceIntensityRequestDto):[MtMoodSource]
     getUnitById(id:ID):Unit
+    getAllPaginationUserLearningStatus(input:UserLearningStatusDto):PaginationResponse
+
 }
 
 type Mutation {
@@ -189,7 +191,9 @@ type Mutation {
     pauseCounsellorSlotsById(input:CounsellorSlotDto):String!
     loginUser(input:LoginDto):String!
     changePassword(input:ChangePasswordDto):String!
-
+    createUserLearningStatus(input:UserLearningStatusDto):String!
+    updateUserLearningStatus(input:UserLearningStatusDto):String!
+    deleteUserLearningStatusById(userId:String):String!
 }
 
 scalar Upload
@@ -705,6 +709,7 @@ type PaginationResponse{
     totalElements:Int
     counsellorEmployeeList:[CounsellorEmployee]
     counsellorSlotList:[CounsellorSlot]
+    userLearningStatusList:[UserLearningStatus]
 }
 input TeamMembersDto {
     id:ID
@@ -819,4 +824,26 @@ type LoginResponse {
     accessToken:String
     userRole:String
     email:String
+}
+
+type UserLearningStatus {
+    id:ID
+    userId:String
+    userName:String
+    unitNumber:String
+    chapterNumber:String
+    sequence:String
+}
+
+input UserLearningStatusDto {
+    id:ID
+    userId:String
+    userName:String
+    unitNumber:Int
+    chapterNumber:Int
+    sequence:Int
+    isActive:Boolean
+    pageSize:Int
+    pageNumber:Int
+    sortUserName:Int
 }

@@ -295,6 +295,7 @@ public class AppUserServiceImpl implements AppUserService {
                 appUserRepo.save(user);
                 return "User updated successfully";
             }
+            return "User not found";
         }
         return "This id not present in database";
     }

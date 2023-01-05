@@ -155,6 +155,9 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
         if (region.getMtCountry() != null) {
             searchKey = searchKey + " " + region.getMtCountry();
         }
+        if(region.getIsActive() != null) {
+            searchKey = searchKey + " " + region.getIsActive();
+        }
         if (region.getSite() != null) {
             searchKey = searchKey + " " + region.getSite();
         }
@@ -235,16 +238,20 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
     }
     @Override
     public String deleteRegionById(Long id) {
-        Optional<MtRegion> mtRegionId=regionRepo.findById(id);
-        MtRegion mtRegion;
-        if(mtRegionId.isPresent()){
-            mtRegion=mtRegionId.get();
-            mtRegion.setIsActive(Boolean.FALSE);
-            mtRegion.setIsDeleted(Boolean.TRUE);
-            regionRepo.save(mtRegion);
-            return "delete record successfully";
+        if(Validator.isValid(id)) {
+            Optional<MtRegion> mtRegionId=regionRepo.findById(id);
+            MtRegion mtRegion;
+            if(mtRegionId.isPresent()){
+                mtRegion=mtRegionId.get();
+                mtRegion.setIsActive(Boolean.FALSE);
+                mtRegion.setIsDeleted(Boolean.TRUE);
+                mtRegion.setSearchKey(getRegionSearchKey(mtRegion));
+                regionRepo.save(mtRegion);
+                return "delete record successfully";
+            }
+            return "this id not in data base";
         }
-        return "this id not in data base";
+        return "Id not found";
     }
 
     @Override

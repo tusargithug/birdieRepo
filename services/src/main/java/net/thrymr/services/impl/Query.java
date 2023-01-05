@@ -88,6 +88,10 @@ public class Query implements GraphQLQueryResolver {
     MeditationService meditationService;
     @Autowired
     TeamMembersService teamMembersService;
+
+    @Autowired
+    UserLearningStatusService userLearningStatusService;
+
     @QueryMapping(name = "getMoodSourceById")
     public MtMoodSource getMoodSourceById(@Argument Long id) {
         return moodSourceService.getMoodSourceById(id);
@@ -478,5 +482,10 @@ public class Query implements GraphQLQueryResolver {
     @QueryMapping(name = "getUnitById")
     public Unit getUnitById(@Argument Long id) {
         return unitAndChapterServices.getUnitById(id);
+    }
+
+    @QueryMapping(name = "getAllPaginationUserLearningStatus")
+    public PaginationResponse getAllPaginationUserLearningStatus(@Argument(name = "input") UserLearningStatusDto request) {
+        return userLearningStatusService.getAllPaginationUserLearningStatus(request);
     }
 }
