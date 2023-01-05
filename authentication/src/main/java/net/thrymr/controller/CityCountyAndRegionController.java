@@ -80,6 +80,11 @@ public class CityCountyAndRegionController {
         return cityCountyAndRegionService.updateRegionById(regionDto);
     }
 
+    @MutationMapping(name = "deleteRegionById")
+    public String deleteRegionById(@Argument Long id) {
+        return cityCountyAndRegionService.deleteRegionById(id);
+    }
+
 
     @QueryMapping("getAllCountry")
     public List<MtCountry> getAllCountry() {

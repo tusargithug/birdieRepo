@@ -40,13 +40,14 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
 
     @Autowired
     SiteRepo siteRepo;
+
     @Override
     public String saveCountry(CountryDto countryDto) {
-        MtCountry mtCountry=new MtCountry();
+        MtCountry mtCountry = new MtCountry();
         mtCountry.setCountryName(countryDto.getCountryName());
         mtCountry.setCountryCode(countryDto.getCountryCode());
-        Optional<MtRegion> mtRegionId=regionRepo.findById(countryDto.getRegionId());
-        if(mtRegionId.isPresent()) {
+        Optional<MtRegion> mtRegionId = regionRepo.findById(countryDto.getRegionId());
+        if (mtRegionId.isPresent()) {
             mtCountry.setRegion(mtRegionId.get());
         }
         mtCountry.setSearchKey(getCountrySearchKey(mtCountry));
@@ -56,19 +57,19 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
 
     @Override
     public String updateCountryById(CountryDto countryDto) {
-        Optional<MtCountry> mtCountryId=countryRepo.findById(countryDto.getId());
+        Optional<MtCountry> mtCountryId = countryRepo.findById(countryDto.getId());
         MtCountry mtCountry;
-        if(mtCountryId.isPresent()) {
+        if (mtCountryId.isPresent()) {
             mtCountry = mtCountryId.get();
             if (Validator.isValid(countryDto.getCountryName())) {
                 mtCountry.setCountryName(countryDto.getCountryName());
             }
-            if(Validator.isValid(countryDto.getCountryCode())) {
+            if (Validator.isValid(countryDto.getCountryCode())) {
                 mtCountry.setCountryCode(countryDto.getCountryCode());
             }
-            if(Validator.isValid(countryDto.getRegionId())) {
-                Optional<MtRegion> regionOptional= regionRepo.findById(countryDto.getRegionId());
-                if(regionOptional.isPresent()){
+            if (Validator.isValid(countryDto.getRegionId())) {
+                Optional<MtRegion> regionOptional = regionRepo.findById(countryDto.getRegionId());
+                if (regionOptional.isPresent()) {
                     mtCountry.setRegion(regionOptional.get());
                 }
             }
@@ -97,18 +98,19 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
 
     @Override
     public List<MtCountry> getAllCountry() {
-        List<MtCountry> mtCountries=countryRepo.findAll();
-        if(!mtCountries.isEmpty()) {
-            return mtCountries.stream().filter(obj-> obj.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList());
+        List<MtCountry> mtCountries = countryRepo.findAll();
+        if (!mtCountries.isEmpty()) {
+            return mtCountries.stream().filter(obj -> obj.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList());
         }
         return new ArrayList<>();
     }
+
     @Override
     public String deleteCountryById(Long id) {
-        Optional<MtCountry> mtCountryId=countryRepo.findById(id);
+        Optional<MtCountry> mtCountryId = countryRepo.findById(id);
         MtCountry mtCountry;
-        if(mtCountryId.isPresent()){
-            mtCountry=mtCountryId.get();
+        if (mtCountryId.isPresent()) {
+            mtCountry = mtCountryId.get();
             mtCountry.setIsActive(Boolean.FALSE);
             mtCountry.setIsDeleted(Boolean.TRUE);
             countryRepo.save(mtCountry);
@@ -136,10 +138,10 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
 
     @Override
     public String saveCity(CityDto cityDto) {
-        MtCity mtCity=new MtCity();
+        MtCity mtCity = new MtCity();
         mtCity.setCityName(cityDto.getCityName());
-        Optional<MtCountry> mtCountryId=countryRepo.findById(cityDto.getMtCountryId());
-        if(mtCountryId.isPresent()) {
+        Optional<MtCountry> mtCountryId = countryRepo.findById(cityDto.getMtCountryId());
+        if (mtCountryId.isPresent()) {
             mtCity.setCountry(mtCountryId.get());
         }
         mtCity.setSearchKey(getAppUserSearchKey(mtCity));
@@ -155,21 +157,22 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
         if (region.getMtCountry() != null) {
             searchKey = searchKey + " " + region.getMtCountry();
         }
-        if(region.getIsActive() != null) {
+        if (region.getIsActive() != null) {
             searchKey = searchKey + " " + region.getIsActive();
         }
         if (region.getSite() != null) {
             searchKey = searchKey + " " + region.getSite();
         }
-         return searchKey;
+        return searchKey;
     }
+
     @Override
     public String updateCityById(CityDto cityDto) {
-        Optional<MtCity> mtCityId=cityRepo.findById(cityDto.getId());
+        Optional<MtCity> mtCityId = cityRepo.findById(cityDto.getId());
         MtCity mtCity;
-        if(mtCityId.isPresent()){
-            mtCity=mtCityId.get();
-            if(Validator.isValid(cityDto.getCityName())) {
+        if (mtCityId.isPresent()) {
+            mtCity = mtCityId.get();
+            if (Validator.isValid(cityDto.getCityName())) {
                 mtCity.setCityName(cityDto.getCityName());
                 cityRepo.save(mtCity);
             }
@@ -181,19 +184,19 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
 
     @Override
     public List<MtCity> getAllCities() {
-        List<MtCity> mtCity=cityRepo.findAll();
-        if(!mtCity.isEmpty()) {
-            return mtCity.stream().filter(obj-> obj.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList());
+        List<MtCity> mtCity = cityRepo.findAll();
+        if (!mtCity.isEmpty()) {
+            return mtCity.stream().filter(obj -> obj.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList());
         }
         return new ArrayList<>();
     }
 
     @Override
     public String deleteCityById(Long id) {
-        Optional<MtCity> mtCityId=cityRepo.findById(id);
+        Optional<MtCity> mtCityId = cityRepo.findById(id);
         MtCity mtCity;
-        if(mtCityId.isPresent()){
-            mtCity=mtCityId.get();
+        if (mtCityId.isPresent()) {
+            mtCity = mtCityId.get();
             mtCity.setIsActive(Boolean.FALSE);
             mtCity.setIsDeleted(Boolean.TRUE);
             cityRepo.save(mtCity);
@@ -205,7 +208,7 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
 
     @Override
     public String saveRegion(RegionDto regionDto) {
-        MtRegion mtRegion=new MtRegion();
+        MtRegion mtRegion = new MtRegion();
         mtRegion.setRegionName(regionDto.getRegionName());
         mtRegion.setSearchKey(getRegionSearchKey(mtRegion));
         regionRepo.save(mtRegion);
@@ -214,35 +217,36 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
 
     @Override
     public String updateRegionById(RegionDto regionDto) {
-        Optional<MtRegion> mtRegionId=regionRepo.findById(regionDto.getId());
+        Optional<MtRegion> mtRegionId = regionRepo.findById(regionDto.getId());
         MtRegion mtRegion;
-        if(mtRegionId.isPresent()){
-            mtRegion=mtRegionId.get();
-            if(Validator.isValid(regionDto.getId())) {
+        if (mtRegionId.isPresent()) {
+            mtRegion = mtRegionId.get();
+            if (Validator.isValid(regionDto.getId())) {
                 mtRegion.setRegionName(regionDto.getRegionName());
             }
             mtRegion.setSearchKey(getRegionSearchKey(mtRegion));
             regionRepo.save(mtRegion);
             return "region update successfully";
         }
-        return "this id not in data base";
+        return "This id not in data base";
     }
 
     @Override
     public List<MtRegion> getAllRegions() {
-        List<MtRegion> mtRegions=regionRepo.findAll();
-        if(!mtRegions.isEmpty()) {
-            return mtRegions.stream().filter(obj-> obj.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList());
+        List<MtRegion> mtRegions = regionRepo.findAll();
+        if (!mtRegions.isEmpty()) {
+            return mtRegions.stream().filter(obj -> obj.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList());
         }
         return new ArrayList<>();
     }
+
     @Override
     public String deleteRegionById(Long id) {
-        if(Validator.isValid(id)) {
-            Optional<MtRegion> mtRegionId=regionRepo.findById(id);
+        if (Validator.isValid(id)) {
+            Optional<MtRegion> mtRegionId = regionRepo.findById(id);
             MtRegion mtRegion;
-            if(mtRegionId.isPresent()){
-                mtRegion=mtRegionId.get();
+            if (mtRegionId.isPresent()) {
+                mtRegion = mtRegionId.get();
                 mtRegion.setIsActive(Boolean.FALSE);
                 mtRegion.setIsDeleted(Boolean.TRUE);
                 mtRegion.setSearchKey(getRegionSearchKey(mtRegion));
@@ -256,7 +260,7 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
 
     @Override
     public String uploadCountryData(MultipartFile file) {
-        List<MtCountry> countryList=new ArrayList<>();
+        List<MtCountry> countryList = new ArrayList<>();
         XSSFWorkbook workbook;
         try {
             workbook = new XSSFWorkbook(file.getInputStream());
@@ -268,30 +272,30 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
             return "COUNTRY.IMPORT.FORMAT.INVALID.DATA";
         }
         for (int index = 1; index <= worksheet.getLastRowNum(); index++) {
-            System.out.println("getLastRowNum: "+ worksheet.getLastRowNum());
+            System.out.println("getLastRowNum: " + worksheet.getLastRowNum());
             if (index > 0) {
                 try {
                     XSSFRow row = worksheet.getRow(index);
-                    MtCountry country=new MtCountry();
+                    MtCountry country = new MtCountry();
 
-                    if(row.getCell(9)!=null){
+                    if (row.getCell(9) != null) {
                         country.setCountryCode(getCellValue(row.getCell(9)));
                     }
-                    if(row.getCell(10)!=null){
+                    if (row.getCell(10) != null) {
                         country.setCountryName(getCellValue(row.getCell(10)));
                     }
-                    if(row.getCell(11)!=null){
-                        country.setInternationalDialing("+"+getCellValue(row.getCell(11)));
+                    if (row.getCell(11) != null) {
+                        country.setInternationalDialing("+" + getCellValue(row.getCell(11)));
                     }
-                    if(row.getCell(12)!=null){
+                    if (row.getCell(12) != null) {
                         Optional<MtRegion> mtRegion = regionRepo.findById(Long.valueOf(getCellValue(row.getCell(12))));
-                        if(mtRegion.isPresent()){
+                        if (mtRegion.isPresent()) {
                             country.setRegion(mtRegion.get());
                         }
                     }
                     setCountrySearchKey(country);
                     countryList.add(country);
-                }catch (Exception e) {
+                } catch (Exception e) {
                     return "COUNTRY.IMPORT.FORMAT.FAILED";
                 }
             }
@@ -319,7 +323,7 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
         if (worksheet.getLastRowNum() < 1) {
             return "CITY.IMPORT.FORMAT.INVALID.DATA";
         }
-        XSSFSheet workSheet= workbook.getSheetAt(0);
+        XSSFSheet workSheet = workbook.getSheetAt(0);
         if (workSheet.getLastRowNum() < 1) {
             return "CITY.IMPORT.FORMAT.INVALID.DATA";
         }
@@ -327,20 +331,20 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
             if (index > 0) {
                 try {
                     XSSFRow row = workSheet.getRow(index);
-                    MtCity mtCity=new MtCity();
+                    MtCity mtCity = new MtCity();
 
-                    if(row.getCell(9)!=null){
+                    if (row.getCell(9) != null) {
                         mtCity.setCityName(getCellValue(row.getCell(9)));
                     }
-                    if(row.getCell(10)!=null){
+                    if (row.getCell(10) != null) {
                         Optional<MtCountry> mtCountry = countryRepo.findById(Long.valueOf(getCellValue(row.getCell(10))));
-                        if(mtCountry.isPresent()){
+                        if (mtCountry.isPresent()) {
                             mtCity.setCountry(mtCountry.get());
                         }
                     }
                     setCitySearchKey(mtCity);
                     mtCityList.add(mtCity);
-                }catch (Exception e) {
+                } catch (Exception e) {
                     return "CITY.IMPORT.FORMAT.FAILED";
                 }
             }
@@ -366,23 +370,23 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
         if (worksheet.getLastRowNum() < 1) {
             return "REGION.IMPORT.FORMAT.INVALID.DATA";
         }
-        XSSFSheet workSheet= workbook.getSheetAt(0);
+        XSSFSheet workSheet = workbook.getSheetAt(0);
         if (workSheet.getLastRowNum() < 1) {
-            return  "REGION.IMPORT.FORMAT.INVALID.DATA";
+            return "REGION.IMPORT.FORMAT.INVALID.DATA";
         }
         for (int index = 1; index <= workSheet.getLastRowNum(); index++) {
             if (index > 0) {
                 try {
                     XSSFRow row = workSheet.getRow(index);
-                    MtRegion mtRegion=new MtRegion();
+                    MtRegion mtRegion = new MtRegion();
 
-                    if(row.getCell(9)!=null){
+                    if (row.getCell(9) != null) {
                         mtRegion.setRegionName(getCellValue(row.getCell(9)));
                     }
                     setRegionSearchKey(mtRegion);
                     MtRegionList.add(mtRegion);
-                }catch (Exception e) {
-                    return  "REGION.IMPORT.FORMAT.FAILED";
+                } catch (Exception e) {
+                    return "REGION.IMPORT.FORMAT.FAILED";
                 }
             }
 
@@ -391,15 +395,15 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
             regionRepo.saveAll(MtRegionList);
             return "REGION.IMPORT.SUCCESS";
         }
-        return  "REGION.IMPORT.FAILED";
+        return "REGION.IMPORT.FAILED";
     }
 
     @Override
     public MtRegion getRegionById(Long id) {
-        MtRegion mtRegion= null;
-        if(Validator.isValid(id)){
-            Optional<MtRegion> optionalMtRegion= regionRepo.findById(id);
-            if(optionalMtRegion.isPresent() && optionalMtRegion.get().getIsDeleted().equals(Boolean.FALSE)){
+        MtRegion mtRegion = null;
+        if (Validator.isValid(id)) {
+            Optional<MtRegion> optionalMtRegion = regionRepo.findById(id);
+            if (optionalMtRegion.isPresent() && optionalMtRegion.get().getIsDeleted().equals(Boolean.FALSE)) {
                 mtRegion = optionalMtRegion.get();
                 return mtRegion;
             }
@@ -419,12 +423,13 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
         }
         return new MtCountry();
     }
-        @Override
+
+    @Override
     public MtCity getCityById(Long id) {
         MtCity mtCity = null;
-        if(Validator.isValid(id)){
+        if (Validator.isValid(id)) {
             Optional<MtCity> optionalMtCity = cityRepo.findById(id);
-            if(optionalMtCity.isPresent() && optionalMtCity.get().getIsDeleted().equals(Boolean.FALSE)){
+            if (optionalMtCity.isPresent() && optionalMtCity.get().getIsDeleted().equals(Boolean.FALSE)) {
                 mtCity = optionalMtCity.get();
                 return mtCity;
             }
@@ -458,13 +463,14 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
             value = cell.getStringCellValue();
         } else if (cell.getCellType().equals(CellType.BOOLEAN)) {
             value = String.valueOf(cell.getBooleanCellValue());
-        }else if (cell.getCellType().equals(CellType.BLANK) || cell.getCellType().equals(CellType.ERROR)) {
+        } else if (cell.getCellType().equals(CellType.BLANK) || cell.getCellType().equals(CellType.ERROR)) {
             value = "";
         } else {
             value = cell.getRawValue();
         }
         return value;
     }
+
     private void setCountrySearchKey(MtCountry country) {
         String searchKey = "";
         if (Validator.isValid(country.getCountryName())) {
@@ -472,6 +478,7 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
         }
         country.setSearchKey(searchKey);
     }
+
     private void setCitySearchKey(MtCity mtCity) {
         String searchKey = "";
         if (Validator.isValid(mtCity.getCityName())) {
@@ -479,6 +486,7 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
         }
         mtCity.setSearchKey(searchKey);
     }
+
     private void setRegionSearchKey(MtRegion mtRegion) {
         String searchKey = "";
         if (Validator.isValid(mtRegion.getRegionName())) {
