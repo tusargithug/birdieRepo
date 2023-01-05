@@ -22,6 +22,8 @@ public interface AppUserService {
 
     String updateAppUser(AppUserDto request) throws ParseException;
 
+    String updateAppUsers(List<AppUserDto> appUserDtoList) throws ParseException;
+
     String deleteAppUserById(Long id);
 
     String createUserCourse(UserCourseDto request) throws ParseException;

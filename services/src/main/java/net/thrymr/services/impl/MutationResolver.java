@@ -84,6 +84,11 @@ public class MutationResolver implements GraphQLMutationResolver {
         return appUserService.updateAppUser(request);
     }
 
+    @MutationMapping(name = "updateAppUsers")
+    public String updateAppUsers(List<AppUserDto> request) throws Exception {
+        return appUserService.updateAppUsers(request);
+    }
+
 
     //delete App user by id
     @MutationMapping(name = "deleteAppUserById")
@@ -246,6 +251,11 @@ public class MutationResolver implements GraphQLMutationResolver {
         return siteTeamAndShiftTimingsService.updateTeam(teamDto);
     }
 
+    @MutationMapping(name = "updateTeams")
+    public String updateTeams(List<TeamDto> teamDtoList) {
+        return siteTeamAndShiftTimingsService.updateTeams(teamDtoList);
+    }
+
     @MutationMapping(name = "deleteTeamById")
     public String deleteTeamById(@Argument Long id) {
         return siteTeamAndShiftTimingsService.deleteTeamById(id);
@@ -358,6 +368,10 @@ public class MutationResolver implements GraphQLMutationResolver {
         return counsellorService.updateCounsellorById(counsellorDto);
     }
 
+    @MutationMapping(name = "updateCounsellors")
+    public String updateCounsellors(@Argument(name = "input") List<CounsellorDto> counsellorDtoList) {
+        return counsellorService.updateCounsellors(counsellorDtoList);
+    }
     @MutationMapping(name = "deleteCounsellorById")
     public String deleteCounsellorById(@Argument Long id) {
         return counsellorService.deleteCounsellorById(id);

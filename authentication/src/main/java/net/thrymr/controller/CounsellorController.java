@@ -32,6 +32,11 @@ public class CounsellorController {
         return counsellorService.updateCounsellorById(counsellorDto);
     }
 
+    @MutationMapping(name = "updateCounsellors")
+    public String updateCounsellors(@Argument(name = "input") List<CounsellorDto> counsellorDtoList) {
+        return counsellorService.updateCounsellors(counsellorDtoList);
+    }
+
     @MutationMapping(name = "deleteCounsellorById")
     public String deleteCounsellorById(@Argument Long id) {
         return counsellorService.deleteCounsellorById(id);

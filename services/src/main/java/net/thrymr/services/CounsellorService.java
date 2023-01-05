@@ -16,6 +16,8 @@ public interface CounsellorService {
 
     String updateCounsellorById(CounsellorDto counsellorDto);
 
+    String updateCounsellors(List<CounsellorDto> counsellorDtoList);
+
     String deleteCounsellorById(Long id);
 
     PaginationResponse getAllCounsellorPagination(CounsellorDto response);

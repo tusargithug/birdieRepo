@@ -79,6 +79,7 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Autowired
     CounsellorEmployeeRepo counsellorEmployeeRepo;
+
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
@@ -154,9 +155,9 @@ public class AppUserServiceImpl implements AppUserService {
                             Optional<FileEntity> optionalFileEntity = fileRepo.findById(Long.valueOf(getCellValue(row.getCell(20))));
                             optionalFileEntity.ifPresent(appUser::setUploadPicture);
                         }
-                            appUser.setSearchKey(getAppUserSearchKey(appUser));
+                        appUser.setSearchKey(getAppUserSearchKey(appUser));
 
-                            getAppUserSearchKey(appUser);
+                        getAppUserSearchKey(appUser);
                         appUsers.add(appUser);
                     } catch (Exception e) {
                         logger.error("Exception{} ", e);
@@ -196,9 +197,9 @@ public class AppUserServiceImpl implements AppUserService {
     public String createAppUser(AppUserDto request) throws ParseException {
         AppUser user = new AppUser();
         user.setUserName(request.getUserName());
-        if(request.getEmpId() != null && !appUserRepo.existsByEmpId(request.getEmpId())) {
+        if (request.getEmpId() != null && !appUserRepo.existsByEmpId(request.getEmpId())) {
             user.setEmpId(request.getEmpId());
-        }else {
+        } else {
             return "this employee id is already Existed";
         }
         if (request.getDateOfJoining() != null) {
@@ -211,15 +212,15 @@ public class AppUserServiceImpl implements AppUserService {
             }
         }
         user.setRoles(Roles.valueOf(request.getRoles()));
-        if(request.getEmail() != null && !appUserRepo.existsByEmail(request.getEmail())) {
+        if (request.getEmail() != null && !appUserRepo.existsByEmail(request.getEmail())) {
             user.setEmail(request.getEmail());
-        }else {
+        } else {
             return "This email already existed";
         }
         user.setCountryCode(request.getCountryCode());
-        if(request.getMobile() != null && !appUserRepo.existsByMobile(request.getMobile())) {
+        if (request.getMobile() != null && !appUserRepo.existsByMobile(request.getMobile())) {
             user.setMobile(request.getMobile());
-        }else {
+        } else {
             return "This mobile number already existed";
         }
         user.setGender(Gender.valueOf(request.getGender()));
@@ -238,6 +239,36 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
+    public String updateAppUsers(List<AppUserDto> appUserDtoList) throws ParseException {
+        if (appUserDtoList != null && appUserDtoList.size() > 0) {
+            for (AppUserDto appUserDto : appUserDtoList) {
+                AppUser appUser = null;
+                if (Validator.isValid(appUserDto.getId())) {
+
+                    Optional<AppUser> optionalAppUser = appUserRepo.findById(appUserDto.getId());
+                    if(optionalAppUser.isPresent()) {
+                        appUser = optionalAppUser.get();
+
+                        if (appUserDto.getShiftStartAt() != null) {
+                            appUser.setShiftStartAt(DateUtils.toStringToLocalTime(appUserDto.getShiftStartAt(), Constants.TIME_FORMAT_12_HOURS));
+                        }
+                        if (appUserDto.getShiftEndAt() != null) {
+                            appUser.setShiftEndAt(DateUtils.toStringToLocalTime(appUserDto.getShiftEndAt(), Constants.TIME_FORMAT_12_HOURS));
+                        }
+                        if (appUserDto.getShiftStartAt() != null && appUserDto.getShiftEndAt() != null) {
+                            appUser.setShiftTimings(appUserDto.getShiftStartAt() + " - " + appUserDto.getShiftEndAt());
+                        }
+                        appUser.setSearchKey(getAppUserSearchKey(appUser));
+                        appUserRepo.save(appUser);
+                    }
+                }
+            }
+            return "Employees updated successfully";
+        }
+        return "Data not found";
+    }
+
+    @Override
     public String updateAppUser(AppUserDto request) throws ParseException {
         if (Validator.isValid(request.getId())) {
             Optional<AppUser> optionalAppUser = appUserRepo.findById(request.getId());
@@ -248,7 +279,7 @@ public class AppUserServiceImpl implements AppUserService {
                 }
                 if (user.getEmpId().equals(request.getEmpId()) || !appUserRepo.existsByEmpId(request.getEmpId())) {
                     user.setEmpId(request.getEmpId());
-                }else {
+                } else {
                     return "This employee id already exist";
                 }
                 if (Validator.isObjectValid(request.getDateOfJoining())) {
@@ -265,12 +296,12 @@ public class AppUserServiceImpl implements AppUserService {
                 }
                 if (user.getMobile().equals(request.getMobile()) || !appUserRepo.existsByMobile(request.getMobile())) {
                     user.setMobile(request.getMobile());
-                }else {
-                   return  "This mobile number already exist";
+                } else {
+                    return "This mobile number already exist";
                 }
                 if (user.getEmail().equals(request.getEmail()) || !appUserRepo.existsByEmail(request.getEmail())) {
                     user.setEmail(request.getEmail());
-                }else{
+                } else {
                     return "This mail already existed";
                 }
                 if (Validator.isValid(request.getRoles())) {
@@ -291,7 +322,9 @@ public class AppUserServiceImpl implements AppUserService {
                         user.setUploadPicture(optionalFileEntity.get());
                     }
                 }
-                user.setShiftTimings(request.getShiftStartAt() + " - " + request.getShiftEndAt());
+                if (Validator.isObjectValid(request.getShiftStartAt()) && Validator.isObjectValid(request.getShiftEndAt())) {
+                    user.setShiftTimings(request.getShiftStartAt() + " - " + request.getShiftEndAt());
+                }
                 appUserRepo.save(user);
                 return "User updated successfully";
             }
@@ -483,7 +516,7 @@ public class AppUserServiceImpl implements AppUserService {
 
         Specification<AppUser> appUserSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> addUserPredicate = new ArrayList<>();
-            Join<AppUser, Site> siteJoin =root.join("site");
+            Join<AppUser, Site> siteJoin = root.join("site");
             if (request.getUserName() != null) {
                 Predicate userName = criteriaBuilder.and(root.get("userName").in(request.getUserName()));
                 addUserPredicate.add(userName);
@@ -491,6 +524,11 @@ public class AppUserServiceImpl implements AppUserService {
             if (request.getEmpId() != null && !request.getEmpId().isEmpty()) {
                 Predicate empId = criteriaBuilder.and(root.get("empId").in(request.getEmpId()));
                 addUserPredicate.add(empId);
+            }
+
+            if (request.getShiftTimings() != null && !request.getShiftTimings().isEmpty()) {
+                Predicate alerts = criteriaBuilder.and(root.get("shiftTimings").in(request.getShiftTimings()));
+                addUserPredicate.add(alerts);
             }
             if (request.getRoles() != null && request.getRoles().isEmpty()) {
                 Predicate roles = criteriaBuilder.and(root.get("roles").in(request.getRoles()));
@@ -509,7 +547,7 @@ public class AppUserServiceImpl implements AppUserService {
                 Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(request.getShiftTimingsList()));
                 addUserPredicate.add(shiftTimings);
             }
-            if(request.getSiteId() != null){
+            if (request.getSiteId() != null) {
                 Predicate site = criteriaBuilder.and(siteJoin.get("id").in(request.getSiteId()));
                 addUserPredicate.add(site);
             }
@@ -544,12 +582,12 @@ public class AppUserServiceImpl implements AppUserService {
     public String saveCounsellorEmployeeInfo(CounsellorEmployeeDto request) {
         CounsellorEmployee counsellorEmployee = new CounsellorEmployee();
         if (Validator.isValid(request.getAppUserId())) {
-            Optional<AppUser> optionalAppUser= appUserRepo.findById(request.getAppUserId());
-            if(optionalAppUser.isPresent()) {
+            Optional<AppUser> optionalAppUser = appUserRepo.findById(request.getAppUserId());
+            if (optionalAppUser.isPresent()) {
                 counsellorEmployee.setAppUser(optionalAppUser.get());
             }
         }
-        if(Validator.isValid(request.getCounsellorId())) {
+        if (Validator.isValid(request.getCounsellorId())) {
             Optional<Counsellor> counsellorOptional = counsellorRepo.findById(request.getCounsellorId());
             if (counsellorOptional.isPresent()) {
                 counsellorEmployee.setCounsellor(counsellorOptional.get());

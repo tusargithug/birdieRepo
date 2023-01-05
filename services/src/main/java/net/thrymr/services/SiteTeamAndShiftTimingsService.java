@@ -12,6 +12,8 @@ public interface SiteTeamAndShiftTimingsService {
 
     Team updateTeam(TeamDto teamDto);
 
+    String updateTeams(List<TeamDto> teamDtoList);
+
     String deleteTeamById(Long id);
 
     String saveSite(SiteDto siteDto);

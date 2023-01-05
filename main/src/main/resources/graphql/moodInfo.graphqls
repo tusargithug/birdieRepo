@@ -90,6 +90,7 @@ type Query {
 type Mutation {
     createAppUser(input :AppUserDto): String!
     updateAppUser(input:AppUserDto!): String!
+    updateAppUsers(input:[AppUserDto!]): String!
     deleteAppUserById(id:ID):String!
     createUserMoodCheckIn(input :MoodSourceIntensityRequestDto):String!
     createUserMoodSourceCheckIn(input :MoodSourceIntensityRequestDto):String!
@@ -113,6 +114,7 @@ type Mutation {
     deleteChapterById(id:ID):String!
     createTeam(input:TeamDto):Team
     updateTeam(input:TeamDto):Team
+    updateTeams(input:[TeamDto]):String!
     deleteTeamById(id:ID):String!
     saveSite(input:SiteDto):String!
     updateSite(input:SiteDto):String!
@@ -135,6 +137,7 @@ type Mutation {
     createCounsellorSlot(input:CounsellorSlotDto):String!
     createCounsellor(input:CounsellorDto):String!
     updateCounsellorById(input:CounsellorDto):String!
+    updateCounsellors(input:[CounsellorDto]):String!
     deleteCounsellorById(id:ID!):String!
     saveVendor(input:VendorDto):String!
     deleteVendorById(id:ID):String!
@@ -254,6 +257,7 @@ input AppUserDto{
     alertList:[String]
     shiftTimingsList:[String]
     counsellorId:Int
+    shiftTimings:String
 }
 enum Roles{
     NONE
@@ -309,20 +313,16 @@ enum FileType{
 type ShiftTimings{
     id: ID!
     shiftName:String
-    site:Site
     shiftStatAt:LocalTime
     shiftEndAt:LocalTime
-    team:[Team]
+    shiftTimings:String
     isActive:Boolean
 }
 input ShiftTimingsDto{
     id:Int
-    siteId:Int
-    teamId:Int
     shiftName:String
-    shiftStatAt:LocalTime
-    shiftEndAt:LocalTime
-    counsellorId:Int
+    shiftStatAt:String
+    shiftEndAt:String
     status:Boolean
 }
 type CounsellorSlot{

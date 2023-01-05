@@ -14,11 +14,7 @@ import java.time.LocalTime;
 public class ShiftTimingsDto {
     private Long id;
     private SlotShift shiftName;
-    private SiteDto site;
-    private LocalTime shiftStatAt;
-    private LocalTime shiftEndAt;
-    private Long TeamId;
-    private Long SiteId;
+    private String shiftStatAt;
+    private String shiftEndAt;
     private Boolean status;
-    private Long CounsellorId;
 }
