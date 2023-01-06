@@ -351,6 +351,7 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
 
+    
     @Override
     public AppUser getAppUserById(Long id) {
         AppUser appUser;
