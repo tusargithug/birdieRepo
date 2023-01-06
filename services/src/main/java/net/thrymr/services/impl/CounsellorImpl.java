@@ -340,6 +340,12 @@ public class CounsellorImpl implements CounsellorService {
         return new LanguageDetails();
     }
 
+    @Override
+    public String deleteAllEducation() {
+        educationRepo.deleteAll();
+        return "All records deleted successfully";
+    }
+
     public String getCounsellorSearchKey(Counsellor counsellor) {
         String searchKey = "";
         if (counsellor.getCounsellorName() != null) {

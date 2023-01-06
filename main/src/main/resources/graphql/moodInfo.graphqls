@@ -94,7 +94,6 @@ type Mutation {
     updateAppUser(input:AppUserDto!): String!
     deleteAppUserById(id:ID):String!
     createUserMoodCheckIn(input :MoodSourceIntensityRequestDto):String!
-    createUserMoodSourceCheckIn(input :MoodSourceIntensityRequestDto):String!
     deleteUserMoodCheckInById(id:ID):String!
     deleteUserMoodSourceCheckInById(id:ID):String!
     createUserCourse(input:UserCourseDto):String!
@@ -548,7 +547,7 @@ enum MoodType{
 type UserMoodCheckIn{
     appUser:AppUser
     mtMoodInfo:MtMoodInfo
-    userMoodSourceCheckedIn:UserMoodSourceCheckedIn
+    mtMoodSourceList:[MtMoodSource]
     mtMoodIntensity:MtMoodIntensity
     description:String
 }
@@ -568,11 +567,6 @@ enum CategoryType{
     SELF
     NONE
     WORK_SELF
-}
-type UserMoodSourceCheckedIn{
-    appUser:AppUser
-    mtMoodSourceList:[MtMoodSource]
-    description:String
 }
 input MoodSourceDto{
     id:Int

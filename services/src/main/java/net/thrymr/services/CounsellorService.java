@@ -37,4 +37,7 @@ public interface CounsellorService {
     EducationDetails getEducationalDetailsById(Long id);
 
     LanguageDetails getLanguageDetailsById(Long id);
+
+
+    String deleteAllEducation();
 }

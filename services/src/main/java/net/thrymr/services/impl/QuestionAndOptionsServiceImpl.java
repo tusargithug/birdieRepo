@@ -105,7 +105,7 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
         MtQuestion question = null;
         if (Validator.isValid(id)) {
             Optional<MtQuestion> optionalQuestion = questionRepo.findById(id);
-            if (optionalQuestion.isPresent() && optionalQuestion.get().getIsActive().equals(Boolean.TRUE)) {
+            if (optionalQuestion.isPresent() && optionalQuestion.get().getIsDeleted().equals(Boolean.TRUE)) {
                 question = optionalQuestion.get();
                 return question;
             }

@@ -78,4 +78,9 @@ public class CounsellorController {
     public List<LanguageDetails> getAllLanguagesDetails() {
         return counsellorService.getAllLanguagesDetails();
     }
+
+    @MutationMapping(name = "deleteAllEducation")
+    public String deleteAllEducation(){
+        return counsellorService.deleteAllEducation();
+    }
 }

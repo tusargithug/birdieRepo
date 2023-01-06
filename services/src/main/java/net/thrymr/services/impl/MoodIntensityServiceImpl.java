@@ -3,7 +3,6 @@ package net.thrymr.services.impl;
 import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
 import net.thrymr.model.AppUser;
 import net.thrymr.model.UserMoodCheckIn;
-import net.thrymr.model.UserMoodSourceCheckedIn;
 import net.thrymr.model.master.MtMoodInfo;
 import net.thrymr.model.master.MtMoodIntensity;
 import net.thrymr.model.master.MtMoodSource;
@@ -45,9 +44,9 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
     @Autowired
     UserMoodCheckInRepo userMoodCheckInRepo;
     @Autowired
-    UserMoodSourceCheckInRepo userMoodSourceCheckInRepo;
-    @Autowired
     AppUserRepo appUserRepo;
+    @Autowired
+    MoodSourceRepo moodSourceRepo;
 
 
     private String getCellValue(XSSFCell cell) {
@@ -209,10 +208,10 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
                         userMoodCheckIn.setMtMoodInfo(optionalMtMoodInfo.get());
                     }
                 }
-                if (Validator.isValid(request.getUserSourceCheckedInId())) {
-                    Optional<UserMoodSourceCheckedIn> userMoodSourceCheckedIn = userMoodSourceCheckInRepo.findById(request.getUserSourceCheckedInId());
-                    if (userMoodSourceCheckedIn.isPresent()) {
-                        userMoodCheckIn.setUserMoodSourceCheckedIn(userMoodSourceCheckedIn.get());
+                if(Validator.isValid(request.getMoodSourceIdList())){
+                    List<MtMoodSource> moodSourceList = moodSourceRepo.findAllByIdIn(request.getMoodSourceIdList());
+                    if(!moodSourceList.isEmpty()){
+                        userMoodCheckIn.setMtMoodSourceList(moodSourceList);
                     }
                 }
                 userMoodCheckIn.setDescription(request.getDescription());
@@ -245,26 +244,20 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
         UserMoodCheckIn userMoodCheckIn = new UserMoodCheckIn();
         if (Validator.isValid(request.getIntensityId())) {
             Optional<MtMoodIntensity> optionalMtMoodIntensity = moodIntensityRepo.findByIdAndMtMoodInfoIdAndIsActiveAndIsDeleted(request.getIntensityId(), request.getMoodInfoId(), Boolean.TRUE, Boolean.FALSE);
-            if (optionalMtMoodIntensity.isPresent()) {
-                userMoodCheckIn.setMtMoodIntensity(optionalMtMoodIntensity.get());
-            }
+            optionalMtMoodIntensity.ifPresent(userMoodCheckIn::setMtMoodIntensity);
         }
         if (Validator.isValid(request.getAppUserId())) {
             Optional<AppUser> optionalAppUser = appUserRepo.findById(request.getAppUserId());
-            if (optionalAppUser.isPresent()) {
-                userMoodCheckIn.setAppUser(optionalAppUser.get());
-            }
+            optionalAppUser.ifPresent(userMoodCheckIn::setAppUser);
         }
         if (Validator.isValid(request.getMoodInfoId())) {
             Optional<MtMoodInfo> optionalMtMoodInfo = moodInfoRepo.findById(request.getMoodInfoId());
-            if (optionalMtMoodInfo.isPresent()) {
-                userMoodCheckIn.setMtMoodInfo(optionalMtMoodInfo.get());
-            }
+            optionalMtMoodInfo.ifPresent(userMoodCheckIn::setMtMoodInfo);
         }
-        if (Validator.isValid(request.getUserSourceCheckedInId())) {
-            Optional<UserMoodSourceCheckedIn> userMoodSourceCheckedIn = userMoodSourceCheckInRepo.findById(request.getUserSourceCheckedInId());
-            if (userMoodSourceCheckedIn.isPresent()) {
-                userMoodCheckIn.setUserMoodSourceCheckedIn(userMoodSourceCheckedIn.get());
+        if(Validator.isValid(request.getMoodSourceIdList())){
+            List<MtMoodSource> moodSourceList = moodSourceRepo.findAllByIdIn(request.getMoodSourceIdList());
+            if(!moodSourceList.isEmpty()){
+                userMoodCheckIn.setMtMoodSourceList(moodSourceList);
             }
         }
         userMoodCheckIn.setDescription(request.getDescription());
@@ -287,9 +280,6 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
         }
         if (userMoodCheckIn.getMtMoodInfo() != null) {
             searchKey = searchKey + " " + userMoodCheckIn.getMtMoodInfo();
-        }
-        if (userMoodCheckIn.getUserMoodSourceCheckedIn() != null) {
-            searchKey = searchKey + " " + userMoodCheckIn.getUserMoodSourceCheckedIn();
         }
         if (userMoodCheckIn.getMtMoodIntensity() != null) {
             searchKey = searchKey + " " + userMoodCheckIn.getMtMoodIntensity();

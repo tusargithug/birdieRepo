@@ -5,7 +5,6 @@ import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
 import net.thrymr.enums.Category;
 import net.thrymr.model.AppUser;
 import net.thrymr.model.UserMoodCheckIn;
-import net.thrymr.model.UserMoodSourceCheckedIn;
 import net.thrymr.model.master.MtMoodInfo;
 import net.thrymr.model.master.MtMoodIntensity;
 import net.thrymr.model.master.MtMoodSource;
@@ -42,8 +41,6 @@ public class MoodSourceServiceImpl implements MoodSourceService {
     Environment environment;
     @Autowired
     MoodSourceRepo moodSourceRepo;
-    @Autowired
-    UserMoodSourceCheckInRepo userMoodSourceCheckInRepo;
 
     @Autowired
     MoodIntensityRepo moodIntensityRepo;
@@ -191,50 +188,6 @@ public class MoodSourceServiceImpl implements MoodSourceService {
     }
 
     @Override
-    public String createUserMoodSourceCheckIn(MoodSourceIntensityRequestDto request) {
-        UserMoodCheckIn userMoodCheckIn = new UserMoodCheckIn();
-        List<MtMoodSource> mtMoodSourceList = moodSourceRepo.findAllByIdIn(request.getMoodSourceIdList());
-        UserMoodSourceCheckedIn checkedIn = new UserMoodSourceCheckedIn();
-        if (Validator.isValid(request.getIntensityId())) {
-            Optional<MtMoodIntensity> optionalMtMoodIntensity = moodIntensityRepo.findByIdAndMtMoodInfoIdAndIsActiveAndIsDeleted(request.getIntensityId(), request.getMoodInfoId(), Boolean.TRUE, Boolean.FALSE);
-            if (optionalMtMoodIntensity.isPresent()) {
-                userMoodCheckIn.setMtMoodIntensity(optionalMtMoodIntensity.get());
-            }
-        }
-        if (Validator.isValid(request.getAppUserId())) {
-            Optional<AppUser> optionalAppUser = appUserRepo.findById(request.getAppUserId());
-            if (optionalAppUser.isPresent()) {
-                userMoodCheckIn.setAppUser(optionalAppUser.get());
-            }
-        }
-        if (Validator.isValid(request.getMoodInfoId())) {
-            Optional<MtMoodInfo> optionalMtMoodInfo = moodInfoRepo.findById(request.getMoodInfoId());
-            if (optionalMtMoodInfo.isPresent()) {
-                userMoodCheckIn.setMtMoodInfo(optionalMtMoodInfo.get());
-            }
-        }
-        if (Validator.isValid(request.getUserSourceCheckedInId())) {
-            Optional<UserMoodSourceCheckedIn> userMoodSourceCheckedIn = userMoodSourceCheckInRepo.findById(request.getUserSourceCheckedInId());
-            if (userMoodSourceCheckedIn.isPresent()) {
-                userMoodCheckIn.setUserMoodSourceCheckedIn(userMoodSourceCheckedIn.get());
-            }
-        }
-        userMoodCheckIn.setDescription(request.getDescription());
-        userMoodCheckInRepo.save(userMoodCheckIn);
-
-        // checkedIn.setAppUser(user);
-        if (!mtMoodSourceList.isEmpty()) {
-            checkedIn.setMtMoodSourceList(mtMoodSourceList);
-        }
-        if (Validator.isValid(request.getDescription())) {
-            checkedIn.setDescription(request.getDescription());
-        }
-        checkedIn.setSearchKey(getMoodSourceCheckedSearchKey(checkedIn));
-        userMoodSourceCheckInRepo.save(checkedIn);
-        return "Mood source update successfully";
-    }
-
-    @Override
     public String deleteUserMoodSourceCheckInById(Long id) {
         Optional<MtMoodSource> optionalMtMoodSource = moodSourceRepo.findById(id);
         optionalMtMoodSource.ifPresent(moodSourceRepo::delete);
@@ -248,20 +201,5 @@ public class MoodSourceServiceImpl implements MoodSourceService {
            return moodSourceList;
        }
        return new ArrayList<>();
-    }
-
-
-    public String getMoodSourceCheckedSearchKey(UserMoodSourceCheckedIn userMoodSourceCheckedIn) {
-        String searchKey = "";
-        if (userMoodSourceCheckedIn.getDescription() != null) {
-            searchKey = searchKey + " " + userMoodSourceCheckedIn.getDescription();
-        }
-        if (userMoodSourceCheckedIn.getIsActive() != null) {
-            searchKey = searchKey + " " + userMoodSourceCheckedIn.getIsActive();
-        }
-        if (userMoodSourceCheckedIn.getAppUser() != null) {
-            searchKey = searchKey + " " + userMoodSourceCheckedIn.getAppUser();
-        }
-        return searchKey;
     }
 }

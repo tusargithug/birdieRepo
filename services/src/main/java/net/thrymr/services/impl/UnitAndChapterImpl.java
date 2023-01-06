@@ -4,10 +4,7 @@ import net.thrymr.dto.ChapterDto;
 import net.thrymr.dto.UnitDto;
 
 import net.thrymr.dto.response.PaginationResponse;
-import net.thrymr.model.AppUser;
-import net.thrymr.model.Chapter;
-import net.thrymr.model.FileEntity;
-import net.thrymr.model.Unit;
+import net.thrymr.model.*;
 import net.thrymr.model.master.MtOptions;
 import net.thrymr.model.master.MtQuestion;
 import net.thrymr.repository.ChapterRepo;
@@ -243,7 +240,6 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         }
 
 
-
         //filters
         Specification<Unit> chapterSpecification = ((root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> addUnitPredicate = new ArrayList<>();
@@ -256,9 +252,17 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                 addUnitPredicate.add(isActive);
             }
             if (chapterDto.getChapterName() != null && !chapterDto.getChapterName().isEmpty()) {
-                Predicate unitName = criteriaBuilder.and(root.get("chapterName").in(chapterDto.getChapterName()));
+                Join<Unit, Chapter> unitChapterJoin = root.join("chapters", JoinType.LEFT);
+                Predicate unitName = criteriaBuilder.and(unitChapterJoin.get("chapterName").in(chapterDto.getChapterName()));
                 addUnitPredicate.add(unitName);
             }
+            Predicate isDeletedUnit = criteriaBuilder.equal(root.get("isDeleted"), Boolean.FALSE);
+            addUnitPredicate.add(isDeletedUnit);
+
+            Join<Unit, Chapter> unitChapterJoin = root.join("chapters");
+            Predicate chapterIsDeletedPredicate=criteriaBuilder.and(unitChapterJoin.get("isDeleted").in(Boolean.FALSE));
+            addUnitPredicate.add(chapterIsDeletedPredicate);
+
             if (chapterDto.getAddedOn() != null) {
                 Predicate createdOn = criteriaBuilder.and(root.get("createdOn").in(chapterDto.getAddedOn()));
                 addUnitPredicate.add(createdOn);
@@ -271,17 +275,6 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                         "%" + chapterDto.getSearchKey().toLowerCase() + "%");
                 addUnitPredicate.add(searchPredicate);
             }
-
-            Join<Unit,Chapter> unitChapterJoin = root.join("chapters",JoinType.LEFT);
-            Predicate chapterIsDeletedPredicate=criteriaBuilder.and(unitChapterJoin.get("isDeleted").in(Boolean.FALSE));
-            addUnitPredicate.add(chapterIsDeletedPredicate);
-            Join<Chapter,MtQuestion> questionJoin = root.join("questionList",JoinType.LEFT);
-            Predicate mtQuestionIsDeletedPredicate=criteriaBuilder.and(questionJoin.get("isDeleted").in(Boolean.FALSE));
-            addUnitPredicate.add(mtQuestionIsDeletedPredicate);
-            Join<MtQuestion,MtOptions> optionsJoin = root.join("mtOptions",JoinType.LEFT);
-            Predicate mtOptionsIsDeletedPredicate=criteriaBuilder.and(optionsJoin.get("isDeleted").in(Boolean.FALSE));
-            addUnitPredicate.add(mtOptionsIsDeletedPredicate);
-
             return criteriaBuilder.and(addUnitPredicate.toArray(new Predicate[0]));
         });
         PaginationResponse paginationResponse = new PaginationResponse();
@@ -295,7 +288,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                     return paginationResponse;
                 }
             }
-        }else {
+        } else {
             List<Unit> unitObjectives = unitRpo.findAll(chapterSpecification);
             System.out.println(unitObjectives.size());
             paginationResponse.setUnitList(unitObjectives.stream().filter(unit -> unit.getId().equals(chapterDto.getUnitId())).collect(Collectors.toSet()));
@@ -303,17 +296,16 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         }
         return new PaginationResponse();
     }
-
     @Override
     public Chapter getChapterById(Long id) {
-       Chapter chapter = null;
-       if (Validator.isValid(id)) {
-           Optional<Chapter> optionalAppUser = chapterRepo.findById(id);
-           if (optionalAppUser.isPresent() && optionalAppUser.get().getIsDeleted().equals(Boolean.FALSE)) {
-               chapter = optionalAppUser.get();
-               return chapter;
-           }
-       }
+        Chapter chapter = null;
+        if (Validator.isValid(id)) {
+            Optional<Chapter> optionalAppUser = chapterRepo.findById(id);
+            if (optionalAppUser.isPresent() && optionalAppUser.get().getIsDeleted().equals(Boolean.FALSE)) {
+                chapter = optionalAppUser.get();
+                return chapter;
+            }
+        }
         return new Chapter();
     }
 

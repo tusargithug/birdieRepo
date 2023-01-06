@@ -105,11 +105,6 @@ public class MutationResolver implements GraphQLMutationResolver {
 
     }
 
-    @MutationMapping(name = "createUserMoodSourceCheckIn")
-    public String createUserMoodSourceCheckIn(MoodSourceIntensityRequestDto request) {
-        return moodSourceService.createUserMoodSourceCheckIn(request);
-    }
-
     @MutationMapping(name = "deleteUserMoodSourceCheckInById")
     public String deleteUserMoodSourceCheckInById(Long id) {
         return moodSourceService.deleteUserMoodSourceCheckInById(id);
@@ -623,6 +618,8 @@ public class MutationResolver implements GraphQLMutationResolver {
     public String testSingleFileUpload(Part part, DataFetchingEnvironment env) {
        return "uploaded";
     }
+
+
 
 
     class FileUploadResult {
