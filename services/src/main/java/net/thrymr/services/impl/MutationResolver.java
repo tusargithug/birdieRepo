@@ -653,6 +653,10 @@ public class MutationResolver implements GraphQLMutationResolver {
     public String deleteUserLearningStatusById(String userId) {
         return userLearningStatusService.deleteUserLearningStatusById(userId);
     }
+    @MutationMapping(name = "deleteAllEducation")
+    public String deleteAllEducation(){
+        return counsellorService.deleteAllEducation();
+    }
 }
 
 

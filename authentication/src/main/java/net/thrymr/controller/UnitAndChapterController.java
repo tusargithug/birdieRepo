@@ -1,7 +1,9 @@
 package net.thrymr.controller;
 
 import net.thrymr.dto.*;
+import net.thrymr.dto.response.ChapterResponse;
 import net.thrymr.dto.response.PaginationResponse;
+import net.thrymr.dto.response.UnitResponse;
 import net.thrymr.model.Chapter;
 import net.thrymr.model.Unit;
 import net.thrymr.services.UnitAndChapterServices;
@@ -75,7 +77,7 @@ public class UnitAndChapterController {
     }
 
     @QueryMapping(name = "getChapterById")
-    public Chapter getChapterById(@Argument Long id) {
+    public ChapterResponse getChapterById(@Argument Long id) {
         return unitAndChapterServices.getChapterById(id);
     }
 
@@ -85,7 +87,7 @@ public class UnitAndChapterController {
     }
 
     @QueryMapping(name = "getUnitBySequence")
-    public Unit getUnitBySequence(@Argument (name = "input") UnitDto request) {
+    public UnitResponse getUnitBySequence(@Argument (name = "input") UnitDto request) {
         return unitAndChapterServices.getUnitBySequence(request);
     }
 

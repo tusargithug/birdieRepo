@@ -80,12 +80,12 @@ type Query {
     getEducationalDetailsById(id:ID):EducationDetails
     getLanguageDetailsById(id:ID):LanguageDetails
     getVendorSiteById(id:ID):[VendorSite]
-    getChapterById(id:ID):Chapter
+    getChapterById(id:ID):ChapterResponse
     logoutUser:String!
     getLoggedInUser:LoginResponse
     getAllMoodSourceById(input:MoodSourceIntensityRequestDto):[MtMoodSource]
     getUnitById(id:ID):Unit
-    getUnitBySequence(input:UnitDto):Unit
+    getUnitBySequence(input:UnitDto):UnitResponse
     getChapterBySequence(sequence:Int):Chapter
     getAllPaginationUserLearningStatus(input:UserLearningStatusDto):PaginationResponse
 
@@ -195,6 +195,7 @@ type Mutation {
     createUserLearningStatus(input:UserLearningStatusDto):String!
     updateUserLearningStatus(input:UserLearningStatusDto):String!
     deleteUserLearningStatusById(userId:String):String!
+    deleteAllEducation:String!
 }
 
 scalar Upload
@@ -842,4 +843,30 @@ input UserLearningStatusDto {
     pageSize:Int
     pageNumber:Int
     sortUserName:Int
+}
+type ChapterResponse{
+    id:ID
+    chapterName:String
+    profilePicture:FileEntity
+    description:String
+    video:FileEntity
+    sequence:Int
+    questionList:[QuestionResponse]
+}
+type QuestionResponse{
+    id:ID
+    question:String
+    mtOptions :[OptionResponse]
+    sequence:Int
+}
+type OptionResponse{
+    id:ID
+    textAnswer:String
+    isCorrect:Boolean
+}
+type UnitResponse{
+    id:ID
+    unitName:String
+    sequence:Int
+    chapters :[ChapterResponse]
 }

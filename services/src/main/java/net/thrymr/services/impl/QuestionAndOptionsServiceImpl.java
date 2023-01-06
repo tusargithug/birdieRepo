@@ -213,6 +213,58 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
                         }
 
                     }
+                } else {
+
+                    Set<MtOptions> mtOptionsList = new HashSet<>();
+                    question = new MtQuestion();
+                    question.setQuestion(questionDto.getQuestion());
+                    if (questionDto.getQuestionCalType() != null) {
+                        question.setQuestionCalType(QuestionCalType.valueOf(questionDto.getQuestionCalType()));
+                    }
+                    if (questionDto.getSequence() != null) {
+                        question.setSequence(questionDto.getSequence());
+                    }
+
+                    if (questionDto.getPsychometricTestId() != null) {
+                        Optional<PsychometricTest> optionalPsychometricTest = psychometricTestRepo.findById(questionDto.getPsychometricTestId());
+                        if (optionalPsychometricTest.isPresent()) {
+                            question.setPsychometricTest(optionalPsychometricTest.get());
+                        }
+                    }
+                    if (questionDto.getAssessmentId() != null) {
+                        Optional<MtAssessment> optionalAssessment = assessmentRepo.findById(questionDto.getAssessmentId());
+                        if (optionalAssessment.isPresent()) {
+                            question.setAssessment(optionalAssessment.get());
+                        }
+                    }
+
+                    if (questionDto.getChapterId() != null) {
+                        Optional<Chapter> chapterOptional = chapterRepo.findById(questionDto.getChapterId());
+                        if (chapterOptional.isPresent()) {
+                            question.setChapter(chapterOptional.get());
+                        }
+                    }
+                    question.setSearchKey(getAppUserSearchKey(question));
+                    question = questionRepo.save(question);
+                    for (OptionsDto optionsDto : questionDto.getOptionsDtoList()) {
+                        MtOptions option = new MtOptions();
+                        option.setQuestion(question);
+                        option.setTextAnswer(optionsDto.getTextAnswer());
+                        if (optionsDto.getIsCorrect().equals(Boolean.TRUE)) {
+                            option.setIsCorrect(optionsDto.getIsCorrect());
+                        }
+                        if (optionsDto.getUserCourseId() != null) {
+                            Optional<UserCourse> optionalUserCourse = userCourseRepo.findById(optionsDto.getUserCourseId());
+                            if (optionalUserCourse.isPresent()) {
+                                option.setUserCourse(optionalUserCourse.get());
+                            }
+                        }
+                        option.setSearchKey(getOptionsSearchKey(option));
+                        optionsRepo.save(option);
+                        mtOptionsList.add(option);
+                    }
+
+                    question.setMtOptions(new HashSet<>(mtOptionsList));
                 }
             }
             return "update question successfully";

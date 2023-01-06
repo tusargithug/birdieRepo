@@ -2,7 +2,9 @@ package net.thrymr.services;
 
 import net.thrymr.dto.ChapterDto;
 import net.thrymr.dto.UnitDto;
+import net.thrymr.dto.response.ChapterResponse;
 import net.thrymr.dto.response.PaginationResponse;
+import net.thrymr.dto.response.UnitResponse;
 import net.thrymr.model.Chapter;
 import net.thrymr.model.Unit;
 
@@ -29,11 +31,11 @@ public interface UnitAndChapterServices {
     String deleteChapterById(Long id);
     PaginationResponse getAllChapterPagination(ChapterDto chapterDto);
 
-    Chapter getChapterById(Long id);
+    ChapterResponse getChapterById(Long id);
 
     Unit getUnitById(Long id);
 
-    Unit getUnitBySequence(UnitDto request);
+    UnitResponse getUnitBySequence(UnitDto request);
 
     Chapter getChapterBySequence(Integer sequence);
 }

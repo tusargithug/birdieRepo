@@ -4,10 +4,7 @@ import graphql.kickstart.tools.GraphQLQueryResolver;
 import net.thrymr.FileDocument;
 import net.thrymr.dto.*;
 import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
-import net.thrymr.dto.response.CounsellorSlotResponse;
-import net.thrymr.dto.response.PaginationResponse;
-import net.thrymr.dto.response.UserAppointmentResponse;
-import net.thrymr.dto.response.VendorResponse;
+import net.thrymr.dto.response.*;
 import net.thrymr.enums.Alerts;
 import net.thrymr.enums.Roles;
 import net.thrymr.enums.TagType;
@@ -470,7 +467,7 @@ public class Query implements GraphQLQueryResolver {
     public List<VendorSite> getVendorSiteById(@Argument Long id) {return vendorService.getVendorSiteById(id);}
 
     @QueryMapping(name = "getChapterById")
-    public Chapter getChapterById(@Argument Long id) {
+    public ChapterResponse getChapterById(@Argument Long id) {
         return unitAndChapterServices.getChapterById(id);
     }
 
@@ -484,7 +481,7 @@ public class Query implements GraphQLQueryResolver {
         return unitAndChapterServices.getUnitById(id);
     }
     @QueryMapping(name = "getUnitBySequence")
-    public Unit getUnitBySequence(@Argument (name = "input") UnitDto request) {
+    public UnitResponse getUnitBySequence(@Argument (name = "input") UnitDto request) {
         return unitAndChapterServices.getUnitBySequence(request);
     }
     @QueryMapping(name = "getChapterBySequence")

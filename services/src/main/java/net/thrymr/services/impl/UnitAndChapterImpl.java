@@ -3,7 +3,7 @@ package net.thrymr.services.impl;
 import net.thrymr.dto.ChapterDto;
 import net.thrymr.dto.UnitDto;
 
-import net.thrymr.dto.response.PaginationResponse;
+import net.thrymr.dto.response.*;
 import net.thrymr.model.*;
 import net.thrymr.model.master.MtOptions;
 import net.thrymr.model.master.MtQuestion;
@@ -297,16 +297,49 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         return new PaginationResponse();
     }
     @Override
-    public Chapter getChapterById(Long id) {
+    public ChapterResponse getChapterById(Long id) {
         Chapter chapter = null;
         if (Validator.isValid(id)) {
-            Optional<Chapter> optionalAppUser = chapterRepo.findById(id);
+            ChapterResponse chapterResponse = new ChapterResponse();
+            List<QuestionResponse> questionResponseList = new ArrayList<>();
+            Optional<Chapter> optionalAppUser = chapterRepo.findByIdAndIsDeletedAndQuestionListIsDeletedAndQuestionListMtOptionsIsDeleted(id, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE);
             if (optionalAppUser.isPresent() && optionalAppUser.get().getIsDeleted().equals(Boolean.FALSE)) {
                 chapter = optionalAppUser.get();
-                return chapter;
+                chapterResponse.setId(chapter.getId());
+                chapterResponse.setChapterName(chapter.getChapterName());
+                chapterResponse.setDescription(chapter.getDescription());
+                chapterResponse.setSequence(chapter.getSequence());
+                if (optionalAppUser.get().getQuestionList() != null) {
+                    for (MtQuestion mtQuestion : optionalAppUser.get().getQuestionList()) {
+                        if (mtQuestion.getIsDeleted().equals(Boolean.FALSE)) {
+                            QuestionResponse questionResponse = new QuestionResponse();
+                            questionResponse.setId(mtQuestion.getId());
+                            questionResponse.setQuestion(mtQuestion.getQuestion());
+                            questionResponse.setSequence(mtQuestion.getSequence());
+                            questionResponse.setQuestionCalType(mtQuestion.getQuestionCalType());
+                            if (mtQuestion.getMtOptions() != null && !mtQuestion.getMtOptions().isEmpty()) {
+                                List<OptionResponse> optionResponseList = new ArrayList<>();
+                                for (MtOptions mtOptions : mtQuestion.getMtOptions()) {
+                                    if (mtOptions.getIsDeleted().equals(Boolean.FALSE)) {
+                                        OptionResponse optionResponse = new OptionResponse();
+                                        optionResponse.setId(optionResponse.getId());
+                                        optionResponse.setIsCorrect(mtOptions.getIsCorrect());
+                                        optionResponse.setTextAnswer(mtOptions.getTextAnswer());
+                                        optionResponseList.add(optionResponse);
+                                    }
+                                }
+                                questionResponse.setMtOptions(optionResponseList);
+                            }
+                            questionResponseList.add(questionResponse);
+                        }
+                    }
+                }
+                chapterResponse.setQuestionList(questionResponseList);
+
+                return chapterResponse;
             }
         }
-        return new Chapter();
+        return new ChapterResponse();
     }
 
     @Override
@@ -323,16 +356,56 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
     }
 
     @Override
-    public Unit getUnitBySequence(UnitDto request) {
+    public UnitResponse getUnitBySequence(UnitDto request) {
         Unit unit = null;
-        if(Validator.isValid(request.getSequence()) && Validator.isValid(request.getChapterSequence())) {
-            Optional<Unit> optionalUnit = unitRpo.findBySequenceAndChaptersSequence(request.getSequence(),request.getChapterSequence());
-            if (optionalUnit.isPresent() && optionalUnit.get().getIsDeleted().equals(Boolean.FALSE)){
+        if (Validator.isValid(request.getSequence()) && Validator.isValid(request.getChapterSequence())) {
+            UnitResponse unitResponse = new UnitResponse();
+            ChapterResponse chapterResponse = new ChapterResponse();
+            List<ChapterResponse> chapterList = new ArrayList<>();
+            Optional<Unit> optionalUnit = unitRpo.findBySequenceAndChaptersSequence(request.getSequence(), request.getChapterSequence());
+            if (optionalUnit.isPresent() && optionalUnit.get().getIsDeleted().equals(Boolean.FALSE)) {
                 unit = optionalUnit.get();
-                return unit;
+                unitResponse.setId(unit.getId());
+                unitResponse.setUnitName(unit.getUnitName());
+                for (Chapter chapter : optionalUnit.get().getChapters()) {
+                    chapterResponse.setId(chapter.getId());
+                    chapterResponse.setChapterName(chapter.getChapterName());
+                    chapterResponse.setDescription(chapter.getDescription());
+                    chapterResponse.setSequence(chapter.getSequence());
+                    chapterList.add(chapterResponse);
+                    if (chapter.getQuestionList() != null) {
+                        List<QuestionResponse> questionResponseList = new ArrayList<>();
+                        for (MtQuestion mtQuestion : chapter.getQuestionList()) {
+                            if (mtQuestion.getIsDeleted().equals(Boolean.FALSE)) {
+                                QuestionResponse questionResponse = new QuestionResponse();
+                                questionResponse.setId(mtQuestion.getId());
+                                questionResponse.setQuestion(mtQuestion.getQuestion());
+                                questionResponse.setSequence(mtQuestion.getSequence());
+                                questionResponse.setQuestionCalType(mtQuestion.getQuestionCalType());
+                                if (mtQuestion.getMtOptions() != null && !mtQuestion.getMtOptions().isEmpty()) {
+                                    List<OptionResponse> optionResponseList = new ArrayList<>();
+                                    for (MtOptions mtOptions : mtQuestion.getMtOptions()) {
+                                        if (mtOptions.getIsDeleted().equals(Boolean.FALSE)) {
+                                            OptionResponse optionResponse = new OptionResponse();
+                                            optionResponse.setId(mtOptions.getId());
+                                            optionResponse.setIsCorrect(mtOptions.getIsCorrect());
+                                            optionResponse.setTextAnswer(mtOptions.getTextAnswer());
+                                            optionResponseList.add(optionResponse);
+                                        }
+                                    }
+                                    questionResponse.setMtOptions(optionResponseList);
+                                }
+                                questionResponseList.add(questionResponse);
+                            }
+                        }
+                        chapterResponse.setQuestionList(questionResponseList);
+                    }
+                }
+                unitResponse.setChapters(chapterList);
             }
+            return unitResponse;
         }
-        return new Unit();
+        return new UnitResponse();
     }
     @Override
     public Chapter getChapterBySequence(Integer sequence) {
