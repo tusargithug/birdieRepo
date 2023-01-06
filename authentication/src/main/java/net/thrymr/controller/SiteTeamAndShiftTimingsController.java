@@ -22,74 +22,84 @@ public class SiteTeamAndShiftTimingsController {
     SiteTeamAndShiftTimingsService siteTeamAndShiftTimingsService;
 
 
-    @MutationMapping(name="createTeam")
-    public Team createTeam(@Argument(name = "input") TeamDto teamDto){
+    @MutationMapping(name = "createTeam")
+    public Team createTeam(@Argument(name = "input") TeamDto teamDto) {
         return siteTeamAndShiftTimingsService.createTeam(teamDto);
     }
-    @MutationMapping(name="updateTeam")
-    public Team updateTeam(@Argument(name = "input")TeamDto teamDto){
+
+    @MutationMapping(name = "updateTeam")
+    public Team updateTeam(@Argument(name = "input") TeamDto teamDto) {
         return siteTeamAndShiftTimingsService.updateTeam(teamDto);
     }
 
-    @MutationMapping(name="deleteTeamById")
-    public String deleteTeamById(@Argument Long id){
+    @MutationMapping(name = "updateTeams")
+    public String updateTeams(@Argument(name = "input") List<TeamDto> teamDtoList) {
+        return siteTeamAndShiftTimingsService.updateTeams(teamDtoList);
+    }
+
+    @MutationMapping(name = "deleteTeamById")
+    public String deleteTeamById(@Argument Long id) {
         return siteTeamAndShiftTimingsService.deleteTeamById(id);
     }
 
-    @MutationMapping(name="saveSite")
-    public String saveSite(@Argument(name = "input")SiteDto siteDto){
+    @MutationMapping(name = "saveSite")
+    public String saveSite(@Argument(name = "input") SiteDto siteDto) {
         return siteTeamAndShiftTimingsService.saveSite(siteDto);
     }
-    @MutationMapping(name="updateSite")
-    public String updateSite(@Argument(name = "input")SiteDto siteDto){
+
+    @MutationMapping(name = "updateSite")
+    public String updateSite(@Argument(name = "input") SiteDto siteDto) {
         return siteTeamAndShiftTimingsService.updateSite(siteDto);
     }
 
     @QueryMapping(name = "getSiteById")
-    public Site getSiteById(@Argument Long id){
+    public Site getSiteById(@Argument Long id) {
         return siteTeamAndShiftTimingsService.getSiteById(id);
     }
-    @MutationMapping(name="deleteSiteById")
-    public String deleteSiteById(@Argument Long id){
+
+    @MutationMapping(name = "deleteSiteById")
+    public String deleteSiteById(@Argument Long id) {
         return siteTeamAndShiftTimingsService.deleteSiteById(id);
     }
 
-    @MutationMapping(name="saveSiftTimings")
-    public String saveSiftTimings(@Argument(name = "input")ShiftTimingsDto shiftTimingsDto){
+    @MutationMapping(name = "saveSiftTimings")
+    public String saveSiftTimings(@Argument(name = "input") ShiftTimingsDto shiftTimingsDto) {
         return siteTeamAndShiftTimingsService.saveShiftTimings(shiftTimingsDto);
     }
 
-    @MutationMapping(name="updateSiftTimings")
-    public String updateSiftTimings(@Argument(name = "input")ShiftTimingsDto shiftTimingsDto){
+    @MutationMapping(name = "updateSiftTimings")
+    public String updateSiftTimings(@Argument(name = "input") ShiftTimingsDto shiftTimingsDto) {
         return siteTeamAndShiftTimingsService.updateSiftTimings(shiftTimingsDto);
     }
-    @MutationMapping(name="deleteSiftTimingsById")
-    public String deleteSiftTimingsById(@Argument Long id){
+
+    @MutationMapping(name = "deleteSiftTimingsById")
+    public String deleteSiftTimingsById(@Argument Long id) {
         return siteTeamAndShiftTimingsService.deleteSiftTimingsById(id);
     }
 
     @QueryMapping("getAllTeamPagination")
-    public PaginationResponse getAllTeamPagination(@Argument(name = "input")TeamDto teamdto){
+    public PaginationResponse getAllTeamPagination(@Argument(name = "input") TeamDto teamdto) {
         return siteTeamAndShiftTimingsService.getAllTeamPagination(teamdto);
     }
+
     @QueryMapping("getAllSitePagination")
-    public PaginationResponse getAllSitePagination(@Argument(name = "input") SiteDto siteDto){
+    public PaginationResponse getAllSitePagination(@Argument(name = "input") SiteDto siteDto) {
         return siteTeamAndShiftTimingsService.getAllSitePagination(siteDto);
     }
 
 
     @QueryMapping(name = "getAllShiftTimings")
-    public List<ShiftTimings> getAllShiftTimings(){
+    public List<ShiftTimings> getAllShiftTimings() {
         return siteTeamAndShiftTimingsService.getAllShiftTimings();
     }
 
-    @QueryMapping(name="getAllAppUserByRoles")
-    public List<AppUser> getAllAppUserByRoles(@Argument(name = "input") AppUserDto request)  {
+    @QueryMapping(name = "getAllAppUserByRoles")
+    public List<AppUser> getAllAppUserByRoles(@Argument(name = "input") AppUserDto request) {
         return siteTeamAndShiftTimingsService.getAllAppUserByRoles(request);
     }
 
-    @QueryMapping(name="previewAlertNotification")
-    public RoleWiseCountResponse previewAlertNotification(@Argument(name = "input") TeamMembersDto request)  {
+    @QueryMapping(name = "previewAlertNotification")
+    public RoleWiseCountResponse previewAlertNotification(@Argument(name = "input") TeamMembersDto request) {
         return siteTeamAndShiftTimingsService.previewAlertNotification(request);
     }
 
@@ -97,8 +107,9 @@ public class SiteTeamAndShiftTimingsController {
     public Team getTeamById(@Argument Long id) {
         return siteTeamAndShiftTimingsService.getTeamById(id);
     }
+
     @QueryMapping("getAllEnumAlerts")
-    public List<Alerts> getAllEnumAlerts(){
+    public List<Alerts> getAllEnumAlerts() {
         return siteTeamAndShiftTimingsService.getAllEnumAlerts();
     }
 }

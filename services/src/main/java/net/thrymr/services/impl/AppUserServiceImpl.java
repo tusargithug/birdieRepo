@@ -238,6 +238,36 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
+    public String updateAppUsers(List<AppUserDto> appUserDtoList) throws ParseException {
+        if (appUserDtoList != null && appUserDtoList.size() > 0) {
+            for (AppUserDto appUserDto : appUserDtoList) {
+                AppUser appUser = null;
+                if (Validator.isValid(appUserDto.getId())) {
+
+                    Optional<AppUser> optionalAppUser = appUserRepo.findById(appUserDto.getId());
+                    if(optionalAppUser.isPresent()) {
+                        appUser = optionalAppUser.get();
+
+                        if (appUserDto.getShiftStartAt() != null) {
+                            appUser.setShiftStartAt(DateUtils.toStringToLocalTime(appUserDto.getShiftStartAt(), Constants.TIME_FORMAT_12_HOURS));
+                        }
+                        if (appUserDto.getShiftEndAt() != null) {
+                            appUser.setShiftEndAt(DateUtils.toStringToLocalTime(appUserDto.getShiftEndAt(), Constants.TIME_FORMAT_12_HOURS));
+                        }
+                        if (appUserDto.getShiftStartAt() != null && appUserDto.getShiftEndAt() != null) {
+                            appUser.setShiftTimings(appUserDto.getShiftStartAt() + " - " + appUserDto.getShiftEndAt());
+                        }
+                        appUser.setSearchKey(getAppUserSearchKey(appUser));
+                        appUserRepo.save(appUser);
+                    }
+                }
+            }
+            return "Employees updated successfully";
+        }
+        return "Data not found";
+    }
+
+    @Override
     public String updateAppUser(AppUserDto request) throws ParseException {
         if (Validator.isValid(request.getId())) {
             Optional<AppUser> optionalAppUser = appUserRepo.findById(request.getId());
@@ -291,7 +321,9 @@ public class AppUserServiceImpl implements AppUserService {
                         user.setUploadPicture(optionalFileEntity.get());
                     }
                 }
-                user.setShiftTimings(request.getShiftStartAt() + " - " + request.getShiftEndAt());
+                if (Validator.isObjectValid(request.getShiftStartAt()) && Validator.isObjectValid(request.getShiftEndAt())) {
+                    user.setShiftTimings(request.getShiftStartAt() + " - " + request.getShiftEndAt());
+                }
                 appUserRepo.save(user);
                 return "User updated successfully";
             }
@@ -493,6 +525,10 @@ public class AppUserServiceImpl implements AppUserService {
             if (request.getEmpId() != null && !request.getEmpId().isEmpty()) {
                 Predicate empId = criteriaBuilder.and(root.get("empId").in(request.getEmpId()));
                 addUserPredicate.add(empId);
+            }
+            if (request.getShiftTimings() != null && !request.getShiftTimings().isEmpty()) {
+                Predicate alerts = criteriaBuilder.and(root.get("shiftTimings").in(request.getShiftTimings()));
+                addUserPredicate.add(alerts);
             }
             if (request.getRoles() != null && request.getRoles().isEmpty()) {
                 Predicate roles = criteriaBuilder.and(root.get("roles").in(request.getRoles()));

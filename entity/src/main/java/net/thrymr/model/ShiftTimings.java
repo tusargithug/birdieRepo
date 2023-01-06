@@ -18,12 +18,14 @@ public class ShiftTimings extends BaseEntity {
     @Column(name = "shift_name")
     @Enumerated(EnumType.STRING)
     private SlotShift shiftName;
-    @OneToOne(cascade = CascadeType.ALL)
-    private Site site;
     private LocalTime shiftStatAt;
     private LocalTime shiftEndAt;
+    private String shiftTimings;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Site site;
+   /*
     @OneToMany(cascade=CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "shiftTimings")
     private List<Team> team;
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private Counsellor counsellors;
+    private Counsellor counsellors;*/
 }

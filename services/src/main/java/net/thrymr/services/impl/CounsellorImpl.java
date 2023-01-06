@@ -39,41 +39,47 @@ public class CounsellorImpl implements CounsellorService {
     TeamRepo teamRepo;
     @Autowired
     SiteRepo siteRepo;
-   @Autowired
-   EducationRepo educationRepo;
-   @Autowired
-   LanguageRepo languageRepo;
-   @Autowired
-   VendorRepo vendorRepo;
+    @Autowired
+    EducationRepo educationRepo;
+    @Autowired
+    LanguageRepo languageRepo;
+    @Autowired
+    VendorRepo vendorRepo;
 
 
     @Override
     public String createCounsellor(CounsellorDto request) {
         Counsellor counsellor = new Counsellor();
-        if(request.getEmpId() != null && !counsellorRepo.existsByEmpId(request.getEmpId())) {
+        if (request.getEmpId() != null && !counsellorRepo.existsByEmpId(request.getEmpId())) {
             counsellor.setEmpId(request.getEmpId());
-        }else {
+        } else {
             return "This employee id already existed";
         }
         counsellor.setCounsellorName(request.getCounsellorName());
         counsellor.setEducationalDetails(request.getEducationalDetails());
-        if(request.getEmailId() != null && !counsellorRepo.existsByEmailId(request.getEmailId())) {
+        if (request.getEmailId() != null && !counsellorRepo.existsByEmailId(request.getEmailId())) {
             counsellor.setEmailId(request.getEmailId());
-        }else {
+        } else {
             return "This email already existed";
         }
         counsellor.setLanguages(request.getLanguages());
         counsellor.setBio(request.getBio());
-        counsellor.setShiftStartAt(DateUtils.toStringToLocalTime(request.getShiftStartAt(), Constants.TIME_FORMAT_12_HOURS));
-        counsellor.setShiftEndAt(DateUtils.toStringToLocalTime(request.getShiftEndAt(), Constants.TIME_FORMAT_12_HOURS));
-        counsellor.setShiftTimings(request.getShiftStartAt() + " - " + request.getShiftEndAt());
+        if (request.getShiftStartAt() != null) {
+            counsellor.setShiftStartAt(DateUtils.toStringToLocalTime(request.getShiftStartAt(), Constants.TIME_FORMAT_12_HOURS));
+        }
+        if (request.getShiftEndAt() != null) {
+            counsellor.setShiftEndAt(DateUtils.toStringToLocalTime(request.getShiftEndAt(), Constants.TIME_FORMAT_12_HOURS));
+        }
+        if (request.getShiftStartAt() != null && request.getShiftEndAt() != null) {
+            counsellor.setShiftTimings(request.getShiftStartAt() + " - " + request.getShiftEndAt());
+        }
         if (Validator.isValid(request.getDesignation()) && request.getDesignation().equals("COUNSELLOR")) {
             counsellor.setDesignation(Roles.valueOf(request.getDesignation()));
         }
         counsellor.setCountryCode(request.getCountryCode());
-        if(request.getMobileNumber() != null && !counsellorRepo.existsByMobileNumber(request.getMobileNumber())) {
-                counsellor.setMobileNumber(request.getMobileNumber());
-        }else{
+        if (request.getMobileNumber() != null && !counsellorRepo.existsByMobileNumber(request.getMobileNumber())) {
+            counsellor.setMobileNumber(request.getMobileNumber());
+        } else {
             return "This mobile number already existed";
         }
         counsellor.setGender(Gender.valueOf(request.getGender()));
@@ -81,7 +87,7 @@ public class CounsellorImpl implements CounsellorService {
             Optional<Site> optionalSite = siteRepo.findById(request.getSiteId());
             optionalSite.ifPresent(counsellor::setSite);
         }
-        if (Validator.isValid(request.getVendorId())){
+        if (Validator.isValid(request.getVendorId())) {
             Optional<Vendor> optionalVendor = vendorRepo.findById(request.getVendorId());
             optionalVendor.ifPresent(counsellor::setVendor);
         }
@@ -91,15 +97,44 @@ public class CounsellorImpl implements CounsellorService {
     }
 
     @Override
+    public String updateCounsellors(List<CounsellorDto> counsellorDtoList) {
+        if (counsellorDtoList != null && counsellorDtoList.size() > 0) {
+            for (CounsellorDto counsellorDto : counsellorDtoList) {
+                Counsellor counsellor = null;
+                if (Validator.isValid(counsellorDto.getId())) {
+                    Optional<Counsellor> optionalCounsellor = counsellorRepo.findById(counsellorDto.getId());
+                    if (optionalCounsellor.isPresent()) {
+                        counsellor = optionalCounsellor.get();
+
+                        if (counsellorDto.getShiftStartAt() != null) {
+                            counsellor.setShiftStartAt(DateUtils.toStringToLocalTime(counsellorDto.getShiftStartAt(), Constants.TIME_FORMAT_12_HOURS));
+                        }
+                        if (counsellorDto.getShiftEndAt() != null) {
+                            counsellor.setShiftEndAt(DateUtils.toStringToLocalTime(counsellorDto.getShiftEndAt(), Constants.TIME_FORMAT_12_HOURS));
+                        }
+                        if (counsellorDto.getShiftStartAt() != null && counsellorDto.getShiftEndAt() != null) {
+                            counsellor.setShiftTimings(counsellorDto.getShiftStartAt() + " - " + counsellorDto.getShiftEndAt());
+                        }
+                        counsellor.setSearchKey(getCounsellorSearchKey(counsellor));
+                        counsellorRepo.save(counsellor);
+                    }
+                }
+            }
+            return "Counsellors updated successfully";
+        }
+        return "Data not found";
+    }
+
+    @Override
     public String updateCounsellorById(CounsellorDto request) {
         if (Validator.isValid(request.getId())) {
             Optional<Counsellor> optionalCounsellor = counsellorRepo.findById(request.getId());
             Counsellor counsellor = null;
             if (optionalCounsellor.isPresent()) {
                 counsellor = optionalCounsellor.get();
-                if(counsellor.getEmpId().equals(request.getEmpId()) || !counsellorRepo.existsByEmpId(request.getEmpId())) {
+                if (counsellor.getEmpId().equals(request.getEmpId()) || !counsellorRepo.existsByEmpId(request.getEmpId())) {
                     counsellor.setEmpId(request.getEmpId());
-                }else {
+                } else {
                     return "This employee id already existed";
                 }
                 if (Validator.isValid(request.getCounsellorName())) {
@@ -108,7 +143,7 @@ public class CounsellorImpl implements CounsellorService {
                 if (Validator.isValid(request.getEducationalDetails())) {
                     counsellor.setEducationalDetails(request.getEducationalDetails());
                 }
-                if(counsellor.getEmailId().equals(request.getEmailId()) || !counsellorRepo.existsByEmailId(request.getEmailId())) {
+                if (counsellor.getEmailId().equals(request.getEmailId()) || !counsellorRepo.existsByEmailId(request.getEmailId())) {
                     counsellor.setEmailId(request.getEmailId());
                 } else {
                     return "This Email Id already existed";
@@ -125,9 +160,9 @@ public class CounsellorImpl implements CounsellorService {
                 if (Validator.isValid(request.getCountryCode())) {
                     counsellor.setCountryCode(request.getCountryCode());
                 }
-                if(counsellor.getMobileNumber().equals(request.getMobileNumber()) || !counsellorRepo.existsByMobileNumber(request.getMobileNumber())) {
-                        counsellor.setMobileNumber(request.getMobileNumber());
-                }else {
+                if (counsellor.getMobileNumber().equals(request.getMobileNumber()) || !counsellorRepo.existsByMobileNumber(request.getMobileNumber())) {
+                    counsellor.setMobileNumber(request.getMobileNumber());
+                } else {
                     return "This mobile number already existed";
                 }
                 if (request.getShiftStartAt() != null) {
@@ -148,7 +183,7 @@ public class CounsellorImpl implements CounsellorService {
                         counsellor.setSite(optionalSite.get());
                     }
                 }
-                if (Validator.isValid(request.getVendorId())){
+                if (Validator.isValid(request.getVendorId())) {
                     Optional<Vendor> optionalVendor = vendorRepo.findById(request.getVendorId());
                     optionalVendor.ifPresent(counsellor::setVendor);
                 }
@@ -199,6 +234,10 @@ public class CounsellorImpl implements CounsellorService {
             if (response.getEmpId() != null) {
                 Predicate empId = criteriaBuilder.and(root.get("empId").in(response.getEmpId()));
                 addCounsellorPredicate.add(empId);
+            }
+            if (response.getShiftTimings() != null && !response.getShiftTimings().isEmpty()) {
+                Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(response.getShiftTimings()));
+                addCounsellorPredicate.add(shiftTimings);
             }
             if (response.getAddedOn() != null && response.getAddedOn().equals(Boolean.TRUE)) {
                 Predicate addedOn = criteriaBuilder.and(root.get("createdOn").in(response.getAddedOn()));
@@ -285,9 +324,9 @@ public class CounsellorImpl implements CounsellorService {
     @Override
     public String updateEducationDetailsById(EducationDto request) {
         EducationDetails educationDetails = null;
-        if(Validator.isValid(request.getId())){
+        if (Validator.isValid(request.getId())) {
             Optional<EducationDetails> optionalEducationDetails = educationRepo.findById(request.getId());
-            if(optionalEducationDetails.isPresent()){
+            if (optionalEducationDetails.isPresent()) {
                 educationDetails = optionalEducationDetails.get();
                 if (Validator.isValid(request.getEducationName())) {
                     educationDetails.setEducationName(request.getEducationName());
@@ -302,9 +341,9 @@ public class CounsellorImpl implements CounsellorService {
     @Override
     public String updateLanguageDetailsById(LanguageDto request) {
         LanguageDetails languageDetails = null;
-        if(Validator.isValid(request.getId())){
+        if (Validator.isValid(request.getId())) {
             Optional<LanguageDetails> languageDetailsOptional = languageRepo.findById(request.getId());
-            if(languageDetailsOptional.isPresent()) {
+            if (languageDetailsOptional.isPresent()) {
                 languageDetails = languageDetailsOptional.get();
                 languageDetails.setLanguageName(request.getLanguageName());
                 languageRepo.save(languageDetails);
@@ -317,9 +356,9 @@ public class CounsellorImpl implements CounsellorService {
     @Override
     public EducationDetails getEducationalDetailsById(Long id) {
         EducationDetails educationDetails = null;
-        if(Validator.isValid(id)) {
+        if (Validator.isValid(id)) {
             Optional<EducationDetails> optionalEducationDetails = educationRepo.findById(id);
-            if(optionalEducationDetails.isPresent()){
+            if (optionalEducationDetails.isPresent()) {
                 educationDetails = optionalEducationDetails.get();
                 return educationDetails;
             }
@@ -330,9 +369,9 @@ public class CounsellorImpl implements CounsellorService {
     @Override
     public LanguageDetails getLanguageDetailsById(Long id) {
         LanguageDetails languageDetails = null;
-        if(Validator.isValid(id)){
+        if (Validator.isValid(id)) {
             Optional<LanguageDetails> languageDetailsOptional = languageRepo.findById(id);
-            if(languageDetailsOptional.isPresent()){
+            if (languageDetailsOptional.isPresent()) {
                 languageDetails = languageDetailsOptional.get();
                 return languageDetails;
             }
@@ -372,11 +411,11 @@ public class CounsellorImpl implements CounsellorService {
         if (counsellor.getShiftEndAt() != null) {
             searchKey = searchKey + " " + counsellor.getShiftEndAt();
         }
-        if(counsellor.getEducationalDetails() != null){
-            searchKey = searchKey + " " +counsellor.getEducationalDetails();
+        if (counsellor.getEducationalDetails() != null) {
+            searchKey = searchKey + " " + counsellor.getEducationalDetails();
         }
-        if(counsellor.getLanguages() != null){
-            searchKey = searchKey + " " +counsellor.getLanguages();
+        if (counsellor.getLanguages() != null) {
+            searchKey = searchKey + " " + counsellor.getLanguages();
         }
         if (counsellor.getShiftTimings() != null) {
             searchKey = searchKey + " " + counsellor.getShiftTimings();
@@ -390,12 +429,11 @@ public class CounsellorImpl implements CounsellorService {
         if (counsellor.getIsActive() != null) {
             searchKey = searchKey + " " + counsellor.getIsActive();
         }
-        if(counsellor.getVendor() != null) {
+        if (counsellor.getVendor() != null) {
             searchKey = searchKey + " " + counsellor.getVendor().getVendorName();
         }
         return searchKey;
     }
-
 
 
 }

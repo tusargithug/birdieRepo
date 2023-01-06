@@ -22,6 +22,8 @@ public interface CounsellorService {
 
     Counsellor getCounsellorById(Long id);
 
+    String updateCounsellors(List<CounsellorDto> counsellorDtoList);
+
     List<EducationDetails> getAllEducationalDetails();
 
     List<LanguageDetails> getAllLanguagesDetails();

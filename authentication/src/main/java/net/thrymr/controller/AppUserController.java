@@ -50,6 +50,12 @@ public class AppUserController {
 
     }
 
+    @MutationMapping(name = "updateAppUsers")
+    public String updateAppUsers(@Argument(name = "input") List<AppUserDto> request) throws ParseException {
+        return appUserService.updateAppUsers(request);
+
+    }
+
     @MutationMapping(name = "deleteAppUserById")
     public String deleteAppUserById(@Argument Long id) {
         return appUserService.deleteAppUserById(id);
