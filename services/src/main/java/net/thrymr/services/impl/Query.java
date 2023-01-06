@@ -481,7 +481,7 @@ public class Query implements GraphQLQueryResolver {
         return unitAndChapterServices.getUnitById(id);
     }
     @QueryMapping(name = "getUnitBySequence")
-    public UnitResponse getUnitBySequence(@Argument (name = "input") UnitDto request) {
+    public Unit getUnitBySequence(@Argument (name = "input") UnitDto request) {
         return unitAndChapterServices.getUnitBySequence(request);
     }
     @QueryMapping(name = "getChapterBySequence")
