@@ -320,8 +320,8 @@ type ShiftTimings{
     id: ID!
     shiftName:String
     site:Site
-    shiftStatAt:LocalTime
-    shiftEndAt:LocalTime
+    shiftStatAt:String
+    shiftEndAt:String
     shiftTimings:String
     isActive:Boolean
 }
