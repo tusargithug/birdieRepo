@@ -74,6 +74,9 @@ public class MutationResolver implements GraphQLMutationResolver {
     @Autowired
     TeamMembersService teamMembersService;
 
+    @Autowired
+    UserLearningStatusService userLearningStatusService;
+
     @MutationMapping(name = "createAppUser")
     public String createAppUser(AppUserDto request) throws Exception {
         return appUserService.createAppUser(request);
@@ -636,6 +639,19 @@ public class MutationResolver implements GraphQLMutationResolver {
         public void setId(UUID id) {
             this.id = id;
         }
+    }
+
+    @MutationMapping(name = "createUserLearningStatus")
+    public String createUserLearningStatus(UserLearningStatusDto userLearningStatusDto) {
+        return userLearningStatusService.createUserLearningStatus(userLearningStatusDto);
+    }
+    @MutationMapping(name = "updateUserLearningStatus")
+    public String updateUserLearningStatus(UserLearningStatusDto userLearningStatusDto) {
+        return userLearningStatusService.updateUserLearningStatus(userLearningStatusDto);
+    }
+    @MutationMapping(name = "deleteUserLearningStatusById")
+    public String deleteUserLearningStatusById(String userId) {
+        return userLearningStatusService.deleteUserLearningStatusById(userId);
     }
 }
 
