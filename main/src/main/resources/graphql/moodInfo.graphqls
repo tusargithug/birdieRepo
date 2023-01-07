@@ -29,7 +29,7 @@ type Query {
     getAllVendorPagination(input:VendorDto):[VendorResponse]
     getAllAssessment:[MtAssessment]
     getAssessmentById(id:ID!):MtAssessment
-    getQuestionById(id:ID!):MtQuestion
+    getQuestionById(questionId:ID!):MtQuestion
     getAnswersByQuestionId(id:ID!):[MtOptions]
     getAllQuestions:[MtQuestion]
     getOptionById(id:ID!):MtOptions
@@ -85,9 +85,10 @@ type Query {
     getLoggedInUser:LoginResponse
     getAllMoodSourceById(input:MoodSourceIntensityRequestDto):[MtMoodSource]
     getUnitById(id:ID):Unit
-    getUnitBySequence(input:UnitDto):Unit
-    getChapterBySequence(sequence:Int):Chapter
+    getUnitBySequence(sequence:Int):Unit
+    getChapterBySequence(input:ChapterDto):Chapter
     getAllPaginationUserLearningStatus(input:UserLearningStatusDto):PaginationResponse
+    getQuestionByChapterId(chapterId:ID):[MtQuestion]
 
 }
 

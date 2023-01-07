@@ -29,4 +29,5 @@ public interface QuestionAndOptionsService {
     List<MtOptions> getAllOption();
 
     String deleteOptionById(Long id);
+    List<MtQuestion> getQuestionByChapterId(Long chapterId);
 }

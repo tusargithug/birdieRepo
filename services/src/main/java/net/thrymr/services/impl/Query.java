@@ -481,16 +481,20 @@ public class Query implements GraphQLQueryResolver {
         return unitAndChapterServices.getUnitById(id);
     }
     @QueryMapping(name = "getUnitBySequence")
-    public Unit getUnitBySequence(@Argument (name = "input") UnitDto request) {
-        return unitAndChapterServices.getUnitBySequence(request);
+    public Unit getUnitBySequence(@Argument Integer sequences) {
+        return unitAndChapterServices.getUnitBySequence(sequences);
     }
     @QueryMapping(name = "getChapterBySequence")
-    public Chapter getChapterBySequence(@Argument Integer sequence) {
-        return unitAndChapterServices.getChapterBySequence(sequence);
+    public Chapter getChapterBySequence(@Argument(name = "input") ChapterDto request) {
+        return unitAndChapterServices.getChapterBySequence(request);
     }
 
     @QueryMapping(name = "getAllPaginationUserLearningStatus")
     public PaginationResponse getAllPaginationUserLearningStatus(@Argument(name = "input") UserLearningStatusDto request) {
         return userLearningStatusService.getAllPaginationUserLearningStatus(request);
+    }
+    @QueryMapping("getQuestionByChapterId")
+    public List<MtQuestion> getQuestionByChapterId(@Argument Long chapterId){
+        return questionAndOptionsService.getQuestionByChapterId(chapterId);
     }
 }

@@ -14,5 +14,5 @@ import java.util.Optional;
 
 @Repository
 public interface UnitRpo extends JpaRepository<Unit,Long>, JpaSpecificationExecutor<Unit> {
-    Optional<Unit> findBySequenceAndChaptersSequence(Integer sequence, Integer chapterSequence);
+    Optional<Unit> findBySequence(Integer sequence);
 }

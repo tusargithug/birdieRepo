@@ -356,10 +356,10 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
     }
 
     @Override
-    public Unit getUnitBySequence(UnitDto request) {
+    public Unit getUnitBySequence(Integer sequence) {
         Unit unit = null;
-        if(Validator.isValid(request.getSequence()) && Validator.isValid(request.getChapterSequence())) {
-            Optional<Unit> optionalUnit = unitRpo.findBySequenceAndChaptersSequence(request.getSequence(),request.getChapterSequence());
+        if(Validator.isValid(sequence)) {
+            Optional<Unit> optionalUnit = unitRpo.findBySequence(sequence);
             if (optionalUnit.isPresent() && optionalUnit.get().getIsDeleted().equals(Boolean.FALSE)){
                 unit = optionalUnit.get();
                 return unit;
@@ -368,10 +368,10 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         return new Unit();
     }
     @Override
-    public Chapter getChapterBySequence(Integer sequence) {
+    public Chapter getChapterBySequence(ChapterDto request) {
         Chapter Chapter = null;
-        if(Validator.isValid(sequence)) {
-            Optional<Chapter> optionalChapter = chapterRepo.findBySequence(sequence);
+        if(Validator.isValid(request.getUnitId()) && Validator.isValid(request.getSequence())) {
+            Optional<Chapter> optionalChapter = chapterRepo.findByUnitIdAndSequence(request.getUnitId(),request.getSequence());
             if (optionalChapter.isPresent() && optionalChapter.get().getIsDeleted().equals(Boolean.FALSE)){
                 Chapter = optionalChapter.get();
                 return Chapter;

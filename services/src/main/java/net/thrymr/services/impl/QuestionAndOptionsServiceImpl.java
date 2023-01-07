@@ -99,13 +99,23 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
     }
 
     @Override
-    public MtQuestion getQuestionById(Long id) {
+    public List<MtQuestion> getQuestionByChapterId(Long ChapterId) {
         MtQuestion question = null;
-        if (Validator.isValid(id)) {
-            Optional<MtQuestion> optionalQuestion = questionRepo.findById(id);
-            if (optionalQuestion.isPresent() && optionalQuestion.get().getIsDeleted().equals(Boolean.TRUE)) {
-                question = optionalQuestion.get();
-                return question;
+        if (Validator.isValid(ChapterId)) {
+            List<MtQuestion> questionList = questionRepo.findByChapterId(ChapterId);
+            if (!questionList.isEmpty()) {
+                return questionList.stream().filter(mtQuestion -> mtQuestion.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList());
+            }
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
+    public MtQuestion getQuestionById(Long questionId) {
+        if (Validator.isValid(questionId)) {
+            Optional<MtQuestion> optionalMtQuestion = questionRepo.findById(questionId);
+            if (optionalMtQuestion.isPresent() && optionalMtQuestion.get().getIsDeleted().equals(Boolean.FALSE)) {
+                return optionalMtQuestion.get();
             }
         }
         return new MtQuestion();

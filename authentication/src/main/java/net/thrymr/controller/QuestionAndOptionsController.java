@@ -2,6 +2,7 @@ package net.thrymr.controller;
 
 import net.thrymr.dto.OptionsDto;
 import net.thrymr.dto.QuestionDto;
+import net.thrymr.model.Chapter;
 import net.thrymr.model.master.MtOptions;
 import net.thrymr.model.master.MtQuestion;
 import net.thrymr.services.QuestionAndOptionsService;
@@ -32,6 +33,11 @@ public class QuestionAndOptionsController {
     @QueryMapping("getQuestionById")
     public MtQuestion getQuestionById(@Argument Long id) {
         return questionAndOptionsService.getQuestionById(id);
+    }
+
+    @QueryMapping("getQuestionByChapterId")
+    public List<MtQuestion> getQuestionByChapterId(@Argument Long chapterId){
+        return questionAndOptionsService.getQuestionByChapterId(chapterId);
     }
 
     @MutationMapping("deleteQuestionById")
