@@ -78,14 +78,12 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
                     MtOptions option = new MtOptions();
                     option.setQuestion(question);
                     option.setTextAnswer(optionsDto.getTextAnswer());
-                    if (optionsDto.getIsCorrect().equals(Boolean.TRUE)) {
+                    if (optionsDto.getIsCorrect().equals(Boolean.TRUE) || optionsDto.getIsCorrect().equals(Boolean.FALSE) ) {
                         option.setIsCorrect(optionsDto.getIsCorrect());
                     }
                     if (optionsDto.getUserCourseId() != null) {
                         Optional<UserCourse> optionalUserCourse = userCourseRepo.findById(optionsDto.getUserCourseId());
-                        if (optionalUserCourse.isPresent()) {
-                            option.setUserCourse(optionalUserCourse.get());
-                        }
+                        optionalUserCourse.ifPresent(option::setUserCourse);
                     }
                     option.setSearchKey(getOptionsSearchKey(option));
                     optionsRepo.save(option);
@@ -202,7 +200,7 @@ public class QuestionAndOptionsServiceImpl implements QuestionAndOptionsService 
                                     if (mtOptions.getId().equals(optionsDto.getId())) {
                                         mtOptions.setQuestion(question);
                                         mtOptions.setTextAnswer(optionsDto.getTextAnswer());
-                                        if (optionsDto.getIsCorrect()!=null && (optionsDto.getIsCorrect().equals(Boolean.TRUE) || optionsDto.getIsCorrect().equals(Boolean.FALSE))) {
+                                        if (optionsDto.getIsCorrect() != null && (optionsDto.getIsCorrect().equals(Boolean.TRUE) || optionsDto.getIsCorrect().equals(Boolean.FALSE))) {
                                             mtOptions.setIsCorrect(optionsDto.getIsCorrect());
                                         }
                                         mtOptions.setSearchKey(getOptionsSearchKey(mtOptions));
