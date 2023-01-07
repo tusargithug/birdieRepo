@@ -87,7 +87,7 @@ public class UnitAndChapterController {
     }
 
     @QueryMapping(name = "getUnitBySequence")
-    public UnitResponse getUnitBySequence(@Argument (name = "input") UnitDto request) {
+    public Unit getUnitBySequence(@Argument (name = "input") UnitDto request) {
         return unitAndChapterServices.getUnitBySequence(request);
     }
 

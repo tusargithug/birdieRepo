@@ -85,7 +85,7 @@ type Query {
     getLoggedInUser:LoginResponse
     getAllMoodSourceById(input:MoodSourceIntensityRequestDto):[MtMoodSource]
     getUnitById(id:ID):Unit
-    getUnitBySequence(input:UnitDto):UnitResponse
+    getUnitBySequence(input:UnitDto):Unit
     getChapterBySequence(sequence:Int):Chapter
     getAllPaginationUserLearningStatus(input:UserLearningStatusDto):PaginationResponse
 

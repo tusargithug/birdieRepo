@@ -35,7 +35,7 @@ public interface UnitAndChapterServices {
 
     Unit getUnitById(Long id);
 
-    UnitResponse getUnitBySequence(UnitDto request);
+    Unit getUnitBySequence(UnitDto request);
 
     Chapter getChapterBySequence(Integer sequence);
 }
