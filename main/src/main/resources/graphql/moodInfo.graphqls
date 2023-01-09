@@ -214,6 +214,7 @@ type MtMoodInfo {
 }
 
 type MtMoodIntensity{
+    id:ID
     name:String
     description:String
     emoji:String
@@ -555,7 +556,6 @@ enum MoodType{
 type UserMoodCheckIn{
     appUser:AppUser
     mtMoodInfo:MtMoodInfo
-    mtMoodSourceList:[MtMoodSource]
     mtMoodIntensity:MtMoodIntensity
     description:String
 }

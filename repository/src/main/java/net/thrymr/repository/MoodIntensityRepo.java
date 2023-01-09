@@ -15,4 +15,7 @@ public interface MoodIntensityRepo extends JpaRepository<MtMoodIntensity, Long> 
     List<MtMoodIntensity> findByMtMoodInfoId(Long id);
 
     Optional<MtMoodIntensity> findByIdAndMtMoodInfoIdAndIsActiveAndIsDeleted(Long intensityId, Long moodInfoId, Boolean aTrue, Boolean aFalse);
+
+    Optional<MtMoodIntensity> findByIdAndMtMoodInfoId(Long intensityId, Long moodInfoId);
+
 }

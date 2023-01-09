@@ -1,8 +1,10 @@
 package net.thrymr.services.impl;
 
+import kotlin.reflect.jvm.internal.impl.renderer.ClassifierNamePolicy;
 import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
 import net.thrymr.model.AppUser;
 import net.thrymr.model.UserMoodCheckIn;
+import net.thrymr.model.UserMoodCheckInMoodSources;
 import net.thrymr.model.master.MtMoodInfo;
 import net.thrymr.model.master.MtMoodIntensity;
 import net.thrymr.model.master.MtMoodSource;
@@ -10,6 +12,7 @@ import net.thrymr.repository.*;
 import net.thrymr.services.MoodIntensityService;
 import net.thrymr.utils.ApiResponse;
 import net.thrymr.utils.Validator;
+import org.apache.poi.sl.draw.geom.GuideIf;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -47,6 +50,8 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
     AppUserRepo appUserRepo;
     @Autowired
     MoodSourceRepo moodSourceRepo;
+    @Autowired
+    UserMoodCheckInMoodSourcesRepo userMoodCheckInMoodSourcesRepo;
 
 
     private String getCellValue(XSSFCell cell) {
@@ -208,12 +213,6 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
                         userMoodCheckIn.setMtMoodInfo(optionalMtMoodInfo.get());
                     }
                 }
-                if(Validator.isValid(request.getMoodSourceIdList())){
-                    List<MtMoodSource> moodSourceList = moodSourceRepo.findAllByIdIn(request.getMoodSourceIdList());
-                    if(!moodSourceList.isEmpty()){
-                        userMoodCheckIn.setMtMoodSourceList(moodSourceList);
-                    }
-                }
                 userMoodCheckIn.setDescription(request.getDescription());
                 userMoodCheckIn.setSearchKey(getUserMoodCheckedSearchKey(userMoodCheckIn));
                 userMoodCheckInRepo.save(userMoodCheckIn);
@@ -243,7 +242,7 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
     public String createUserMoodCheckIn(MoodSourceIntensityRequestDto request) {
         UserMoodCheckIn userMoodCheckIn = new UserMoodCheckIn();
         if (Validator.isValid(request.getIntensityId())) {
-            Optional<MtMoodIntensity> optionalMtMoodIntensity = moodIntensityRepo.findByIdAndMtMoodInfoIdAndIsActiveAndIsDeleted(request.getIntensityId(), request.getMoodInfoId(), Boolean.TRUE, Boolean.FALSE);
+            Optional<MtMoodIntensity> optionalMtMoodIntensity = moodIntensityRepo.findByIdAndMtMoodInfoId(request.getIntensityId(), request.getMoodInfoId());
             optionalMtMoodIntensity.ifPresent(userMoodCheckIn::setMtMoodIntensity);
         }
         if (Validator.isValid(request.getAppUserId())) {
@@ -254,15 +253,22 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
             Optional<MtMoodInfo> optionalMtMoodInfo = moodInfoRepo.findById(request.getMoodInfoId());
             optionalMtMoodInfo.ifPresent(userMoodCheckIn::setMtMoodInfo);
         }
-        if(Validator.isValid(request.getMoodSourceIdList())){
-            List<MtMoodSource> moodSourceList = moodSourceRepo.findAllByIdIn(request.getMoodSourceIdList());
-            if(!moodSourceList.isEmpty()){
-                userMoodCheckIn.setMtMoodSourceList(moodSourceList);
-            }
-        }
+
         userMoodCheckIn.setDescription(request.getDescription());
         userMoodCheckIn.setSearchKey(getUserMoodCheckedSearchKey(userMoodCheckIn));
         userMoodCheckInRepo.save(userMoodCheckIn);
+        if (Validator.isValid(request.getMoodSourceIdList())) {
+            List<MtMoodSource> moodSourceList = moodSourceRepo.findAllByIdIn(request.getMoodSourceIdList());
+            if (!moodSourceList.isEmpty()) {
+                for (MtMoodSource mtMoodSource : moodSourceList) {
+                    UserMoodCheckInMoodSources userMoodCheckInMoodSources = new UserMoodCheckInMoodSources();
+                    userMoodCheckInMoodSources.setMtMoodSource(mtMoodSource);
+                    userMoodCheckInMoodSources.setUserMoodCheckIn(userMoodCheckIn);
+                    userMoodCheckInMoodSourcesRepo.save(userMoodCheckInMoodSources);
+                }
+            }
+            return "mood source list is empty";
+        }
         return "create mood checking details";
     }
 
