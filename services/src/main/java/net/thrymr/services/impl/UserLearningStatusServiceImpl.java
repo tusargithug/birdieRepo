@@ -38,14 +38,23 @@ public class UserLearningStatusServiceImpl implements UserLearningStatusService 
             if (Validator.isValid(request.getUserName())) {
                 userLearningStatus.setUserName(request.getUserName());
             }
-            if (Validator.isValid(request.getUnitNumber())) {
-                userLearningStatus.setUnitNumber(request.getUnitNumber());
+            if (Validator.isValid(request.getUnitSequence())) {
+                userLearningStatus.setUnitSequence(request.getUnitSequence());
             }
-            if (Validator.isValid(request.getChapterNumber())) {
-                userLearningStatus.setChapterNumber(request.getChapterNumber());
+            if (Validator.isValid(request.getChapterSequence())) {
+                userLearningStatus.setChapterSequence(request.getChapterSequence());
             }
-            if (Validator.isValid(request.getSequence())) {
-                userLearningStatus.setSequence(request.getSequence());
+            if (Validator.isValid(request.getVideoSequence())) {
+                userLearningStatus.setVideoSequence(request.getVideoSequence());
+            }
+            if (Validator.isValid(request.getTotalUnits())) {
+                userLearningStatus.setTotalUnits(request.getTotalUnits());
+            }
+            if (Validator.isValid(request.getTotalChaptersInUnit())) {
+                userLearningStatus.setTotalChaptersInUnit(request.getTotalChaptersInUnit());
+            }
+            if (Validator.isValid(request.getTotalVideosInChapter())) {
+                userLearningStatus.setTotalVideosInChapter(request.getTotalVideosInChapter());
             }
             userLearningStatusRepo.save(userLearningStatus);
             return "User status saved successfully.";
@@ -68,14 +77,23 @@ public class UserLearningStatusServiceImpl implements UserLearningStatusService 
                     if (Validator.isValid(request.getUserName())) {
                         userLearningStatus.setUserName(request.getUserName());
                     }
-                    if (Validator.isValid(request.getUnitNumber())) {
-                        userLearningStatus.setUnitNumber(request.getUnitNumber());
+                    if (Validator.isValid(request.getUnitSequence())) {
+                        userLearningStatus.setUnitSequence(request.getUnitSequence());
                     }
-                    if (Validator.isValid(request.getChapterNumber())) {
-                        userLearningStatus.setChapterNumber(request.getChapterNumber());
+                    if (Validator.isValid(request.getChapterSequence())) {
+                        userLearningStatus.setChapterSequence(request.getChapterSequence());
                     }
-                    if (Validator.isValid(request.getSequence())) {
-                        userLearningStatus.setSequence(request.getSequence());
+                    if (Validator.isValid(request.getVideoSequence())) {
+                        userLearningStatus.setVideoSequence(request.getVideoSequence());
+                    }
+                    if (Validator.isValid(request.getTotalUnits())) {
+                        userLearningStatus.setTotalUnits(request.getTotalUnits());
+                    }
+                    if (Validator.isValid(request.getTotalChaptersInUnit())) {
+                        userLearningStatus.setTotalChaptersInUnit(request.getTotalChaptersInUnit());
+                    }
+                    if (Validator.isValid(request.getTotalVideosInChapter())) {
+                        userLearningStatus.setTotalVideosInChapter(request.getTotalVideosInChapter());
                     }
                     userLearningStatusRepo.save(userLearningStatus);
                     return "User status updated successfully";
@@ -88,14 +106,23 @@ public class UserLearningStatusServiceImpl implements UserLearningStatusService 
                     if (Validator.isValid(request.getUserName())) {
                         userLearningStatus.setUserName(request.getUserName());
                     }
-                    if (Validator.isValid(request.getUnitNumber())) {
-                        userLearningStatus.setUnitNumber(request.getUnitNumber());
+                    if (Validator.isValid(request.getUnitSequence())) {
+                        userLearningStatus.setUnitSequence(request.getUnitSequence());
                     }
-                    if (Validator.isValid(request.getChapterNumber())) {
-                        userLearningStatus.setChapterNumber(request.getChapterNumber());
+                    if (Validator.isValid(request.getChapterSequence())) {
+                        userLearningStatus.setChapterSequence(request.getChapterSequence());
                     }
-                    if (Validator.isValid(request.getSequence())) {
-                        userLearningStatus.setSequence(request.getSequence());
+                    if (Validator.isValid(request.getVideoSequence())) {
+                        userLearningStatus.setVideoSequence(request.getVideoSequence());
+                    }
+                    if (Validator.isValid(request.getTotalUnits())) {
+                        userLearningStatus.setTotalUnits(request.getTotalUnits());
+                    }
+                    if (Validator.isValid(request.getTotalChaptersInUnit())) {
+                        userLearningStatus.setTotalChaptersInUnit(request.getTotalChaptersInUnit());
+                    }
+                    if (Validator.isValid(request.getTotalVideosInChapter())) {
+                        userLearningStatus.setTotalVideosInChapter(request.getTotalVideosInChapter());
                     }
                     userLearningStatusRepo.save(userLearningStatus);
                     return "User status saved successfully";
@@ -135,18 +162,18 @@ public class UserLearningStatusServiceImpl implements UserLearningStatusService 
                 addUserPredicate.add(userName);
             }
 
-            if (Validator.isValid(request.getUnitNumber())) {
-                Predicate unitNumber = criteriaBuilder.and(root.get("unitNumber").in(request.getUnitNumber()));
+            if (Validator.isValid(request.getUnitSequence())) {
+                Predicate unitNumber = criteriaBuilder.and(root.get("unitNumber").in(request.getUnitSequence()));
                 addUserPredicate.add(unitNumber);
             }
 
-            if (Validator.isValid(request.getChapterNumber())) {
-                Predicate chapterNumber = criteriaBuilder.and(root.get("chapterNumber").in(request.getChapterNumber()));
+            if (Validator.isValid(request.getChapterSequence())) {
+                Predicate chapterNumber = criteriaBuilder.and(root.get("chapterNumber").in(request.getChapterSequence()));
                 addUserPredicate.add(chapterNumber);
             }
 
-            if (request.getSequence() != null) {
-                Predicate sequence = criteriaBuilder.and(root.get("sequence").in(request.getSequence()));
+            if (request.getVideoSequence() != null) {
+                Predicate sequence = criteriaBuilder.and(root.get("sequence").in(request.getVideoSequence()));
                 addUserPredicate.add(sequence);
             }
 

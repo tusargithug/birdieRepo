@@ -18,7 +18,7 @@ public class UserLearningStatusDto {
     private String userId;
     private String userName;
     private Long unitSequence;
-    private Long chapterNumber;
+    private Long chapterSequence;
     private Long videoSequence;
     private Long totalUnits;
     private Long totalChaptersInUnit;

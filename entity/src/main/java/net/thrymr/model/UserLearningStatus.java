@@ -22,7 +22,7 @@ public class UserLearningStatus extends BaseEntity {
     @Column(name = "unit_sequence")
     private Long unitSequence;
     @Column(name = "chapter_sequence")
-    private Long chapterNumber;
+    private Long chapterSequence;
     @Column(name = "video_sequence")
     private Long videoSequence;
     private Long totalUnits;

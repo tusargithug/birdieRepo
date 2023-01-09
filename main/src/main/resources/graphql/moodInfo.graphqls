@@ -829,18 +829,21 @@ type UserLearningStatus {
     id:ID
     userId:String
     userName:String
-    unitNumber:String
-    chapterNumber:String
-    sequence:String
+    unitSequence:Int
+    chapterSequence:Int
+    videoSequence:Int
+    totalUnits:Int
+    totalChaptersInUnit:Int
+    totalVideosInChapter:Int
 }
 
 input UserLearningStatusDto {
     id:ID
     userId:String
     userName:String
-    unitNumber:Int
-    chapterNumber:Int
-    sequence:Int
+    unitSequence:Int
+    chapterSequence:Int
+    videoSequence:Int
     isActive:Boolean
     pageSize:Int
     pageNumber:Int
