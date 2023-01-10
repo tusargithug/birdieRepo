@@ -427,6 +427,7 @@ type Vendor{
     mobileNumber:String
     countryCode:String
     email:String
+    counsellor:[Counsellor]
 }
 input VendorDto{
     id:Int
