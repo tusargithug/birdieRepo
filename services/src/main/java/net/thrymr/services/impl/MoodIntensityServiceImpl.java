@@ -266,8 +266,8 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
                     userMoodCheckInMoodSources.setUserMoodCheckIn(userMoodCheckIn);
                     userMoodCheckInMoodSourcesRepo.save(userMoodCheckInMoodSources);
                 }
+                return "mood source list is empty";
             }
-            return "mood source list is empty";
         }
         return "create mood checking details";
     }

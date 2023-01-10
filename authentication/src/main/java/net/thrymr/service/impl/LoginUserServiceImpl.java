@@ -4,6 +4,7 @@ import net.thrymr.dto.AppUserDto;
 import net.thrymr.dto.ChangePasswordDto;
 import net.thrymr.dto.LoginDto;
 import net.thrymr.dto.response.LoginResponse;
+import net.thrymr.enums.Roles;
 import net.thrymr.model.AppUser;
 import net.thrymr.repository.AppUserRepo;
 import net.thrymr.security.JwtUtil;
@@ -35,13 +36,23 @@ public class LoginUserServiceImpl implements LoginUserService {
 
     @Override
     public String signUpUser(AppUserDto request) {
-        return null;
+        AppUser appUser = new AppUser();
+        if (request.getId() != null && request.getId() > 0) {
+            appUser = appUserRepo.findById(request.getId()).orElse(new AppUser());
+        }
+        appUser.setUserName(request.getUserName());
+        appUser.setMobile(request.getMobile());
+        appUser.setEmail(request.getEmail());
+        appUser.setRoles(Roles.valueOf(request.getRoles()));
+        appUser.setPassword(new BCryptPasswordEncoder().encode("123456"));
+        appUserRepo.save(appUser);
+        return "User signup successfully";
     }
 
     @Override
     public String loginUser(LoginDto request) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmpId(),request.getPassword()));
+                new UsernamePasswordAuthenticationToken(request.getEmail(),request.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtil.generateJwtToken(authentication);
@@ -54,7 +65,7 @@ public class LoginUserServiceImpl implements LoginUserService {
         loginResponse.setEmail(loggedInUser.getEmail());
         loginResponse.setUserRole(loggedInUser.getRole());
         loginResponse.setAccessToken(jwt);
-        return "Login successfully";
+        return loginResponse.getAccessToken();
     }
 
     @Override

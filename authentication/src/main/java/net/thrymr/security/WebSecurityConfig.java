@@ -55,10 +55,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers("/api/admin/**").permitAll()
-                .antMatchers("/api/v1/**").permitAll()
+                .antMatchers("/signup","/loginUser").permitAll()
                 .antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources", "/configuration/security",
                         "/swagger-ui.html", "/webjars/**", "/swagger-resources/configuration/ui",
-                        "/swagger-resources/configuration/security","/graphiql","/apis/graphql","loginUser").permitAll();
+                        "/swagger-resources/configuration/security","/graphiql","/apis/graphql").permitAll();
               //  .anyRequest().authenticated().and().exceptionHandling().authenticationEntryPoint(unauthorizedHandler);
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

@@ -4,11 +4,15 @@ import net.thrymr.dto.AppUserDto;
 import net.thrymr.dto.ChangePasswordDto;
 import net.thrymr.dto.LoginDto;
 import net.thrymr.dto.response.LoginResponse;
+import net.thrymr.model.AppUser;
 import net.thrymr.service.LoginUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -16,16 +20,24 @@ public class LoginUserController {
     @Autowired
     private LoginUserService loginUserService;
 
-    @MutationMapping("signUpUser")
-    public String signUpUser(@Argument (name = "input") AppUserDto request) {
-        return loginUserService.signUpUser(request);
-    }
+//    @MutationMapping("signUpUser")
+//    public String signUpUser(@Argument (name = "input") AppUserDto request) {
+//        return loginUserService.signUpUser(request);
+//    }
 
-    @MutationMapping("loginUser")
+    /*@MutationMapping("loginUser")
     public String loginUser(@Argument (name = "input") LoginDto request) {
         return loginUserService.loginUser(request);
-    }
+    }*/
 
+        @PostMapping("/loginUser")
+    public String loginUser(@Argument(name = "input") LoginDto request) {
+        return loginUserService.loginUser(request);
+    }
+    @PostMapping("/signup")
+    public String signUpUser(@RequestBody AppUserDto appUserDto){
+        return loginUserService.signUpUser(appUserDto);
+    }
     @MutationMapping("changePassword")
     public String changePassword(@Argument (name = "input") ChangePasswordDto changePasswordDto) {
         return loginUserService.changePassword(changePasswordDto);
