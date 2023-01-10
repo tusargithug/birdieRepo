@@ -43,7 +43,7 @@ public class MoodInfoController {
         return moodInfoService.deleteMoodInfoById(id);
     }
     @QueryMapping(name = "getAllMoodInfo")
-    public List<MtMoodInfo> getAllMoodInfo() {
-        return moodInfoService.getAllMoodInfo();
+    public List<MtMoodInfo> getAllMoodInfo(@Argument String searchKey) {
+        return moodInfoService.getAllMoodInfo(searchKey);
     }
 }

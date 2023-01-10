@@ -186,9 +186,11 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             optionalCity.ifPresent(site::setCity);
         }
         //siteManager
-        siteDto.setSearchKey(saveSiteSearchKey(site));
-        if (siteDto.getStatus() != null && siteDto.getStatus().equals(Boolean.TRUE)) {
+
+        if (siteDto.getStatus() != null) {
             site.setIsActive(siteDto.getStatus());
+        } else {
+            site.setIsActive(Boolean.TRUE);
         }
         site.setSearchKey(getSiteSearchKey(site));
         siteRepo.save(site);
@@ -482,26 +484,6 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     }
 
 
-    public String saveSiteSearchKey(Site site) {
-        String searchKey = "";
-        if (site.getRegion() != null) {
-            searchKey = searchKey + " " + site.getRegion().getRegionName();
-        }
-        if (site.getSiteId() != null) {
-            searchKey = searchKey + " " + site.getSiteId();
-        }
-        if (site.getSiteName() != null) {
-            searchKey = searchKey + " " + site.getSiteName();
-        }
-        if (site.getCity() != null) {
-            searchKey = searchKey + " " + site.getCity().getCityName();
-        }
-        if (site.getCountry() != null) {
-            searchKey = searchKey + " " + site.getCountry().getCountryName();
-        }
-        return searchKey;
-    }
-
     public String getTeamSearchKey(Team team) {
         String searchKey = "";
         if (team.getTeamId() != null) {
@@ -545,11 +527,11 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         if (site.getRegion() != null) {
             searchKey = searchKey + " " + site.getRegion().getRegionName();
         }
-        if (site.getIsActive() != null) {
-            searchKey = searchKey + " " + site.getIsActive();
-        }
         if (site.getCountry() != null) {
             searchKey = searchKey + " " + site.getCountry().getCountryName();
+        }
+        if (site.getIsActive() != null) {
+            searchKey = searchKey + " " + site.getIsActive();
         }
         return searchKey;
     }

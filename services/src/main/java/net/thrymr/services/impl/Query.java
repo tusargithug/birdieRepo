@@ -105,8 +105,8 @@ public class Query implements GraphQLQueryResolver {
     }
 
     @QueryMapping(name = "getAllMoodInfo")
-    public List<MtMoodInfo> getAllMoodInfo() {
-        return moodInfoService.getAllMoodInfo();
+    public List<MtMoodInfo> getAllMoodInfo(@Argument String searchKey) {
+        return moodInfoService.getAllMoodInfo(searchKey);
     }
 
     @QueryMapping(name = "getAllMoodCheckIn")

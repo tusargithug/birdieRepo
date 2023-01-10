@@ -5,7 +5,7 @@ schema {
 
 type Query {
     moodInfoById(id: ID): MtMoodInfo
-    getAllMoodInfo:[MtMoodInfo]
+    getAllMoodInfo(searchKey:String):[MtMoodInfo]
     getAllMoodIntensities:[MtMoodIntensity]
     getAppUserById(id:ID):AppUser
     mtRoleById(id:ID):MtRoles

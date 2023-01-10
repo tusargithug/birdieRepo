@@ -144,11 +144,18 @@ public class MoodInfoServiceImpl implements MoodInfoService {
     }
 
     @Override
-    public List<MtMoodInfo> getAllMoodInfo() {
-        List<MtMoodInfo> mtMoodInfoList = moodInfoRepo.findAll();
+    public List<MtMoodInfo> getAllMoodInfo(String searchKey) {
+        List<MtMoodInfo> mtMoodInfoList;
+        if(Validator.isValid(searchKey)) {
+            mtMoodInfoList = moodInfoRepo.findBySearchKeyContaining(searchKey);
+        } else {
+            mtMoodInfoList = moodInfoRepo.findAll();
+        }
+
         if (!mtMoodInfoList.isEmpty()) {
             return mtMoodInfoList.stream().filter(mtMoodInfo -> mtMoodInfo.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
         }
+
         return new ArrayList<>();
     }
 

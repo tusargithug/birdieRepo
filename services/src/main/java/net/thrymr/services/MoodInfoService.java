@@ -10,7 +10,7 @@ import java.util.List;
 public interface MoodInfoService {
     ApiResponse saveMoodInfo(MultipartFile file);
 
-    List<MtMoodInfo> getAllMoodInfo();
+    List<MtMoodInfo> getAllMoodInfo(String searchKey);
 
     MtMoodInfo getMoodInfoById(Long id);
 
