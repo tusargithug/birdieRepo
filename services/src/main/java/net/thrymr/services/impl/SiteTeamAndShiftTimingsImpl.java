@@ -70,10 +70,10 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             Optional<Site> optionalSite = siteRepo.findById(teamDto.getSiteId());
             optionalSite.ifPresent(team::setSite);
         }
-        if (teamDto.getStatus() != null && teamDto.getStatus().equals(Boolean.TRUE)) {
+        if (teamDto.getStatus() != null) {
             team.setIsActive(teamDto.getStatus());
         } else {
-            team.setIsActive(Boolean.FALSE);
+            team.setIsActive(Boolean.TRUE);
         }
         team.setSearchKey(getTeamSearchKey(team));
         teamRepo.save(team);
@@ -128,8 +128,10 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                     Optional<Site> optionalSite = siteRepo.findById(teamDto.getSiteId());
                     optionalSite.ifPresent(team::setSite);
                 }
-                if (teamDto.getStatus() != null && teamDto.getStatus().equals(Boolean.FALSE) || teamDto.getStatus().equals(Boolean.TRUE)) {
+                if (teamDto.getStatus() != null) {
                     team.setIsActive(teamDto.getStatus());
+                } else {
+                    team.setIsActive(Boolean.TRUE);
                 }
                 if (teamDto.getShiftStartAt() != null) {
                     team.setShiftStartAt(DateUtils.toStringToLocalTime(teamDto.getShiftStartAt(), Constants.TIME_FORMAT_12_HOURS));
@@ -158,6 +160,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                 team = teamId.get();
                 team.setIsActive(Boolean.FALSE);
                 team.setIsDeleted(Boolean.TRUE);
+                team.setSearchKey(getTeamSearchKey(team));
                 teamRepo.save(team);
             }
             return "delete records successfully";
@@ -441,10 +444,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                 Predicate shiftTimings = criteriaBuilder.and(root.get("shiftTimings").in(teamDto.getShiftTimings()));
                 addTeamSpecification.add(shiftTimings);
             }
-            if (teamDto.getStatus() != null && !teamDto.getStatus().equals(Boolean.TRUE)) {
-                Predicate isActive = criteriaBuilder.and(root.get("isActive").in(teamDto.getStatus()));
-                addTeamSpecification.add(isActive);
-            } else if (teamDto.getStatus() != null && !teamDto.getStatus().equals(Boolean.FALSE)) {
+            if (teamDto.getStatus() != null) {
                 Predicate isActive = criteriaBuilder.and(root.get("isActive").in(teamDto.getStatus()));
                 addTeamSpecification.add(isActive);
             }
