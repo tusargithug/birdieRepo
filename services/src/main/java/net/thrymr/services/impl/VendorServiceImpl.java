@@ -110,7 +110,7 @@ public class VendorServiceImpl implements VendorService {
     public Vendor getVendorById(Long id) {
         if (Validator.isValid(id)) {
             Optional<Vendor> optionalVendor = vendorRepo.findById(id);
-            if (optionalVendor.isPresent() && optionalVendor.get().getIsActive().equals(Boolean.TRUE)) {
+            if (optionalVendor.isPresent() && optionalVendor.get().getIsDeleted().equals(Boolean.FALSE)) {
                 return optionalVendor.get();
             }
         }
