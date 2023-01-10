@@ -19,10 +19,14 @@ public class UserLearningStatus extends BaseEntity {
     private String userId;
     @Column(name = "user_name")
     private String userName;
-    @Column(name = "unit_number")
-    private Long unitNumber;
-    @Column(name = "chapter_number")
-    private Long chapterNumber;
-    private Long sequence;
+    @Column(name = "unit_sequence")
+    private Long unitSequence;
+    @Column(name = "chapter_sequence")
+    private Long chapterSequence;
+    @Column(name = "video_sequence")
+    private Long videoSequence;
+    private Long totalUnits;
+    private Long totalChaptersInUnit;
+    private Long totalVideosInChapter;
 
 }

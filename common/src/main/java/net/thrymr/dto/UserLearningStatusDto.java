@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -15,9 +17,12 @@ public class UserLearningStatusDto {
     private Long id;
     private String userId;
     private String userName;
-    private Long unitNumber;
-    private Long chapterNumber;
-    private Long sequence;
+    private Long unitSequence;
+    private Long chapterSequence;
+    private Long videoSequence;
+    private Long totalUnits;
+    private Long totalChaptersInUnit;
+    private Long totalVideosInChapter;
     private Integer pageSize;
     private Integer pageNumber;
     private Boolean sortUserName;
