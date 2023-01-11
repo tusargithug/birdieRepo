@@ -223,14 +223,25 @@ public class AppUserServiceImpl implements AppUserService {
             return "This mobile number already existed";
         }
         user.setGender(Gender.valueOf(request.getGender()));
-        user.setShiftStartAt(DateUtils.toStringToLocalTime(request.getShiftStartAt(), Constants.TIME_FORMAT_12_HOURS));
-        user.setShiftEndAt(DateUtils.toStringToLocalTime(request.getShiftEndAt(), Constants.TIME_FORMAT_12_HOURS));
-        user.setShiftTimings(request.getShiftStartAt() + " - " + request.getShiftEndAt());
+        if (request.getShiftStartAt() != null) {
+            user.setShiftStartAt(DateUtils.toStringToLocalTime(request.getShiftStartAt(), Constants.TIME_FORMAT_12_HOURS));
+        }
+        if (request.getShiftEndAt() != null) {
+            user.setShiftEndAt(DateUtils.toStringToLocalTime(request.getShiftEndAt(), Constants.TIME_FORMAT_12_HOURS));
+        }
+        if (request.getShiftStartAt() != null && request.getShiftEndAt() != null) {
+            user.setShiftTimings(request.getShiftStartAt() + " - " + request.getShiftEndAt());
+        }
         if (Validator.isValid(request.getPictureId())) {
             Optional<FileEntity> optionalFileEntity = fileRepo.findByFileId(request.getPictureId());
             if (optionalFileEntity.isPresent()) {
                 user.setUploadPicture(optionalFileEntity.get());
             }
+        }
+        if (request.getIsActive() != null) {
+            user.setIsActive(request.getIsActive());
+        } else {
+            user.setIsActive(Boolean.TRUE);
         }
         user.setSearchKey(getAppUserSearchKey(user));
         appUserRepo.save(user);
@@ -324,6 +335,12 @@ public class AppUserServiceImpl implements AppUserService {
                 if (Validator.isObjectValid(request.getShiftStartAt()) && Validator.isObjectValid(request.getShiftEndAt())) {
                     user.setShiftTimings(request.getShiftStartAt() + " - " + request.getShiftEndAt());
                 }
+                if (request.getIsActive() != null) {
+                    user.setIsActive(request.getIsActive());
+                } else {
+                    user.setIsActive(Boolean.TRUE);
+                }
+                user.setSearchKey(getAppUserSearchKey(user));
                 appUserRepo.save(user);
                 return "User updated successfully";
             }
@@ -341,6 +358,7 @@ public class AppUserServiceImpl implements AppUserService {
                 appUser = optionalAppUser.get();
                 appUser.setIsActive(Boolean.FALSE);
                 appUser.setIsDeleted(Boolean.TRUE);
+                appUser.setSearchKey(getAppUserSearchKey(appUser));
                 appUserRepo.save(appUser);
                 return "User deleted successfully";
             }

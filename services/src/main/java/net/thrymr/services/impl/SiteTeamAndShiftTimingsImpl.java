@@ -228,8 +228,10 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                     Optional<MtCity> optionalCity = cityRepo.findById(siteDto.getCityId());
                     optionalCity.ifPresent(site::setCity);
                 }
-                if (siteDto.getStatus().equals(Boolean.TRUE) || siteDto.getStatus().equals(Boolean.FALSE)) {
+                if (siteDto.getStatus() != null) {
                     site.setIsActive(siteDto.getStatus());
+                } else {
+                    site.setIsActive(Boolean.TRUE);
                 }
                 site.setSearchKey(getSiteSearchKey(site));
                 siteRepo.save(site);
@@ -304,7 +306,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             }
         } else {
             List<Site> siteList = siteRepo.findAll(siteSpecification);
-            paginationResponse.setSiteList(siteList.stream().filter(site -> site.getIsDeleted().equals(Boolean.FALSE) && site.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList()));
+            paginationResponse.setSiteList(siteList.stream().filter(site -> site.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList()));
             return paginationResponse;
         }
         return new PaginationResponse();
