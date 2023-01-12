@@ -616,6 +616,11 @@ public class AppUserServiceImpl implements AppUserService {
         return "counsellor employee information saved successfully";
     }
 
+    @Override
+    public Long getTotalEmployeesCount() {
+        return appUserRepo.countByIsDeleted(Boolean.FALSE);
+    }
+
     public String getAppUserSearchKey(AppUser appUser) {
         String searchKey = "";
         if (appUser.getUserName() != null) {

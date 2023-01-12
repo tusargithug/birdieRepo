@@ -641,4 +641,14 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         List<Alerts> alertsList = Arrays.asList(Alerts.NONE, Alerts.RED_ALERT, Alerts.ORANGE_ALERT, Alerts.GREEN_ALERT);
         return alertsList;
     }
+
+    @Override
+    public Long getTotalTeamCount() {
+        return teamRepo.countByIsDeleted(Boolean.FALSE);
+    }
+
+    @Override
+    public Long getTotalSiteCount() {
+        return siteRepo.countByIsDeleted(Boolean.FALSE);
+    }
 }

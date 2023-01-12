@@ -88,4 +88,9 @@ public class CounsellorController {
     public String deleteAllEducation(){
         return counsellorService.deleteAllEducation();
     }
+
+    @QueryMapping(name = "getTotalCounsellorsCount")
+    public Long getTotalCounsellorsCount(@Argument Long vendorId) {
+        return counsellorService.getTotalCounsellorsCount(vendorId);
+    }
 }

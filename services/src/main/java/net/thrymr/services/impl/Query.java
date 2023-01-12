@@ -497,4 +497,24 @@ public class Query implements GraphQLQueryResolver {
     public List<MtQuestion> getQuestionByChapterId(@Argument Long chapterId){
         return questionAndOptionsService.getQuestionByChapterId(chapterId);
     }
+    @QueryMapping("getTotalTeamCount")
+    public Long getTotalTeamCount() {
+        return siteTeamAndShiftTimingsService.getTotalTeamCount();
+    }
+    @QueryMapping("getTotalSiteCount")
+    public Long getTotalSiteCount() {
+        return siteTeamAndShiftTimingsService.getTotalSiteCount();
+    }
+    @QueryMapping("getTotalVendorsCount")
+    public Long getTotalVendorsCount() {
+        return vendorService.getTotalVendorsCount();
+    }
+    @QueryMapping("getTotalCounsellorsCount")
+    public Long getTotalCounsellorsCount(@Argument Long vendorId) {
+        return counsellorService.getTotalCounsellorsCount(vendorId);
+    }
+    @QueryMapping("getTotalEmployeesCount")
+    public Long getTotalEmployeesCount() {
+        return appUserService.getTotalEmployeesCount();
+    }
 }

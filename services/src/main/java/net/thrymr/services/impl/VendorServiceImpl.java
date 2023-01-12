@@ -324,6 +324,11 @@ public class VendorServiceImpl implements VendorService {
         return new ArrayList<>();
     }
 
+    @Override
+    public Long getTotalVendorsCount() {
+        return vendorRepo.countByIsDeleted(Boolean.FALSE);
+    }
+
     public String getVendorSearchKey(Vendor vendor) {
         String searchKey = "";
         if (vendor.getPOC() != null) {
@@ -346,8 +351,8 @@ public class VendorServiceImpl implements VendorService {
         }
         if (vendor.getEmail() != null) {
             searchKey = searchKey + " " + vendor.getEmail();
-
         }
+
         return searchKey;
     }
 

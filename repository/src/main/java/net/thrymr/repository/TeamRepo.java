@@ -12,4 +12,5 @@ import java.util.Optional;
 @Repository
 public interface TeamRepo extends JpaRepository<Team,Long>, JpaSpecificationExecutor<Team> {
 
+    Long countByIsDeleted(Boolean isDelete);
 }

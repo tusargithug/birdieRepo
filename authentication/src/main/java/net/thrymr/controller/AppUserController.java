@@ -87,4 +87,9 @@ public class AppUserController {
         return appUserService.saveCounsellorEmployeeInfo(request);
 
     }
+
+    @QueryMapping(name = "getTotalEmployeesCount")
+    public Long getTotalEmployeesCount() {
+        return appUserService.getTotalEmployeesCount();
+    }
 }

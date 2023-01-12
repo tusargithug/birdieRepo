@@ -11,5 +11,5 @@ import java.util.List;
 @Repository
 public interface MoodInfoRepo extends JpaRepository<MtMoodInfo, Long> {
 
-    List<MtMoodInfo> findBySearchKeyContaining(String searchKey);
+    List<MtMoodInfo> findBySearchKeyContainingIgnoreCase(String searchKey);
 }

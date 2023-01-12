@@ -43,4 +43,7 @@ public interface SiteTeamAndShiftTimingsService {
     Site getSiteById(Long id);
 
     List<Alerts> getAllEnumAlerts();
+
+    Long getTotalTeamCount();
+    Long getTotalSiteCount();
 }

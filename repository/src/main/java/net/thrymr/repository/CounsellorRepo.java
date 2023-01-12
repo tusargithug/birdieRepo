@@ -15,4 +15,6 @@ public interface CounsellorRepo extends JpaRepository<Counsellor,Long>, JpaSpeci
     boolean existsByEmailId(String emailId);
 
     boolean existsByMobileNumber(String mobileNumber);
+
+    Long countByVendorIdAndIsDeleted(Long vendorId, Boolean isDelete);
 }

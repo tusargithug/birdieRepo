@@ -22,4 +22,6 @@ public interface VendorService {
 
     List<VendorSite> getVendorSiteById(Long id);
 
+    Long getTotalVendorsCount();
+
 }
