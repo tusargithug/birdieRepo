@@ -122,4 +122,9 @@ public class SiteTeamAndShiftTimingsController {
     public Long getTotalSiteCount() {
         return siteTeamAndShiftTimingsService.getTotalSiteCount();
     }
+
+    @QueryMapping("getAllAdminCounts")
+    public List<AdminCountsDto> getAllAdminCounts() {
+        return siteTeamAndShiftTimingsService.getAllAdminCounts();
+    }
 }

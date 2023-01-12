@@ -94,6 +94,7 @@ type Query {
     getTotalTeamCount:Int
     getTotalVendorsCount:Int
     getTotalCounsellorsCount(vendorId:Int):Int
+    getAllAdminCounts:[AdminCountsDto]
 
 }
 
@@ -881,4 +882,9 @@ type UnitResponse{
     unitName:String
     sequence:Int
     chapters :[ChapterResponse]
+}
+
+type AdminCountsDto {
+    fieldName:String
+    fieldCount:Int
 }

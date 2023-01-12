@@ -517,4 +517,9 @@ public class Query implements GraphQLQueryResolver {
     public Long getTotalEmployeesCount() {
         return appUserService.getTotalEmployeesCount();
     }
+
+    @QueryMapping("getAllAdminCounts")
+    List<AdminCountsDto> getAllAdminCounts() {
+        return siteTeamAndShiftTimingsService.getAllAdminCounts();
+    }
 }

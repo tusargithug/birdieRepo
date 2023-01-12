@@ -46,4 +46,6 @@ public interface SiteTeamAndShiftTimingsService {
 
     Long getTotalTeamCount();
     Long getTotalSiteCount();
+
+    List<AdminCountsDto> getAllAdminCounts();
 }

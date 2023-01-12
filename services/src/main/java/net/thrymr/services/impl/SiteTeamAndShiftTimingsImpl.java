@@ -51,6 +51,9 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     @Autowired
     TeamMembersRepo teamMembersRepo;
 
+    @Autowired
+    VendorRepo vendorRepo;
+
     @Override
     public Team createTeam(TeamDto teamDto) {
         Team team = new Team();
@@ -650,5 +653,34 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     @Override
     public Long getTotalSiteCount() {
         return siteRepo.countByIsDeleted(Boolean.FALSE);
+    }
+
+    @Override
+    public List<AdminCountsDto> getAllAdminCounts() {
+
+        List<AdminCountsDto> adminCountsDtoList = new ArrayList<>();
+
+        AdminCountsDto adminCountsDto = new AdminCountsDto();
+        adminCountsDto.setFieldName("Teams count");
+        adminCountsDto.setFieldCount(teamRepo.countByIsDeleted(Boolean.FALSE));
+        adminCountsDtoList.add(adminCountsDto);
+
+        adminCountsDto = new AdminCountsDto();
+        adminCountsDto.setFieldName("Sites count");
+        adminCountsDto.setFieldCount(siteRepo.countByIsDeleted(Boolean.FALSE));
+        adminCountsDtoList.add(adminCountsDto);
+
+        adminCountsDto = new AdminCountsDto();
+        adminCountsDto.setFieldName("Vendors count");
+        adminCountsDto.setFieldCount(vendorRepo.countByIsDeleted(Boolean.FALSE));
+        adminCountsDtoList.add(adminCountsDto);
+
+        adminCountsDto = new AdminCountsDto();
+        adminCountsDto.setFieldName("Employees count");
+        adminCountsDto.setFieldCount(appUserRepo.countByIsDeleted(Boolean.FALSE));
+        adminCountsDtoList.add(adminCountsDto);
+
+
+       return adminCountsDtoList;
     }
 }
