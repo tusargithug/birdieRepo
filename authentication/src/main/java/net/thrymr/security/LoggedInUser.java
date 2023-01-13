@@ -40,7 +40,7 @@ public class LoggedInUser implements UserDetails {
         LoggedInUser loggedInUser=new LoggedInUser();
         loggedInUser.setId((loginData.get().getId()));
         loggedInUser.setContactNumber(loginData.get().getMobile());
-       loggedInUser.setEmail(loginData.get().getEmail());
+        loggedInUser.setEmail(loginData.get().getEmail());
         loggedInUser.setPassword(loginData.get().getPassword());
         return loggedInUser;
     }

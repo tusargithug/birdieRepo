@@ -195,6 +195,7 @@ type Mutation {
     deleteAllCities:String!
     pauseCounsellorSlotsById(input:CounsellorSlotDto):String!
     loginUser(input:LoginDto):String!
+    signUpUser(input:AppUserDto):String!
     changePassword(input:ChangePasswordDto):String!
     createUserLearningStatus(input:UserLearningStatusDto):String!
     updateUserLearningStatus(input:UserLearningStatusDto):String!

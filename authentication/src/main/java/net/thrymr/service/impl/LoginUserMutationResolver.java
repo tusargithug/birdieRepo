@@ -1,6 +1,7 @@
 package net.thrymr.service.impl;
 
 import graphql.kickstart.tools.GraphQLMutationResolver;
+import net.thrymr.dto.AppUserDto;
 import net.thrymr.dto.ChangePasswordDto;
 import net.thrymr.dto.LoginDto;
 import net.thrymr.service.LoginUserService;
@@ -18,6 +19,11 @@ public class LoginUserMutationResolver implements GraphQLMutationResolver {
     @MutationMapping("/loginUser")
     public String loginUser(@Argument(name = "input") LoginDto request) {
         return loginUserService.loginUser(request);
+    }
+
+    @MutationMapping("/signUpUser")
+    public String signUpUser(@Argument (name = "input") AppUserDto request) {
+        return loginUserService.signUpUser(request);
     }
 
     @MutationMapping("changePassword")

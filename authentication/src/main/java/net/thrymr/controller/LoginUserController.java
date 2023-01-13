@@ -20,24 +20,24 @@ public class LoginUserController {
     @Autowired
     private LoginUserService loginUserService;
 
-//    @MutationMapping("signUpUser")
-//    public String signUpUser(@Argument (name = "input") AppUserDto request) {
-//        return loginUserService.signUpUser(request);
-//    }
+    @MutationMapping("signUpUser")
+    public String signUpUser(@Argument (name = "input") AppUserDto request) {
+        return loginUserService.signUpUser(request);
+    }
 
-    /*@MutationMapping("loginUser")
+    @MutationMapping("loginUser")
     public String loginUser(@Argument (name = "input") LoginDto request) {
         return loginUserService.loginUser(request);
-    }*/
+    }
 
-        @PostMapping("/loginUser")
+   /*     @PostMapping("/loginUser")
     public String loginUser(@Argument(name = "input") LoginDto request) {
         return loginUserService.loginUser(request);
     }
     @PostMapping("/signup")
     public String signUpUser(@RequestBody AppUserDto appUserDto){
         return loginUserService.signUpUser(appUserDto);
-    }
+    }*/
     @MutationMapping("changePassword")
     public String changePassword(@Argument (name = "input") ChangePasswordDto changePasswordDto) {
         return loginUserService.changePassword(changePasswordDto);
