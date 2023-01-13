@@ -89,6 +89,12 @@ type Query {
     getChapterBySequence(input:ChapterDto):Chapter
     getAllPaginationUserLearningStatus(input:UserLearningStatusDto):PaginationResponse
     getQuestionByChapterId(chapterId:ID):[MtQuestion]
+    getTotalSiteCount:Int
+    getTotalEmployeesCount:Int
+    getTotalTeamCount:Int
+    getTotalVendorsCount:Int
+    getTotalCounsellorsCount(vendorId:Int):Int
+    getAllAdminCounts:[AdminCountsDto]
 
 }
 
@@ -877,4 +883,9 @@ type UnitResponse{
     unitName:String
     sequence:Int
     chapters :[ChapterResponse]
+}
+
+type AdminCountsDto {
+    fieldName:String
+    fieldCount:Int
 }

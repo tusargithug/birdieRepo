@@ -49,4 +49,9 @@ public class VendorController {
 
     @QueryMapping(name = "getVendorSiteById")
     public List<VendorSite> getVendorSiteById(@Argument Long id) {return vendorService.getVendorSiteById(id);}
+
+    @QueryMapping(name = "getTotalVendorsCount")
+    public Long getTotalVendorsCount() {
+        return vendorService.getTotalVendorsCount();
+    }
 }

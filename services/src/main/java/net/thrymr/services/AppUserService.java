@@ -36,4 +36,6 @@ public interface AppUserService {
     PaginationResponse getAllAppUserPagination(AppUserDto response);
 
     String saveCounsellorEmployeeInfo(CounsellorEmployeeDto request);
+
+    Long getTotalEmployeesCount();
 }

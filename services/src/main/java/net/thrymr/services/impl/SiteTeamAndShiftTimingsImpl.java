@@ -51,6 +51,9 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     @Autowired
     TeamMembersRepo teamMembersRepo;
 
+    @Autowired
+    VendorRepo vendorRepo;
+
     @Override
     public Team createTeam(TeamDto teamDto) {
         Team team = new Team();
@@ -228,8 +231,10 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
                     Optional<MtCity> optionalCity = cityRepo.findById(siteDto.getCityId());
                     optionalCity.ifPresent(site::setCity);
                 }
-                if (siteDto.getStatus().equals(Boolean.TRUE) || siteDto.getStatus().equals(Boolean.FALSE)) {
+                if (siteDto.getStatus() != null) {
                     site.setIsActive(siteDto.getStatus());
+                } else {
+                    site.setIsActive(Boolean.TRUE);
                 }
                 site.setSearchKey(getSiteSearchKey(site));
                 siteRepo.save(site);
@@ -304,7 +309,7 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
             }
         } else {
             List<Site> siteList = siteRepo.findAll(siteSpecification);
-            paginationResponse.setSiteList(siteList.stream().filter(site -> site.getIsDeleted().equals(Boolean.FALSE) && site.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList()));
+            paginationResponse.setSiteList(siteList.stream().filter(site -> site.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList()));
             return paginationResponse;
         }
         return new PaginationResponse();
@@ -638,5 +643,44 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
     public List<Alerts> getAllEnumAlerts() {
         List<Alerts> alertsList = Arrays.asList(Alerts.NONE, Alerts.RED_ALERT, Alerts.ORANGE_ALERT, Alerts.GREEN_ALERT);
         return alertsList;
+    }
+
+    @Override
+    public Long getTotalTeamCount() {
+        return teamRepo.countByIsDeleted(Boolean.FALSE);
+    }
+
+    @Override
+    public Long getTotalSiteCount() {
+        return siteRepo.countByIsDeleted(Boolean.FALSE);
+    }
+
+    @Override
+    public List<AdminCountsDto> getAllAdminCounts() {
+
+        List<AdminCountsDto> adminCountsDtoList = new ArrayList<>();
+
+        AdminCountsDto adminCountsDto = new AdminCountsDto();
+        adminCountsDto.setFieldName("Teams count");
+        adminCountsDto.setFieldCount(teamRepo.countByIsDeleted(Boolean.FALSE));
+        adminCountsDtoList.add(adminCountsDto);
+
+        adminCountsDto = new AdminCountsDto();
+        adminCountsDto.setFieldName("Sites count");
+        adminCountsDto.setFieldCount(siteRepo.countByIsDeleted(Boolean.FALSE));
+        adminCountsDtoList.add(adminCountsDto);
+
+        adminCountsDto = new AdminCountsDto();
+        adminCountsDto.setFieldName("Vendors count");
+        adminCountsDto.setFieldCount(vendorRepo.countByIsDeleted(Boolean.FALSE));
+        adminCountsDtoList.add(adminCountsDto);
+
+        adminCountsDto = new AdminCountsDto();
+        adminCountsDto.setFieldName("Employees count");
+        adminCountsDto.setFieldCount(appUserRepo.countByIsDeleted(Boolean.FALSE));
+        adminCountsDtoList.add(adminCountsDto);
+
+
+       return adminCountsDtoList;
     }
 }

@@ -14,4 +14,6 @@ public interface VendorRepo extends JpaRepository<Vendor,Long>, JpaSpecification
     boolean existsByMobileNumber(String mobileNumber);
 
     boolean existsByEmail(String email);
+
+    Long countByIsDeleted(Boolean isDelete);
 }

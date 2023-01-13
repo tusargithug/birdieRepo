@@ -25,4 +25,6 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> , JpaSpecifica
 	boolean existsByEmail(String email);
 
 	boolean existsByMobile(String mobile);
+
+	Long countByIsDeleted(Boolean isDeleted);
 }

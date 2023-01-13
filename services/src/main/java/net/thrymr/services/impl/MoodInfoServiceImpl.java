@@ -147,7 +147,7 @@ public class MoodInfoServiceImpl implements MoodInfoService {
     public List<MtMoodInfo> getAllMoodInfo(String searchKey) {
         List<MtMoodInfo> mtMoodInfoList;
         if(Validator.isValid(searchKey)) {
-            mtMoodInfoList = moodInfoRepo.findBySearchKeyContaining(searchKey);
+            mtMoodInfoList = moodInfoRepo.findBySearchKeyContainingIgnoreCase(searchKey);
         } else {
             mtMoodInfoList = moodInfoRepo.findAll();
         }

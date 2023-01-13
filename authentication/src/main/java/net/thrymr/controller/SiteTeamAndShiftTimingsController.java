@@ -112,4 +112,19 @@ public class SiteTeamAndShiftTimingsController {
     public List<Alerts> getAllEnumAlerts() {
         return siteTeamAndShiftTimingsService.getAllEnumAlerts();
     }
+
+    @QueryMapping("getTotalTeamCount")
+    public Long getTotalTeamCount() {
+        return siteTeamAndShiftTimingsService.getTotalTeamCount();
+    }
+
+    @QueryMapping("getTotalSiteCount")
+    public Long getTotalSiteCount() {
+        return siteTeamAndShiftTimingsService.getTotalSiteCount();
+    }
+
+    @QueryMapping("getAllAdminCounts")
+    public List<AdminCountsDto> getAllAdminCounts() {
+        return siteTeamAndShiftTimingsService.getAllAdminCounts();
+    }
 }

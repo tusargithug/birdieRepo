@@ -12,4 +12,6 @@ public interface SiteRepo extends JpaRepository<Site,Long>, JpaSpecificationExec
     List<Site> findAllByIdInAndIsActiveAndIsDeleted(List<Long> siteIdList, Boolean aTrue, Boolean aFalse);
 
     List<Site> findAllBySiteIdIn(List<Long> list);
+
+    Long countByIsDeleted(Boolean isDelete);
 }

@@ -385,6 +385,11 @@ public class CounsellorImpl implements CounsellorService {
         return "All records deleted successfully";
     }
 
+    @Override
+    public Long getTotalCounsellorsCount(Long vendorId) {
+        return counsellorRepo.countByVendorIdAndIsDeleted(vendorId, Boolean.FALSE);
+    }
+
     public String getCounsellorSearchKey(Counsellor counsellor) {
         String searchKey = "";
         if (counsellor.getCounsellorName() != null) {

@@ -40,6 +40,7 @@ public interface CounsellorService {
 
     LanguageDetails getLanguageDetailsById(Long id);
 
-
     String deleteAllEducation();
+
+    Long getTotalCounsellorsCount(Long vendorId);
 }
