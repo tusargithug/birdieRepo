@@ -3,6 +3,7 @@ package net.thrymr.dto.response;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.thrymr.model.Counsellor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,4 +21,6 @@ public class VendorResponse {
     List<SiteResponse> siteResponseList = new ArrayList<>();
     private Long totalElement;
     private int totalPages;
+    private List<Counsellor> counsellorList;
+    private int noOfCounsellors=0;
 }

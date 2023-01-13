@@ -776,6 +776,8 @@ type VendorResponse{
     siteResponseList:[SiteResponse]
     totalElement:Int
     totalPages:Int
+    counsellorList:[Counsellor]
+    noOfCounsellors:Int
 }
 type SiteResponse{
     id:Int

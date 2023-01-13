@@ -653,8 +653,8 @@ public class AppUserServiceImpl implements AppUserService {
         if (appUser.getShiftEndAt() != null) {
             searchKey = searchKey + " " + appUser.getShiftEndAt();
         }
-        if (appUser.getIsActive() != null) {
-            searchKey = searchKey + " " + appUser.getShiftEndAt();
+        if (appUser.getShiftStartAt() != null) {
+            searchKey = searchKey + " " + appUser.getShiftStartAt();
         }
         if (appUser.getMobile() != null) {
             searchKey = searchKey + " " + appUser.getUserName();

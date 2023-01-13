@@ -267,6 +267,8 @@ public class VendorServiceImpl implements VendorService {
                     vendorResponse.setTotalPages(vendorObjectives.getTotalPages());
                     vendorResponse.setTotalElement(vendorObjectives.getTotalElements());
                     vendorResponse.setCountryCode(vendorSite.getVendor().getCountryCode());
+                    vendorResponse.setCounsellorList(vendorSite.getVendor().getCounsellor());
+                    vendorResponse.setNoOfCounsellors(vendorSite.getVendor().getCounsellor().size());
                     SiteResponse siteResponse = new SiteResponse();
                     siteResponse.setId(vendorSite.getSite().getId());
                     siteResponse.setSiteName(vendorSite.getSite().getSiteName());
@@ -295,6 +297,8 @@ public class VendorServiceImpl implements VendorService {
                     vendorResponse.setPOC(vendorSite.getVendor().getPOC());
                     vendorResponse.setEmail(vendorSite.getVendor().getEmail());
                     vendorResponse.setCountryCode(vendorSite.getVendor().getCountryCode());
+                    vendorResponse.setCounsellorList(vendorSite.getVendor().getCounsellor());
+                    vendorResponse.setNoOfCounsellors(vendorSite.getVendor().getCounsellor().size());
                     SiteResponse siteResponse = new SiteResponse();
                     siteResponse.setId(vendorSite.getSite().getId());
                     siteResponse.setSiteName(vendorSite.getSite().getSiteName());
