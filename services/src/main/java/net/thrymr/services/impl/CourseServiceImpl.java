@@ -87,16 +87,10 @@ public class CourseServiceImpl implements CourseService {
             searchKey = searchKey + " " + course.getName();
         }
         if (course.getCategory() != null) {
-            searchKey = searchKey + " " + course.getCategory();
-        }
-        if (course.getAssignments() != null) {
-            searchKey = searchKey + " " + course.getAssignments();
+            searchKey = searchKey + " " + course.getCategory().getName();
         }
         if(course.getDescription() != null){
             searchKey = searchKey + " " + course.getDescription();
-        }
-        if(course.getCategory() != null){
-            searchKey = searchKey + " " + course.getCategory();
         }
         if (course.getContent() != null)  {
             searchKey = searchKey + " " + course.getContent();
