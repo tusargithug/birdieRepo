@@ -657,7 +657,7 @@ public class AppUserServiceImpl implements AppUserService {
             searchKey = searchKey + " " + appUser.getShiftStartAt();
         }
         if (appUser.getMobile() != null) {
-            searchKey = searchKey + " " + appUser.getUserName();
+            searchKey = searchKey + " " + appUser.getMobile();
         }
         if (appUser.getCountryCode() != null) {
             searchKey = searchKey + " " + appUser.getCountryCode();
