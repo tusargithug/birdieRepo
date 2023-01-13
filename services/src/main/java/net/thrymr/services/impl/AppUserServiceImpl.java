@@ -635,9 +635,6 @@ public class AppUserServiceImpl implements AppUserService {
         if (appUser.getShiftTimings() != null) {
             searchKey = searchKey + " " + appUser.getShiftTimings();
         }
-        if (appUser.getIsActive() != null) {
-            searchKey = searchKey + " " + appUser.getIsActive();
-        }
         if (appUser.getCreatedOn() != null) {
             searchKey = searchKey + " " + appUser.getCreatedOn();
         }
@@ -657,13 +654,18 @@ public class AppUserServiceImpl implements AppUserService {
             searchKey = searchKey + " " + appUser.getShiftStartAt();
         }
         if (appUser.getMobile() != null) {
-            searchKey = searchKey + " " + appUser.getUserName();
+            searchKey = searchKey + " " + appUser.getMobile();
         }
         if (appUser.getCountryCode() != null) {
             searchKey = searchKey + " " + appUser.getCountryCode();
         }
         if (appUser.getSite() != null) {
             searchKey = searchKey + " " + appUser.getSite().getSiteName();
+        }
+        if (appUser.getIsActive() != null && appUser.getIsActive().equals(Boolean.FALSE)) {
+            searchKey = searchKey + " " + "Inactive";
+        } else {
+            searchKey = searchKey + " " + "Active";
         }
         return searchKey;
     }

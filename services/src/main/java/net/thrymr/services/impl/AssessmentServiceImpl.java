@@ -56,7 +56,7 @@ public class AssessmentServiceImpl implements AssessmentService {
         if (request.getIsActive() != null && request.getIsActive().equals(Boolean.TRUE)) {
             assessment.setIsActive(request.getIsActive());
         }
-        assessment.setSearchKey(getAppUserSearchKey(assessment));
+        assessment.setSearchKey(getAssessmentSearchKey(assessment));
         return assessment;
     }
 
@@ -94,7 +94,7 @@ public class AssessmentServiceImpl implements AssessmentService {
                 if (request.getIsActive()!=null && request.getIsActive().equals(Boolean.TRUE) || request.getIsActive().equals(Boolean.FALSE)) {
                     assessment.setIsActive(request.getIsActive());
                 }
-                assessment.setSearchKey(getAppUserSearchKey(assessment));
+                assessment.setSearchKey(getAssessmentSearchKey(assessment));
                 assessmentRepo.save(assessment);
                 return "Assessment update successfully";
             }
@@ -111,6 +111,7 @@ public class AssessmentServiceImpl implements AssessmentService {
                 assessment = optionalAssessment.get();
                 assessment.setIsActive(Boolean.FALSE);
                 assessment.setIsDeleted(Boolean.TRUE);
+                assessment.setSearchKey(getAssessmentSearchKey(assessment));
                 assessmentRepo.save(assessment);
                 return "Assessment deleted successfully";
             }
@@ -130,7 +131,7 @@ public class AssessmentServiceImpl implements AssessmentService {
         return new MtAssessment();
     }
 
-    public String getAppUserSearchKey(MtAssessment mtAssessment) {
+    public String getAssessmentSearchKey(MtAssessment mtAssessment) {
         String searchKey = "";
         if (mtAssessment.getName() != null) {
             searchKey = searchKey + " " + mtAssessment.getName();
@@ -161,6 +162,11 @@ public class AssessmentServiceImpl implements AssessmentService {
         }
         if (mtAssessment.getQuestionList() != null) {
             searchKey = searchKey + " " + mtAssessment.getQuestionList();
+        }
+        if (mtAssessment.getIsActive() != null && mtAssessment.getIsActive().equals(Boolean.FALSE)) {
+            searchKey = searchKey + " " + "Inactive";
+        } else {
+            searchKey = searchKey + " " + "Active";
         }
         return searchKey;
     }

@@ -400,9 +400,6 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         if (unit.getUnitName() != null && !unit.getUnitName().isEmpty()) {
             searchKey = searchKey + " " + unit.getUnitName();
         }
-        if (unit.getIsActive() != null) {
-            searchKey = searchKey + " " + unit.getIsActive();
-        }
         if (unit.getCreatedOn() != null) {
             searchKey = searchKey + " " + unit.getCreatedOn();
         }
@@ -417,6 +414,11 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         }
         if (unit.getChapters() != null) {
             searchKey = searchKey + " " + unit.getChapters().stream().map(Chapter::getProfilePicture);
+        }
+        if (unit.getIsActive() != null && unit.getIsActive().equals(Boolean.FALSE)) {
+            searchKey = searchKey + " " + "Inactive";
+        } else {
+            searchKey = searchKey + " " + "Active";
         }
         return searchKey;
     }

@@ -237,14 +237,16 @@ public class AppointmentServiceImpl implements AppointmentService {
         if (userAppointment.getIsCurrentAppointment() != null) {
             searchKey = searchKey + " " + userAppointment.getIsCurrentAppointment();
         }
-        if (userAppointment.getIsActive() != null) {
-            searchKey = searchKey + " " + userAppointment.getIsActive();
-        }
         if (userAppointment.getAppUser() != null) {
             searchKey = searchKey + " " + userAppointment.getAppUser();
         }
         if (userAppointment.getCounsellor() != null) {
             searchKey = searchKey + " " + userAppointment.getCounsellor();
+        }
+        if (userAppointment.getIsActive() != null && userAppointment.getIsActive().equals(Boolean.FALSE)) {
+            searchKey = searchKey + " " + "Inactive";
+        } else {
+            searchKey = searchKey + " " + "Active";
         }
         return searchKey;
     }

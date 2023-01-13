@@ -350,11 +350,13 @@ public class VendorServiceImpl implements VendorService {
         if (vendor.getMobileNumber() != null) {
             searchKey = searchKey + " " + vendor.getMobileNumber();
         }
-        if (vendor.getIsActive() != null) {
-            searchKey = searchKey + " " + vendor.getIsActive();
-        }
         if (vendor.getEmail() != null) {
             searchKey = searchKey + " " + vendor.getEmail();
+        }
+        if (vendor.getIsActive() != null && vendor.getIsActive().equals(Boolean.FALSE)) {
+            searchKey = searchKey + " " + "Inactive";
+        } else {
+            searchKey = searchKey + " " + "Active";
         }
 
         return searchKey;
@@ -386,6 +388,12 @@ public class VendorServiceImpl implements VendorService {
         if (vendorSite.getSite().getSiteName() != null) {
             searchKey = searchKey + " " + vendorSite.getSite().getSiteName();
         }
+        if (vendorSite.getVendor().getIsActive() != null && vendorSite.getVendor().getIsActive().equals(Boolean.FALSE)) {
+            searchKey = searchKey + " " + "Inactive";
+        } else {
+            searchKey = searchKey + " " + "Active";
+        }
+
         return searchKey;
     }
 

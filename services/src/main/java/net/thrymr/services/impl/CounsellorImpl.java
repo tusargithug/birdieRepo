@@ -431,11 +431,16 @@ public class CounsellorImpl implements CounsellorService {
         if (counsellor.getGender() != null) {
             searchKey = searchKey + " " + counsellor.getGender();
         }
-        if (counsellor.getIsActive() != null) {
-            searchKey = searchKey + " " + counsellor.getIsActive();
-        }
         if (counsellor.getVendor() != null) {
             searchKey = searchKey + " " + counsellor.getVendor().getVendorName();
+        }
+        if (counsellor.getSite() != null) {
+            searchKey = searchKey + " " + counsellor.getSite().getSiteName();
+        }
+        if (counsellor.getIsActive() != null && counsellor.getIsActive().equals(Boolean.FALSE)) {
+            searchKey = searchKey + " " + "Inactive";
+        } else {
+            searchKey = searchKey + " " + "Active";
         }
         return searchKey;
     }

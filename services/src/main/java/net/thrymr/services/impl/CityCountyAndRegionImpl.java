@@ -82,16 +82,18 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
     }
 
 
-    public String getAppUserSearchKey(MtCity mtCity) {
+    public String getCitySearchKey(MtCity mtCity) {
         String searchKey = "";
         if (mtCity.getCityName() != null) {
             searchKey = searchKey + " " + mtCity.getCityName();
         }
-        if (mtCity.getCountry() != null) {
-            searchKey = searchKey + " " + mtCity.getCountry();
+        if (mtCity.getCountry().getRegion().getRegionName() != null) {
+            searchKey = searchKey + " " + mtCity.getCountry().getRegion().getRegionName();
         }
-        if (mtCity.getSites() != null) {
-            searchKey = searchKey + " " + mtCity.getSites();
+        if (mtCity.getIsActive() != null && mtCity.getIsActive().equals(Boolean.FALSE)) {
+            searchKey = searchKey + " " + "Inactive";
+        } else {
+            searchKey = searchKey + " " + "Active";
         }
         return searchKey;
     }
@@ -128,11 +130,14 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
             searchKey = searchKey + " " + country.getCountryCode();
         }
         if (country.getRegion() != null) {
-            searchKey = searchKey + " " + country.getRegion();
+            searchKey = searchKey + " " + country.getRegion().getRegionName();
         }
-        if (country.getCities() != null) {
-            searchKey = searchKey + " " + country.getCities();
+        if (country.getIsActive() != null && country.getIsActive().equals(Boolean.FALSE)) {
+            searchKey = searchKey + " " + "Inactive";
+        } else {
+            searchKey = searchKey + " " + "Active";
         }
+
         return searchKey;
     }
 
@@ -144,7 +149,7 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
         if (mtCountryId.isPresent()) {
             mtCity.setCountry(mtCountryId.get());
         }
-        mtCity.setSearchKey(getAppUserSearchKey(mtCity));
+        mtCity.setSearchKey(getCitySearchKey(mtCity));
         cityRepo.save(mtCity);
         return "City saved successfully";
     }
@@ -176,7 +181,7 @@ public class CityCountyAndRegionImpl implements CityCountyAndRegionService {
                 mtCity.setCityName(cityDto.getCityName());
                 cityRepo.save(mtCity);
             }
-            mtCity.setSearchKey(getAppUserSearchKey(mtCity));
+            mtCity.setSearchKey(getCitySearchKey(mtCity));
             return "City update successfully";
         }
         return "this id not in data base";
