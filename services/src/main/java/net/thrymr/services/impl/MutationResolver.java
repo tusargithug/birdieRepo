@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.Part;
+import java.security.Principal;
 import java.text.ParseException;
 import java.util.List;
 import java.util.UUID;

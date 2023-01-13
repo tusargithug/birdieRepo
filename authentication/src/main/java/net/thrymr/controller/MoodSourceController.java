@@ -11,6 +11,7 @@ import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
 @RestController
@@ -26,13 +27,11 @@ public class MoodSourceController {
 
     }
 
-
-    // get all mood sources
+    @RolesAllowed("EMPLOYEE")
     @QueryMapping(name = "getAllMoodSources")
     public List<MtMoodSource> getAllMoodSources() {
         return moodSourceService.getAllMoodSources();
     }
-
 
     @QueryMapping("getMoodSourceById")
     public MtMoodSource getMoodSourceById(@Argument Long id) {

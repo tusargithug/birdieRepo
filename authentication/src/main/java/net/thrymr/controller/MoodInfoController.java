@@ -21,6 +21,7 @@ import net.thrymr.services.MoodInfoService;
 import net.thrymr.utils.ApiResponse;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
 
@@ -29,6 +30,7 @@ public class MoodInfoController {
     @Autowired
     MoodInfoService moodInfoService;
 
+    @RolesAllowed("EMPLOYEE")
     @QueryMapping(name = "getMoodInfoById")
     public MtMoodInfo getMoodInfoById(@Argument Long id) {
         return moodInfoService.getMoodInfoById(id);
@@ -42,6 +44,7 @@ public class MoodInfoController {
     public String deleteMoodInfoById(@Argument Long id){
         return moodInfoService.deleteMoodInfoById(id);
     }
+    @RolesAllowed("EMPLOYEE")
     @QueryMapping(name = "getAllMoodInfo")
     public List<MtMoodInfo> getAllMoodInfo(@Argument String searchKey) {
         return moodInfoService.getAllMoodInfo(searchKey);

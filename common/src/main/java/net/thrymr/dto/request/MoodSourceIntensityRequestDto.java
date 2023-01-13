@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,4 +22,5 @@ public class MoodSourceIntensityRequestDto {
     private List<Long> sourceIds=new ArrayList<>();
     private String intensityDescription;
     private String description;
+
 }

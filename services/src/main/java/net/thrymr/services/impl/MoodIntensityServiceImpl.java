@@ -11,6 +11,7 @@ import net.thrymr.model.master.MtMoodSource;
 import net.thrymr.repository.*;
 import net.thrymr.services.MoodIntensityService;
 import net.thrymr.utils.ApiResponse;
+import net.thrymr.utils.CommonUtil;
 import net.thrymr.utils.Validator;
 import org.apache.poi.sl.draw.geom.GuideIf;
 import org.apache.poi.ss.usermodel.CellType;
@@ -19,15 +20,19 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
+import org.keycloak.representations.AccessToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.trace.http.HttpTrace;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -245,10 +250,12 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
             Optional<MtMoodIntensity> optionalMtMoodIntensity = moodIntensityRepo.findByIdAndMtMoodInfoId(request.getIntensityId(), request.getMoodInfoId());
             optionalMtMoodIntensity.ifPresent(userMoodCheckIn::setMtMoodIntensity);
         }
-        if (Validator.isValid(request.getAppUserId())) {
-            Optional<AppUser> optionalAppUser = appUserRepo.findById(request.getAppUserId());
-            optionalAppUser.ifPresent(userMoodCheckIn::setAppUser);
-        }
+        Principal principal=() -> String.valueOf(Principal.class);
+        String loginUserEmail = CommonUtil.getUser(principal);
+        System.out.println("+++++++"+CommonUtil.getUser(principal));
+        Optional<AppUser> optionalAppUser = appUserRepo.findByEmail(loginUserEmail);
+        optionalAppUser.ifPresent(userMoodCheckIn::setAppUser);
+
         if (Validator.isValid(request.getMoodInfoId())) {
             Optional<MtMoodInfo> optionalMtMoodInfo = moodInfoRepo.findById(request.getMoodInfoId());
             optionalMtMoodInfo.ifPresent(userMoodCheckIn::setMtMoodInfo);
