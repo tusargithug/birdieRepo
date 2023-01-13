@@ -75,6 +75,11 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
         if (Validator.isValid(mtMoodIntensity.getName())) {
             searchKey = searchKey + mtMoodIntensity.getName();
         }
+        if (mtMoodIntensity.getIsActive() != null && mtMoodIntensity.getIsActive().equals(Boolean.FALSE)) {
+            searchKey = searchKey + " " + "Inactive";
+        } else {
+            searchKey = searchKey + " " + "Active";
+        }
         mtMoodIntensity.setSearchKey(searchKey);
     }
 
@@ -289,6 +294,11 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
         }
         if (userMoodCheckIn.getMtMoodIntensity() != null) {
             searchKey = searchKey + " " + userMoodCheckIn.getMtMoodIntensity();
+        }
+        if (userMoodCheckIn.getIsActive() != null && userMoodCheckIn.getIsActive().equals(Boolean.FALSE)) {
+            searchKey = searchKey + " " + "Inactive";
+        } else {
+            searchKey = searchKey + " " + "Active";
         }
 
         return searchKey;

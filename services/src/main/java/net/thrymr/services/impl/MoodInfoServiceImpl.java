@@ -61,6 +61,11 @@ public class MoodInfoServiceImpl implements MoodInfoService {
         if (Validator.isValid(mtMoodInfo.getName())) {
             searchKey = searchKey + mtMoodInfo.getName();
         }
+        if (mtMoodInfo.getIsActive() != null && mtMoodInfo.getIsActive().equals(Boolean.FALSE)) {
+            searchKey = searchKey + " " + "Inactive";
+        } else {
+            searchKey = searchKey + " " + "Active";
+        }
         mtMoodInfo.setSearchKey(searchKey);
     }
 

@@ -346,8 +346,10 @@ public class MiniSessionImpl implements MiniSessionService {
         if (miniSession.getMiniSessionName() != null) {
             searchKey = searchKey + " " + miniSession.getMiniSessionName();
         }
-        if (miniSession.getIsActive() != null) {
-            searchKey = searchKey + " " + miniSession.getIsActive();
+        if (miniSession.getIsActive() != null && miniSession.getIsActive().equals(Boolean.FALSE)) {
+            searchKey = searchKey + " " + "Inactive";
+        } else {
+            searchKey = searchKey + " " + "Active";
         }
 
         return searchKey;
@@ -359,10 +361,12 @@ public class MiniSessionImpl implements MiniSessionService {
             searchKey = searchKey + " " + groups.getGroupName();
         }
         if (groups.getMiniSession() != null) {
-            searchKey = searchKey + " " + groups.getMiniSession();
+            searchKey = searchKey + " " + groups.getMiniSession().getMiniSessionName();
         }
-        if (groups.getIsActive() != null) {
-            searchKey = searchKey + " " + groups.getIsActive();
+        if (groups.getIsActive() != null && groups.getIsActive().equals(Boolean.FALSE)) {
+            searchKey = searchKey + " " + "Inactive";
+        } else {
+            searchKey = searchKey + " " + "Active";
         }
 
         return searchKey;
@@ -397,8 +401,10 @@ public class MiniSessionImpl implements MiniSessionService {
         if (details.getIsText() != null) {
             searchKey = searchKey + " " + details.getIsText();
         }
-        if (details.getIsActive() != null) {
-            searchKey = searchKey + " " + details.getIsActive();
+        if (details.getIsActive() != null && details.getIsActive().equals(Boolean.FALSE)) {
+            searchKey = searchKey + " " + "Inactive";
+        } else {
+            searchKey = searchKey + " " + "Active";
         }
         return searchKey;
     }
@@ -414,11 +420,13 @@ public class MiniSessionImpl implements MiniSessionService {
         if (fileDetails.getFileContentType() != null) {
             searchKey = searchKey + " " + fileDetails.getFileContentType();
         }
-        if (fileDetails.getIsActive() != null) {
-            searchKey = searchKey + " " + fileDetails.getIsActive();
-        }
         if (fileDetails.getGroups() != null) {
-            searchKey = searchKey + " " + fileDetails.getGroups();
+            searchKey = searchKey + " " + fileDetails.getGroups().getGroupName();
+        }
+        if (fileDetails.getIsActive() != null && fileDetails.getIsActive().equals(Boolean.FALSE)) {
+            searchKey = searchKey + " " + "Inactive";
+        } else {
+            searchKey = searchKey + " " + "Active";
         }
         return searchKey;
     }

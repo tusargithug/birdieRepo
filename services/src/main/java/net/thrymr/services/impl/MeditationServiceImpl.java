@@ -189,6 +189,11 @@ public class MeditationServiceImpl implements MeditationService {
         if(mtMeditation.getCreatedOn() !=null){
             searchKey = searchKey + " " + mtMeditation.getCreatedOn();
         }
+        if (mtMeditation.getIsActive() != null && mtMeditation.getIsActive().equals(Boolean.FALSE)) {
+            searchKey = searchKey + " " + "Inactive";
+        } else {
+            searchKey = searchKey + " " + "Active";
+        }
         return searchKey;
     }
 }

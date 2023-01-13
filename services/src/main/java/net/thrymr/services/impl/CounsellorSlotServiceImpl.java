@@ -425,14 +425,16 @@ public class CounsellorSlotServiceImpl implements CounsellorSlotService {
         if (counsellorSlot.getCounsellor() != null) {
             searchKey = searchKey + " " + counsellorSlot.getCounsellor().getSite().getSiteName();
         }
-        if (counsellorSlot.getIsActive() != null) {
-            searchKey = searchKey + " " + counsellorSlot.getIsActive();
-        }
         if (counsellorSlot.getFromDate() != null) {
             searchKey = searchKey + " " + counsellorSlot.getFromDate();
         }
         if (counsellorSlot.getToDate() != null) {
             searchKey = searchKey + " " + counsellorSlot.getToDate();
+        }
+        if (counsellorSlot.getIsActive() != null && counsellorSlot.getIsActive().equals(Boolean.FALSE)) {
+            searchKey = searchKey + " " + "Inactive";
+        } else {
+            searchKey = searchKey + " " + "Active";
         }
         return searchKey;
     }

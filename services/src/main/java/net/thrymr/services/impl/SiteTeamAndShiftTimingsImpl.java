@@ -509,8 +509,10 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         if (team.getShiftTimings() != null) {
             searchKey = searchKey + " " + team.getShiftTimings();
         }
-        if (team.getIsActive() != null) {
-            searchKey = searchKey + " " + team.getIsActive();
+        if (team.getIsActive() != null && team.getIsActive().equals(Boolean.FALSE)) {
+            searchKey = searchKey + " " + "Inactive";
+        } else {
+            searchKey = searchKey + " " + "Active";
         }
         return searchKey;
     }
@@ -535,8 +537,10 @@ public class SiteTeamAndShiftTimingsImpl implements SiteTeamAndShiftTimingsServi
         if (site.getCountry() != null) {
             searchKey = searchKey + " " + site.getCountry().getCountryName();
         }
-        if (site.getIsActive() != null) {
-            searchKey = searchKey + " " + site.getIsActive();
+        if (site.getIsActive() != null && site.getIsActive().equals(Boolean.FALSE)) {
+            searchKey = searchKey + " " + "Inactive";
+        } else {
+            searchKey = searchKey + " " + "Active";
         }
         return searchKey;
     }

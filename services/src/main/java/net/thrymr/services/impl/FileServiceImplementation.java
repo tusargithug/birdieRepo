@@ -205,8 +205,10 @@ public class FileServiceImplementation implements FileService {
         if (fileEntity.getFileContentType() != null) {
             searchKey = searchKey + " " + fileEntity.getFileContentType();
         }
-        if (fileEntity.getIsActive() != null) {
-            searchKey = searchKey + " " + fileEntity.getIsActive();
+        if (fileEntity.getIsActive() != null && fileEntity.getIsActive().equals(Boolean.FALSE)) {
+            searchKey = searchKey + " " + "Inactive";
+        } else {
+            searchKey = searchKey + " " + "Active";
         }
         return searchKey;
     }
