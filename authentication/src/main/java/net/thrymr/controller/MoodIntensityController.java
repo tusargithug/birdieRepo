@@ -38,7 +38,7 @@ public class MoodIntensityController {
     public String deleteMoodIntensitiesById(@Argument Long id) {
         return moodIntensityService.deleteMoodIntensitiesById(id);
     }
-    @RolesAllowed("EMPLOYEE")
+
     @QueryMapping(name = "getAllMoodIntensities")
     public List<MtMoodIntensity> getAllMoodIntensities() {
         return moodIntensityService.getAllMoodIntensities();
@@ -54,13 +54,12 @@ public class MoodIntensityController {
     public String createUserMoodCheckIn(@Argument(name = "input") MoodSourceIntensityRequestDto request){
         return moodIntensityService.createUserMoodCheckIn(request);
     }*/
-    @RolesAllowed("EMPLOYEE")
     @MutationMapping("createUserMoodCheckIn")
-    public String createUserMoodCheckIn(@Argument MoodSourceIntensityRequestDto request){
+    public String createUserMoodCheckIn(@Argument(name = "input") MoodSourceIntensityRequestDto request){
         return moodIntensityService.createUserMoodCheckIn(request);
     }
 
-//    @RolesAllowed("admin")
+//    @RolesAllowed("ADMIN")
 //    @RequestMapping(value = "/demo", method = RequestMethod.GET)
 //    public ResponseEntity<String> getAdmin(Authentication authentication, Principal principal) {
 //        KeycloakAuthenticationToken keycloakAuthenticationToken = (KeycloakAuthenticationToken) principal;
@@ -69,7 +68,6 @@ public class MoodIntensityController {
 //        //model.addAttribute("username", accessToken.getGivenName());
 //        return ResponseEntity.ok("Hello Admin");
 //    }
-    @RolesAllowed("EMPLOYEE")
     @QueryMapping(name = "getAllMoodCheckIn")
     public List<UserMoodCheckIn> getAllMoodCheckIn(){
         return moodIntensityService.getAllMoodCheckIn();

@@ -255,11 +255,10 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
             Optional<MtMoodIntensity> optionalMtMoodIntensity = moodIntensityRepo.findByIdAndMtMoodInfoId(request.getIntensityId(), request.getMoodInfoId());
             optionalMtMoodIntensity.ifPresent(userMoodCheckIn::setMtMoodIntensity);
         }
-        Principal principal=() -> String.valueOf(Principal.class);
-        String loginUserEmail = CommonUtil.getUser(principal);
-        System.out.println("+++++++"+CommonUtil.getUser(principal));
-        Optional<AppUser> optionalAppUser = appUserRepo.findByEmail(loginUserEmail);
-        optionalAppUser.ifPresent(userMoodCheckIn::setAppUser);
+        if(Validator.isValid(request.getLoginUserMail())) {
+            Optional<AppUser> optionalAppUser = appUserRepo.findByEmail(request.getLoginUserMail());
+            optionalAppUser.ifPresent(userMoodCheckIn::setAppUser);
+        }
 
         if (Validator.isValid(request.getMoodInfoId())) {
             Optional<MtMoodInfo> optionalMtMoodInfo = moodInfoRepo.findById(request.getMoodInfoId());
@@ -278,10 +277,10 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
                     userMoodCheckInMoodSources.setUserMoodCheckIn(userMoodCheckIn);
                     userMoodCheckInMoodSourcesRepo.save(userMoodCheckInMoodSources);
                 }
-                return "mood source list is empty";
+                return "create mood checking details";
             }
         }
-        return "create mood checking details";
+        return "mood source list is empty";
     }
 
 

@@ -22,5 +22,6 @@ public class MoodSourceIntensityRequestDto {
     private List<Long> sourceIds=new ArrayList<>();
     private String intensityDescription;
     private String description;
+    private String loginUserMail;
 
 }

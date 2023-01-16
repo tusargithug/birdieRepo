@@ -2,6 +2,8 @@ package net.thrymr.controller;
 
 
 import net.thrymr.dto.MoodInfoDto;
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
+import org.keycloak.representations.AccessToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +24,8 @@ import net.thrymr.utils.ApiResponse;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 
 import javax.annotation.security.RolesAllowed;
+import javax.security.auth.Subject;
+import java.security.Principal;
 import java.util.List;
 
 
@@ -30,7 +34,6 @@ public class MoodInfoController {
     @Autowired
     MoodInfoService moodInfoService;
 
-    @RolesAllowed("EMPLOYEE")
     @QueryMapping(name = "getMoodInfoById")
     public MtMoodInfo getMoodInfoById(@Argument Long id) {
         return moodInfoService.getMoodInfoById(id);
@@ -44,7 +47,6 @@ public class MoodInfoController {
     public String deleteMoodInfoById(@Argument Long id){
         return moodInfoService.deleteMoodInfoById(id);
     }
-    @RolesAllowed("EMPLOYEE")
     @QueryMapping(name = "getAllMoodInfo")
     public List<MtMoodInfo> getAllMoodInfo(@Argument String searchKey) {
         return moodInfoService.getAllMoodInfo(searchKey);

@@ -7,6 +7,7 @@ import net.thrymr.repository.MoodInfoRepo;
 import net.thrymr.repository.MoodIntensityRepo;
 import net.thrymr.services.MoodInfoService;
 import net.thrymr.utils.ApiResponse;
+import net.thrymr.utils.CommonUtil;
 import net.thrymr.utils.Validator;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.util.NumberToTextConverter;
@@ -17,11 +18,15 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.trace.http.HttpTrace;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.security.auth.Subject;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -156,11 +161,10 @@ public class MoodInfoServiceImpl implements MoodInfoService {
         } else {
             mtMoodInfoList = moodInfoRepo.findAll();
         }
-
         if (!mtMoodInfoList.isEmpty()) {
-            return mtMoodInfoList.stream().filter(mtMoodInfo -> mtMoodInfo.getIsActive().equals(Boolean.TRUE)).collect(Collectors.toList());
+            System.out.println(mtMoodInfoList.stream().filter(mtMoodInfo -> mtMoodInfo.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList()));
+            return mtMoodInfoList.stream().filter(mtMoodInfo -> mtMoodInfo.getIsDeleted().equals(Boolean.FALSE)).collect(Collectors.toList());
         }
-
         return new ArrayList<>();
     }
 

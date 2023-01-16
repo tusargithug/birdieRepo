@@ -12,8 +12,6 @@ import net.thrymr.repository.FileRepo;
 import net.thrymr.repository.UnitRpo;
 import net.thrymr.services.UnitAndChapterServices;
 import net.thrymr.utils.Validator;
-import org.apache.poi.sl.draw.geom.GuideIf;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +23,8 @@ import org.springframework.stereotype.Service;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 

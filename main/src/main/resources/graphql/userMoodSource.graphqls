@@ -2,10 +2,10 @@ input MoodSourceIntensityRequestDto{
  appUserId:Int
  intensityId:Int
  sourceIds:Int
- userSourceCheckedInId:Int
  moodSourceIdList:[Int]
  moodInfoId:Int
  Description:String
+ loginUserMail:String
 }
 
 input UserCourseDto{

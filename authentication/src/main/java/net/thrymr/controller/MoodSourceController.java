@@ -26,8 +26,6 @@ public class MoodSourceController {
         this.moodSourceService = moodSourceService;
 
     }
-
-    @RolesAllowed("EMPLOYEE")
     @QueryMapping(name = "getAllMoodSources")
     public List<MtMoodSource> getAllMoodSources() {
         return moodSourceService.getAllMoodSources();
