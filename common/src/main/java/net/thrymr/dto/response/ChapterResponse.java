@@ -22,7 +22,7 @@ public class ChapterResponse {
 
     private FileEntity video;
 
-    private Integer sequence;
+    private Long sequence;
 
     private List<QuestionResponse> questionList=new ArrayList<>();
 }

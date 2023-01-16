@@ -184,7 +184,6 @@ type Chapter{
     isActive:Boolean
     createdOn:String
     questionList:[MtQuestion]
-    sequence:Int
 }
 type MtOptions{
     id:ID
@@ -267,7 +266,6 @@ type Unit{
     isActive:Boolean
     createdOn:String
     searchKey:String
-    sequence:Int
 }
 
 input AssessmentDto{

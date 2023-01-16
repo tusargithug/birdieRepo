@@ -42,7 +42,9 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
 
     @Override
     public String saveUnit(UnitDto request) {
-        unitRpo.save(dtoToEntity(request));
+     Unit unit= unitRpo.save(dtoToEntity(request));
+     unit.setSequence(unit.getId());
+        unitRpo.save(unit);
         return "unit saved successfully";
     }
 
@@ -67,8 +69,8 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                 if (dto.getIsActive() != null && dto.getIsActive().equals(Boolean.TRUE) || dto.getIsActive().equals(Boolean.FALSE)) {
                     unit.setIsActive(dto.getIsActive());
                 }
-                if(Validator.isValid(dto.getSequence())){
-                    unit.setSequence(dto.getSequence());
+                if(Validator.isValid(unit.getId())){
+                    unit.setSequence(unit.getId());
                 }
                 unit.setSearchKey(getUnitSearchKey(unit));
                 return unit;
@@ -156,6 +158,8 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
     @Override
     public Chapter saveChapter(ChapterDto request) {
         Chapter chapter = chapterRepo.save(dtoToChapter(request));
+        chapter.setSequence(chapter.getId());
+        chapterRepo.save(chapter);
         return chapter;
     }
 
@@ -193,8 +197,8 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                 if (dto.getIsActive() != null && dto.getIsActive().equals(Boolean.TRUE) || dto.getIsActive().equals(Boolean.FALSE)) {
                     chapter.setIsActive(dto.getIsActive());
                 }
-                if(Validator.isValid(dto.getSequence())){
-                    chapter.setSequence(dto.getSequence());
+                if(Validator.isValid(chapter.getId())){
+                    chapter.setSequence(chapter.getId());
                 }
                 chapterRepo.save(chapter);
             }
@@ -308,7 +312,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                 chapterResponse.setId(chapter.getId());
                 chapterResponse.setChapterName(chapter.getChapterName());
                 chapterResponse.setDescription(chapter.getDescription());
-                chapterResponse.setSequence(chapter.getSequence());
+                chapterResponse.setSequence(chapter.getId());
                 if (optionalAppUser.get().getQuestionList() != null) {
                     for (MtQuestion mtQuestion : optionalAppUser.get().getQuestionList()) {
                         if (mtQuestion.getIsDeleted().equals(Boolean.FALSE)) {
@@ -384,7 +388,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
     public Unit dtoToEntity(UnitDto dto) {
         Unit unit = new Unit();
         unit.setUnitName(dto.getUnitName());
-        unit.setSequence(dto.getSequence());
+//        unit.setSequence(dto.getSequence());
         if (dto.getIsActive() != null && dto.getIsActive().equals(Boolean.TRUE)) {
             unit.setIsActive(dto.getIsActive());
         }
@@ -427,7 +431,6 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
         Chapter chapter = new Chapter();
         chapter.setChapterName(chapterDto.getChapterName());
         chapter.setDescription(chapterDto.getDescription());
-        chapter.setSequence(chapterDto.getSequence());
         if (Validator.isValid(chapterDto.getProfilePictureId())) {
             Optional<FileEntity> optionalFileEntity = fileRepo.findByFileId(chapterDto.getProfilePictureId());
             if (optionalFileEntity.isPresent()) {
