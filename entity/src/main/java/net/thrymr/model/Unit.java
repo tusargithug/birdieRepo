@@ -16,6 +16,8 @@ public class Unit extends  BaseEntity{
 
     @Column(name = "unit_name")
     private String unitName;
+
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true)
     private Integer sequence;
 
