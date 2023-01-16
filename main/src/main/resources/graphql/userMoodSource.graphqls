@@ -4,7 +4,6 @@ input MoodSourceIntensityRequestDto{
  sourceIds:Int
  moodSourceIdList:[Int]
  moodInfoId:Int
- Description:String
  loginUserMail:String
 }
 
