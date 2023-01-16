@@ -283,9 +283,6 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
 
     public String getUserMoodCheckedSearchKey(UserMoodCheckIn userMoodCheckIn) {
         String searchKey = "";
-        if (userMoodCheckIn.getDescription() != null) {
-            searchKey = searchKey + " " + userMoodCheckIn.getDescription();
-        }
         if (userMoodCheckIn.getIsActive() != null) {
             searchKey = searchKey + " " + userMoodCheckIn.getIsActive();
         }
