@@ -27,6 +27,4 @@ public class UserMoodCheckIn extends BaseEntity {
 	private MtMoodInfo mtMoodInfo;
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private MtMoodIntensity mtMoodIntensity;
-	@Column(name = "description", columnDefinition = "TEXT")
-	private String description;
 }

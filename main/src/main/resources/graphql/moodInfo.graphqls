@@ -565,7 +565,6 @@ type UserMoodCheckIn{
     appUser:AppUser
     mtMoodInfo:MtMoodInfo
     mtMoodIntensity:MtMoodIntensity
-    description:String
 }
 type CounsellorEmployee{
     counsellor:Counsellor

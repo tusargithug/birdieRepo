@@ -223,7 +223,6 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
                         userMoodCheckIn.setMtMoodInfo(optionalMtMoodInfo.get());
                     }
                 }
-                userMoodCheckIn.setDescription(request.getDescription());
                 userMoodCheckIn.setSearchKey(getUserMoodCheckedSearchKey(userMoodCheckIn));
                 userMoodCheckInRepo.save(userMoodCheckIn);
             }
@@ -255,7 +254,7 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
             Optional<MtMoodIntensity> optionalMtMoodIntensity = moodIntensityRepo.findByIdAndMtMoodInfoId(request.getIntensityId(), request.getMoodInfoId());
             optionalMtMoodIntensity.ifPresent(userMoodCheckIn::setMtMoodIntensity);
         }
-        if(Validator.isValid(request.getLoginUserMail())) {
+        if (Validator.isValid(request.getLoginUserMail())) {
             Optional<AppUser> optionalAppUser = appUserRepo.findByEmail(request.getLoginUserMail());
             optionalAppUser.ifPresent(userMoodCheckIn::setAppUser);
         }
@@ -264,8 +263,6 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
             Optional<MtMoodInfo> optionalMtMoodInfo = moodInfoRepo.findById(request.getMoodInfoId());
             optionalMtMoodInfo.ifPresent(userMoodCheckIn::setMtMoodInfo);
         }
-
-        userMoodCheckIn.setDescription(request.getDescription());
         userMoodCheckIn.setSearchKey(getUserMoodCheckedSearchKey(userMoodCheckIn));
         userMoodCheckInRepo.save(userMoodCheckIn);
         if (Validator.isValid(request.getMoodSourceIdList())) {
@@ -286,9 +283,6 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
 
     public String getUserMoodCheckedSearchKey(UserMoodCheckIn userMoodCheckIn) {
         String searchKey = "";
-        if (userMoodCheckIn.getDescription() != null) {
-            searchKey = searchKey + " " + userMoodCheckIn.getDescription();
-        }
         if (userMoodCheckIn.getIsActive() != null) {
             searchKey = searchKey + " " + userMoodCheckIn.getIsActive();
         }
