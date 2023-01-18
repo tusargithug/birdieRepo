@@ -27,5 +27,7 @@ public class ChapterResponse {
 
     private Unit unit;
 
+    private Boolean isActive;
+
     private List<QuestionResponse> questionList=new ArrayList<>();
 }
