@@ -95,6 +95,7 @@ type Query {
     getTotalVendorsCount:Int
     getTotalCounsellorsCount(vendorId:Int):Int
     getAllAdminCounts:[AdminCountsDto]
+    getAllUserMoodInfo:UserMoodCheckInResponse
 
 }
 
@@ -889,4 +890,30 @@ type UnitResponse{
 type AdminCountsDto {
     fieldName:String
     fieldCount:Int
+}
+
+type UserMoodCheckInResponse {
+    totalEmployees:Int
+    moodCheckInMonthResponseList:[MoodCheckInMonthResponse]
+    userMoodAveragesList:[UserMoodAverages]
+}
+
+type MoodCheckInMonthResponse {
+    monthName:String
+    positiveMoodRes:Int
+    negativeMoodRes:Int
+    positiveHighIntensityRes:Int
+    negativeHighIntensityRes:Int
+    positiveLowIntensityRes:Int
+    negativeLowIntensityRes:Int
+}
+
+type UserMoodAverages {
+    moodType:String
+    userMoodAverageInfoList:[UserMoodAverageInfo]
+}
+
+type UserMoodAverageInfo {
+    moodName:String
+    moodCount:Int
 }

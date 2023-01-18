@@ -2,6 +2,10 @@ package net.thrymr.services.impl;
 
 import kotlin.reflect.jvm.internal.impl.renderer.ClassifierNamePolicy;
 import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
+import net.thrymr.dto.response.MoodCheckInMonthResponse;
+import net.thrymr.dto.response.UserMoodAverageInfo;
+import net.thrymr.dto.response.UserMoodAverages;
+import net.thrymr.dto.response.UserMoodCheckInResponse;
 import net.thrymr.model.AppUser;
 import net.thrymr.model.UserMoodCheckIn;
 import net.thrymr.model.UserMoodCheckInMoodSources;
@@ -33,10 +37,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.groupingBy;
 
 
 @Service
@@ -239,6 +250,228 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
     }
 
     @Override
+    public UserMoodCheckInResponse getAllUserMoodInfo() {
+
+        List<UserMoodCheckIn> userMoodCheckInList = userMoodCheckInRepo.findAll();
+
+        if (!userMoodCheckInList.isEmpty()) {
+
+            UserMoodCheckInResponse userMoodCheckInResponse = new UserMoodCheckInResponse();
+
+            userMoodCheckInResponse.setTotalEmployees(userMoodCheckInList.size());
+
+            Map<String, List<UserMoodCheckIn>> moodsByMonth = userMoodCheckInList.stream().collect(groupingBy(UserMoodCheckIn::getCreatedDate));
+
+            List<MoodCheckInMonthResponse> moodCheckInMonthResponseList = new ArrayList<>();
+            List<UserMoodAverages> userMoodAveragesList = new ArrayList<>();
+
+            moodsByMonth.forEach(new BiConsumer<String, List<UserMoodCheckIn>>() {
+                @Override
+                public void accept(String date, List<UserMoodCheckIn> userMoodCheckIns) {
+
+                    MoodCheckInMonthResponse moodCheckInMonthResponse = new MoodCheckInMonthResponse();
+                    moodCheckInMonthResponse.setMonthName(date);
+                    moodCheckInMonthResponse.setPositiveMoodRes(userMoodCheckIns.stream().filter(obj -> obj.getMtMoodInfo().getMoodType().name().equals("POSITIVE")).count());
+                    moodCheckInMonthResponse.setNegativeMoodRes(userMoodCheckIns.stream().filter(obj -> obj.getMtMoodInfo().getMoodType().name().equals("NEGATIVE")).count());
+                    moodCheckInMonthResponse.setPositiveHighIntensityRes(userMoodCheckIns.stream().filter(obj -> obj.getMtMoodInfo().getMoodType().name().equals("POSITIVE") && obj.getMtMoodIntensity().getScore().equals(5.0f)).count());
+                    moodCheckInMonthResponse.setNegativeHighIntensityRes(userMoodCheckIns.stream().filter(obj -> obj.getMtMoodInfo().getMoodType().name().equals("NEGATIVE") && obj.getMtMoodIntensity().getScore().equals(5.0f)).count());
+                    moodCheckInMonthResponse.setPositiveLowIntensityRes(userMoodCheckIns.stream().filter(obj -> obj.getMtMoodInfo().getMoodType().name().equals("POSITIVE") && obj.getMtMoodIntensity().getScore().equals(1.0f)).count());
+                    moodCheckInMonthResponse.setNegativeLowIntensityRes(userMoodCheckIns.stream().filter(obj -> obj.getMtMoodInfo().getMoodType().name().equals("NEGATIVE") && obj.getMtMoodIntensity().getScore().equals(1.0f)).count());
+
+                    moodCheckInMonthResponseList.add(moodCheckInMonthResponse);
+                }
+            });
+
+            if (!moodCheckInMonthResponseList.isEmpty()) {
+                userMoodCheckInResponse.setMoodCheckInMonthResponseList(moodCheckInMonthResponseList);
+            }
+
+            List<UserMoodCheckIn> positiveUserMoodCheckIn = userMoodCheckInList.stream().filter(obj -> obj.getMtMoodInfo().getMoodType().name().equals("POSITIVE")).toList();
+            List<UserMoodCheckIn> negativeUserMoodCheckIn = userMoodCheckInList.stream().filter(obj -> obj.getMtMoodInfo().getMoodType().name().equals("NEGATIVE")).toList();
+
+            List<UserMoodCheckIn> positiveHighIntensityMoods = userMoodCheckInList.stream().filter(obj -> obj.getMtMoodInfo().getMoodType().name().equals("POSITIVE") && obj.getMtMoodIntensity().getScore().equals(5.0f)).toList();
+            List<UserMoodCheckIn> negativeHighIntensityMoods = userMoodCheckInList.stream().filter(obj -> obj.getMtMoodInfo().getMoodType().name().equals("NEGATIVE") && obj.getMtMoodIntensity().getScore().equals(5.0f)).toList();
+
+            List<UserMoodCheckIn> positiveLowIntensityMoods = userMoodCheckInList.stream().filter(obj -> obj.getMtMoodInfo().getMoodType().name().equals("POSITIVE") && obj.getMtMoodIntensity().getScore().equals(1.0f)).toList();
+            List<UserMoodCheckIn> negativeLowIntensityMoods = userMoodCheckInList.stream().filter(obj -> obj.getMtMoodInfo().getMoodType().name().equals("NEGATIVE") && obj.getMtMoodIntensity().getScore().equals(1.0f)).toList();
+
+
+            List<Long> positivesIds = new ArrayList<>();
+            List<Long> negativeIds = new ArrayList<>();
+            List<Long> positiveHighIntensityIds = new ArrayList<>();
+            List<Long> negativeHighIntensityIds = new ArrayList<>();
+            List<Long> positiveLowIntensityIds = new ArrayList<>();
+            List<Long> negativeLowIntensityIds = new ArrayList<>();
+
+
+            Map<Long, Integer> positiveFreqMap = new HashMap<>();
+            Map<Long, Integer> negativeFreqMap = new HashMap<>();
+            Map<Long, Integer> positiveHighIntensityFreqMap = new HashMap<>();
+            Map<Long, Integer> negativeHighIntensityFreqMap = new HashMap<>();
+            Map<Long, Integer> positiveLowIntensityFreqMap = new HashMap<>();
+            Map<Long, Integer> negativeLowIntensityFreqMap = new HashMap<>();
+
+            for (UserMoodCheckIn userMoodCheckIn : positiveUserMoodCheckIn) {
+                positivesIds.add(userMoodCheckIn.getMtMoodInfo().getId());
+            }
+            for (UserMoodCheckIn userMoodCheckIn : negativeUserMoodCheckIn) {
+                negativeIds.add(userMoodCheckIn.getMtMoodInfo().getId());
+            }
+            for(UserMoodCheckIn userMoodCheckIn : positiveHighIntensityMoods) {
+                positiveHighIntensityIds.add(userMoodCheckIn.getMtMoodIntensity().getId());
+            }
+            for(UserMoodCheckIn userMoodCheckIn : negativeHighIntensityMoods) {
+                negativeHighIntensityIds.add(userMoodCheckIn.getMtMoodIntensity().getId());
+            }
+            for(UserMoodCheckIn userMoodCheckIn : positiveLowIntensityMoods) {
+                positiveLowIntensityIds.add(userMoodCheckIn.getMtMoodIntensity().getId());
+            }
+            for(UserMoodCheckIn userMoodCheckIn : negativeLowIntensityMoods) {
+                negativeLowIntensityIds.add(userMoodCheckIn.getMtMoodIntensity().getId());
+            }
+
+            Set<Long> possitiveSet = new HashSet<Long>(positivesIds);
+            for (Long r : possitiveSet) {
+                positiveFreqMap.put(r, Collections.frequency(positivesIds, r));
+            }
+
+            Set<Long> negativeSet = new HashSet<Long>(negativeIds);
+            for (Long r : negativeSet) {
+                negativeFreqMap.put(r, Collections.frequency(negativeIds, r));
+            }
+
+            Set<Long> possitiveHighIntensitySet = new HashSet<Long>(positiveHighIntensityIds);
+            for (Long r : possitiveHighIntensitySet) {
+                positiveHighIntensityFreqMap.put(r, Collections.frequency(positiveHighIntensityIds, r));
+            }
+
+            Set<Long> negativeHighIntensitySet = new HashSet<Long>(negativeHighIntensityIds);
+            for (Long r : negativeHighIntensitySet) {
+                negativeHighIntensityFreqMap.put(r, Collections.frequency(negativeHighIntensityIds, r));
+            }
+
+            Set<Long> possitiveLowIntensitySet = new HashSet<Long>(positiveLowIntensityIds);
+            for (Long r : possitiveLowIntensitySet) {
+                positiveLowIntensityFreqMap.put(r, Collections.frequency(positiveLowIntensityIds, r));
+            }
+
+            Set<Long> negativeLowIntensitySet = new HashSet<Long>(negativeLowIntensityIds);
+            for (Long r : negativeLowIntensitySet) {
+                negativeLowIntensityFreqMap.put(r, Collections.frequency(negativeLowIntensityIds, r));
+            }
+
+            List<Long> avgPositiveKeys = positiveFreqMap.entrySet().stream().sorted(Map.Entry.<Long, Integer>comparingByValue().reversed()).limit(3).map(Map.Entry::getKey).toList();
+            List<Long> avgNegativeKeys = negativeFreqMap.entrySet().stream().sorted(Map.Entry.<Long, Integer>comparingByValue().reversed()).limit(3).map(Map.Entry::getKey).toList();
+            List<Long> avgPositiveHighIntensityKeys = positiveHighIntensityFreqMap.entrySet().stream().sorted(Map.Entry.<Long, Integer>comparingByValue().reversed()).limit(3).map(Map.Entry::getKey).toList();
+            List<Long> avgNegativeHighIntensityKeys = negativeHighIntensityFreqMap.entrySet().stream().sorted(Map.Entry.<Long, Integer>comparingByValue().reversed()).limit(3).map(Map.Entry::getKey).toList();
+            List<Long> avgPositiveLowIntensityKeys = positiveLowIntensityFreqMap.entrySet().stream().sorted(Map.Entry.<Long, Integer>comparingByValue().reversed()).limit(3).map(Map.Entry::getKey).toList();
+            List<Long> avgNegativeLowIntensityKeys = negativeLowIntensityFreqMap.entrySet().stream().sorted(Map.Entry.<Long, Integer>comparingByValue().reversed()).limit(3).map(Map.Entry::getKey).toList();
+
+
+
+            UserMoodAverages userPosMoodAverages = new UserMoodAverages();
+            userPosMoodAverages.setMoodType("AvgPositiveMoods");
+            List<UserMoodAverageInfo> userPosMoodAverageInfoList = new ArrayList<>();
+            for (Long positiveKey : avgPositiveKeys) {
+
+                Optional<MtMoodInfo> optionalMtMoodInfo = moodInfoRepo.findById(positiveKey);
+                if (optionalMtMoodInfo.isPresent()) {
+                    UserMoodAverageInfo userMoodAverageInfo = new UserMoodAverageInfo();
+                    userMoodAverageInfo.setMoodName(optionalMtMoodInfo.get().getName());
+                    userMoodAverageInfo.setMoodCount(positiveFreqMap.get(positiveKey));
+                    userPosMoodAverageInfoList.add(userMoodAverageInfo);
+                }
+            }
+            userPosMoodAverages.setUserMoodAverageInfoList(userPosMoodAverageInfoList);
+            userMoodAveragesList.add(userPosMoodAverages);
+
+
+            UserMoodAverages userNegMoodAverages = new UserMoodAverages();
+            userNegMoodAverages.setMoodType("AvgNegativeMoods");
+            List<UserMoodAverageInfo> userNegAvgNegMoodInfoList = new ArrayList<>();
+            for (Long negativeKey : avgNegativeKeys) {
+
+                Optional<MtMoodInfo> optionalMtMoodInfo = moodInfoRepo.findById(negativeKey);
+                if (optionalMtMoodInfo.isPresent()) {
+                    UserMoodAverageInfo userMoodAverageInfo = new UserMoodAverageInfo();
+                    userMoodAverageInfo.setMoodName(optionalMtMoodInfo.get().getName());
+                    userMoodAverageInfo.setMoodCount(negativeFreqMap.get(negativeKey));
+                    userNegAvgNegMoodInfoList.add(userMoodAverageInfo);
+                }
+            }
+            userNegMoodAverages.setUserMoodAverageInfoList(userNegAvgNegMoodInfoList);
+            userMoodAveragesList.add(userNegMoodAverages);
+
+            UserMoodAverages userHighIntensityPosMoodAverages = new UserMoodAverages();
+            userHighIntensityPosMoodAverages.setMoodType("AvgHighIntensityPositiveMoods");
+            List<UserMoodAverageInfo> userPossitiveHighIntensityMoodInfoList = new ArrayList<>();
+            for (Long posHighInKey : avgPositiveHighIntensityKeys) {
+                Optional<MtMoodIntensity> optionalMtMoodIntensity = moodIntensityRepo.findById(posHighInKey);
+                if(optionalMtMoodIntensity.isPresent()) {
+                    UserMoodAverageInfo userMoodAverageInfo = new UserMoodAverageInfo();
+                    userMoodAverageInfo.setMoodName(optionalMtMoodIntensity.get().getName());
+                    userMoodAverageInfo.setMoodCount(positiveHighIntensityFreqMap.get(posHighInKey));
+                    userPossitiveHighIntensityMoodInfoList.add(userMoodAverageInfo);
+                }
+            }
+            userHighIntensityPosMoodAverages.setUserMoodAverageInfoList(userPossitiveHighIntensityMoodInfoList);
+            userMoodAveragesList.add(userHighIntensityPosMoodAverages);
+
+            UserMoodAverages userHighIntensityNegMoodAverages = new UserMoodAverages();
+            userHighIntensityNegMoodAverages.setMoodType("AvgHighIntensityNegativeMoods");
+            List<UserMoodAverageInfo> userNegativeHighIntensityMoodInfoList = new ArrayList<>();
+            for (Long negHighInKey : avgNegativeHighIntensityKeys) {
+                Optional<MtMoodIntensity> optionalMtMoodIntensity = moodIntensityRepo.findById(negHighInKey);
+                if(optionalMtMoodIntensity.isPresent()) {
+                    UserMoodAverageInfo userMoodAverageInfo = new UserMoodAverageInfo();
+                    userMoodAverageInfo.setMoodName(optionalMtMoodIntensity.get().getName());
+                    userMoodAverageInfo.setMoodCount(negativeHighIntensityFreqMap.get(negHighInKey));
+                    userNegativeHighIntensityMoodInfoList.add(userMoodAverageInfo);
+                }
+            }
+            userHighIntensityNegMoodAverages.setUserMoodAverageInfoList(userNegativeHighIntensityMoodInfoList);
+            userMoodAveragesList.add(userHighIntensityNegMoodAverages);
+
+            UserMoodAverages userLowIntensityPosMoodAverages = new UserMoodAverages();
+            userLowIntensityPosMoodAverages.setMoodType("AvgLowIntensityPositiveMoods");
+            List<UserMoodAverageInfo> userPossitiveLowIntensityMoodInfoList = new ArrayList<>();
+            for (Long posLowInKey : avgPositiveLowIntensityKeys) {
+                Optional<MtMoodIntensity> optionalMtMoodIntensity = moodIntensityRepo.findById(posLowInKey);
+                if(optionalMtMoodIntensity.isPresent()) {
+                    UserMoodAverageInfo userMoodAverageInfo = new UserMoodAverageInfo();
+                    userMoodAverageInfo.setMoodName(optionalMtMoodIntensity.get().getName());
+                    userMoodAverageInfo.setMoodCount(positiveLowIntensityFreqMap.get(posLowInKey));
+                    userPossitiveLowIntensityMoodInfoList.add(userMoodAverageInfo);
+                }
+            }
+            userLowIntensityPosMoodAverages.setUserMoodAverageInfoList(userPossitiveLowIntensityMoodInfoList);
+            userMoodAveragesList.add(userLowIntensityPosMoodAverages);
+
+            UserMoodAverages userLowIntensityNegMoodAverages = new UserMoodAverages();
+            userLowIntensityNegMoodAverages.setMoodType("AvgLowIntensityNegativeMoods");
+            List<UserMoodAverageInfo> userNegativeLowIntensityMoodInfoList = new ArrayList<>();
+            for (Long negLowInKey : avgNegativeLowIntensityKeys) {
+                Optional<MtMoodIntensity> optionalMtMoodIntensity = moodIntensityRepo.findById(negLowInKey);
+                if(optionalMtMoodIntensity.isPresent()) {
+                    UserMoodAverageInfo userMoodAverageInfo = new UserMoodAverageInfo();
+                    userMoodAverageInfo.setMoodName(optionalMtMoodIntensity.get().getName());
+                    userMoodAverageInfo.setMoodCount(negativeLowIntensityFreqMap.get(negLowInKey));
+                    userNegativeLowIntensityMoodInfoList.add(userMoodAverageInfo);
+                }
+            }
+            userLowIntensityNegMoodAverages.setUserMoodAverageInfoList(userNegativeLowIntensityMoodInfoList);
+            userMoodAveragesList.add(userLowIntensityNegMoodAverages);
+
+            userMoodCheckInResponse.setUserMoodAveragesList(userMoodAveragesList);
+
+            return userMoodCheckInResponse;
+
+        }
+
+        return new UserMoodCheckInResponse();
+    }
+
+    @Override
     public List<UserMoodCheckIn> getAllMoodCheckIn() {
         List<UserMoodCheckIn> userMoodCheckInList = userMoodCheckInRepo.findAll();
         if (!userMoodCheckInList.isEmpty()) {
@@ -264,6 +497,10 @@ public class MoodIntensityServiceImpl implements MoodIntensityService {
             optionalMtMoodInfo.ifPresent(userMoodCheckIn::setMtMoodInfo);
         }
         userMoodCheckIn.setSearchKey(getUserMoodCheckedSearchKey(userMoodCheckIn));
+        LocalDateTime myDateObj = LocalDateTime.now();
+        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("MMM-yyyy");
+        String formattedDate = myDateObj.format(myFormatObj);
+        userMoodCheckIn.setCreatedDate(formattedDate);
         userMoodCheckInRepo.save(userMoodCheckIn);
         if (Validator.isValid(request.getMoodSourceIdList())) {
             List<MtMoodSource> moodSourceList = moodSourceRepo.findAllByIdIn(request.getMoodSourceIdList());

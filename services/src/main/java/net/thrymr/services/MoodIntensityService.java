@@ -1,5 +1,6 @@
 package net.thrymr.services;
 import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
+import net.thrymr.dto.response.UserMoodCheckInResponse;
 import net.thrymr.model.UserMoodCheckIn;
 import net.thrymr.model.master.MtMoodIntensity;
 import net.thrymr.utils.ApiResponse;
@@ -27,4 +28,6 @@ public interface MoodIntensityService {
     String createUserMoodCheckIn(MoodSourceIntensityRequestDto request);
 
     String deleteUserMoodCheckInById(Long id);
+
+    UserMoodCheckInResponse getAllUserMoodInfo();
 }

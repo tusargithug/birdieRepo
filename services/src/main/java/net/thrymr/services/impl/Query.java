@@ -525,4 +525,9 @@ public class Query implements GraphQLQueryResolver {
     List<AdminCountsDto> getAllAdminCounts() {
         return siteTeamAndShiftTimingsService.getAllAdminCounts();
     }
+    @QueryMapping(name = "getAllUserMoodInfo")
+    public UserMoodCheckInResponse getAllUserMoodInfo() {
+        return moodIntensityService.getAllUserMoodInfo();
+    }
+
 }
