@@ -146,17 +146,17 @@
 		<!-- https://mvnrepository.com/artifact/com.graphql-java/graphql-java-extended-scalars -->
 
 	</dependencies>
-<!--	<dependencyManagement>-->
-<!--		<dependencies>-->
-<!--			<dependency>-->
-<!--				<groupId>org.keycloak.bom</groupId>-->
-<!--				<artifactId>keycloak-adapter-bom</artifactId>-->
-<!--				<version>15.0.2</version>-->
-<!--				<type>pom</type>-->
-<!--				<scope>import</scope>-->
-<!--			</dependency>-->
-<!--		</dependencies>-->
-<!--	</dependencyManagement>-->
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.keycloak.bom</groupId>
+				<artifactId>keycloak-adapter-bom</artifactId>
+				<version>15.0.2</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<modules>
 		<module>main</module>
