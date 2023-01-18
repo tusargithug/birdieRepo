@@ -18,6 +18,12 @@
 
 	<properties>
 		<java.version>17</java.version>
+		<source>17</source>
+		<target>17</target>
+		<testSource>17</testSource>
+		<testTarget>17</testTarget>
+
+
 	</properties>
 
 	<dependencies>
@@ -171,6 +177,15 @@
 				<configuration>
 					<skip>true</skip>
 					<mainClass>net.thrymr.BaseApplication</mainClass>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<source>17</source>
+					<target>17</target>
 				</configuration>
 			</plugin>
 		</plugins>
