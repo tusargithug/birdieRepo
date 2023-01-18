@@ -313,6 +313,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                 chapterResponse.setChapterName(chapter.getChapterName());
                 chapterResponse.setDescription(chapter.getDescription());
                 chapterResponse.setSequence(chapter.getId());
+                chapterResponse.setUnit(chapter.getUnit());
                 if (optionalAppUser.get().getQuestionList() != null) {
                     for (MtQuestion mtQuestion : optionalAppUser.get().getQuestionList()) {
                         if (mtQuestion.getIsDeleted().equals(Boolean.FALSE)) {

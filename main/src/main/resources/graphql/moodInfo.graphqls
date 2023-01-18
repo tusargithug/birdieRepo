@@ -866,6 +866,7 @@ type ChapterResponse{
     description:String
     video:FileEntity
     sequence:Int
+    unit:Unit
     questionList:[QuestionResponse]
 }
 type QuestionResponse{

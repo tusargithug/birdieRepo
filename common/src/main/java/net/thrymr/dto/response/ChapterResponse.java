@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.thrymr.model.FileEntity;
+import net.thrymr.model.Unit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,8 @@ public class ChapterResponse {
     private FileEntity video;
 
     private Long sequence;
+
+    private Unit unit;
 
     private List<QuestionResponse> questionList=new ArrayList<>();
 }
