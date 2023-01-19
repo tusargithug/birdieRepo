@@ -328,7 +328,7 @@ public class UnitAndChapterImpl implements UnitAndChapterServices {
                                 for (MtOptions mtOptions : mtQuestion.getMtOptions()) {
                                     if (mtOptions.getIsDeleted().equals(Boolean.FALSE)) {
                                         OptionResponse optionResponse = new OptionResponse();
-                                        optionResponse.setId(optionResponse.getId());
+                                        optionResponse.setId(mtOptions.getId());
                                         optionResponse.setIsCorrect(mtOptions.getIsCorrect());
                                         optionResponse.setTextAnswer(mtOptions.getTextAnswer());
                                         optionResponseList.add(optionResponse);
