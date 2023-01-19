@@ -1,5 +1,7 @@
 package net.thrymr.controller;
+
 import net.thrymr.dto.request.MoodSourceIntensityRequestDto;
+import net.thrymr.dto.response.UserMoodCheckInResponse;
 import net.thrymr.model.UserMoodCheckIn;
 import net.thrymr.model.master.MtMoodIntensity;
 import net.thrymr.services.MoodIntensityService;
@@ -31,7 +33,7 @@ public class MoodIntensityController {
 
     @QueryMapping(name = "getMoodIntensitiesById")
     public MtMoodIntensity getMoodIntensitiesById(@Argument Long id) {
-        return  moodIntensityService.getMoodIntensitiesById(id);
+        return moodIntensityService.getMoodIntensitiesById(id);
     }
 
     @MutationMapping(name = "deleteMoodIntensitiesById")
@@ -55,11 +57,11 @@ public class MoodIntensityController {
         return moodIntensityService.createUserMoodCheckIn(request);
     }*/
     @MutationMapping("createUserMoodCheckIn")
-    public String createUserMoodCheckIn(@Argument(name = "input") MoodSourceIntensityRequestDto request){
+    public String createUserMoodCheckIn(@Argument(name = "input") MoodSourceIntensityRequestDto request) {
         return moodIntensityService.createUserMoodCheckIn(request);
     }
 
-//    @RolesAllowed("ADMIN")
+    //    @RolesAllowed("ADMIN")
 //    @RequestMapping(value = "/demo", method = RequestMethod.GET)
 //    public ResponseEntity<String> getAdmin(Authentication authentication, Principal principal) {
 //        KeycloakAuthenticationToken keycloakAuthenticationToken = (KeycloakAuthenticationToken) principal;
@@ -69,18 +71,23 @@ public class MoodIntensityController {
 //        return ResponseEntity.ok("Hello Admin");
 //    }
     @QueryMapping(name = "getAllMoodCheckIn")
-    public List<UserMoodCheckIn> getAllMoodCheckIn(){
+    public List<UserMoodCheckIn> getAllMoodCheckIn() {
         return moodIntensityService.getAllMoodCheckIn();
     }
 
     @MutationMapping(name = "deleteUserMoodCheckInById")
-    public String deleteUserMoodCheckInById(@Argument Long id){
+    public String deleteUserMoodCheckInById(@Argument Long id) {
         return moodIntensityService.deleteUserMoodCheckInById(id);
     }
 
     @QueryMapping(name = "getAllMoodIntensitiesByMoodInfoId")
     public List<MtMoodIntensity> getAllMoodIntensitiesByMoodInfoId(@Argument Long id) {
         return moodIntensityService.getAllMoodIntensitiesByMoodInfoId(id);
+    }
+
+    @QueryMapping(name = "getAllUserMoodInfo")
+    public UserMoodCheckInResponse getAllUserMoodInfo() {
+        return moodIntensityService.getAllUserMoodInfo();
     }
 
 }
